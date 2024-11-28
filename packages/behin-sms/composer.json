@@ -1,0 +1,17 @@
+{
+    "name": "behin/sms",
+    "version": "1.0",
+    "description": "",
+    "autoload": {
+        "psr-4": {
+            "Behin\\Sms\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}

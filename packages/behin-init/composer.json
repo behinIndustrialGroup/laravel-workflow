@@ -1,0 +1,17 @@
+{
+    "name": "behin/init",
+    "version": "1.2",
+    "description": "",
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BehinInit\\": "src/"
+        }
+    },
+    "require": {}
+}

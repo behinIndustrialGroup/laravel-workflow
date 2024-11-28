@@ -1,0 +1,17 @@
+{
+    "name": "behin/process-maker",
+    "description": "connect to process maker",
+    "version": "2.3.6",
+    "autoload": {
+        "psr-4": {
+            "BehinProcessMaker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}

@@ -1,0 +1,1 @@
+@extends('behin-layouts.app')

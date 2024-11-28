@@ -1,0 +1,17 @@
+{
+    "name": "behin/user-roles",
+    "version": "1.2",
+    "description": "defining roles of users and accessibility of each role. it can use codes in views and controllers.",
+    "autoload": {
+        "psr-4": {
+            "BehinUserRoles\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}

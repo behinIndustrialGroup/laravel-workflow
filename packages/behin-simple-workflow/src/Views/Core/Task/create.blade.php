@@ -1,0 +1,112 @@
+@extends('behin-layouts.app')
+
+@section('content')
+    <div class="container">
+        <h2>{{ $process->name }}</h2>
+        @foreach ($process->startTasks() as $task)
+            <div class="panel panel-default">
+                    @csrf
+                    <div class="panel-heading p-2 bg-light">
+                        <strong class="panel-title">
+                            <a data-toggle="collapse" href="#{{$task->id}}">{{ $task->name }}</a>
+                            <span
+                                class="badge bg-{{ $task->type == 'form' ? 'primary' : ($task->type == 'script' ? 'success' : 'warning') }}">
+                                {{ ucfirst($task->type) }}
+                            </span>
+                            <input type="hidden" name="id" value="{{ $task->id }}">
+                            <div class="flex-grow-1" style="display: inline">
+                                <select name="executive_element_id" class="form-select">
+                                    <option value="">{{ trans('Select an option') }}</option>
+                                    @if ($task->type == 'form')
+                                        @foreach ($forms as $form)
+                                            <option value="{{ $form->id }}"
+                                                {{ $form->id == $task->executive_element_id ? 'selected' : '' }}>
+                                                {{ $form->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        <a type="submit" class="" style="float: left"
+                        href="{{ route('simpleWorkflow.task.edit', $task->id) }}">{{ trans('Edit') }}</a>
+
+                        </strong>
+
+
+                    </div>
+                <div id="{{$task->id}}" class="panel-collapse">
+                    <div class="panel-body">
+                        @php
+                            $children = $task->children();
+                        @endphp
+                        @if (count($children))
+                            @include('SimpleWorkflowView::Core.Task.tree', [
+                                'children' => $children,
+                                'level' => 1,
+                            ])
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+
+
+        <form action="{{ route('simpleWorkflow.task.create') }}" method="POST" class="p-4 border rounded bg-light">
+            @csrf
+            <input type="hidden" name="process_id" value="{{ $process->id }}">
+            <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">{{ trans('Task Name') }}</label>
+                <div class="col-sm-10">
+                    <input type="text" name="name" id="name" class="form-control"
+                        placeholder="{{ trans('Enter task name') }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="type" class="col-sm-2 col-form-label">{{ trans('Task Type') }}</label>
+                <div class="col-sm-10">
+                    <select name="type" id="type" class="form-select">
+                        <option value="form">{{ trans('Form') }}</option>
+                        <option value="condition">{{ trans('Condition') }}</option>
+                        <option value="script">{{ trans('Script') }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Parent Task') }}</label>
+                <div class="col-sm-10">
+                    <select name="parent_id" id="parent_id" class="form-select">
+                        <option value="">{{ trans('None') }}</option>
+                        @foreach ($process->tasks() as $task)
+                            <option value="{{ $task->id }}">{{ $task->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="submit" class="btn btn-primary">{{ trans('Create') }}</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+@endsection
+
+@section('script')
+    <script>
+        function create_process() {
+            var form = $('#create-process-form')[0];
+            var fd = new FormData(form);
+            send_ajax_formdata_request(
+                "{{ route('simpleWorkflow.process.create') }}",
+                fd,
+                function(response) {
+                    console.log(response);
+
+                }
+            )
+
+        }
+    </script>
+@endsection

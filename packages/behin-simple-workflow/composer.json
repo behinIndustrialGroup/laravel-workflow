@@ -1,0 +1,17 @@
+{
+    "name": "behin/simple-workflow",
+    "version": "1.0",
+    "description": "",
+    "autoload": {
+        "psr-4": {
+            "Behin\\SimpleWorkflow\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}

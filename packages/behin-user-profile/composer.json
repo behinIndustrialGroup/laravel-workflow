@@ -1,0 +1,16 @@
+{
+    "name": "behin/user-profile",
+    "description": "",
+    "authors": [
+        {
+            "name": "Amirali-Hosseini",
+            "email": "amiralihosseini216@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "UserProfile\\": "src/"
+        }
+    },
+    "require": {}
+}

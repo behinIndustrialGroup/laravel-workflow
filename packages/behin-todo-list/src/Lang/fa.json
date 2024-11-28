@@ -1,0 +1,16 @@
+{
+    "delete ok" : "حذف با موفققیت انجام شد",
+    "delete not ok" : "حذف با مشکل مواجه شد",
+    "update ok" : "بروزرسانی با موفققیت انجام شد",
+    "update not ok" : "بروزرسانی با مشکل مواجه شد",
+    "task assigned successfully" : "تسک با موفقیت ایجاد شد",
+    "Task Title": "عنوان تسک",
+    "Assign To": "تخصیص به",
+    "Due Date": "تاریخ انجام",
+    "Reminder Date": "تاریخ یاداوری",
+    "Task Description": "توضیحات تسک",
+    "Description": "توضیحات",
+    "all tasks": "تمام تسک ها",
+    "today tasks": "تسک های امروز",
+    "expired tasks": "تسک های گذشته"
+}

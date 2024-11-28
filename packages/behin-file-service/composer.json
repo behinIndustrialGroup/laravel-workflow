@@ -1,0 +1,17 @@
+{
+    "name": "behin/file-service",
+    "version": "1",
+    "description": "",
+    "authors": [
+        {
+            "name": "Amirali-Hosseini",
+            "email": "amiralihosseini216@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FileService\\": "src/"
+        }
+    },
+    "require": {}
+}

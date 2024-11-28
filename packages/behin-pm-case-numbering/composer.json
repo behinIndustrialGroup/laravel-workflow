@@ -1,0 +1,17 @@
+{
+    "name": "behin/pm-case-numbering",
+    "version": "1.0",
+    "description": "",
+    "autoload": {
+        "psr-4": {
+            "Behin\\PMCaseNumbering\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}
