@@ -2,7 +2,10 @@
 
 namespace Behin\SimpleWorkflow\Models\Core;
 
+use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
+use Behin\SimpleWorkflow\Controllers\Core\ScriptController;
+use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -30,7 +33,10 @@ class Task extends Model
         'name',
         'type',
         'executive_element_id',
-        'parent_id'
+        'parent_id',
+        'next_element_id',
+        'assignment_type',
+        'case_name',
     ];
 
     public function process()
@@ -45,9 +51,23 @@ class Task extends Model
         return Task::where('parent_id', $this->id)->whereNot('id', $this->id)->get();
     }
 
-    public function executiveElementId(){
+    public function executiveElement(){
         if($this->type == 'form'){
             return FormController::getById($this->executive_element_id);
         }
+        if($this->type == 'script'){
+            return ScriptController::getById($this->executive_element_id);
+        }
+        if($this->type == 'condition'){
+            return ConditionController::getById($this->executive_element_id);
+        }
+    }
+
+    public function nextTask(){
+        return TaskController::getById($this->next_element_id);
+    }
+
+    public function actors(){
+        return $this->hasMany(TaskActor::class, 'task_id');
     }
 }

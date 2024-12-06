@@ -1,0 +1,17 @@
+{
+    "name": "mkhodroo/cities",
+    "description": "add iran cities to database",
+    "version": "1.3",
+    "autoload": {
+        "psr-4": {
+            "Mkhodroo\\Cities\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "require": {}
+}

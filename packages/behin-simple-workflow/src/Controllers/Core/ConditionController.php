@@ -72,9 +72,12 @@ class ConditionController extends Controller
         $case = CaseController::getById($caseId);
         $variables = collect($case->variables());
         foreach($conditions as $condition){
-            $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $condition->value)->first();
+            $value = mb_convert_encoding($condition->value, 'UTF-8');
+            // print($value);
+            $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
             // print($c);
             if(!$c){
+                print($value);
                 return false;
             }
         }

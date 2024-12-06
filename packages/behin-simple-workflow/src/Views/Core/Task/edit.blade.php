@@ -29,12 +29,12 @@
             <input type="hidden" name="id" value="{{ $task->id }}">
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Name') }}</label>
-                <input type="text" name="name" id="" value="{{ $task->name }}">
+                <input type="text" name="name" id="" class="form-control" value="{{ $task->name }}">
             </div>
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Executive File') }}</label>
                 <div class="col-sm-10">
-                    <select name="executive_element_id" class="form-select">
+                    <select name="executive_element_id" class="form-control select2">
                         <option value="">{{ trans('Select an option') }}</option>
                         @if ($task->type == 'form')
                                 @foreach ($forms as $form)
@@ -66,7 +66,7 @@
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Parent Task') }}</label>
                 <div class="col-sm-10">
-                    <select name="parent_id" id="parent_id" class="form-select">
+                    <select name="parent_id" id="parent_id" class="form-control select2">
                         <option value="">{{ trans('None') }}</option>
                         @foreach ($task->process->tasks() as $item)
                             <option value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>{{ $item->name }}</option>
@@ -74,10 +74,43 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="" style="float: left">{{ trans('Edit') }}</a>
+            <div class="row mb-3">
+                <label for="next_element_id" class="col-sm-2 col-form-label">{{ trans('Next Element') }}</label>
+                <div class="col-sm-10">
+                    <select name="next_element_id" id="next_element_id" class="form-control select2">
+                        <option value="">{{ trans('None') }}</option>
+                    @foreach ($task->process->tasks() as $item)
+                        <option value="{{ $item->id }}" {{ $item->id == $task->next_element_id ? 'selected' : '' }}>{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="assignment_type" class="col-sm-2 col-form-label">{{ trans('Assignment') }}</label>
+                <div class="col-sm-10">
+                    <select name="assignment_type" id="assignment_type" class="form-control">
+                        <option value="">{{ trans('None') }}</option>
+                        <option value="normal" {{ $task->assignment_type == 'normal' ? 'selected' : '' }}>{{ trans('Normal') }}</option>
+                        <option value="dynamic" {{ $task->assignment_type == 'dynamic' ? 'selected' : '' }}>{{ trans('Dynamic') }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="case_name" class="col-sm-2 col-form-label">{{ trans('Case Name') }}</label>
+                <div class="col-sm-10">
+                    <input type="text" name="case_name" class="form-control" dir="ltr" value="{{ $task->case_name }}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
 
 
 
         </div>
     </form>
+@endsection
+
+@section('script')
+    <script>
+        initial_view();
+    </script>
 @endsection

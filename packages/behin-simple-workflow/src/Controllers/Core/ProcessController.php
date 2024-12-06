@@ -77,7 +77,8 @@ class ProcessController extends Controller
             ], 403);
         }
         $case = CaseController::create($task->process_id, Auth::id() );
-        InboxController::create($taskId, $case->id, Auth::id(), 'new');
-        //craete case in user inbox
+        $inbox = InboxController::create($taskId, $case->id, Auth::id(), 'new');
+        return redirect()->route('simpleWorkflow.inbox.view', $inbox->id);
+        return InboxController::view($inbox->id);
     }
 }

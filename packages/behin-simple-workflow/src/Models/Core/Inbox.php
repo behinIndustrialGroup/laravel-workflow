@@ -31,6 +31,7 @@ class Inbox extends Model
         'case_id',
         'actor',
         'status',
+        'case_name'
     ];
 
     public function task()

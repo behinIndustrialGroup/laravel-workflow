@@ -43,5 +43,11 @@ if (!function_exists('getFieldDetailsByName')) {
     }
 }
 
+if (!function_exists('previewForm')) {
+    function previewForm($id) {
+        return FormController::preview($id);
+    }
+}
+
 
 

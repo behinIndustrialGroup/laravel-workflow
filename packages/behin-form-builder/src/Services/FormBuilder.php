@@ -10,6 +10,11 @@ use MyFormBuilder\Fields\SelectField;
 use MyFormBuilder\Fields\TextareaField;
 use MyFormBuilder\Fields\SubmitField;
 use MyFormBuilder\Fields\FieldFactory;
+use MyFormBuilder\Fields\FileField;
+use MyFormBuilder\Fields\CheckboxField;
+use MyFormBuilder\Fields\DivField;
+use MyFormBuilder\Fields\LocationField;
+use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
 
 class FormBuilder
@@ -35,12 +40,53 @@ class FormBuilder
         return $this;
     }
 
+    public function title(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new TitleField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function div(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new DivField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function checkbox(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new CheckboxField($name, $attributes))->render();
+        return $this;
+    }
+
     public function text(string $name, array $attributes = null)
     {
 
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new TextField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function location(string $name, array $attributes = null)
+    {
+        return (new LocationField($name, $attributes))->render();
+    }
+
+    public function file(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new FileField($name, $attributes))->render();
         return $this;
     }
 
@@ -67,22 +113,24 @@ class FormBuilder
         return $this;
     }
 
-    public function textarea($name, $attributes = null): self
+    public function textarea($name, $attributes = null)
     {
-        if (is_array($name)) {
-            $attributes = $name;
-            $name = $attributes['name'] ?? '';
-            unset($attributes['name']);
-        }
 
         $attributes = $attributes ?? [];
-        $field = $this->fieldFactory->create('textarea', $name, $attributes);
+        // $field = $this->fieldFactory->create('textarea', $name, $attributes);
+        return (new TextareaField($name, $attributes))->render();
+
         $this->fields[] = new TextareaField($name, $field);
         return $this;
     }
 
-    public function select($name, $options = [], $attributes = []): self
+    public function select($name, $options, $attributes = [])
     {
+        $attributes = $attributes ?? [];
+        $attributes['options'] = $options;
+
+
+        return (new SelectField($name, $attributes))->render();
         if (is_array($name)) {
             $attributes = $name;
             $name = $attributes['name'] ?? '';

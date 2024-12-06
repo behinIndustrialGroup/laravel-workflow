@@ -19,6 +19,7 @@
                     <th>#</th>
                     <th>{{ trans('Process Title') }}</th>
                     <th>{{ trans('Task Title') }}</th>
+                    <th>{{ trans('Case Title') }}</th>
                     <th>{{ trans('Status') }}</th>
                     <th>{{ trans('Received At') }}</th>
                     <th>{{ trans('Actions') }}</th>
@@ -30,6 +31,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $row->task->process->name }}</td>
                         <td>{{ $row->task->name }}</td>
+                        <td>{{ $row->case_name }}</td>
                         <td>
                             @if($row->status == 'new')
                                 <span class="badge bg-primary">{{ trans('New') }}</span>

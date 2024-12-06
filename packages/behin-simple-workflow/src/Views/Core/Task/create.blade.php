@@ -1,40 +1,60 @@
 @extends('behin-layouts.app')
 
+@section('title', trans('Edit Process'))
+
 @section('content')
     <div class="container">
         <h2>{{ $process->name }}</h2>
         @foreach ($process->startTasks() as $task)
+            @php
+                $bgColor =
+                    $task->type == 'form' ? 'bg-primary' : ($task->type == 'script' ? 'bg-success' : 'bg-warning');
+            @endphp
             <div class="panel panel-default">
-                    @csrf
-                    <div class="panel-heading p-2 bg-light">
-                        <strong class="panel-title">
-                            <a data-toggle="collapse" href="#{{$task->id}}">{{ $task->name }}</a>
-                            <span
-                                class="badge bg-{{ $task->type == 'form' ? 'primary' : ($task->type == 'script' ? 'success' : 'warning') }}">
-                                {{ ucfirst($task->type) }}
+                @csrf
+                <div class="panel-heading p-2 bg-light">
+                    <strong class="panel-title">
+                        <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
+                        <span class="badge {{ $bgColor }}">
+                            {{ ucfirst($task->type) }}
+                        </span>
+                        <input type="hidden" name="id" value="{{ $task->id }}">
+                        <div class="flex-grow-1" style="display: inline">
+                            <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
+                                {{ $task->executive_element_id ? $task->executiveElement()->name : '' }}
                             </span>
-                            <input type="hidden" name="id" value="{{ $task->id }}">
-                            <div class="flex-grow-1" style="display: inline">
-                                <select name="executive_element_id" class="form-select">
-                                    <option value="">{{ trans('Select an option') }}</option>
-                                    @if ($task->type == 'form')
-                                        @foreach ($forms as $form)
-                                            <option value="{{ $form->id }}"
-                                                {{ $form->id == $task->executive_element_id ? 'selected' : '' }}>
-                                                {{ $form->name }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            @if($task->assignment_type)
+                                <span class="badge {{ $bgColor }}">{{ trans('Assignment') }}:
+                                    {{ $task->assignment_type }}
+                                </span>
+                            @endif
+                            @if($task->actors()->count() > 0)
+                                <span class="badge bg-info">{{ trans('Actors') }}:
+                                    {{ $task->actors()->pluck('actor')->implode(', ') }}
+                                </span>
+                            @endif
+                            @if ($task->next_element_id)
+                                @php
+                                    $bgColor =
+                                        $task->nextTask()->type == 'form'
+                                            ? 'bg-primary'
+                                            : ($task->nextTask()->type == 'script'
+                                                ? 'bg-success'
+                                                : 'bg-warning');
+                                @endphp
+                                <span class="badge {{ $bgColor }}">{{ trans('Next Task') }} :
+                                    {{ $task->nextTask()->name }}
+                                </span>
+                            @endif
+                        </div>
                         <a type="submit" class="" style="float: left"
-                        href="{{ route('simpleWorkflow.task.edit', $task->id) }}">{{ trans('Edit') }}</a>
+                            href="{{ route('simpleWorkflow.task.edit', $task->id) }}">{{ trans('Edit') }}</a>
 
-                        </strong>
+                    </strong>
 
 
-                    </div>
-                <div id="{{$task->id}}" class="panel-collapse">
+                </div>
+                <div id="{{ $task->id }}" class="panel-collapse">
                     <div class="panel-body">
                         @php
                             $children = $task->children();

@@ -7,7 +7,6 @@
                 <tr>
                     <th>{{ trans('Id') }}</th>
                     <th>{{ trans('Name') }}</th>
-                    <th>{{ trans('Executive file') }}</th>
                     <th>{{ trans('Action') }}</th>
                 </tr>
             </thead>
@@ -17,10 +16,7 @@
                         @csrf
                         <tr>
                             <td>{{ $form->id }} <input type="hidden" name="id" value="{{ $form->id }}"></td>
-                            <td><input type="text" name="name" id="" value="{{ $form->name }}"></td>
-                            <td><input type="text" name="executive_file" id=""
-                                    value="{{ $form->executive_file }}">
-                            </td>
+                            <td>{{ $form->name }}</td>
                             <td><a class="btn btn-success"
                                     href="{{ route('simpleWorkflow.form.edit', ['id' => $form->id]) }}">{{ trans('Edit') }}</a>
                             </td>
@@ -29,12 +25,11 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <form action="{{ route('simpleWorkflow.form.store') }}" method="POST">
+                <form action="{{ route('simpleWorkflow.form.create') }}" method="POST">
                     @csrf
                     <tr>
                         <td></td>
                         <td><input type="text" name="name" id="" value=""></td>
-                        <td><input type="text" name="executive_file" id="" value="">
                         </td>
                         <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
                     </tr>

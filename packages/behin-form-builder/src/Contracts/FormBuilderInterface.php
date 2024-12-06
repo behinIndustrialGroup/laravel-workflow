@@ -9,7 +9,7 @@ interface FormBuilderInterface
     public function email(string $name, array $attributes = []): self;
     public function password(string $name, array $attributes = []): self;
     public function textarea(string $name, array $attributes = []): self;
-    public function select(string $name, array $options, array $attributes = []): self;
+    public function select(string $name, string $options, array $attributes = []): self;
     public function submit(string $text = 'Submit', array $attributes = []): self;
     public function render(): string;
 }

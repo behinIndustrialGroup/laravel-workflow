@@ -38,7 +38,7 @@ class FieldController extends Controller
             'attributes' => json_encode($attributes)
         ]);
 
-        return redirect()->route('simpleWorkflow.fields.index')->with('success', 'Fields created successfully.');
+        return redirect()->route('simpleWorkflow.fields.index', ['#createForm'])->with('success', 'Fields created successfully.');
     }
 
     public function edit(Fields $field)
@@ -48,30 +48,27 @@ class FieldController extends Controller
 
     public function update(Request $request, Fields $field)
     {
-        $ar = [];
-        $index = 0;
-        foreach($request->fieldName as $fieldName){
-            if($fieldName){
-                $ar[] = [
-                    'fieldName' => $fieldName,
-                    'operation' => $request->operation[$index],
-                    'value' => $request->value[$index],
-                    'task' => $request->task[$index],
-                ];
-            }
 
-            $index++;
-        }
-        $Condition->content = json_encode($ar);
-        $Condition->save();
-        return redirect()->back();
+        $attributes = [
+            'query' => $request->input('query') ? $request->input('query') : null,
+            'placeholder' => $request->placeholder,
+            'options' => $request->options ? $request->options : null
+        ];
+        $field->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'attributes' => json_encode($attributes)
+        ]);
+
+        return redirect()->route('simpleWorkflow.fields.edit', $field->id)->with('success', 'Fields updated successfully.');
+
     }
 
     public static function getAll() {
-        return Fields::get();
+        return Fields::orderBy('created_at')->get();
     }
     public static function getById($id) {
-        return Condition::find($id);
+        return Fields::find($id);
     }
 
     public static function getByName($fieldName) {

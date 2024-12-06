@@ -20,14 +20,13 @@
                 {{ session('success') }}
             </div>
         @endif
-        <table class="table table-strpped">
+        <table class="table table-strpped" dir="ltr">
             <thead>
                 <tr>
                     <th>{{ trans('ID') }}</th>
                     <th>{{ trans('Name') }}</th>
                     <th>{{ trans('Type') }}</th>
-                    <th>{{ trans('Query') }}</th>
-                    <th>{{ trans('Placeholder') }}</th>
+                    <th>{{ trans('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,21 +36,24 @@
                     @endphp
                     <tr>
                         <td>{{ $key }}</td>
-                        <td><input type="text" name="name" id="" value="{{ $field->name }}"></td>
-                        <td><input type="text" name="type" id="" value="{{ $field->type }}"></td>
+                        <td class="text-center">{{ $field->name }}</td>
+                        <td class="text-center">{{ $field->type }}</td>
+
                         <td>
-                            <textarea name="query" id="" cols="30" rows="10" dir="ltr">{{ is_string($attributes?->query) ? $attributes?->query : '' }}</textarea>
-                        </td>
-                        <td><input type="text" name="placeholder" id="" value="{{ $attributes?->placeholder }}">
+                            <a href="{{ route('simpleWorkflow.fields.edit', $field->id) }}" class="btn btn-default">{{ trans('Edit') }}</a>
+                            <button class="btn btn-danger">{{ trans('Delete') }}</button>
                         </td>
                     </tr>
                 @endforeach
-                <form action="{{ route('simpleWorkflow.fields.store') }}" method="POST">
+
+            </tbody>
+            <tfoot id="createForm">
+                <form action="{{ route('simpleWorkflow.fields.store') }}" method="POST" >
                     @csrf
                     <tr>
                         <td></td>
-                        <td><input type="text" name="name" id=""></td>
-                        <td><select name="type" id="">
+                        <td><input type="text" name="name" class="form-control text-center"></td>
+                        <td class="text-center form-select"><select name="type" id="">
                                 <option value="string">string</option>
                                 <option value="number">number</option>
                                 <option value="text">text</option>
@@ -60,17 +62,17 @@
                                 <option value="file">file</option>
                                 <option value="checkbox">checkbox</option>
                                 <option value="radio">radio</option>
+                                <option value="title">title</option>
+                                <option value="location">location</option>
+                                <option value="div">div</option>
                             </select></td>
-                        <td>
-                            <textarea name="query" id="" cols="30" rows="10"></textarea>
-                        </td>
-                        <td><input type="text" name="placeholder" id=""></td>
+                            <td>
+                                <button class="btn btn-default">{{ trans('Create') }}</button>
+                            </td>
                     </tr>
-                    <td>
-                        <button class="btn btn-default">{{ trans('Create') }}</button>
-                    </td>
+
                 </form>
-            </tbody>
+            </tfoot>
         </table>
     </div>
 @endsection

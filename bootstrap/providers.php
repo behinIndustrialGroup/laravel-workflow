@@ -10,6 +10,7 @@ use BehinProcessMaker\BehinProcessMakerProvider;
 use BehinProcessMakerAdmin\BehinProcessMakerAdminProvider;
 use BehinUserRoles\UserRolesServiceProvider;
 use FileService\FileServiceProvider;
+use Mkhodroo\Cities\CityProvider;
 use MyFormBuilder\FormBuilderServiceProvider;
 use TodoList\TodoListProvider;
 use UserProfile\UserProfileProvider;
@@ -29,4 +30,5 @@ return [
     FileServiceProvider::class,
     SimpleWorkflowProvider::class,
     FormBuilderServiceProvider::class,
+    CityProvider::class,
 ];

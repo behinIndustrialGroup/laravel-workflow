@@ -34,23 +34,32 @@
     {{-- <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom.css')  . '?' . config('app.version') }}"> --}}
     <link rel="stylesheet" type="text/css" href="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.css')  . '?' . config('app.version') }}" />
     <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/dropzone.min.css')  . '?' . config('app.version') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.css')  . '?' . config('app.version') }}">
     {{-- <link rel="stylesheet" href="{{ Url('public/behin/behin-dist/dist/css/persian-datepicker-0.4.5.min.css')  . '?' . config('app.version') }}" /> --}}
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ url('public/behin/behin-dist/persian-date-picker/persian-datepicker.css') }}">
+    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/mapp/css/mapp.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/mapp/css/fa/style.css')  . '?' . config('app.version') }}">
     @yield('style')
 
     <script src="{{ url('public/behin/behin-dist/plugins/jquery/jquery.min.js') . '?' . config('app.version') }}"></script>
+    {{-- <script type="text/javascript" src="https://cdn.map.ir/web-sdk/1.4.2/js/jquery-3.2.1.min.js"></script> --}}
     <script src="{{ url('public/behin/behin-dist/plugins/datatables/jquery.dataTables.js')  . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.js')  . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-dist/persian-date-picker/persian-date.js')  . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-dist/persian-date-picker/persian-datepicker.js')  . '?' . config('app.version') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+    <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.env.js')  . '?' . config('app.version') }}"></script>
+
 
     <script src="{{ url('public/behin/behin-js/ajax.js')  . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dataTable.js')  . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dropzone.js')  . '?' . config('app.version') }}"></script>
+
+
+
     @yield('script_in_head')
 
 </head>
@@ -93,6 +102,10 @@
         <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
         <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
         <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+        <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.min.js')  . '?' . config('app.version') }}"></script>
+        <script src="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.js')  . '?' . config('app.version') }}"></script>
+
+
 
 
 
@@ -119,10 +132,8 @@
 
         <script src="{{ url('public/behin/behin-js/loader.js')  . '?' . config('app.version') }}"></script>
         <script src="{{ url('public/behin/behin-js/scripts.js')  . '?' . config('app.version') }}"></script>
-
         @yield('script')
     </div>
-
 
 
 </body>

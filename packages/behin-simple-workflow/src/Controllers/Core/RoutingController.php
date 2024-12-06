@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RoutingController extends Controller
 {
-    public static function save(Request $request)
+    public static function save(Request $request, $requiredFields = [])
     {
         $request->validate([
             'processId' => 'required',
@@ -21,16 +21,44 @@ class RoutingController extends Controller
             'caseId' => 'required',
         ]);
 
+        // $ar = [];
+        // if(count($requiredFields) > 0){
+        //     foreach($requiredFields as $field){
+        //         $ar[$field] = 'required';
+        //     }
+        //     $request->validate($ar);
+        // }
+
         $processId = $request->processId;
         $taskId = $request->taskId;
         $caseId = $request->caseId;
 
         $vars = $request->all();
+
+        // return $vars;
         foreach ($vars as $key => $value) {
-            VariableController::save($processId, $caseId, $key, $value);
+            if (gettype($value) == 'object') {
+                return VariableController::saveFile($processId, $caseId, $key, $value);
+            } else {
+                VariableController::save($processId, $caseId, $key, $value);
+            }
+        }
+
+        foreach($requiredFields as $field){
+            $var = VariableController::getVariable($processId, $caseId, $field);
+            if(!$var->value){
+                return response()->json(
+                    [
+                        'status' => 400,
+                        'msg' => trans('SimpleWorkflowLang::fields.' . $field) . ': ' . trans('SimpleWorkflowLang::fields.Required')
+                    ],
+                    400
+                );
+            }
         }
         return response()->json(
             [
+                'status' => 200,
                 'msg' => trans('Saved')
             ]
         );
@@ -38,13 +66,21 @@ class RoutingController extends Controller
 
     public static function saveAndNext(Request $request)
     {
-        self::save($request);
         $caseId = $request->caseId;
         $processId = $request->processId;
         $taskId = $request->taskId;
         $inbox = InboxController::getById($request->inboxId);
         $task = $inbox->task;
+        $form = $task->executiveElement();
+        $requiredFields = FormController::requiredFields($form->id);
+        $result = self::save($request, $requiredFields);
+        $response = json_decode($result->getContent());
+
+        if($response->status != 200){
+            return $response;
+        }
         $taskChildren = $task->children();
+
         // return $taskChildren;
         if ($task->type == 'form') {
             if ($task->assignment_type == 'normal') {
@@ -62,10 +98,15 @@ class RoutingController extends Controller
                 // همه باید وضعیت انجام شده تغییر کنند
             }
         }
-        foreach ($taskChildren as $task) {
-            $result = self::executeNextTask($task, $caseId);
-            if($result == 'break'){
-                break;
+        if ($task->next_element_id) {
+            $nextTask = TaskController::getById($task->next_element_id);
+            self::executeNextTask($nextTask, $caseId);
+        } else {
+            foreach ($taskChildren as $task) {
+                $result = self::executeNextTask($task, $caseId);
+                if ($result == 'break') {
+                    break;
+                }
             }
         }
     }
@@ -101,16 +142,16 @@ class RoutingController extends Controller
         if ($task->type == 'condition') {
             $condition = ConditionController::getById($task->executive_element_id);
             $result = ConditionController::runCondition($task->executive_element_id, $caseId);
-            print($result);
+            // print($result);
 
             if ($result) {
                 $nextTask = $condition->nextIfTrue();
-                if((bool)$nextTask){
+                if ((bool)$nextTask) {
                     self::executeNextTask($nextTask, $caseId);
-                }else{
+                } else {
                     $taskChildren = $task->children();
                     foreach ($taskChildren as $task) {
-                        print($task->name);
+                        // print($task->name);
                         self::executeNextTask($task, $caseId);
                     }
                 }

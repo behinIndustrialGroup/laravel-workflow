@@ -71,6 +71,7 @@ return array(
     'MyFormBuilder\\' => array($baseDir . '/packages/behin-form-builder/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Mockery\\' => array($vendorDir . '/mockery/mockery/library/Mockery'),
+    'Mkhodroo\\Cities\\' => array($baseDir . '/packages/mkhodroo-cities/src'),
     'Melipayamak\\' => array($vendorDir . '/melipayamak/php/src'),
     'League\\MimeTypeDetection\\' => array($vendorDir . '/league/mime-type-detection/src'),
     'League\\Flysystem\\Local\\' => array($vendorDir . '/league/flysystem-local'),

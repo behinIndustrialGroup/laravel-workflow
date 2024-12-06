@@ -38,7 +38,8 @@
             "TodoList\\": "packages/behin-todo-list/src/",
             "FileService\\": "packages/behin-file-service/src/",
             "Behin\\SimpleWorkflow\\": "packages/behin-simple-workflow/src/",
-            "MyFormBuilder\\": "packages/behin-form-builder/src/"
+            "MyFormBuilder\\": "packages/behin-form-builder/src/",
+            "Mkhodroo\\Cities\\": "packages/mkhodroo-cities/src/"
         },
         "files": [
             "packages/behin-init/src/App/Helpers/behin-helpers.php",
