@@ -9,7 +9,7 @@ use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Illuminate\Http\Request;
 
-class SendSmsToCustomer extends Controller
+class SendValidationSmsToCustomer extends Controller
 {
     protected $case;
     public function __construct($case) {

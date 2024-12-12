@@ -65,5 +65,6 @@ class ScriptController extends Controller
         $case = CaseController::getById($caseId);
         $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
         $script = new $executiveFile($case);
+        $script->execute();
     }
 }

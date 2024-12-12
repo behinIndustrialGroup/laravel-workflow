@@ -92,7 +92,7 @@
             @endif
             @if ($fieldDetails->type == 'file')
                 @php
-                    $fieldValues = $variables->where('key', $field->fieldName)->pluck('value');
+                    $fieldValues = isset($variables) ? $variables->where('key', $field->fieldName)->pluck('value') : [];
                 @endphp
                 {!! Form::file($fieldId, [
                     'value' => $fieldValues,

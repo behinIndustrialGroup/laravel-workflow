@@ -66,19 +66,27 @@ class ProcessController extends Controller
         ]);
     }
 
-    public static function start($taskId)
+    public static function start($taskId, $force = false, $redirect = true)
     {
         $task = TaskController::getById($taskId);
-        $listOfProcessThatUserCanStart = collect(self::listOfProcessThatUserCanStart(Auth::id()))->pluck('id')->toArray();
-        if(!in_array($task->process_id, $listOfProcessThatUserCanStart))
+        if(!$force)
         {
+            $listOfProcessThatUserCanStart = collect(self::listOfProcessThatUserCanStart(Auth::id()))->pluck('id')->toArray();
+            if(!in_array($task->process_id, $listOfProcessThatUserCanStart))
+            {
             return response()->json([
-                'msg' => trans("You don't have permission to start this process")
-            ], 403);
+                    'msg' => trans("You don't have permission to start this process")
+                ], 403);
+            }
         }
-        $case = CaseController::create($task->process_id, Auth::id() );
-        $inbox = InboxController::create($taskId, $case->id, Auth::id(), 'new');
-        return redirect()->route('simpleWorkflow.inbox.view', $inbox->id);
+        $creator = Auth::user() ? Auth::user()->id : 1;
+        $case = CaseController::create($task->process_id, $creator );
+        $inbox = InboxController::create($taskId, $case->id, $creator, 'new');
+        if($redirect)
+        {
+            return redirect()->route('simpleWorkflow.inbox.view', $inbox->id);
+        }
+        return $inbox;
         return InboxController::view($inbox->id);
     }
 }

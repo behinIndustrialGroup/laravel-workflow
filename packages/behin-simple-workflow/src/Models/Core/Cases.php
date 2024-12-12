@@ -38,5 +38,9 @@ class Cases extends Model
         return VariableController::getVariablesByCaseId($this->id);
     }
 
+    public function process(){
+        return $this->belongsTo(Process::class, 'process_id');
+    }
+
 }
 

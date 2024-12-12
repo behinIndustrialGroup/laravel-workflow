@@ -24,7 +24,6 @@
     @endif
     <form action="javascript:void(0)" method="POST" id="form" enctype="multipart/form-data" class="border p-2 bg-white">
 
-        @csrf
         <input type="hidden" name="inboxId" id="" value="{{ $inbox->id }}">
         <input type="hidden" name="caseId" id="" value="{{ $case->id }}">
         <input type="hidden" name="taskId" id="" value="{{ $task->id }}">

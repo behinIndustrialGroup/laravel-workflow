@@ -46,22 +46,19 @@ class RoutingController extends Controller
 
         foreach($requiredFields as $field){
             $var = VariableController::getVariable($processId, $caseId, $field);
-            if(!$var->value){
-                return response()->json(
+            if(!$var?->value){
+                return
                     [
                         'status' => 400,
                         'msg' => trans('SimpleWorkflowLang::fields.' . $field) . ': ' . trans('SimpleWorkflowLang::fields.Required')
-                    ],
-                    400
-                );
+                    ];
             }
         }
-        return response()->json(
+        return
             [
                 'status' => 200,
                 'msg' => trans('Saved')
-            ]
-        );
+            ];
     }
 
     public static function saveAndNext(Request $request)
@@ -74,10 +71,9 @@ class RoutingController extends Controller
         $form = $task->executiveElement();
         $requiredFields = FormController::requiredFields($form->id);
         $result = self::save($request, $requiredFields);
-        $response = json_decode($result->getContent());
 
-        if($response->status != 200){
-            return $response;
+        if($result['status'] != 200){
+            return $result;
         }
         $taskChildren = $task->children();
 
@@ -109,6 +105,10 @@ class RoutingController extends Controller
                 }
             }
         }
+        return response()->json([
+            'status' => 200,
+            'msg' => trans('Saved')
+        ]);
     }
 
     public static function executeNextTask($task, $caseId)
