@@ -28,6 +28,10 @@ class Process extends Model
         'name'
     ];
 
+    function cases(){
+        return $this->hasMany(Cases::class);
+    }
+
     function tasks(){
         return TaskController::getProcessTasks($this->id);
     }

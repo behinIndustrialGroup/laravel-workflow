@@ -10,6 +10,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RoutingController extends Controller
 {
@@ -38,12 +39,12 @@ class RoutingController extends Controller
         // return $vars;
         foreach ($vars as $key => $value) {
             if (gettype($value) == 'object') {
-                return VariableController::saveFile($processId, $caseId, $key, $value);
+                VariableController::saveFile($processId, $caseId, $key, $value);
             } else {
                 VariableController::save($processId, $caseId, $key, $value);
             }
         }
-
+        Log::info("test");
         foreach($requiredFields as $field){
             $var = VariableController::getVariable($processId, $caseId, $field);
             if(!$var?->value){
@@ -71,7 +72,7 @@ class RoutingController extends Controller
         $form = $task->executiveElement();
         $requiredFields = FormController::requiredFields($form->id);
         $result = self::save($request, $requiredFields);
-
+        Log::info($result);
         if($result['status'] != 200){
             return $result;
         }
@@ -119,7 +120,7 @@ class RoutingController extends Controller
                 foreach ($taskActors as $actor) {
                     InboxController::create($task->id, $caseId, $actor, 'new');
                 }
-                echo json_encode($taskActors);
+                // echo json_encode($taskActors);
             }
             if ($task->assignment_type == 'dynamic') {
                 $taskActors = TaskActorController::getDynamicTaskActors($task->id, $caseId)->pluck('actor');
@@ -161,3 +162,5 @@ class RoutingController extends Controller
         }
     }
 }
+
+

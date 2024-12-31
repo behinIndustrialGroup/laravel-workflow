@@ -2,6 +2,7 @@
 
 use Behin\PMCaseNumbering\PackageServiceProvider;
 use Behin\SimpleWorkflow\SimpleWorkflowProvider;
+use Behin\SimpleWorkflowReport\SimpleWorkflowReportProvider;
 use Behin\Sms\SmsProvider;
 use BehinFileControl\BehinFileControlProvider;
 use BehinInit\BehinInitProvider;
@@ -31,4 +32,5 @@ return [
     SimpleWorkflowProvider::class,
     FormBuilderServiceProvider::class,
     CityProvider::class,
+    SimpleWorkflowReportProvider::class
 ];

@@ -28,6 +28,13 @@ return [
                 'inbox' => [ 'fa_name' => 'کارتابل', 'route-name' => 'simpleWorkflow.inbox.index' ],
             ]
         ],
+        'workflow-report' => [
+            'icon' => '',
+            'fa_name' => 'گزارشات کارتابل',
+            'submenu' => [
+                'list' => [ 'fa_name' => 'لیست', 'route-name' => 'simpleWorkflowReport.index' ],
+            ]
+        ],
         'workflow' => [
             'icon' => '',
             'fa_name' => 'گردش کار',

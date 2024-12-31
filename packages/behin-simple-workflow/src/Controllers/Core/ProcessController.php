@@ -84,9 +84,9 @@ class ProcessController extends Controller
         $inbox = InboxController::create($taskId, $case->id, $creator, 'new');
         if($redirect)
         {
+            // return InboxController::view($inbox->id);
             return redirect()->route('simpleWorkflow.inbox.view', $inbox->id);
         }
         return $inbox;
-        return InboxController::view($inbox->id);
     }
 }

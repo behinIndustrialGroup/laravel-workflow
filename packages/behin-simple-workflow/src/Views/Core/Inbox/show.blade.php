@@ -81,9 +81,6 @@
                     } else {
                         show_error(response.msg);
                     }
-                },
-                function(response) {
-                    show_error(response.msg);
                 }
             )
         }

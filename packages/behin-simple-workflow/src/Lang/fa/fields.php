@@ -82,6 +82,10 @@ return [
     'dispatched_expert' => 'کارشناس اعزامی',
     'washing' => 'شستشو',
     'reception title' => 'پذیرش',
-    'device information title' => 'اطلاعات دستگاه'
+    'device information title' => 'اطلاعات دستگاه',
+    'customer_workshop_or_ceo_name' => 'نام مشتری / کارگاه / مدیر عامل',
+    'visit_time'=> 'زمان مراجعه',
+    'dispatched_expert_needed' => 'نیاز به کارشناس اعزامی',
+    'refer_to_unit' => 'ارجاع به واحد',
 
 ];

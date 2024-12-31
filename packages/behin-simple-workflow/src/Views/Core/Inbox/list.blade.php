@@ -1,7 +1,7 @@
 @extends('behin-layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container table-responsive">
     <h2>{{ trans('User Inbox') }}</h2>
     @if(session('error'))
         <div class="alert alert-danger">

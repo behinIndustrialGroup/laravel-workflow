@@ -77,7 +77,7 @@ class ConditionController extends Controller
             $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
             // print($c);
             if(!$c){
-                print($value);
+                // print($value);
                 return false;
             }
         }

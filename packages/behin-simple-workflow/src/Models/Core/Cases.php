@@ -2,6 +2,7 @@
 
 namespace Behin\SimpleWorkflow\Models\Core;
 
+use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,9 +39,19 @@ class Cases extends Model
         return VariableController::getVariablesByCaseId($this->id);
     }
 
-    public function process(){
+    public function getVariable($name)
+    {
+        return VariableController::getVariable($this->process_id, $this->id, $name)?->value;
+    }
+
+    public function process()
+    {
         return $this->belongsTo(Process::class, 'process_id');
     }
 
-}
 
+    public function creator()
+    {
+        return User::find($this->creator);
+    }
+}

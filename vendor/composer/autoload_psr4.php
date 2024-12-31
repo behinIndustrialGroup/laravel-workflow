@@ -110,6 +110,7 @@ return array(
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'Behin\\Sms\\' => array($baseDir . '/packages/behin-sms/src'),
     'Behin\\SimpleWorkflow\\' => array($baseDir . '/packages/behin-simple-workflow/src'),
+    'Behin\\SimpleWorkflowReport\\' => array($baseDir . '/packages/behin-simple-workflow-report/src'),
     'Behin\\PMCaseNumbering\\' => array($baseDir . '/packages/behin-pm-case-numbering/src'),
     'BehinUserRoles\\' => array($baseDir . '/packages/behin-user-roles/src'),
     'BehinProcessMaker\\' => array($baseDir . '/packages/behin-process-maker/src'),
