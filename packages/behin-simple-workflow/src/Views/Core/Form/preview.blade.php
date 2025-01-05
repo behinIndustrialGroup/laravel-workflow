@@ -90,6 +90,17 @@
                     'readonly' => $readOnly,
                 ]) !!}
             @endif
+            @if ($fieldDetails->type == 'select-multiple')
+                {!! Form::selectMultiple($fieldId, is_string($fieldAttributes?->options) ? $fieldAttributes?->options : null, [
+                    'value' => json_decode($fieldValue),
+                    'query' => is_string($fieldAttributes?->query) ? $fieldAttributes?->query : null,
+                    'class' => 'form-control',
+                    'id' => $fieldId,
+                    'placeholder' => $fieldAttributes?->placeholder,
+                    'required' => $required,
+                    'readonly' => $readOnly,
+                ]) !!}
+            @endif
             @if ($fieldDetails->type == 'file')
                 @php
                     $fieldValues = isset($variables) ? $variables->where('key', $field->fieldName)->pluck('value') : [];

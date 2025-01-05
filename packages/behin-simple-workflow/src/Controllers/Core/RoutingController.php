@@ -35,12 +35,16 @@ class RoutingController extends Controller
         $caseId = $request->caseId;
 
         $vars = $request->all();
+        // return $vars;
 
         // return $vars;
         foreach ($vars as $key => $value) {
             if (gettype($value) == 'object') {
                 VariableController::saveFile($processId, $caseId, $key, $value);
             } else {
+                if(is_array($value)){
+                    $value = json_encode($value);
+                }
                 VariableController::save($processId, $caseId, $key, $value);
             }
         }
@@ -76,14 +80,41 @@ class RoutingController extends Controller
         if($result['status'] != 200){
             return $result;
         }
+
         $taskChildren = $task->children();
 
-        // return $taskChildren;
+        if ($task->next_element_id) {
+            $nextTask = TaskController::getById($task->next_element_id);
+            if ($error = taskHasError($nextTask->id)) {
+                return response()->json([
+                    'status' => 400,
+                    'msg' => 'next task error:' . $error['descriptions']
+                ]);
+            }
+            self::executeNextTask($nextTask, $caseId);
+        } else {
+            foreach ($taskChildren as $task) {
+                if ($error = taskHasError($task->id)) {
+                    return response()->json([
+                        'status' => 400,
+                        'msg' => 'next task error:' . $error['descriptions']
+                    ]);
+                }
+                $result = self::executeNextTask($task, $caseId);
+                if ($result == 'break') {
+                    break;
+                }
+            }
+        }
         if ($task->type == 'form') {
             if ($task->assignment_type == 'normal') {
-                InboxController::changeStatusByInboxId($request->inboxId, 'done');
-                //از این رکورد در اینباکس یک ردیف وجود دارد
-                // وضعیت همین رکورد باید در اینباکس به انجام شده تغییر کند
+                $inboxes = InboxController::getAllByTaskId($task->id);
+                foreach ($inboxes as $inbox) {
+                    InboxController::changeStatusByInboxId($inbox->id, 'done');
+                } 
+                // InboxController::changeStatusByInboxId($request->inboxId, 'done');
+                //از این رکورد در اینباکس یک یا چمد ردیف وجود دارد
+                // وضعیت همه رکوردها باید در اینباکس به انجام شده تغییر کند
             }
             if ($task->assignment_type == 'dynamic') {
                 InboxController::changeStatusByInboxId($request->inboxId, 'done');
@@ -91,19 +122,9 @@ class RoutingController extends Controller
                 // وضعیت همین رکورد باید در اینباکس به انجام شده تغییر کند
             }
             if ($task->assignment_type == 'parallel') {
+                InboxController::changeStatusByInboxId($inbox->id, 'done');
                 // از این رکورد چند ردیف در اینباکس وجود دارد
                 // همه باید وضعیت انجام شده تغییر کنند
-            }
-        }
-        if ($task->next_element_id) {
-            $nextTask = TaskController::getById($task->next_element_id);
-            self::executeNextTask($nextTask, $caseId);
-        } else {
-            foreach ($taskChildren as $task) {
-                $result = self::executeNextTask($task, $caseId);
-                if ($result == 'break') {
-                    break;
-                }
             }
         }
         return response()->json([

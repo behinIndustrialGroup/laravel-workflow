@@ -10,13 +10,16 @@
 
 @section('content')
     <div class="container">
+        <div class="card row col-sm-12 p-2">
+            <a href="{{ route('simpleWorkflow.form.index') }}" class="btn btn-primary col-sm-2">{{ trans('Back To Forms') }}</a>
+        </div>
         <div class="card row col-sm-12">
-
             <div class="col-md-12">
                 <form action="{{ route('simpleWorkflow.form.update') }}" method="POST" class="mb-3">
                     @csrf
                     <input type="hidden" name="formId" value="{{ $form->id }}">
-
+                    <label for="">{{ trans('Form Name') }}:</label>
+                    <input type="text" name="name" value="{{ $form->name }}" class="form-control" id="">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -32,8 +35,8 @@
                         <tbody>
                             @if (is_array($content))
                                 @foreach ($content as $field)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                    <tr id="tr_{{ $index }}">
+                                        <td>{{ $index + 1 }} </td>
                                         <td><input type="text" name="order[{{ $index }}]" id="" class="form-control text-center"
                                                 value="{{ isset($field->order) ? $field->order : '' }}"></td>
                                         <td><input type="text" name="fieldName[{{ $index }}]" class="form-control text-center"
@@ -105,5 +108,10 @@
 @section('script')
     <script>
         initial_view();
+
+        function deleteField(index) {
+            $('#tr_' + index).remove();
+        }
+
     </script>
 @endsection

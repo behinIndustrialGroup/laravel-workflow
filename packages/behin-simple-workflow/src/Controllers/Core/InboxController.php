@@ -35,6 +35,11 @@ class InboxController extends Controller
         ]);
     }
 
+    public static function getAllByTaskId($taskId): Collection
+    {
+        return Inbox::where('task_id', $taskId)->get();
+    }
+
     public static function changeStatusByInboxId($inboxId, $status)
     {
         $inboxRow = self::getById($inboxId);

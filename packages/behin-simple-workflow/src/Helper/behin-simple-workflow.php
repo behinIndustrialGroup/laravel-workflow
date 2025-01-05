@@ -57,6 +57,12 @@ if (!function_exists('previewForm')) {
     }
 }
 
+if (!function_exists('taskHasError')) {
+    function taskHasError($taskId) {
+        return TaskController::TaskHasError($taskId);
+    }
+}
+
 
 
 

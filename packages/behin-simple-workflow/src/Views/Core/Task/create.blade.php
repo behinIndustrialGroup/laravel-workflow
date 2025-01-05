@@ -4,6 +4,7 @@
 
 @section('content')
     <div class="container">
+
         <h2>{{ $process->name }}</h2>
         @foreach ($process->startTasks() as $task)
             @php
@@ -13,6 +14,9 @@
             <div class="panel panel-default">
                 @csrf
                 <div class="panel-heading p-2 bg-light">
+                    @if ($error = taskHasError($task->id))
+                        <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
+                    @endif
                     <strong class="panel-title">
                         <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
                         <span class="badge {{ $bgColor }}">
@@ -23,12 +27,12 @@
                             <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
                                 {{ $task->executive_element_id ? $task->executiveElement()->name : '' }}
                             </span>
-                            @if($task->assignment_type)
+                            @if ($task->assignment_type)
                                 <span class="badge {{ $bgColor }}">{{ trans('Assignment') }}:
                                     {{ $task->assignment_type }}
                                 </span>
                             @endif
-                            @if($task->actors()->count() > 0)
+                            @if ($task->actors()->count() > 0)
                                 <span class="badge bg-info">{{ trans('Actors') }}:
                                     {{ $task->actors()->pluck('actor')->implode(', ') }}
                                 </span>

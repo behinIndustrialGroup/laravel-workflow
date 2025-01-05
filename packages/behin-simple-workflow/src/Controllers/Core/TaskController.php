@@ -63,4 +63,35 @@ class TaskController extends Controller
         return Task::where('process_id', $process_id)->whereColumn('id', 'parent_id')->get();
     }
 
+    public static function TaskHasError($taskId){
+        $task = TaskController::getById($taskId);
+        $hasError = 0;
+        if($task->type == 'form'){
+            // $hasError++;
+            if($task->actors()->count() == 0){
+                $hasError++;
+                $descriptions = 'don\'t have actor';
+            }
+        }
+        if($task->type == 'condition'){
+            if($task->executive_element_id == null){
+                $hasError++;
+                $descriptions = 'don\'t have executive element';
+            }
+        }
+        if($task->type == 'script'){
+            if($task->executive_element_id == null){
+                $hasError++;
+                $descriptions = 'don\'t have executive element';
+            }
+        }
+        if($hasError > 0){
+            return [
+                'hasError' => $hasError,
+                'descriptions' => $descriptions,
+            ];
+        }
+        return false;
+    }
+
 }

@@ -89,4 +89,15 @@ class ProcessController extends Controller
         }
         return $inbox;
     }
+
+    public static function processHasError($processId){
+        $process = ProcessController::getById($processId);
+        $hasError = 0;
+        foreach($process->tasks() as $task){
+            if(TaskController::TaskHasError($task->id)){
+                $hasError++;
+            }
+        }
+        return $hasError;
+    }
 }

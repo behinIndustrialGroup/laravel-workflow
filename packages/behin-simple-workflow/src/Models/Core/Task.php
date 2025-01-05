@@ -51,6 +51,10 @@ class Task extends Model
         return Task::where('parent_id', $this->id)->whereNot('id', $this->id)->get();
     }
 
+    public function errors(){
+        return TaskController::TaskHasError($this->id);
+    }
+
     public function executiveElement(){
         if($this->type == 'form'){
             return FormController::getById($this->executive_element_id);

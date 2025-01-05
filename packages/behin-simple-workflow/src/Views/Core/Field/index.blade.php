@@ -20,7 +20,7 @@
                 {{ session('success') }}
             </div>
         @endif
-        <table class="table table-strpped" dir="ltr">
+        <table class="table table-strpped" dir="ltr" id="table">
             <thead>
                 <tr>
                     <th>{{ trans('ID') }}</th>
@@ -59,6 +59,7 @@
                                 <option value="text">text</option>
                                 <option value="date">date</option>
                                 <option value="select">select</option>
+                                <option value="select-multiple">select-multiple</option>
                                 <option value="file">file</option>
                                 <option value="checkbox">checkbox</option>
                                 <option value="radio">radio</option>
@@ -75,4 +76,11 @@
             </tfoot>
         </table>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        initial_view();
+        $('#table').DataTable({});
+    </script>
 @endsection

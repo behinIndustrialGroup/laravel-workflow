@@ -22,7 +22,7 @@ class TitleField extends AbstractField
             }
         }
         $s .= '>';
-        $s .= trans('SimpleWorkflowLang::fields.' . $this->name);
+        $s .= trans('fields.' . $this->name);
 
         $s .= '</div>';
         return $s;

@@ -47,6 +47,13 @@ return [
                 'fields' => [ 'fa_name' => 'فیلدها', 'route-name' => 'simpleWorkflow.fields.index' ],
             ]
         ],
+        'translations' => [
+            'icon' => 'fa fa-language',
+            'fa_name' => 'ترجمه',
+            'submenu' => [
+                'index' => [ 'fa_name' => 'ترجمه', 'route-name' => '', 'route-url' => '/translations' ],
+            ]
+        ],
         'cases-report' => [
             'icon' => 'fa fa-list',
             'fa_name' => 'گزارشات کارپوشه',

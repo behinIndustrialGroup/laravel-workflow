@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '063371e2cf03383ee1e8f2f3cf4bebfa0558fb63',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'barryvdh/laravel-translation-manager' => array(
+            'pretty_version' => 'v0.6.6',
+            'version' => '0.6.6.0',
+            'reference' => 'fef5b8e6318d8cab0b2a082ed222a8b72c071ee2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../barryvdh/laravel-translation-manager',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'brianium/paratest' => array(
             'pretty_version' => 'v7.4.3',
             'version' => '7.4.3.0',
@@ -425,9 +434,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '063371e2cf03383ee1e8f2f3cf4bebfa0558fb63',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

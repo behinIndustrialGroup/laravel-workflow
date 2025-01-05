@@ -30,7 +30,7 @@ class CheckboxField extends AbstractField
             }
         }
         $s .= '>&nbsp;';
-        $s .= trans('SimpleWorkflowLang::fields.' . $this->name);
+        $s .= trans('fields.' . $this->name);
         if($this->attributes['required'] == 'on'){
             $s .= ' <span class="text-danger">*</span>';
         }

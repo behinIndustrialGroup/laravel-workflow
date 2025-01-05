@@ -12,16 +12,16 @@
             </thead>
             <tbody>
                 @foreach ($forms as $form)
-                    <form action="{{ route('simpleWorkflow.form.store') }}" method="POST">
                         @csrf
                         <tr>
                             <td>{{ $form->id }} <input type="hidden" name="id" value="{{ $form->id }}"></td>
                             <td>{{ $form->name }}</td>
                             <td><a class="btn btn-success"
                                     href="{{ route('simpleWorkflow.form.edit', ['id' => $form->id]) }}">{{ trans('Edit') }}</a>
+                                    <button class="btn btn-info"><i class="fa fa-copy" onclick="copyForm('{{ $form->id }}')"></i></button>
+                                    <button class="btn btn-danger" onclick="deleteForm('{{ $form->id }}')"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>
-                    </form>
                 @endforeach
             </tbody>
             <tfoot>
@@ -53,6 +53,34 @@
                 }
             )
 
+        }
+
+        function copyForm(id) {
+            var fd = new FormData();
+            fd.append('id', id);
+            send_ajax_formdata_request(
+                "{{ route('simpleWorkflow.form.copy') }}",
+                fd,
+                function(response) {
+                    console.log(response);
+                    show_message(response.msg)
+                    location.reload();
+                }
+            )
+        }
+
+        function deleteForm(id) {
+            var fd = new FormData();
+            fd.append('id', id);
+            send_ajax_formdata_request_with_confirm(
+                "{{ route('simpleWorkflow.form.delete') }}",
+                fd,
+                function(response) {
+                    console.log(response);
+                    show_message(response.msg)
+                    location.reload();
+                }
+            )
         }
     </script>
 @endsection

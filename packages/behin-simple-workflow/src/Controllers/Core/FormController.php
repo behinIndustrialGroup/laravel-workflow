@@ -32,7 +32,7 @@ class FormController extends Controller
     }
 
     public function index(){
-        $forms = Form::get();
+        $forms = Form::orderBy('created_at', 'desc')->get();
         return view('SimpleWorkflowView::Core.Form.list')->with([
             'forms' => $forms
         ]);
@@ -64,6 +64,7 @@ class FormController extends Controller
             $index++;
         }
         $form->content = json_encode($ar);
+        $form->name = $request->name;
         $form->save();
         return redirect()->back();
     }
@@ -110,6 +111,27 @@ class FormController extends Controller
         $form = self::getById($id);
         return view('SimpleWorkflowView::Core.Form.preview')->with([
             'form' => $form
+        ]);
+    }
+
+    public static function copy(Request $request){
+        $form = self::getById($request->id);
+        $newForm = new Form();
+        $newForm->name = $form->name . ' - Copy';
+        $newForm->executive_file = $form->executive_file;
+        $newForm->content = $form->content;
+        $newForm->save();
+        return response()->json([
+            'msg' => trans('Form copied successfully'),
+            'id' => $newForm->id
+        ]);
+    }
+
+    public static function delete(Request $request){
+        $form = self::getById($request->id);
+        $form->delete();
+        return response()->json([
+            'msg' => trans('Form deleted successfully')
         ]);
     }
 }

@@ -8,7 +8,7 @@ class TextField extends AbstractField
     {
         $s = '<div class="form-group">';
         $s .= '<label>';
-        $s .= trans('SimpleWorkflowLang::fields.' . $this->name);
+        $s .= trans('fields.' . $this->name);
         if($this->attributes['required'] == 'on'){
             $s .= ' <span class="text-danger">*</span>';
         }

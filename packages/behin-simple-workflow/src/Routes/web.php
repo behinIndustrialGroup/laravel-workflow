@@ -37,6 +37,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('update', [ FormController::class, 'update' ])->name('update');
         Route::post('store', [ FormController::class, 'store' ])->name('store');
         Route::post('create', [ FormController::class, 'createForm' ])->name('create');
+        Route::post('copy', [ FormController::class, 'copy' ])->name('copy');
+        Route::post('delete', [ FormController::class, 'delete' ])->name('delete');
     });
 
     Route::resource('scripts', ScriptController::class);
