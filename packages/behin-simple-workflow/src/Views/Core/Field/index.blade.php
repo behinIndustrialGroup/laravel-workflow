@@ -5,7 +5,35 @@
 @endsection
 
 @section('content')
-    <div class="container">
+<div class="container card p-3">
+    <form action="{{ route('simpleWorkflow.fields.store') }}" method="POST" class="row">
+        @csrf
+        <div class="col-sm-4">
+            <input type="text" name="name" class="form-control text-center">
+        </div>
+        <div class="col-sm-4">
+            <select name="type" id="" class="form-control select2">
+                <option value="string">string</option>
+                <option value="number">number</option>
+                <option value="text">text</option>
+                <option value="date">date</option>
+                <option value="select">select</option>
+                <option value="select-multiple">select-multiple</option>
+                <option value="file">file</option>
+                <option value="checkbox">checkbox</option>
+                <option value="radio">radio</option>
+                <option value="title">title</option>
+                <option value="location">location</option>
+                <option value="div">div</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <button class="btn btn-default">{{ trans('Create') }}</button>
+        </div>
+
+    </form>
+</div>
+    <div class="container card">
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -48,33 +76,10 @@
 
             </tbody>
             <tfoot id="createForm">
-                <form action="{{ route('simpleWorkflow.fields.store') }}" method="POST" >
-                    @csrf
-                    <tr>
-                        <td></td>
-                        <td><input type="text" name="name" class="form-control text-center"></td>
-                        <td class="text-center form-select"><select name="type" id="">
-                                <option value="string">string</option>
-                                <option value="number">number</option>
-                                <option value="text">text</option>
-                                <option value="date">date</option>
-                                <option value="select">select</option>
-                                <option value="select-multiple">select-multiple</option>
-                                <option value="file">file</option>
-                                <option value="checkbox">checkbox</option>
-                                <option value="radio">radio</option>
-                                <option value="title">title</option>
-                                <option value="location">location</option>
-                                <option value="div">div</option>
-                            </select></td>
-                            <td>
-                                <button class="btn btn-default">{{ trans('Create') }}</button>
-                            </td>
-                    </tr>
-
-                </form>
+                
             </tfoot>
         </table>
+        
     </div>
 @endsection
 
