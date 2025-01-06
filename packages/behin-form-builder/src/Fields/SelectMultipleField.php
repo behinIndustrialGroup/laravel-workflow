@@ -37,7 +37,7 @@ class SelectMultipleField extends AbstractField
         if (($this->attributes['query'])) {
             $sqlOptions = DB::select($this->attributes['query']);
             foreach ($sqlOptions as $option) {
-                $values = $this->attributes['value'];
+                $values = is_array($this->attributes['value']) ? $this->attributes['value'] : [];
                 $selected = in_array($option->value, $values) ? 'selected' : '';
                 $s .= "<option value='$option->value' $selected >$option->label</option>";
             }
@@ -45,9 +45,9 @@ class SelectMultipleField extends AbstractField
         if (is_string($this->attributes['options'])) {
             $options = explode("\r\n", $this->attributes['options']);
             foreach ($options as $option) {
-                $values = $this->attributes['value'];
+                $values = is_array($this->attributes['value']) ? $this->attributes['value'] : [];
                 $selected = in_array($option, $values) ? 'selected' : '';
-                $s .= "<option value='$option' $selected >$option $values</option>";
+                $s .= "<option value='$option' $selected >$option</option>";
             }
         }
 
