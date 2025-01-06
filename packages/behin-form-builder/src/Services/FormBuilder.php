@@ -16,6 +16,7 @@ use MyFormBuilder\Fields\DivField;
 use MyFormBuilder\Fields\LocationField;
 use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
+use MyFormBuilder\Fields\SelectMultipleField;
 
 class FormBuilder
 {
@@ -131,6 +132,26 @@ class FormBuilder
 
 
         return (new SelectField($name, $attributes))->render();
+        if (is_array($name)) {
+            $attributes = $name;
+            $name = $attributes['name'] ?? '';
+            $options = $attributes['options'] ?? [];
+            unset($attributes['name'], $attributes['options']);
+        }
+
+        $attributes['options'] = $options;
+        $field = $this->fieldFactory->create('select', $name, $attributes);
+        $this->fields[] = new SelectField($name, $field);
+        return $this;
+    }
+
+    public function selectMultiple($name, $options, $attributes = [])
+    {
+        $attributes = $attributes ?? [];
+        $attributes['options'] = $options;
+
+
+        return (new SelectMultipleField($name, $attributes))->render();
         if (is_array($name)) {
             $attributes = $name;
             $name = $attributes['name'] ?? '';
