@@ -39,7 +39,7 @@
             </select>
         </div>
 
-        @if ($field->type == 'select')
+        @if ($field->type == 'select' || $field->type == 'select-multiple')
             <div class="mb-3">
                 <label for="options" class="form-label">{{ trans('Options') }}</label>
                 <span>هر گزینه در یک خط</span>
