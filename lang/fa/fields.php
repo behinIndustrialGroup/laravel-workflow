@@ -150,4 +150,5 @@ return array (
   'dispatched_expert_needed' => 'اعزام کارشناس لازم است',
   'refer_to_unit' => 'ارجاع به واحد',
   'mapa_expert_companions' => 'همراهان کارشناس مپا',
+  'You have no items in your inbox' => 'رکوردی در کارتابل شما وجود ندارد',
 );

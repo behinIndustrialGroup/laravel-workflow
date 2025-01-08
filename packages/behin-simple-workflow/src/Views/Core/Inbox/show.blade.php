@@ -80,6 +80,8 @@
                 function(response) {
                     console.log(response);
                     if (response.status == 200) {
+                        show_message('{{ trans('fields.Saved') }}')
+                        // window.close();                        
                         window.location.href = '{{ route('simpleWorkflow.inbox.index') }}';
                     } else {
                         show_error(response.msg);

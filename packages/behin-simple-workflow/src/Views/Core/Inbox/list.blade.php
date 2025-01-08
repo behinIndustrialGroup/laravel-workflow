@@ -1,5 +1,8 @@
 @extends('behin-layouts.app')
 
+@section('title')
+    کارتابل
+@endsection
 @section('content')
     <div class="container table-responsive card p-2">
         <h2>{{ trans('fields.User Inbox') }}</h2>
@@ -9,9 +12,9 @@
             </div>
         @endif
         @if ($rows->isEmpty())
-            {{-- <div class="alert alert-info">
-            {{ trans('You have no items in your inbox.') }}
-        </div> --}}
+            <div class="alert alert-info">
+                {{ trans('fields.You have no items in your inbox') }}
+            </div>
         @else
             <table class="table table-striped" id="inbox-list">
                 <thead>
@@ -46,14 +49,15 @@
                             <td>{{ $row->created_at->format('Y-m-d H:i') }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.view', $row->id) }}"
-                                    class="btn btn-sm btn-primary">{{ trans('fields.View') }}</a>
+                                    class="btn btn-sm btn-primary">{{ trans('fields.View') }}<i
+                                        class="fa fa-external-link"></i></a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         @endif
-        
+
     </div>
 @endsection
 
