@@ -36,6 +36,8 @@
                 <option value="radio" @if ($field->type == 'radio') selected @endif>{{ trans('Radio') }}</option>
                 <option value="title" @if ($field->type == 'title') selected @endif>{{ trans('Title') }}</option>
                 <option value="location" @if ($field->type == 'location') selected @endif>{{ trans('Location') }}</option>
+                <option value="signature" @if ($field->type == 'signature') selected @endif>{{ trans('Signature') }}</option>
+                <option value="div" @if ($field->type == 'div') selected @endif>{{ trans('Div') }}</option>
             </select>
         </div>
 

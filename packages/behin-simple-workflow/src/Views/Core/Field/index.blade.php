@@ -24,6 +24,7 @@
                 <option value="radio">radio</option>
                 <option value="title">title</option>
                 <option value="location">location</option>
+                <option value="signature">signature</option>
                 <option value="div">div</option>
             </select>
         </div>

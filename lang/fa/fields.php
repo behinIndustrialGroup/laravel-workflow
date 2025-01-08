@@ -151,4 +151,8 @@ return array (
   'refer_to_unit' => 'ارجاع به واحد',
   'mapa_expert_companions' => 'همراهان کارشناس مپا',
   'You have no items in your inbox' => 'رکوردی در کارتابل شما وجود ندارد',
+  'Download' => 'دانلود',
+  'customer_signature' => 'امضای مشتری',
+  'Set' => 'تنظیم',
+  'Clear' => 'پاک کردن',
 );

@@ -2,6 +2,7 @@
     $content = json_decode($form->content);
     $content = collect($content)->sortBy('order')->toArray();
 @endphp
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 <div class="row">
     @foreach ($content as $field)
         @php
@@ -131,6 +132,19 @@
                     'readonly' => $readOnly,
                     'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
                     'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                ]) !!}
+            @endif
+            @if ($fieldDetails->type == 'signature')
+                {!! Form::signature($fieldId, [
+                    'value' => $fieldValue,
+                    'class' => 'form-control',
+                    'id' => $fieldId,
+                    'placeholder' => $fieldAttributes?->placeholder,
+                    'required' => $required,
+                    'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                    'datalist_from_database' => isset($fieldAttributes?->datalist_from_database) ? $fieldAttributes?->datalist_from_database : null,
                 ]) !!}
             @endif
         </div>

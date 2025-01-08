@@ -17,6 +17,7 @@ use MyFormBuilder\Fields\LocationField;
 use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
 use MyFormBuilder\Fields\SelectMultipleField;
+use MyFormBuilder\Fields\SignatureField;
 
 class FormBuilder
 {
@@ -74,6 +75,15 @@ class FormBuilder
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new TextField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function signature(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new SignatureField($name, $attributes))->render();
         return $this;
     }
 
