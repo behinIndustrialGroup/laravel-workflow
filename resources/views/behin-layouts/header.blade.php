@@ -47,6 +47,12 @@ use App\CustomClasses\Access;
                 <a href="{{ url('admin/messages/list') }}" class="dropdown-item dropdown-footer">نمایش تماام پیام ها</a>
             </div>
         </li> --}}
+        <li class="mr-4">
+            <a href="{{ url('admin') }}" class="">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+
         @include('TodoListViews::partial-views.todo-list-icon')
 
         @include('UserProfileViews::partial-views.user-profile-icon')
