@@ -155,4 +155,5 @@ return array (
   'customer_signature' => 'امضای مشتری',
   'Set' => 'تنظیم',
   'Clear' => 'پاک کردن',
+  'customer_name' => 'نام مشتری',
 );
