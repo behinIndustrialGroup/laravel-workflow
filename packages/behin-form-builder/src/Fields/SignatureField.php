@@ -14,7 +14,7 @@ class SignatureField extends AbstractField
         if ($this->attributes['required'] == 'on') {
             $s .= ' <span class="text-danger">*</span>';
         }
-        $s .= '</label>';
+        $s .= '</label><br>';
         if (isset($this->attributes['value'])) {
             $s .= '<br>';
             $s .= '<a href="' . $this->attributes['value'] . '" target="_blank" download>' . trans('fields.Download') . ' ' . trans('fields.' . $this->name) . '</a><br>';
