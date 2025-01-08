@@ -2,7 +2,7 @@
     $content = json_decode($form->content);
     $content = collect($content)->sortBy('order')->toArray();
 @endphp
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<script src="{{ url('packages/behin-form-builder/src/js/signature_pad.umd.min.js') }}"></script>
 <div class="row">
     @foreach ($content as $field)
         @php
