@@ -25,7 +25,8 @@ class Process extends Model
     }
 
     protected $fillable = [
-        'name'
+        'name',
+        'report_form_id',
     ];
 
     function cases(){

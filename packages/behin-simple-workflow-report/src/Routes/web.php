@@ -9,11 +9,50 @@ use Behin\SimpleWorkflow\Controllers\Core\RoutingController;
 use Behin\SimpleWorkflow\Controllers\Core\ScriptController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskActorController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
+use Behin\SimpleWorkflow\Models\Core\Cases;
+use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
+use BehinProcessMaker\Models\PMVariable;
+use BehinProcessMaker\Models\PmVars;
 use Illuminate\Support\Facades\Route;
 
-Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['web', 'auth'])->group(function(){
+Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['web', 'auth'])->group(function () {
     Route::get('index', [ReportController::class, 'index'])->name('index');
     Route::resource('report', ReportController::class);
-
+    Route::resource('fin-report', FinReportController::class);
+    Route::get('import', function () {
+        $cases = PmVars::groupBy('case_id')->get();
+        foreach ($cases as $case) {
+            $number = PmVars::where('case_id', $case->case_id)->where('key', 'case_number')->first()?->value;
+            $number = $number ? $number : 1;
+            $creator = PmVars::where('case_id', $case->case_id)->where('key', 'crm_user_creator')->first()?->value;
+            $creator = $creator ? $creator : 1;
+            $name = PmVars::where('case_id', $case->case_id)->where('key', 'device_serial_no')->first()?->value;
+            $name = 'سریال نامبر: ' . $name;
+            $newCase = Cases::create([
+                'process_id' => '879e001c-59d5-4afb-958c-15ec7ff269d1',
+                'number' => $number,
+                'name' => $name,
+                'creator' => $creator
+            ]);
+            $vars = PmVars::where('case_id', $case->case_id)->get()->each(function ($row) use ($newCase) {
+                $row->process_id = '879e001c-59d5-4afb-958c-15ec7ff269d1';
+                $row->case_id = $newCase->id;
+            })->toArray();
+            foreach ($vars as $var) {
+                Variable::create($var);
+            }
+        }
+        // $cases = Variable::where('key', 'case_number')->get();
+        // foreach($cases as $case){
+        //     $newCase = Cases::create([
+        //         'process_id' => $case->process_id,
+        //         'number' => $case->value ? $case->value : 1,
+        //         'name' => '',
+        //         'creator' => 1
+        //     ]);
+        //     Variable::where('case_id', $case->case_id)->update(['case_id' => $newCase->id]);
+        // }
+    });
 });

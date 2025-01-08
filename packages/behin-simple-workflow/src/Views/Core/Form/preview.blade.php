@@ -21,6 +21,8 @@
                     'value' => $fieldValue,
                     'class' => '',
                     'id' => $fieldId,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'location')
@@ -37,6 +39,8 @@
                     'defaultZoom' => 13,
                     'defaultLat' => $defaultLat,
                     'defaultLng' => $defaultLng,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'string')
@@ -47,6 +51,9 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                    'datalist_from_database' => isset($fieldAttributes?->datalist_from_database) ? $fieldAttributes?->datalist_from_database : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'checkbox')
@@ -57,6 +64,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'text')
@@ -67,6 +76,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'date')
@@ -77,6 +88,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'select')
@@ -88,6 +101,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'select-multiple')
@@ -99,6 +114,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
             @if ($fieldDetails->type == 'file')
@@ -112,6 +129,8 @@
                     'placeholder' => $fieldAttributes?->placeholder,
                     'required' => $required,
                     'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                 ]) !!}
             @endif
         </div>

@@ -107,6 +107,64 @@
 
         </div>
     </form>
+    <div class="panel-heading p-4 bg-white mt-3">
+        <table class="table table-stripped">
+            <thead>
+                <tr>
+                    <td>{{ trans('Row') }}</td>
+                    <td>{{ trans('ID') }}</td>
+                    <td>{{ trans('Task') }}</td>
+                    <td>{{ trans('Task Assignment Type') }}</td>
+                    <td>{{ trans('Actor') }}</td>
+                    <td>{{ trans('Created at') }}</td>
+                    <td>{{ trans('Action') }}</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($task->actors as $key => $value)
+                    <tr>
+                        <td>{{ $key + 1 }} </td>
+                        <td>{{ $value->id }}</td>
+                        <td>{{ $value->task->name }}</td>
+                        <td>{{ $value->task->assignment_type }}</td>
+                        <td>{{ is_numeric($value->actor) ? getUserInfo($value->actor)->name : $value->actor }}</td>
+                        <td>{{ $value->created_at }}</td>
+                        <td>
+                            <form action="{{ route('simpleWorkflow.task-actors.destroy', $value->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button >{{ trans('Delete') }}</button></td>
+                            </form>
+
+                    </tr>
+                @endforeach
+            </tbody>
+            <form action="{{ route('simpleWorkflow.task-actors.store') }}" method="POST">
+                @csrf
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <input type="text" name="task_id" id="" value="{{ $task->id }}" class="d-none">
+                            <input type="text" name="task_name" id="" value="{{ $task->name }}" class="form-control">
+                        </td>
+                        <td></td>
+                        <td>
+                            <input type="text" name="actor" id="" list="actors">
+                            
+
+                            <datalist id="actors">
+                                @foreach (App\Models\User::all() as $actor)
+                                    <option value="{{ $actor->id }}">{{ $actor->name }}</option>
+                                @endforeach
+                            </datalist>
+                        </td>
+                        <td><button>{{ trans('Create') }}</button></td>
+                    </tr>
+                </tfoot>
+            </form>
+    </div>
 @endsection
 
 @section('script')

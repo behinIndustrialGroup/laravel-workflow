@@ -10,7 +10,10 @@
     <div class="row bg-dark p-2">
         <div class="col-md-12">
             <h2>{{ $task->name }} - {{ $inbox->case_name }}</h2>
-            {{ $case->id }}
+        {{ trans('fields.Case Number') }}: {{ $case->number }} <br>
+        {{ trans('fields.Creator') }}: {{ getUserInfo($case->creator)->name }} <br>
+        {{ trans('fields.Created At') }}: <span dir="ltr">{{ $case->created_at->format('Y-m-d H:i') }}</span>
+            <span class="badge color-dark" style="float: left; color: dark">{{ $case->id }}</span>
         </div>
     </div>
     @if ($errors->any())
@@ -40,9 +43,9 @@
 
     <div class="row bg-white p-2 mt-2">
         <button class="btn btn-primary btn-sm m-1"
-            onclick="saveForm()">{{ trans('SimpleWorkflowLang::fields.Save') }}</button>
+            onclick="saveForm()">{{ trans('fields.Save') }}</button>
         <button class="btn btn-danger btn-sm m-1"
-            onclick="saveAndNextForm()">{{ trans('SimpleWorkflowLang::fields.Save and next') }}</button>
+            onclick="saveAndNextForm()">{{ trans('fields.Save and next') }}</button>
     </div>
 @endsection
 

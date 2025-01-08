@@ -26,6 +26,6 @@ class SimpleWorkflowProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__. '/Migrations');
         $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
         $this->loadViewsFrom(__DIR__. '/Views', 'SimpleWorkflowView');
-        $this->loadTranslationsFrom(__DIR__ . '/Lang', 'SimpleWorkflowLang');
+        $this->loadTranslationsFrom('/lang', 'SimpleWorkflowLang');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace MyFormBuilder\Fields;
 
+use Illuminate\Support\Facades\DB;
+
 class TextField extends AbstractField
 {
     public function render(): string
@@ -14,7 +16,9 @@ class TextField extends AbstractField
         }
         $s .= '</label>';
         $s .= '<input type="text" name="' . $this->name . '" ';
-
+        if(isset($this->attributes['datalist_from_database'])){
+            $s .= 'list="' . $this->name . '_list" ';
+        }
         foreach($this->attributes as $key => $value){
             if($key == 'required'){
                 if($value == 'on'){
@@ -25,11 +29,28 @@ class TextField extends AbstractField
                 if($value == 'on'){
                     $s .= 'readonly ';
                 }
-            }else{
+            }
+            elseif($key == 'script' || $key == 'datalist_from_database'){
+
+            }
+            else{
                 $s .= $key . '="' . $value . '" ';
             }
         }
         $s .= '>';
+        if(isset($this->attributes['script'])){
+            $s .= '<script>';
+            $s .= $this->attributes['script'];
+            $s .= '</script>';
+        }
+        if(isset($this->attributes['datalist_from_database'])){
+            $s .= '<datalist id="' . $this->name . '_list">';
+            $sqlOptions = DB::select($this->attributes['datalist_from_database']);
+            foreach ($sqlOptions as $option) {
+                $s .= "<option value='$option->value'>$option->label</option>";
+            }
+            $s .= '</datalist>';
+        }
         $s .= '</div>';
         return $s;
         if (!isset($this->attributes['type'])) {

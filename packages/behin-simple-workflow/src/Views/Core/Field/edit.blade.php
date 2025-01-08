@@ -60,6 +60,22 @@
             <input type="text" name="placeholder" id="placeholder" class="form-control" value="{{ $attributes?->placeholder }}">
         </div>
 
+        <div class="mb-3">
+            <label for="style" class="form-label">Style</label>
+            <textarea name="style" id="style" class="form-control" rows="4" dir="ltr">{{ isset($attributes->style) && is_string($attributes?->style) ? $attributes?->style : '' }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="script" class="form-label">Script</label>
+            <textarea name="script" id="script" class="form-control" rows="4" dir="ltr">{{ isset($attributes->script) && is_string($attributes?->script) ? $attributes?->script : '' }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="datalist" class="form-label">Datalist From Database</label>
+            باید شامل value و label باشد
+            <textarea name="datalist_from_database" id="datalist" class="form-control" rows="4" dir="ltr">{{ isset($attributes->datalist_from_database) && is_string($attributes?->datalist_from_database) ? $attributes?->datalist_from_database : '' }}</textarea>
+        </div>
+
         <button class="btn btn-primary">{{ trans('Update') }}</button>
     </form>
 

@@ -12,7 +12,7 @@
             <input type="text" name="name" class="form-control text-center">
         </div>
         <div class="col-sm-4">
-            <select name="type" id="" class="form-control select2">
+            <select name="type" id="" class="form-control">
                 <option value="string">string</option>
                 <option value="number">number</option>
                 <option value="text">text</option>
@@ -28,12 +28,12 @@
             </select>
         </div>
         <div class="col-sm-4">
-            <button class="btn btn-default">{{ trans('Create') }}</button>
+            <button class="btn btn-default">{{ trans('fields.Create') }}</button>
         </div>
 
     </form>
 </div>
-    <div class="container card">
+    <div class="container card p-3 table-responsive">
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -48,13 +48,14 @@
                 {{ session('success') }}
             </div>
         @endif
-        <table class="table table-strpped" dir="ltr" id="table">
+        <table class="table table-strpped" id="table">
             <thead>
                 <tr>
                     <th>{{ trans('ID') }}</th>
-                    <th>{{ trans('Name') }}</th>
-                    <th>{{ trans('Type') }}</th>
-                    <th>{{ trans('Actions') }}</th>
+                    <th class="text-left">{{ trans('fields.Name') }}</th>
+                    <th class="text-left">{{ trans('fields.Name') }}</th>
+                    <th class="text-left">{{ trans('fields.Type') }}</th>
+                    <th>{{ trans('fields.Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,12 +65,13 @@
                     @endphp
                     <tr>
                         <td>{{ $key }}</td>
-                        <td class="text-center">{{ $field->name }}</td>
-                        <td class="text-center">{{ $field->type }}</td>
+                        <td class="text-left">{{ trans("fields.".$field->name) }}</td>
+                        <td class="text-left">{{ $field->name }}</td>
+                        <td class="text-left">{{ $field->type }}</td>
 
                         <td>
-                            <a href="{{ route('simpleWorkflow.fields.edit', $field->id) }}" class="btn btn-default">{{ trans('Edit') }}</a>
-                            <button class="btn btn-danger">{{ trans('Delete') }}</button>
+                            <a href="{{ route('simpleWorkflow.fields.edit', $field->id) }}" class="btn btn-default">{{ trans('fields.Edit') }}</a>
+                            <button class="btn btn-danger">{{ trans('fields.Delete') }}</button>
                         </td>
                     </tr>
                 @endforeach
@@ -86,6 +88,10 @@
 @section('script')
     <script>
         initial_view();
-        $('#table').DataTable({});
+        $('#table').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            }
+        });
     </script>
 @endsection

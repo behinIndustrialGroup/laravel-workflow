@@ -29,7 +29,10 @@ class FieldController extends Controller
         ]);
         $attributes = [
             'query' => $request->query ? $request->query : null,
-            'placeholder' => $request->placeholder
+            'placeholder' => $request->placeholder,
+            'style' => $request->style,
+            'script' => $request->script,
+            'datalist_from_database' => $request->datalist_from_database
         ];
 
         Fields::create([
@@ -52,7 +55,10 @@ class FieldController extends Controller
         $attributes = [
             'query' => $request->input('query') ? $request->input('query') : null,
             'placeholder' => $request->placeholder,
-            'options' => $request->options ? $request->options : null
+            'options' => $request->options ? $request->options : null,
+            'style' => $request->style,
+            'script' => $request->script,
+            'datalist_from_database' => $request->datalist_from_database
         ];
         $field->update([
             'name' => $request->name,
@@ -73,22 +79,5 @@ class FieldController extends Controller
 
     public static function getByName($fieldName) {
         return Fields::where('name', $fieldName)->first();
-    }
-
-    public static function runCondition($id, $caseId)
-    {
-        $Condition = self::getById($id);
-        $conditions = json_decode($Condition->content);
-        $case = CaseController::getById($caseId);
-        $variables = collect($case->variables());
-        foreach($conditions as $condition){
-            $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $condition->value)->first();
-            // print($c);
-            if(!$c){
-                return false;
-            }
-        }
-        return true;
-
     }
 }

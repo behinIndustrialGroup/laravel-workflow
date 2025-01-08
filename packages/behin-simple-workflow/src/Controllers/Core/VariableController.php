@@ -11,6 +11,7 @@ use Behin\SimpleWorkflow\Models\Core\Variable;
 use BehinFileControl\Controllers\FileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class VariableController extends Controller
 {
@@ -21,7 +22,26 @@ class VariableController extends Controller
 
     public static function getVariable($processId, $caseId, $key)
     {
-        return Variable::where('process_id', $processId)->where('case_id', $caseId)->where('key', $key)->first();
+        $variable = Variable::where('process_id', $processId)->where('case_id', $caseId)->where('key', $key)->first();
+        return $variable;
+    }
+
+    public static function getAll(array $fields = ['customer_fullname', 'customer_mobile', 'repair_cost'])
+    {
+        $rows = [];
+        foreach ($fields as $field) {
+            $rows[] = DB::raw("MAX(CASE WHEN `key` = '$field' THEN value END) as $field");
+        }
+
+        $searchQuery = DB::table('wf_variables')
+            ->select(
+                'case_id',
+                'process_id',
+                ...$rows
+            )
+            ->groupBy('case_id')
+            ->get();
+        return $searchQuery;
     }
 
     public static function save($processId, $caseId, $key, $value)
@@ -47,13 +67,13 @@ class VariableController extends Controller
 
         // }
         $result = FileController::store($value, 'simpleWorkflow');
-            if ($result['status'] == 200) {
-                Variable::create([
-                    'process_id' => $processId,
-                    'case_id' => $caseId,
-                    'key' => $key,
-                    'value' => $result['dir']
-                ]);
-            }
+        if ($result['status'] == 200) {
+            Variable::create([
+                'process_id' => $processId,
+                'case_id' => $caseId,
+                'key' => $key,
+                'value' => $result['dir']
+            ]);
+        }
     }
 }

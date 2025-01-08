@@ -55,7 +55,7 @@ class RoutingController extends Controller
                 return
                     [
                         'status' => 400,
-                        'msg' => trans('SimpleWorkflowLang::fields.' . $field) . ': ' . trans('SimpleWorkflowLang::fields.Required')
+                        'msg' => trans('fields.' . $field) . ': ' . trans('fields.Required')
                     ];
             }
         }
@@ -93,14 +93,14 @@ class RoutingController extends Controller
             }
             self::executeNextTask($nextTask, $caseId);
         } else {
-            foreach ($taskChildren as $task) {
-                if ($error = taskHasError($task->id)) {
+            foreach ($taskChildren as $childTask) {
+                if ($error = taskHasError($childTask->id)) {
                     return response()->json([
                         'status' => 400,
                         'msg' => 'next task error:' . $error['descriptions']
                     ]);
                 }
-                $result = self::executeNextTask($task, $caseId);
+                $result = self::executeNextTask($childTask, $caseId);
                 if ($result == 'break') {
                     break;
                 }
@@ -171,6 +171,10 @@ class RoutingController extends Controller
                 if ((bool)$nextTask) {
                     self::executeNextTask($nextTask, $caseId);
                 } else {
+                    if ($task->next_element_id) {
+                        $nextTask = TaskController::getById($task->next_element_id);
+                        self::executeNextTask($nextTask, $caseId);
+                    }
                     $taskChildren = $task->children();
                     foreach ($taskChildren as $task) {
                         // print($task->name);

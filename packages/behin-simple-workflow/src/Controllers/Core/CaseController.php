@@ -19,7 +19,7 @@ class CaseController extends Controller
 
     public static function create($processId, $creator, $name = null)
     {
-        $lastNumber = Cases::where('process_id', $processId)->latest()->first()?->number;
+        $lastNumber = Cases::where('process_id', $processId)->orderBy('number', 'desc')->first()?->number;
         $lastNumber = (int) $lastNumber;
         $newNumber = $lastNumber ? $lastNumber + 1 : config('workflow.caseStartValue');
         Log::info($newNumber);
