@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     @foreach ($rows as $index => $row)
-                        <tr>
+                        <tr ondblclick="window.location.href = '{{ route('simpleWorkflow.inbox.view', $row->id) }}'">
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $row->task->process->name }}</td>
                             <td>{{ $row->task->name }}</td>
