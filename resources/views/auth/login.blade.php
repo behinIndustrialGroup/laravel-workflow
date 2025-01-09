@@ -9,6 +9,7 @@
         <div class="card-body">
             <form action="javascript:void(0)" method="post" id="login-form">
                 @csrf
+                <input type="hidden" name="remember" value="1">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="email" placeholder="موبایل">
                     <div class="input-group-append">
