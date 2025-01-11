@@ -11,7 +11,6 @@
                 $bgColor =
                     $task->type == 'form' ? 'bg-primary' : ($task->type == 'script' ? 'bg-success' : 'bg-warning');
             @endphp
-            
             <div class="panel panel-default">
                 @csrf
                 <div class="panel-heading p-2 bg-light">

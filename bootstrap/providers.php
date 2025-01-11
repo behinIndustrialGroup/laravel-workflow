@@ -1,5 +1,6 @@
 <?php
 
+use Barryvdh\TranslationManager\ManagerServiceProvider;
 use Behin\PMCaseNumbering\PackageServiceProvider;
 use Behin\SimpleWorkflow\SimpleWorkflowProvider;
 use Behin\SimpleWorkflowReport\SimpleWorkflowReportProvider;
@@ -32,5 +33,6 @@ return [
     SimpleWorkflowProvider::class,
     FormBuilderServiceProvider::class,
     CityProvider::class,
-    SimpleWorkflowReportProvider::class
+    SimpleWorkflowReportProvider::class,
+    ManagerServiceProvider::class
 ];
