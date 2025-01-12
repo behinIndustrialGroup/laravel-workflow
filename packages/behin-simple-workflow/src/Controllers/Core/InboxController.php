@@ -62,6 +62,40 @@ class InboxController extends Controller
         return $rows;
     }
 
+    public function getAllInbox(): View
+    {
+        $rows = self::getAll();
+        return view('SimpleWorkflowView::Core.Inbox.all')->with([
+            'rows' => $rows
+        ]);
+    }
+
+    public static function getAll(): Collection
+    {
+        $rows = Inbox::with('task')->orderBy('created_at', 'desc')->get();
+        return $rows;
+    }
+
+    public function edit($id): View
+    {
+        $inbox = self::getById($id);
+        return view('SimpleWorkflowView::Core.Inbox.edit')->with([
+            'inbox' => $inbox
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $inbox = self::getById($id);
+        $inbox->status = $request->status;
+        $inbox->actor = $request->actor;
+        $inbox->case_name = $request->case_name;
+        $inbox->save();
+        return redirect()->back()->with([
+            'success' => trans('fields.Inbox updated successfully')
+        ]);
+    }
+
     public static function view($inboxId)
     {
         $inbox = InboxController::getById($inboxId);

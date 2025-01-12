@@ -3,11 +3,14 @@
 namespace Behin\SimpleWorkflow\Controllers\Core;
 
 use App\Http\Controllers\Controller;
+use BaleBot\BaleBotProvider;
+use BaleBot\Controllers\BotController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -135,56 +138,63 @@ class RoutingController extends Controller
 
     public static function executeNextTask($task, $caseId)
     {
-        if ($task->type == 'form') {
-            if ($task->assignment_type == 'normal' or $task->assignment_type == null) {
-                $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
-                foreach ($taskActors as $actor) {
-                    InboxController::create($task->id, $caseId, $actor, 'new');
+        try
+        {
+            if ($task->type == 'form') {
+                if ($task->assignment_type == 'normal' or $task->assignment_type == null) {
+                    $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
+                    foreach ($taskActors as $actor) {
+                        InboxController::create($task->id, $caseId, $actor, 'new');
+                    }
+                    // echo json_encode($taskActors);
                 }
-                // echo json_encode($taskActors);
-            }
-            if ($task->assignment_type == 'dynamic') {
-                $taskActors = TaskActorController::getDynamicTaskActors($task->id, $caseId)->pluck('actor');
-                foreach ($taskActors as $actor) {
-                    InboxController::create($task->id, $caseId, $actor, 'new');
+                if ($task->assignment_type == 'dynamic') {
+                    $taskActors = TaskActorController::getDynamicTaskActors($task->id, $caseId)->pluck('actor');
+                    foreach ($taskActors as $actor) {
+                        InboxController::create($task->id, $caseId, $actor, 'new');
+                    }
+                }
+                if ($task->assignment_type == 'parallel') {
+                    // مشابه نورمال
                 }
             }
-            if ($task->assignment_type == 'parallel') {
-                // مشابه نورمال
+            if ($task->type == 'script') {
+                $script = ScriptController::getById($task->executive_element_id);
+                ScriptController::runScript($task->executive_element_id, $caseId);
+                $taskChildren = $task->children();
+                foreach ($taskChildren as $task) {
+                    self::executeNextTask($task, $caseId);
+                }
             }
-        }
-        if ($task->type == 'script') {
-            $script = ScriptController::getById($task->executive_element_id);
-            ScriptController::runScript($task->executive_element_id, $caseId);
-            $taskChildren = $task->children();
-            foreach ($taskChildren as $task) {
-                self::executeNextTask($task, $caseId);
-            }
-        }
-        if ($task->type == 'condition') {
-            $condition = ConditionController::getById($task->executive_element_id);
-            $result = ConditionController::runCondition($task->executive_element_id, $caseId);
-            // print($result);
-
-            if ($result) {
-                $nextTask = $condition->nextIfTrue();
-                if ((bool)$nextTask) {
-                    self::executeNextTask($nextTask, $caseId);
-                } else {
-                    if ($task->next_element_id) {
-                        $nextTask = TaskController::getById($task->next_element_id);
+            if ($task->type == 'condition') {
+                $condition = ConditionController::getById($task->executive_element_id);
+                $result = ConditionController::runCondition($task->executive_element_id, $caseId);
+                // print($result);
+    
+                if ($result) {
+                    $nextTask = $condition->nextIfTrue();
+                    if ((bool)$nextTask) {
                         self::executeNextTask($nextTask, $caseId);
+                    } else {
+                        if ($task->next_element_id) {
+                            $nextTask = TaskController::getById($task->next_element_id);
+                            self::executeNextTask($nextTask, $caseId);
+                        }
+                        $taskChildren = $task->children();
+                        foreach ($taskChildren as $task) {
+                            // print($task->name);
+                            self::executeNextTask($task, $caseId);
+                        }
                     }
-                    $taskChildren = $task->children();
-                    foreach ($taskChildren as $task) {
-                        // print($task->name);
-                        self::executeNextTask($task, $caseId);
-                    }
+    
+                    return 'break';
                 }
-
-                return 'break';
             }
+        } catch (Exception $th) {
+            BotController::sendMessage(681208098, $th->getMessage());
+            return $th->getMessage();
         }
+
     }
 }
 

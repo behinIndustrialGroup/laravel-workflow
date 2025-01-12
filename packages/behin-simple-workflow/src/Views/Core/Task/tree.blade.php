@@ -9,13 +9,12 @@
     @endphp
     <div class="panel panel-default">
         <div class="panel-heading p-2 bg-light">
+            {!! $indentation !!}
             @if ($error = taskHasError($child->id))
                 <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
             @endif
-            {!! $indentation !!}
-
             <strong class="panel-title">
-                ><a data-toggle="collapse" href="#{{ $child->id }}">{{ $child->name }}</a>
+                <a data-toggle="collapse" href="#{{ $child->id }}">{{ $child->name }}</a>
                 <span class="badge {{ $bgColor }}">
                     {{ ucfirst($child->type) }}
                 </span>

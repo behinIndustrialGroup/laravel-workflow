@@ -48,7 +48,10 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
 
     Route::name('inbox.')->prefix('inbox')->group(function(){
         Route::get('', [ InboxController::class, 'index' ])->name('index');
+        Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');
+        Route::get('edit/{inboxId}', [ InboxController::class, 'edit' ])->name('edit');
+        Route::put('update/{inboxId}', [ InboxController::class, 'update' ])->name('update');
     });
 
     Route::name('routing.')->prefix('routing')->group(function(){

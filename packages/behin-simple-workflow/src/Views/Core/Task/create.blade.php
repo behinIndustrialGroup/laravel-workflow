@@ -11,7 +11,6 @@
                 $bgColor =
                     $task->type == 'form' ? 'bg-primary' : ($task->type == 'script' ? 'bg-success' : 'bg-warning');
             @endphp
-            
             <div class="panel panel-default">
                 @csrf
                 <div class="panel-heading p-2 bg-light">
@@ -65,12 +64,10 @@
                             $children = $task->children();
                         @endphp
                         @if (count($children))
-                            <ul>
-                                @include('SimpleWorkflowView::Core.Task.tree', [
-                                    'children' => $children,
-                                    'level' => 1,
-                                ])
-                            </ul>
+                            @include('SimpleWorkflowView::Core.Task.tree', [
+                                'children' => $children,
+                                'level' => 1,
+                            ])
                         @endif
                     </div>
                 </div>
