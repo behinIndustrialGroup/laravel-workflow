@@ -10,7 +10,7 @@ class ConditionController extends Controller
 {
     public function index()
     {
-        $conditions = Condition::all();
+        $conditions = Condition::orderBy('created_at', 'desc')->get();
         return view('SimpleWorkflowView::Core.Condition.index', compact('conditions'));
     }
 

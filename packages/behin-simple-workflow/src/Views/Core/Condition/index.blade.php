@@ -18,7 +18,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($conditions->sortBy('created_at', 'desc') as $condition)
+                                @foreach ($conditions as $condition)
                                     <tr>
                                         <td>{{ $condition->id }} <input type="hidden" name="id"
                                                 value="{{ $condition->id }}"></td>
