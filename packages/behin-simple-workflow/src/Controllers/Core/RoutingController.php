@@ -84,7 +84,7 @@ class RoutingController extends Controller
         if($result['status'] != 200){
             return $result;
         }
-        if($process->number_of_errors){
+        if($process->number_of_error){
             return response()->json([
                 'status' => 400,
                 'msg' => trans('fields.Process Has Error')
