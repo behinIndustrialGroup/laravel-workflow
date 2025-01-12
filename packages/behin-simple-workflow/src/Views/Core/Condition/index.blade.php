@@ -31,7 +31,7 @@
                                         </td>
                                         <td><a class="btn btn-primary"
                                                 href="{{ route('simpleWorkflow.conditions.edit', $condition->id) }}">
-                                                {{ trans('Edit') }}</a>
+                                                {{ trans('fields.Edit') }}</a>
                                         </td>
                                     </tr>
                                 @endforeach
