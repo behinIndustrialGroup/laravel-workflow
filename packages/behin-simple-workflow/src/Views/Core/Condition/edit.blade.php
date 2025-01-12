@@ -6,6 +6,7 @@
 
 @section('content')
     <h1>{{ trans('fields.Edit Condition') }}</h1>
+    <h2>{{ $condition->name }}</h2>
     <div class="container p-4 border rounded shadow-sm bg-light">
         <form action="{{ route('simpleWorkflow.conditions.update', $condition->id) }}" method="POST">
             @csrf
