@@ -14,6 +14,7 @@
                                 <tr>
                                     <th>{{ trans('fields.ID') }}</th>
                                     <th>{{ trans('fields.Name') }}</th>
+                                    <th>{{ trans('fields.Content') }}</th>
                                     <th>{{ trans('fields.Action') }}</th>
                                 </tr>
                             </thead>
@@ -23,6 +24,11 @@
                                         <td>{{ $condition->id }} <input type="hidden" name="id"
                                                 value="{{ $condition->id }}"></td>
                                         <td>{{ $condition->name }}</td>
+                                        <td>
+                                            @foreach (json_decode($condition->content) as $c)
+                                                {{ $c->fieldName }} {{ $c->operation }} {{ $c->value }}
+                                            @endforeach
+                                        </td>
                                         <td><a class="btn btn-primary"
                                                 href="{{ route('simpleWorkflow.conditions.edit', $condition->id) }}">
                                                 {{ trans('Edit') }}</a>
