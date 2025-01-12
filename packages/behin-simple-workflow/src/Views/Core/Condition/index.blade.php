@@ -2,42 +2,54 @@
 
 @section('content')
     <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>{{ trans('Id') }}</th>
-                    <th>{{ trans('Name') }}</th>
-                    <th>{{ trans('Executive file') }}</th>
-                    <th>{{ trans('Action') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($conditions as $condition)
-                        <tr>
-                            <td>{{ $condition->id }} <input type="hidden" name="id" value="{{ $condition->id }}"></td>
-                            <td><input type="text" name="name" id="" value="{{ $condition->name }}"></td>
-                            <td><input type="text" name="executive_file" id=""
-                                    value="{{ $condition->executive_file }}">
-                            </td>
-                            <td><a class="btn btn-success"
-                                    href="{{ route('simpleWorkflow.conditions.edit', $condition->id) }}">{{ trans('Edit') }}</a>
-                            </td>
-                        </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <form action="{{ route('simpleWorkflow.conditions.store') }}" method="POST">
-                    @csrf
-                    <tr>
-                        <td></td>
-                        <td><input type="text" name="name" id="" value=""></td>
-                        <td><input type="text" name="executive_file" id="" value="">
-                        </td>
-                        <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
-                    </tr>
-                </form>
-            </tfoot>
-        </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ trans('Conditions') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{{ trans('fields.ID') }}</th>
+                                    <th>{{ trans('fields.Name') }}</th>
+                                    <th>{{ trans('fields.Action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($conditions as $condition)
+                                    <tr>
+                                        <td>{{ $condition->id }} <input type="hidden" name="id"
+                                                value="{{ $condition->id }}"></td>
+                                        <td>{{ $condition->name }}</td>
+                                        <td><a class="btn btn-primary"
+                                                href="{{ route('simpleWorkflow.conditions.edit', $condition->id) }}">
+                                                {{ trans('Edit') }}</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <form action="{{ route('simpleWorkflow.conditions.store') }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="name">{{ trans('fields.Name') }}</label>
+                                                <input type="text" name="name" id="name" class="form-control"
+                                                    required>
+                                            </div>
+                                            <button type="submit" class="btn btn-success">{{ trans('Create') }}</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
