@@ -30,6 +30,7 @@ class TaskController extends Controller
             $task->parent_id = $task->id;
             $task->save();
         }
+        ProcessController::processHasError($task->process_id);
         return redirect(route('simpleWorkflow.task.index', ['process_id'=> $task->process_id]));
     }
 

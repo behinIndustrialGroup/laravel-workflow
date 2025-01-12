@@ -98,6 +98,8 @@ class ProcessController extends Controller
                 $hasError++;
             }
         }
+        $process->number_of_error =  $hasError;
+        $process->save();
         return $hasError;
     }
 }

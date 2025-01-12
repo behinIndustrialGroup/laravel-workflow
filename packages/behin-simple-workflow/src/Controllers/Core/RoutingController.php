@@ -74,6 +74,7 @@ class RoutingController extends Controller
         $caseId = $request->caseId;
         $processId = $request->processId;
         $taskId = $request->taskId;
+        $process = ProcessController::getById($processId);
         $inbox = InboxController::getById($request->inboxId);
         $task = $inbox->task;
         $form = $task->executiveElement();
@@ -83,26 +84,20 @@ class RoutingController extends Controller
         if($result['status'] != 200){
             return $result;
         }
+        if($process->number_of_errors){
+            return response()->json([
+                'status' => 400,
+                'msg' => trans('fields.Process Has Error')
+            ]);
+        }
 
         $taskChildren = $task->children();
 
         if ($task->next_element_id) {
             $nextTask = TaskController::getById($task->next_element_id);
-            if ($error = taskHasError($nextTask->id)) {
-                return response()->json([
-                    'status' => 400,
-                    'msg' => 'next task error:' . $error['descriptions']
-                ]);
-            }
             self::executeNextTask($nextTask, $caseId);
         } else {
             foreach ($taskChildren as $childTask) {
-                if ($error = taskHasError($childTask->id)) {
-                    return response()->json([
-                        'status' => 400,
-                        'msg' => 'next task error:' . $error['descriptions']
-                    ]);
-                }
                 $result = self::executeNextTask($childTask, $caseId);
                 if ($result == 'break') {
                     break;

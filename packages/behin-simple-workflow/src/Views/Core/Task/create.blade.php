@@ -6,6 +6,9 @@
     <div class="container">
 
         <h2>{{ $process->name }}</h2>
+        <button onclick="check_error()" class="btn btn-danger">
+            {{ trans('fields.Check Error') }}
+        </button>
         @foreach ($process->startTasks() as $task)
             @php
                 $bgColor =
@@ -22,8 +25,8 @@
                         <span class="badge {{ $bgColor }}">
                             {{ ucfirst($task->type) }}
                         </span>
-                        <input type="hidden" name="id" value="{{ $task->id }}">
-                        <div class="flex-grow-1" style="display: inline">
+                        {{-- <input type="hidden" name="id" value="{{ $task->id }}"> --}}
+                        {{-- <div class="flex-grow-1" style="display: block">
                             <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
                                 {{ $task->executive_element_id ? $task->executiveElement()->name : '' }}
                             </span>
@@ -50,7 +53,7 @@
                                     {{ $task->nextTask()->name }}
                                 </span>
                             @endif
-                        </div>
+                        </div> --}}
                         <a type="submit" class="" style="float: left"
                             href="{{ route('simpleWorkflow.task.edit', $task->id) }}">{{ trans('Edit') }}</a>
 
@@ -131,6 +134,19 @@
                 }
             )
 
+        }
+
+        function check_error() {
+            send_ajax_get_request(
+                "{{ route('simpleWorkflow.process.processHasError', ['processId' => $process->id]) }}",
+                function(response) {
+                    if (response > 0) {
+                        show_error('Process Has Error');
+                    } else {
+                        show_message('Process Has No Error');
+                    }
+                }
+            )
         }
     </script>
 @endsection

@@ -26,6 +26,7 @@ class Process extends Model
 
     protected $fillable = [
         'name',
+        'number_of_error',
         'report_form_id',
     ];
 

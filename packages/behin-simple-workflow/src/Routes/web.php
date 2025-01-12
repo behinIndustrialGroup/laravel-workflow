@@ -18,7 +18,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('store', [ ProcessController::class, 'store' ])->name('store');
         Route::get('start-list', [ ProcessController::class, 'startListView' ])->name('startListView');
         Route::get('start/{taskId}', [ ProcessController::class, 'start' ])->name('start');
-
+        Route::get('check-error/{processId}', [ ProcessController::class, 'processHasError' ])->name('processHasError');
     });
 
     Route::name('task.')->prefix('task')->group(function(){
