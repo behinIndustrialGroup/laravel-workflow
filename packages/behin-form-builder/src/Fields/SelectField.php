@@ -30,6 +30,8 @@ class SelectField extends AbstractField
             }
         }
         $s .= '>';
+        $s .= '<option value="">'. trans('fields.Select') .'</option>';
+
         if (($this->attributes['query'])) {
             $sqlOptions = DB::select($this->attributes['query']);
             foreach ($sqlOptions as $option) {
