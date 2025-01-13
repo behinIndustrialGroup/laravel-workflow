@@ -125,26 +125,24 @@ class InboxController extends Controller
         $variables = VariableController::getVariablesByCaseId($caseId)
             ->pluck('value', 'key')
             ->toArray();
-
         // دریافت عنوان تسک
         $title = $task->case_name;
 
         // جایگزینی متغیرها در عنوان
-        $patterns = [
-            '/@customer_fullname/',
-            '/@device_name/',
-            '/@customer_mobile/',
-            '/@device_serial_no/'
-        ];
+        $patterns = config('workflow.patterns');
 
-        $replacements = [
-            $variables['customer_fullname'] ?? '-',
-            $variables['device_name'] ?? '-',
-            $variables['customer_mobile'] ?? '-',
-            $variables['device_serial_no'] ?? '-'
-        ];
 
-        $title = preg_replace($patterns, $replacements, $title);
+        $replacements = [];
+        foreach ($patterns as $key) {
+            $replacements[] = $variables[$key] ?? '';
+        }
+
+        $p = [];
+        foreach ($patterns as $key) {
+            $p[] = '/@' . $key . '/i';
+        }
+
+        $title = preg_replace($p, $replacements, $title);
         return $title;
     }
 }
