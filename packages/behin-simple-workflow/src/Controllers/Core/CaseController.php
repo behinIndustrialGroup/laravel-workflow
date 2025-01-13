@@ -36,4 +36,9 @@ class CaseController extends Controller
         return Cases::where('process_id', $processId)->get();
     }
 
+    public static function getAll()
+    {
+        return Cases::all();
+    }
+
 }

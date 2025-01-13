@@ -21,7 +21,6 @@ class RoutingController extends Controller
     {
         $request->validate([
             'processId' => 'required',
-            'taskId' => 'required',
             'caseId' => 'required',
         ]);
 
@@ -34,7 +33,7 @@ class RoutingController extends Controller
         // }
 
         $processId = $request->processId;
-        $taskId = $request->taskId;
+        // $taskId = $request->taskId;
         $caseId = $request->caseId;
 
         $vars = $request->all();
@@ -45,23 +44,23 @@ class RoutingController extends Controller
             if (gettype($value) == 'object') {
                 VariableController::saveFile($processId, $caseId, $key, $value);
             } else {
-                if(is_array($value)){
+                if (is_array($value)) {
                     $value = json_encode($value);
                 }
                 VariableController::save($processId, $caseId, $key, $value);
             }
         }
-        Log::info("test");
-        foreach($requiredFields as $field){
-            $var = VariableController::getVariable($processId, $caseId, $field);
-            if(!$var?->value){
-                return
-                    [
-                        'status' => 400,
-                        'msg' => trans('fields.' . $field) . ': ' . trans('fields.Required')
-                    ];
-            }
-        }
+        // Log::info("test");
+        // foreach ($requiredFields as $field) {
+        //     $var = VariableController::getVariable($processId, $caseId, $field);
+        //     if (!$var?->value) {
+        //         return
+        //             [
+        //                 'status' => 400,
+        //                 'msg' => trans('fields.' . $field) . ': ' . trans('fields.Required')
+        //             ];
+        //     }
+        // }
         return
             [
                 'status' => 200,
@@ -81,10 +80,10 @@ class RoutingController extends Controller
         $requiredFields = FormController::requiredFields($form->id);
         $result = self::save($request, $requiredFields);
         Log::info($result);
-        if($result['status'] != 200){
+        if ($result['status'] != 200) {
             return $result;
         }
-        if($process->number_of_error){
+        if ($process->number_of_error) {
             return response()->json([
                 'status' => 400,
                 'msg' => trans('fields.Process Has Error')
@@ -95,12 +94,15 @@ class RoutingController extends Controller
 
         if ($task->next_element_id) {
             $nextTask = TaskController::getById($task->next_element_id);
-            self::executeNextTask($nextTask, $caseId);
+            $result = self::executeNextTask($nextTask, $caseId);
+            if ($result) {
+                return $result;
+            }
         } else {
             foreach ($taskChildren as $childTask) {
                 $result = self::executeNextTask($childTask, $caseId);
-                if ($result == 'break') {
-                    break;
+                if ($result) {
+                    return $result;
                 }
             }
         }
@@ -109,7 +111,7 @@ class RoutingController extends Controller
                 $inboxes = InboxController::getAllByTaskId($task->id);
                 foreach ($inboxes as $inbox) {
                     InboxController::changeStatusByInboxId($inbox->id, 'done');
-                } 
+                }
                 // InboxController::changeStatusByInboxId($request->inboxId, 'done');
                 //از این رکورد در اینباکس یک یا چمد ردیف وجود دارد
                 // وضعیت همه رکوردها باید در اینباکس به انجام شده تغییر کند
@@ -133,8 +135,7 @@ class RoutingController extends Controller
 
     public static function executeNextTask($task, $caseId)
     {
-        try
-        {
+        try {
             if ($task->type == 'form') {
                 if ($task->assignment_type == 'normal' or $task->assignment_type == null) {
                     $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
@@ -155,7 +156,13 @@ class RoutingController extends Controller
             }
             if ($task->type == 'script') {
                 $script = ScriptController::getById($task->executive_element_id);
-                ScriptController::runScript($task->executive_element_id, $caseId);
+                $result = ScriptController::runScript($task->executive_element_id, $caseId);
+                if ($result) {
+                    return response()->json([
+                        'status' => 400,
+                        'msg' => $result
+                    ]);
+                }
                 $taskChildren = $task->children();
                 foreach ($taskChildren as $task) {
                     self::executeNextTask($task, $caseId);
@@ -165,7 +172,7 @@ class RoutingController extends Controller
                 $condition = ConditionController::getById($task->executive_element_id);
                 $result = ConditionController::runCondition($task->executive_element_id, $caseId);
                 // print($result);
-    
+
                 if ($result) {
                     $nextTask = $condition->nextIfTrue();
                     if ((bool)$nextTask) {
@@ -181,16 +188,13 @@ class RoutingController extends Controller
                             self::executeNextTask($task, $caseId);
                         }
                     }
-    
+
                     return 'break';
                 }
             }
         } catch (Exception $th) {
             BotController::sendMessage(681208098, $th->getMessage());
-            return $th->getMessage();
+            return response()->json(['status' => 400, 'msg' => $th->getMessage()]);
         }
-
     }
 }
-
-

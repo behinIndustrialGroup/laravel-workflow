@@ -13,7 +13,7 @@ class EmptyScript extends Controller
 {
     protected $case;
     public function __construct($case) {
-        // $this->case = $case;
+        $this->case = $case;
         // return VariableController::save(
         //     $this->case->process_id, $this->case->id, 'manager', 2
         // );
@@ -21,8 +21,12 @@ class EmptyScript extends Controller
 
     public function execute()
     {
-
-
+        // throw new \Exception("test2");
+        // VariableController::save(
+        //         $this->case->process_id, $this->case->id, 'seda', 2
+        //     );
+        // return $this->case->id;
+        // return "test";
     }
 
 }

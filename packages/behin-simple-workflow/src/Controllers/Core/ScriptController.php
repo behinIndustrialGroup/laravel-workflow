@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Models\Core\Form;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Script;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ScriptController extends Controller
 {
@@ -52,19 +53,42 @@ class ScriptController extends Controller
         return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script updated successfully.');
     }
 
-    public static function getAll() {
+    public static function getAll()
+    {
         return Script::get();
     }
-    public static function getById($id) {
+    public static function getById($id)
+    {
         return Script::find($id);
     }
 
-    public static function runScript($id, $caseId)
+    public static function runScript($id, $caseId, $forTest = false)
     {
-        $script = self::getById($id);
-        $case = CaseController::getById($caseId);
-        $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
-        $script = new $executiveFile($case);
-        $script->execute();
+        return DB::transaction(function () use ($id, $caseId, $forTest) {
+            $script = self::getById($id);
+            $case = CaseController::getById($caseId);
+            $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
+            $script = new $executiveFile($case);
+            $output = $script->execute();
+            if ($forTest) {
+                return throw new \Exception($output);
+            }
+            return $output;
+        });
+        // $script = self::getById($id);
+        // $case = CaseController::getById($caseId);
+        // $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
+        // $script = new $executiveFile($case);
+        // return $script->execute();
+    }
+
+    public static function test(Request $request,$id)
+    {
+        try {
+            $result = self::runScript($id, $request->caseId, true);
+        } catch (\Exception $e) {
+            $result = $e->getMessage();
+        }
+        return $result;
     }
 }

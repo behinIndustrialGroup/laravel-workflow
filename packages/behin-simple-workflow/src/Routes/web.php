@@ -42,6 +42,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     });
 
     Route::resource('scripts', ScriptController::class);
+    Route::post('scripts/{id}/test', [ ScriptController::class, 'test' ])->name('scripts.test');
+
     Route::resource('conditions', ConditionController::class);
     Route::resource('task-actors', TaskActorController::class);
     Route::resource('fields', FieldController::class);

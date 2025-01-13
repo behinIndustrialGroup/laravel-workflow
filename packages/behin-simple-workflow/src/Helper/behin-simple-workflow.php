@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Behin\SimpleWorkflow\Controllers\Core\CaseController;
 use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
 use Behin\SimpleWorkflow\Controllers\Core\FieldController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
@@ -12,6 +13,12 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 if (!function_exists('getProcesses')) {
     function getProcesses() {
         return ProcessController::getAll();
+    }
+}
+
+if (!function_exists('getCases')) {
+    function getCases() {
+        return CaseController::getAll();
     }
 }
 
