@@ -47,6 +47,7 @@ class StartRepairInMapaProcess extends Controller
         $mapa_expert = $this->case->variables()->where('key', 'mapa_expert')->first()->value ?? '';
         $mapa_expert_name = getUserInfo($mapa_expert)?->name;
         $customer_workshop_or_ceo_name = $this->case->variables()->where('key', 'customer_workshop_or_ceo_name')->first()->value ?? '';
+        InboxController::editCaseName($newInbox->id, "پذیرش دستگاه از پرونده " . $parent_case_number);
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
