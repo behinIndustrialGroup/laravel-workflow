@@ -101,6 +101,9 @@ class RoutingController extends Controller
         } else {
             foreach ($taskChildren as $childTask) {
                 $result = self::executeNextTask($childTask, $caseId);
+                if($result == 'break'){
+                    break;
+                }
                 if ($result) {
                     return $result;
                 }
@@ -193,7 +196,7 @@ class RoutingController extends Controller
                 }
             }
         } catch (Exception $th) {
-            BotController::sendMessage(681208098, $th->getMessage());
+            // BotController::sendMessage(681208098, $th->getMessage());
             return response()->json(['status' => 400, 'msg' => $th->getMessage()]);
         }
     }
