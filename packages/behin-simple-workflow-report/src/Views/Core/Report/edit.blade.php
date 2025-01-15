@@ -73,10 +73,3 @@
         </div>
     </div>
 @endsection
-@section('script')
-    <script>
-        function changeForm(){
-
-            $('#body').html(`{{ view('SimpleWorkflowView::Core.Form.preview', ['form' => $form,'case' => $case,'variables' => $variables,'process' => $process]) }}`);
-        }
-    </script>
