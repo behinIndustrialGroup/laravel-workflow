@@ -73,3 +73,9 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+    <script>
+        initial_view();
+    </script>
+@endsection
