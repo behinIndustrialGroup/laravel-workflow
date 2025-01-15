@@ -3,9 +3,6 @@ function show_error(er){
     if(typeof(er) == "string"){
         msg = er;
     }else{
-        if(er.status && er.status == 403){
-            toastr.error("دسترسی ندارید")
-        }
         if(er.responseJSON && er.responseJSON.message){
             msg = er.responseJSON.message;
         }else if(er.responseText){
