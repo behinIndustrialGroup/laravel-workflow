@@ -65,8 +65,10 @@ class StartRepairInMapaProcess extends Controller
             'customer_mobile',
             $this->case->variables()->where('key', 'customer_mobile')->first()->value ?? ''
         );
-        $initial_description = "ارجاع شده از فرایند تعمیر در محل به شماره پرونده " . $parent_case_number;
-        $initial_description .= "این پرونده توسط " . $mapa_expert_name . "انجام شده است ";
+        $initial_description = "ارجاع شده از فرایند تعمیر در محل به شماره پرونده " . $parent_case_number . '. \n';
+        $initial_description .= "این پرونده توسط " . $mapa_expert_name . " انجام شده است.\n";
+        $initial_description .= "سایر توضیحات: \n";
+        $initial_description .= $this->case->variables()->where('key', 'next_visit_description')->first()->value ?? '';
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
