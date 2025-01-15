@@ -62,10 +62,18 @@ class InboxController extends Controller
         return $rows;
     }
 
-    public function getAllInbox(): View
+    public function showCases(): View
     {
-        $rows = self::getAll();
-        return view('SimpleWorkflowView::Core.Inbox.all')->with([
+        $rows = Inbox::groupBy('case_id')->with('task')->orderBy('created_at', 'desc')->get();
+        return view('SimpleWorkflowView::Core.Inbox.cases')->with([
+            'rows' => $rows
+        ]);
+    }
+
+    public function showInboxes($caseId): View
+    {
+        $rows = Inbox::where('case_id', $caseId)->with('task')->orderBy('created_at', 'desc')->get();
+        return view('SimpleWorkflowView::Core.Inbox.inboxes')->with([
             'rows' => $rows
         ]);
     }

@@ -50,7 +50,9 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
 
     Route::name('inbox.')->prefix('inbox')->group(function(){
         Route::get('', [ InboxController::class, 'index' ])->name('index');
-        Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
+        // Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
+        Route::get('cases', [ InboxController::class, 'showCases' ])->name('cases.list');
+        Route::get('cases/{caseId}/inboxes', [ InboxController::class, 'showInboxes' ])->name('cases.inboxes');
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');
         Route::get('edit/{inboxId}', [ InboxController::class, 'edit' ])->name('edit');
         Route::put('update/{inboxId}', [ InboxController::class, 'update' ])->name('update');
