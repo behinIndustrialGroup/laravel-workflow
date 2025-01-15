@@ -41,29 +41,44 @@ class StartRepairInMapaProcess extends Controller
         Log::info($this->case->variables()->where('key', 'customer_name'));
         $task = TaskController::getById("9f6b7b5c-155e-4698-8b05-26ebb061bb7d");
         $newInbox = ProcessController::start($task->id, true, false);
+        $parent_case_number = $this->case->number;
+        $newCaseId = $newInbox->case->id;
+        $newCaseNumber = $newInbox->case->number;
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
             'customer_name',
-            $this->case->variables()->where('key', 'customer_name')->first()->value
+            $this->case->variables()->where('key', 'customer_name')->first()->value ?? ''
         );
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
             'customer_nid',
-            $this->case->variables()->where('key', 'customer_nid')->first()->value
+            $this->case->variables()->where('key', 'customer_nid')->first()->value ?? ''
         );
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
             'customer_mobile',
-            $this->case->variables()->where('key', 'customer_mobile')->first()->value
+            $this->case->variables()->where('key', 'customer_mobile')->first()->value ?? ''
         );
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
             'initial_description',
-            "ارجاع شده از فرایند تعمیر در محل"
+            "ارجاع شده از فرایند تعمیر در محل به شماره پرونده " . $parent_case_number
+        );
+        VariableController::save(
+            $newInbox->case->process_id,
+            $newInbox->case->id,
+            'parent_case_numner',
+            $parent_case_number
+        );
+        VariableController::save(
+            $newInbox->case->process_id,
+            $newInbox->case->id,
+            'parent_case_id',
+            $this->case->id
         );
         // Log::info('newInbox');
         // Log::info($newInbox);
