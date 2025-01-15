@@ -51,16 +51,16 @@ class RoutingController extends Controller
             }
         }
         // Log::info("test");
-        // foreach ($requiredFields as $field) {
-        //     $var = VariableController::getVariable($processId, $caseId, $field);
-        //     if (!$var?->value) {
-        //         return
-        //             [
-        //                 'status' => 400,
-        //                 'msg' => trans('fields.' . $field) . ': ' . trans('fields.Required')
-        //             ];
-        //     }
-        // }
+        foreach ($requiredFields as $field) {
+            $var = VariableController::getVariable($processId, $caseId, $field);
+            if (!$var?->value) {
+                return
+                    [
+                        'status' => 400,
+                        'msg' => trans('fields.' . $field) . ': ' . trans('fields.Required')
+                    ];
+            }
+        }
         return
             [
                 'status' => 200,
