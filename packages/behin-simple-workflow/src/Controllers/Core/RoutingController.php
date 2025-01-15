@@ -111,7 +111,7 @@ class RoutingController extends Controller
         }
         if ($task->type == 'form') {
             if ($task->assignment_type == 'normal') {
-                $inboxes = InboxController::getAllByTaskId($task->id);
+                $inboxes = InboxController::getAllByTaskIdAndCaseId($task->id, $caseId);
                 foreach ($inboxes as $inbox) {
                     InboxController::changeStatusByInboxId($inbox->id, 'done');
                 }
