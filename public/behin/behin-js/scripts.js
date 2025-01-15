@@ -1,17 +1,21 @@
 function show_error(er){
     msg = '';
-    if(typeof(er) == "string"){
-        msg = er;
-    }else{
-        if(er.responseJSON && er.responseJSON.message){
-            msg = er.responseJSON.message;
-        }else if(er.responseText){
-            msg= er.responseText;
+    try{
+        if(typeof(er) == "string"){
+            msg = er;
         }else{
-            msg = "خطا";
+            if(er.responseJSON && er.responseJSON.message){
+                msg = er.responseJSON.message;
+            }else if(er.responseText){
+                msg= er.responseText;
+            }else{
+                msg = "خطا";
+            }
         }
+        toastr.error(msg);
+    }catch(e){
+        msg = er;
     }
-    toastr.error(msg);
     console.log(er);
     if(msg.includes('CSRF')){
         window.location.reload();
