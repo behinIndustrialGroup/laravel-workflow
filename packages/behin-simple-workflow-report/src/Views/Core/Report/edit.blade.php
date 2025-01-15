@@ -18,12 +18,17 @@
                     <div class="card-header">گزارش: {{ $case->getVariable('customer_fullname') }}</div>
                     <div class="card-body">
                         <div class="table-responsive" id="body">
-                            @include('SimpleWorkflowView::Core.Form.preview', [
-                                'form' => $form,
-                                'case' => $case,
-                                'variables' => $variables,
-                                'process' => $process,
-                            ])
+                            <form action="javascript:void(0)" method="POST" id="form">
+                                <input type="hidden" name="caseId" id="" value="{{ $case->id }}">
+                                <input type="hidden" name="processId" id="" value="{{ $process->id }}">
+                                @include('SimpleWorkflowView::Core.Form.preview', [
+                                    'form' => $form,
+                                    'case' => $case,
+                                    'variables' => $variables,
+                                    'process' => $process,
+                                ])
+                            </form>
+
                             {{-- <table class="table table-bordered" style="width: 100%">
                                 <thead>
                                     <tr>
@@ -71,17 +76,17 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="d-flex justify-content-end bg-white p-2 mt-2">
-        <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
-            <i class="fa fa-save"></i> {{ trans('fields.Save') }}
-        </button>
+        <div class="d-flex justify-content-end bg-white p-2 mt-2">
+            <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
+                <i class="fa fa-save"></i> {{ trans('fields.Save') }}
+            </button>
+        </div>
     </div>
 @endsection
 
 @section('script')
     <script>
-        initial_view();
+        initial_view()
 
         function saveForm() {
             var form = $('#form')[0];
@@ -102,3 +107,11 @@
         }
     </script>
 @endsection
+
+{{-- @section('script') --}}
+{{-- <script>
+        function changeForm(){
+
+            $('#body').html(`{{ view('SimpleWorkflowView::Core.Form.preview', ['form' => $form,'case' => $case,'variables' => $variables,'process' => $process]) }}`);
+        }
+    </script> --}}

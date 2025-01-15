@@ -33,7 +33,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="d-none">{{ $case->id }}</td>
                                         <td>{{ $case->number }}</td>
-                                        <td>{{ $case->creator()->name }}</td>
+                                        <td>{{ $case->creator()?->name }}</td>
                                         @php
                                             $s = $case->variables()->where('key', 'customer_fullname')->first()?->value;
                                             $s .= ' - ';
