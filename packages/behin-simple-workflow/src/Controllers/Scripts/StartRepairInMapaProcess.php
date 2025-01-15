@@ -44,11 +44,14 @@ class StartRepairInMapaProcess extends Controller
         $parent_case_number = $this->case->number;
         $newCaseId = $newInbox->case->id;
         $newCaseNumber = $newInbox->case->number;
+        $mapa_expert = $this->case->variables()->where('key', 'mapa_expert')->first()->value ?? '';
+        $mapa_expert_name = getUserInfo($mapa_expert)?->name;
+        $customer_workshop_or_ceo_name = $this->case->variables()->where('key', 'customer_workshop_or_ceo_name')->first()->value ?? '';
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
-            'customer_name',
-            $this->case->variables()->where('key', 'customer_name')->first()->value ?? ''
+            'customer_workshop_or_ceo_name',
+            $customer_workshop_or_ceo_name
         );
         VariableController::save(
             $newInbox->case->process_id,
@@ -62,11 +65,13 @@ class StartRepairInMapaProcess extends Controller
             'customer_mobile',
             $this->case->variables()->where('key', 'customer_mobile')->first()->value ?? ''
         );
+        $initial_description = "ارجاع شده از فرایند تعمیر در محل به شماره پرونده " . $parent_case_number;
+        $initial_description .= "این پرونده توسط " . $mapa_expert_name . "انجام شده است ";
         VariableController::save(
             $newInbox->case->process_id,
             $newInbox->case->id,
             'initial_description',
-            "ارجاع شده از فرایند تعمیر در محل به شماره پرونده " . $parent_case_number
+            $initial_description
         );
         VariableController::save(
             $newInbox->case->process_id,
