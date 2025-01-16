@@ -71,19 +71,23 @@ class TaskController extends Controller
             // $hasError++;
             if($task->actors()->count() == 0){
                 $hasError++;
-                $descriptions = 'don\'t have actor';
+                $descriptions = trans('fields.don\'t have actor');
+            }
+            if($task->assignment_type == null){
+                $hasError++;
+                $descriptions = trans('fields.don\'t have assignment type');
             }
         }
         if($task->type == 'condition'){
             if($task->executive_element_id == null){
                 $hasError++;
-                $descriptions = 'don\'t have executive element';
+                $descriptions = trans('fields.don\'t have executive element');
             }
         }
         if($task->type == 'script'){
             if($task->executive_element_id == null){
                 $hasError++;
-                $descriptions = 'don\'t have executive element';
+                $descriptions = trans('fields.don\'t have executive element');
             }
         }
         if($hasError > 0){
