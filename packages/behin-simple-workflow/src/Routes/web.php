@@ -1,6 +1,7 @@
 <?php
 
 use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
+use Behin\SimpleWorkflow\Controllers\Core\EntityController;
 use Behin\SimpleWorkflow\Controllers\Core\FieldController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\InboxController;
@@ -63,4 +64,9 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('save-and-next', [ RoutingController::class, 'saveAndNext' ])->name('saveAndNext');
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');
     });
+
+
+    Route::resource('entities', EntityController::class);
+    Route::get('entities/{entity}/create-table', [EntityController::class, 'createTable'])->name('entities.createTable');
+
 });

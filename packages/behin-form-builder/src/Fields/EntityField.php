@@ -1,0 +1,42 @@
+<?php
+
+namespace MyFormBuilder\Fields;
+
+use Illuminate\Support\Facades\DB;
+
+class EntityField extends AbstractField
+{
+    public function render(): string
+    {
+        $columns = $this->attributes['columns'] ?? ''; // ['id', 'name' ect. 0 => 'id', 1 => 'name' ect.
+        $columns = str_replace("\r", "", $columns);
+        $columns = explode("\n", $columns);
+        $s = '<div class="form-group table-responsive">';
+        $s .= '<label>';
+        $s .= trans('fields.' . $this->name);
+        $s .= '</label>';
+        $s .= '<table class="table table-bordered">';
+        $s .= '<thead>';
+        $s.= '<tr>';
+        foreach ($columns as $column) {
+            $s.= '<th>'.trans('fields.'. $column).'</th>';
+        }
+        $s .= '</tr>';
+        $s .= '</thead>';
+        $query = $this->attributes['query'] ?? null;
+        if($query){
+            $rows = DB::select($query);
+
+            foreach ($rows as $row){
+                $s .= '<tr>';
+                foreach($columns as $column){
+                    $s .= '<td>'. $row->$column .'</td>';
+                }
+                $s .= '</tr>';
+            }
+        }
+        $s .= '</table>';
+        $s .= '</div>';
+        return $s;
+    }
+}

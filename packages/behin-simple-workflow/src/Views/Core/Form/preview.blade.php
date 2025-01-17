@@ -147,6 +147,18 @@
                     'datalist_from_database' => isset($fieldAttributes?->datalist_from_database) ? $fieldAttributes?->datalist_from_database : null,
                 ]) !!}
             @endif
+            @if ($fieldDetails->type == 'entity')
+                {!! Form::entity($fieldId, [
+                    'columns' => is_string($fieldAttributes?->columns) ? $fieldAttributes?->columns : null,
+                    'query' => is_string($fieldAttributes?->query) ? $fieldAttributes?->query : null,
+                    'class' => 'form-control',
+                    'id' => $fieldId,
+                    'required' => $required,
+                    'readonly' => $readOnly,
+                    'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                    'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                ]) !!}
+            @endif
         </div>
     @endforeach
 </div>

@@ -1,33 +1,15 @@
 @extends('behin-layouts.app')
 
 @section('title')
-    متغیر ها
+    {{ trans('fields.Entity List') }}
 @endsection
 
 @section('content')
 <div class="container card p-3">
-    <form action="{{ route('simpleWorkflow.fields.store') }}" method="POST" class="row">
+    <form action="{{ route('simpleWorkflow.entities.store') }}" method="POST" class="row">
         @csrf
         <div class="col-sm-4">
             <input type="text" name="name" class="form-control text-center">
-        </div>
-        <div class="col-sm-4">
-            <select name="type" id="" class="form-control">
-                <option value="string">string</option>
-                <option value="number">number</option>
-                <option value="text">text</option>
-                <option value="date">date</option>
-                <option value="select">select</option>
-                <option value="select-multiple">select-multiple</option>
-                <option value="file">file</option>
-                <option value="checkbox">checkbox</option>
-                <option value="radio">radio</option>
-                <option value="location">location</option>
-                <option value="signature">signature</option>
-                <option value="entity">entity</option>
-                <option value="title">title</option>
-                <option value="div">div</option>
-            </select>
         </div>
         <div class="col-sm-4">
             <button class="btn btn-default">{{ trans('fields.Create') }}</button>
@@ -56,24 +38,18 @@
                     <th>{{ trans('ID') }}</th>
                     <th class="text-left">{{ trans('fields.Name') }}</th>
                     <th class="text-left">{{ trans('fields.Name') }}</th>
-                    <th class="text-left">{{ trans('fields.Type') }}</th>
                     <th>{{ trans('fields.Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($fields as $key => $field)
-                    @php
-                        $attributes = json_decode($field->attributes);
-                    @endphp
+                @foreach ($entities as $entity)
                     <tr>
-                        <td>{{ $key }}</td>
-                        <td class="text-left">{{ trans("fields.".$field->name) }}</td>
-                        <td class="text-left">{{ $field->name }}</td>
-                        <td class="text-left">{{ $field->type }}</td>
-
+                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-left">{{ trans("fields.".$entity->name) }}</td>
+                        <td class="text-left">{{ $entity->name }}</td>
                         <td>
-                            <a href="{{ route('simpleWorkflow.fields.edit', $field->id) }}" class="btn btn-default">{{ trans('fields.Edit') }}</a>
-                            <button class="btn btn-danger">{{ trans('fields.Delete') }}</button>
+                            <a href="{{ route('simpleWorkflow.entities.edit', $entity->id) }}">{{ trans('fields.Edit') }}</a> |
+                            <a href="{{ route('simpleWorkflow.entities.destroy', $entity->id) }}" onclick="return confirm('{{ trans('messages.confirmDelete') }}')">{{ trans('fields.Delete') }}</a>
                         </td>
                     </tr>
                 @endforeach

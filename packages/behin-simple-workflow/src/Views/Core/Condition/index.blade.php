@@ -25,9 +25,12 @@
                                                 value="{{ $condition->id }}"></td>
                                         <td>{{ $condition->name }}</td>
                                         <td>
-                                            @foreach (json_decode($condition->content) as $c)
-                                                {{ $c->fieldName }} {{ $c->operation }} {{ $c->value }}
-                                            @endforeach
+                                            @if ($condition->content)
+                                                @foreach (json_decode($condition->content) as $c)
+                                                    {{ $c->fieldName }} {{ $c->operation }} {{ $c->value }}
+                                                @endforeach
+                                            @endif
+
                                         </td>
                                         <td><a class="btn btn-primary"
                                                 href="{{ route('simpleWorkflow.conditions.edit', $condition->id) }}">
@@ -58,4 +61,3 @@
         </div>
     </div>
 @endsection
-

@@ -14,13 +14,12 @@
                 $bgColor =
                     $task->type == 'form' ? 'bg-primary' : ($task->type == 'script' ? 'bg-success' : 'bg-warning');
             @endphp
-            <div class="panel panel-default">
+            <div class="">
                 @csrf
-                <div class="panel-heading p-2 bg-light">
-                    @if ($error = taskHasError($task->id))
-                        <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
-                    @endif
-                    <strong class="panel-title">
+                <div class="p-2 bg-light">
+                    <a type="submit" class="" style=""
+                    href="{{ route('simpleWorkflow.task.edit', $task->id) }}"><i class="fa fa-edit"></i></a>
+                    <strong class="">
                         <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
                         <span class="badge {{ $bgColor }}">
                             {{ ucfirst($task->type) }}
@@ -54,15 +53,15 @@
                                 </span>
                             @endif
                         </div> --}}
-                        <a type="submit" class="" style="float: left"
-                            href="{{ route('simpleWorkflow.task.edit', $task->id) }}">{{ trans('Edit') }}</a>
-
                     </strong>
+                    @if ($error = taskHasError($task->id))
+                        <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
+                    @endif
 
 
                 </div>
-                <div id="{{ $task->id }}" class="panel-collapse">
-                    <div class="panel-body">
+                <div id="{{ $task->id }}" class="">
+                    {{-- <div class="panel-body"> --}}
                         @php
                             $children = $task->children();
                         @endphp
@@ -72,7 +71,7 @@
                                 'level' => 1,
                             ])
                         @endif
-                    </div>
+                    {{-- </div> --}}
                 </div>
             </div>
         @endforeach

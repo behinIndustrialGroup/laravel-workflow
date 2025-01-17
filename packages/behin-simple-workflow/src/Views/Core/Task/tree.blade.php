@@ -7,20 +7,20 @@
     @php
         $bgColor = $child->type == 'form' ? 'bg-primary' : ($child->type == 'script' ? 'bg-success' : 'bg-warning');
     @endphp
-    <div class="panel panel-default">
-        <div class="panel-heading p-2 bg-light">
-            @if ($error = taskHasError($child->id))
-                <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
-            @endif
-            {!! $indentation !!} {{ $level}}
-            <strong class="panel-title">
+    {{-- <div class=""> --}}
+        <div class=" p-2 bg-light">
+
+            {!! $indentation !!}
+            <a type="submit" class="" style=""
+                    href="{{ route('simpleWorkflow.task.edit', $child->id) }}"><i class="fa fa-edit"></i></a>
+            <strong class="">
                 <a data-toggle="collapse" href="#{{ $child->id }}">{{ $child->name }}</a>
                 <span class="badge {{ $bgColor }}">
                     {{ ucfirst($child->type) }}
                 </span>
                 <input type="hidden" name="id" value="{{ $child->id }}">
-                {{-- <div class="" style="display: block">
-                    <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
+                <div class="" style="display: inline">
+                    {{-- <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
                         {{ $child->executive_element_id ? $child->executiveElement()->name : '' }}
                     </span>
                     @if ($child->assignment_type)
@@ -32,7 +32,7 @@
                         <span class="badge bg-info">{{ trans('Actors') }}:
                             {{ $child->actors()->pluck('actor')->implode(', ') }}
                         </span>
-                    @endif
+                    @endif --}}
                     @if ($child->next_element_id)
                         @php
                             $bgColor =
@@ -46,23 +46,24 @@
                             {{ $child->nextTask()->name }}
                         </span>
                     @endif
-                </div> --}}
-                <a type="submit" class="" style="float: left"
-                    href="{{ route('simpleWorkflow.task.edit', $child->id) }}">{{ trans('Edit') }}</a>
+                </div>
+
             </strong>
+            @if ($error = taskHasError($child->id))
+                <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
+            @endif
+
 
         </div>
 
-        <div id="{{ $child->id }}" class="panel-collapse">
-            <div class="panel-body">
+        <div id="{{ $child->id }}" class="">
                 @if (count($child->children()))
                     @include('SimpleWorkflowView::Core.Task.tree', [
                         'children' => $child->children(),
-                        'level' => $level + 1,
+                        'level' => $level +1,
                     ])
                 @endif
-            </div>
         </div>
 
-    </div>
+    {{-- </div> --}}
 @endforeach

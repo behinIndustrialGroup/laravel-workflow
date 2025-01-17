@@ -60,6 +60,9 @@ class FieldController extends Controller
             'script' => $request->script,
             'datalist_from_database' => $request->datalist_from_database
         ];
+        if($request->columns !== null){
+            $attributes['columns'] = $request->columns;
+        }
         $field->update([
             'name' => $request->name,
             'type' => $request->type,

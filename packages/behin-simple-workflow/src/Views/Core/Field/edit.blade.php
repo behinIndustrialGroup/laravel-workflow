@@ -5,7 +5,7 @@
     <a href="{{ route('simpleWorkflow.fields.index') }}" class="btn btn-secondary mb-3">
         {{ trans('Back to list') }}
     </a>
-    @if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -13,7 +13,8 @@
     @php
         $attributes = json_decode($field->attributes);
     @endphp
-    <form action="{{ route('simpleWorkflow.fields.update', $field->id) }}" method="POST" class="p-4 border rounded shadow-sm bg-light">
+    <form action="{{ route('simpleWorkflow.fields.update', $field->id) }}" method="POST"
+        class="p-4 border rounded shadow-sm bg-light">
         @csrf
         @method('PUT')
 
@@ -30,53 +31,62 @@
                 <option value="text" @if ($field->type == 'text') selected @endif>{{ trans('Text') }}</option>
                 <option value="date" @if ($field->type == 'date') selected @endif>{{ trans('Date') }}</option>
                 <option value="select" @if ($field->type == 'select') selected @endif>{{ trans('Select') }}</option>
-                <option value="select-multiple" @if ($field->type == 'select-multiple') selected @endif>{{ trans('Select Multiple') }}</option>
+                <option value="select-multiple" @if ($field->type == 'select-multiple') selected @endif>
+                    {{ trans('Select Multiple') }}</option>
                 <option value="file" @if ($field->type == 'file') selected @endif>{{ trans('File') }}</option>
                 <option value="checkbox" @if ($field->type == 'checkbox') selected @endif>{{ trans('Checkbox') }}</option>
                 <option value="radio" @if ($field->type == 'radio') selected @endif>{{ trans('Radio') }}</option>
+                <option value="location" @if ($field->type == 'location') selected @endif>{{ trans('Location') }}
+                </option>
+                <option value="signature" @if ($field->type == 'signature') selected @endif>{{ trans('Signature') }}
+                </option>
+                <option value="entity" @if ($field->type == 'entity') selected @endif>{{ trans('Entity') }}</option>
                 <option value="title" @if ($field->type == 'title') selected @endif>{{ trans('Title') }}</option>
-                <option value="location" @if ($field->type == 'location') selected @endif>{{ trans('Location') }}</option>
-                <option value="signature" @if ($field->type == 'signature') selected @endif>{{ trans('Signature') }}</option>
+
                 <option value="div" @if ($field->type == 'div') selected @endif>{{ trans('Div') }}</option>
             </select>
         </div>
+        @if ($field->type == 'entity')
+            @include('SimpleWorkflowView::Core.Field.entity', ['field' => $field])
+        @else
+            @if ($field->type == 'select' || $field->type == 'select-multiple')
+                <div class="mb-3">
+                    <label for="options" class="form-label">{{ trans('Options') }}</label>
+                    <span>هر گزینه در یک خط</span>
+                    <textarea name="options" id="options" class="form-control" rows="4" dir="ltr">{{ isset($attributes?->options) ? $attributes?->options : '' }}</textarea>
+                </div>
+            @endif
 
-        @if ($field->type == 'select' || $field->type == 'select-multiple')
             <div class="mb-3">
-                <label for="options" class="form-label">{{ trans('Options') }}</label>
-                <span>هر گزینه در یک خط</span>
-                <textarea name="options" id="options" class="form-control" rows="4" dir="ltr">{{ isset($attributes?->options) ? $attributes?->options : '' }}</textarea>
+                <label for="query" class="form-label">{{ trans('Query') }}</label>
+                <p>
+                    کوئری باید شامل value و label باشد.
+                </p>
+                <textarea name="query" id="query" class="form-control" rows="4" dir="ltr">{{ is_string($attributes?->query) ? $attributes?->query : '' }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="placeholder" class="form-label">{{ trans('Placeholder') }}</label>
+                <input type="text" name="placeholder" id="placeholder" class="form-control"
+                    value="{{ $attributes?->placeholder }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="style" class="form-label">Style</label>
+                <textarea name="style" id="style" class="form-control" rows="4" dir="ltr">{{ isset($attributes->style) && is_string($attributes?->style) ? $attributes?->style : '' }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="script" class="form-label">Script</label>
+                <textarea name="script" id="script" class="form-control" rows="4" dir="ltr">{{ isset($attributes->script) && is_string($attributes?->script) ? $attributes?->script : '' }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="datalist" class="form-label">Datalist From Database</label>
+                باید شامل value و label باشد
+                <textarea name="datalist_from_database" id="datalist" class="form-control" rows="4" dir="ltr">{{ isset($attributes->datalist_from_database) && is_string($attributes?->datalist_from_database) ? $attributes?->datalist_from_database : '' }}</textarea>
             </div>
         @endif
-
-        <div class="mb-3">
-            <label for="query" class="form-label">{{ trans('Query') }}</label>
-            <p>
-                کوئری باید شامل value و label باشد.
-            </p>
-            <textarea name="query" id="query" class="form-control" rows="4" dir="ltr">{{ is_string($attributes?->query) ? $attributes?->query : '' }}</textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="placeholder" class="form-label">{{ trans('Placeholder') }}</label>
-            <input type="text" name="placeholder" id="placeholder" class="form-control" value="{{ $attributes?->placeholder }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="style" class="form-label">Style</label>
-            <textarea name="style" id="style" class="form-control" rows="4" dir="ltr">{{ isset($attributes->style) && is_string($attributes?->style) ? $attributes?->style : '' }}</textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="script" class="form-label">Script</label>
-            <textarea name="script" id="script" class="form-control" rows="4" dir="ltr">{{ isset($attributes->script) && is_string($attributes?->script) ? $attributes?->script : '' }}</textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="datalist" class="form-label">Datalist From Database</label>
-            باید شامل value و label باشد
-            <textarea name="datalist_from_database" id="datalist" class="form-control" rows="4" dir="ltr">{{ isset($attributes->datalist_from_database) && is_string($attributes?->datalist_from_database) ? $attributes?->datalist_from_database : '' }}</textarea>
-        </div>
 
         <button class="btn btn-primary">{{ trans('Update') }}</button>
     </form>
