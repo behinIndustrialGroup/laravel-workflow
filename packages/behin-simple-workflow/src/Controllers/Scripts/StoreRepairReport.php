@@ -45,7 +45,7 @@ class StoreRepairReport extends Controller
             [
                 'case_number' => $caseNumber,
                 'creator' => getUserInfo($variable->where('key', 'mapa_expert')->first()->value)->name ?? '',
-                'reports' => $variable->where('key','fix_report')->first()->value ?? '',
+                'report' => $variable->where('key','fix_report')->first()->value ?? '',
                 'start_date' => $variable->where('key','fix_start_date')->first()->value?? '',
                 'start_time' => $variable->where('key','fix_start_time')->first()->value?? '',
                 'end_date' => $variable->where('key','fix_end_date')->first()->value?? '',
