@@ -44,7 +44,7 @@ class StoreRepairReport extends Controller
         Repair_reports::create(
             [
                 'case_number' => $caseNumber,
-                'creator' => $variable->where('key', 'mapa_expert')->first()->value ?? '',
+                'creator' => getUserInfo($variable->where('key', 'mapa_expert')->first()->value)->name ?? '',
                 'reports' => $variable->where('key','fix_report')->first()->value ?? '',
                 'start_date' => $variable->where('key','fix_start_date')->first()->value?? '',
                 'start_time' => $variable->where('key','fix_start_time')->first()->value?? '',
