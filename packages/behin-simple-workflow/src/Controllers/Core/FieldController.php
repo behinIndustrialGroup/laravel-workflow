@@ -27,18 +27,18 @@ class FieldController extends Controller
             'query' => 'nullable|string',
             'placeholder' => 'nullable|string',
         ]);
-        $attributes = [
-            'query' => $request->query ? $request->query : null,
-            'placeholder' => $request->placeholder,
-            'style' => $request->style,
-            'script' => $request->script,
-            'datalist_from_database' => $request->datalist_from_database
-        ];
+        // $attributes = [
+        //     'query' => $request->input('query') ? $request->input('query') : null,
+        //     'placeholder' => $request->placeholder,
+        //     'style' => $request->style,
+        //     'script' => $request->script,
+        //     'datalist_from_database' => $request->datalist_from_database
+        // ];
 
         Fields::create([
             'name' => $request->name,
             'type' => $request->type,
-            'attributes' => json_encode($attributes)
+            'attributes' => null //json_encode($attributes)
         ]);
 
         return redirect()->route('simpleWorkflow.fields.index', ['#createForm'])->with('success', 'Fields created successfully.');
