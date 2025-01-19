@@ -55,13 +55,14 @@
     <div class="d-flex justify-content-end bg-white p-2 mt-2">
         @if ($inbox->status == 'draft')
             <button class="btn btn-sm btn-outline-info m-1" onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
-        @endif
+        @else
         <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
             <i class="fa fa-save"></i> {{ trans('fields.Save') }}
         </button>
         <button class="btn btn-sm btn-outline-danger m-1" onclick="saveAndNextForm()">
             <i class="fa fa-save"></i>  <i class="fa fa-arrow-left"></i>{{ trans('fields.Save and next') }}
         </button>
+        @endif
     </div>
 @endsection
 
