@@ -54,4 +54,8 @@ class Cases extends Model
     {
         return User::find($this->creator);
     }
+
+    public function whereIs(){
+        return Inbox::where('case_id', $this->id)->whereNotIn('status', ['done'])->get();
+    }
 }
