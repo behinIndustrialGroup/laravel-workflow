@@ -74,7 +74,7 @@ class InboxController extends Controller
 
     public static function getUserInbox($userId): Collection
     {
-        $rows = Inbox::where('actor', $userId)->whereIn('status', ['new', 'opened', 'inProgress'])->with('task')->orderBy('created_at', 'desc')->get();
+        $rows = Inbox::where('actor', $userId)->whereIn('status', ['new', 'opened', 'inProgress', 'draft'])->with('task')->orderBy('created_at', 'desc')->get();
         return $rows;
     }
 
@@ -140,6 +140,15 @@ class InboxController extends Controller
                 'variables' => $variables,
                 'form' => $form
             ]);
+        }
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $inbox = self::getById($id);
+        if($inbox->status == 'draft'){
+            $inbox->delete();
+            return redirect()->route('simpleWorkflow.inbox.index')->with('success', trans('fields.Inbox deleted successfully'));
         }
     }
 

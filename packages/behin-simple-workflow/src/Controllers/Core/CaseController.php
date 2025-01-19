@@ -17,18 +17,33 @@ class CaseController extends Controller
         return Cases::find($id);
     }
 
-    public static function create($processId, $creator, $name = null)
+    public static function create($processId, $creator, $name = null, $inDraft = false)
     {
-        $lastNumber = Cases::where('process_id', $processId)->orderBy('number', 'desc')->first()?->number;
-        $lastNumber = (int) $lastNumber;
-        $newNumber = $lastNumber ? $lastNumber + 1 : config('workflow.caseStartValue');
-        Log::info($newNumber);
+        if($inDraft) {
+            return Cases::create([
+                'process_id' => $processId,
+                'number' => null,
+                'name' => $name,
+                'creator' => $creator
+            ]);
+        }
+        $newNumber = self::getNewCaseNumber($processId);
         return Cases::create([
             'process_id' => $processId,
             'number' => $newNumber,
             'name' => $name,
             'creator' => $creator
         ]);
+    }
+
+    public static function getNewCaseNumber($processId){
+        $lastNumber = Cases::where('process_id', $processId)->orderBy('number', 'desc')->first()?->number;
+        $newNumber = $lastNumber? $lastNumber + 1 : config('workflow.caseStartValue');
+        return $newNumber;
+    }
+
+    public static function setCaseNumber($caseId, $number){
+        Cases::where('id', $caseId)->update(['number' => $number]);
     }
 
     public static function getProcessCases($processId)

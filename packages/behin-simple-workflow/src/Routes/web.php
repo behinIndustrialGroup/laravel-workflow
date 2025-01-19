@@ -18,7 +18,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::get('create', [ ProcessController::class, 'create' ])->name('create');
         Route::post('store', [ ProcessController::class, 'store' ])->name('store');
         Route::get('start-list', [ ProcessController::class, 'startListView' ])->name('startListView');
-        Route::get('start/{taskId}', [ ProcessController::class, 'start' ])->name('start');
+        Route::get('start/{taskId}/{force?}/{redirect?}/{inDraft}', [ ProcessController::class, 'start' ])->name('start');
         Route::get('check-error/{processId}', [ ProcessController::class, 'processHasError' ])->name('processHasError');
     });
 
@@ -57,9 +57,11 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');
         Route::get('edit/{inboxId}', [ InboxController::class, 'edit' ])->name('edit');
         Route::put('update/{inboxId}', [ InboxController::class, 'update' ])->name('update');
+        Route::get('delete/{inboxId}', [ InboxController::class, 'delete' ])->name('delete');
     });
 
     Route::name('routing.')->prefix('routing')->group(function(){
+        Route::post('create-case-number-and-save', [ RoutingController::class, 'createCaseNumberAndSave' ])->name('createCaseNumberAndSave');
         Route::post('save', [ RoutingController::class, 'save' ])->name('save');
         Route::post('save-and-next', [ RoutingController::class, 'saveAndNext' ])->name('saveAndNext');
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');

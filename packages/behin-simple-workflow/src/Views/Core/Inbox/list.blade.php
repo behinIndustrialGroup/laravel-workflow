@@ -42,6 +42,8 @@
                                     <span class="badge bg-primary">{{ trans('fields.New') }}</span>
                                 @elseif($row->status == 'in_progress')
                                     <span class="badge bg-warning">{{ trans('fields.In Progress') }}</span>
+                                @elseif($row->status == 'draft')
+                                    <span class="badge bg-info">{{ trans('fields.Draft') }}</span>
                                 @else
                                     <span class="badge bg-success">{{ trans('fields.Completed') }}</span>
                                 @endif
@@ -51,6 +53,11 @@
                                 <a href="{{ route('simpleWorkflow.inbox.view', $row->id) }}"
                                     class="btn btn-sm btn-primary">{{ trans('fields.View') }}<i
                                         class="fa fa-external-link"></i></a>
+                                @if ($row->status == 'draft')
+                                    <a href="{{ route('simpleWorkflow.inbox.delete', $row->id) }}"
+                                        class="btn btn-sm btn-danger">{{ trans('fields.Delete') }}
+                                    <i class="fa fa-trash"></i></a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

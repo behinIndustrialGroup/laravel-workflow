@@ -17,29 +17,34 @@ use Illuminate\Support\Facades\Log;
 
 class RoutingController extends Controller
 {
+    public static function createCaseNumberAndSave(Request $request)
+    {
+        $request->validate([
+            'processId' => 'required',
+            'caseId' => 'required',
+            'inboxId' => 'required',
+        ]);
+        $processId = $request->processId;
+        $caseId = $request->caseId;
+        $inboxId = $request->inboxId;
+
+        $vars = $request->all();
+        $newCaseNumber = CaseController::getNewCaseNumber($processId);
+        CaseController::setCaseNumber($caseId, $newCaseNumber);
+        InboxController::changeStatusByInboxId($inboxId, 'new');
+        return self::save($request);
+    }
     public static function save(Request $request, $requiredFields = [])
     {
         $request->validate([
             'processId' => 'required',
             'caseId' => 'required',
         ]);
-
-        // $ar = [];
-        // if(count($requiredFields) > 0){
-        //     foreach($requiredFields as $field){
-        //         $ar[$field] = 'required';
-        //     }
-        //     $request->validate($ar);
-        // }
-
         $processId = $request->processId;
-        // $taskId = $request->taskId;
         $caseId = $request->caseId;
 
         $vars = $request->all();
-        // return $vars;
 
-        // return $vars;
         foreach ($vars as $key => $value) {
             if (gettype($value) == 'object') {
                 VariableController::saveFile($processId, $caseId, $key, $value);
@@ -50,7 +55,6 @@ class RoutingController extends Controller
                 VariableController::save($processId, $caseId, $key, $value);
             }
         }
-        // Log::info("test");
         foreach ($requiredFields as $field) {
             $var = VariableController::getVariable($processId, $caseId, $field);
             if (!$var?->value) {

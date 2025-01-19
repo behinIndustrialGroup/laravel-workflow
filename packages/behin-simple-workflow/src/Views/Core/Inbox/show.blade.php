@@ -53,6 +53,9 @@
     </div>
 
     <div class="d-flex justify-content-end bg-white p-2 mt-2">
+        @if ($inbox->status == 'draft')
+            <button class="btn btn-sm btn-outline-info m-1" onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
+        @endif
         <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
             <i class="fa fa-save"></i> {{ trans('fields.Save') }}
         </button>
@@ -65,6 +68,23 @@
 @section('script')
     <script>
         initial_view()
+        function createCaseNumberAndSave() {
+            var form = $('#form')[0];
+            var fd = new FormData(form);
+            send_ajax_formdata_request(
+                '{{ route('simpleWorkflow.routing.createCaseNumberAndSave') }}',
+                fd,
+                function(response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        show_message(response.msg)
+                        window.location.reload();
+                    } else {
+                        show_error(response.msg);
+                    }
+                }
+            )
+        }
 
         function saveForm() {
             var form = $('#form')[0];
@@ -94,7 +114,7 @@
                     console.log(response);
                     if (response.status == 200) {
                         show_message('{{ trans('fields.Saved') }}')
-                        // window.close();                        
+                        // window.close();
                         window.location.href = '{{ route('simpleWorkflow.inbox.index') }}';
                     } else {
                         show_error(response.msg);

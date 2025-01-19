@@ -66,7 +66,7 @@ class ProcessController extends Controller
         ]);
     }
 
-    public static function start($taskId, $force = false, $redirect = true)
+    public static function start($taskId, $force = false, $redirect = true, $inDraft = false)
     {
         $task = TaskController::getById($taskId);
         if(!$force)
@@ -80,8 +80,9 @@ class ProcessController extends Controller
             }
         }
         $creator = Auth::user() ? Auth::user()->id : 1;
-        $case = CaseController::create($task->process_id, $creator );
-        $inbox = InboxController::create($taskId, $case->id, $creator, 'new');
+        $case = CaseController::create($task->process_id, $creator, null, $inDraft );
+        $status = $inDraft ? 'draft' : 'new';
+        $inbox = InboxController::create($taskId, $case->id, $creator, $status);
         if($redirect)
         {
             // return InboxController::view($inbox->id);
