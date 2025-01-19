@@ -166,6 +166,10 @@ class RoutingController extends Controller
                         'msg' => $result
                     ]);
                 }
+                if ($task->next_element_id) {
+                    $nextTask = TaskController::getById($task->next_element_id);
+                    self::executeNextTask($nextTask, $caseId);
+                }
                 $taskChildren = $task->children();
                 foreach ($taskChildren as $task) {
                     self::executeNextTask($task, $caseId);
