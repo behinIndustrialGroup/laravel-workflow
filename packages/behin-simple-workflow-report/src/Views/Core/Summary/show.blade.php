@@ -35,10 +35,11 @@
                                         <td>{{ $case->number }}</td>
                                         <td>{{ $case->creator()?->name }}</td>
                                         @php
-                                            $s = $case->variables()->where('key', 'customer_Workshop_or_ceo_name')->first()?->value;
-                                            $s .= ' - ';
+                                            $s = $case->variables()->where('key', 'customer_fullname')->first()?->value;
+                                            $s .= ' ';
+                                            $s .= $case->variables()->where('key', 'customer_workshop_or_ceo_name')->first()?->value;
+                                            $s .= ' | دستگاه: ';
                                             $s .= $case->variables()->where('key', 'device_name')->first()?->value;
-                                            $s .= ' - ';
                                         @endphp
                                         <td>{{ $s }}</td>
                                         @php
