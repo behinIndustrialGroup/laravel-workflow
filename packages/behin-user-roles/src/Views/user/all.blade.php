@@ -41,3 +41,16 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#table').DataTable({
+                responsive: true,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Persian.json",
+                },
+            });
+        });
+    </script>
+@endsection
