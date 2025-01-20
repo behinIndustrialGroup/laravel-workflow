@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="box">
-            <div class="box-header">
+    <div class="container">
+        <div class="card ">
+            <div class="card-header">
                 <a href="{{route('register')}}">
                     <button>
                         ایجاد کاربر
@@ -15,13 +15,14 @@
                 </a>
             </div>
 
-            <div class="box-body">
+            <div class="card-body table-responsive">
                 <table class="table" id="table">
                     <thead>
                         <tr>
                             <th>شناسه</th>
                             <th>نام</th>
                             <th>نام کاربری</th>
+                            <th>نقش</th>
                             <th>ویرایش</th>
 
                         </tr>
@@ -29,8 +30,9 @@
                     @foreach($users as $user)
                         <tr>
                             <td>{{$user->id}}</td>
-                            <td>{{$user->display_name}}</td>
                             <td>{{$user->name}}</td>
+                            <td>{{$user->email}}</td>
+                            <td>{{$user->role()->name ?? ''}}</td>
                             <td><a href="{{$user->id}}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                     @endforeach
