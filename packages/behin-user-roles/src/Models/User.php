@@ -75,7 +75,7 @@ class User extends Authenticatable
     }
 
     function role(){
-        return Role::find($this->id);
+        return Role::find($this->role_id);
     }
 
 }
