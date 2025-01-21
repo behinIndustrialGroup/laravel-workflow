@@ -15,7 +15,7 @@
             <p class="mb-0">
                 {{ trans('fields.Case Number') }}: <span class="badge badge-secondary">{{ $case->number }}</span> <br>
                 {{ trans('fields.Creator') }}: <span class="badge badge-light">{{ getUserInfo($case->creator)->name }}</span> <br>
-                {{ trans('fields.Created At') }}: <span class="badge badge-light" dir="ltr">{{ $case->created_at->format('Y-m-d H:i') }}</span>
+                {{ trans('fields.Created At') }}: <span class="badge badge-light" dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</span>
                 <br>
                 <span class="badge badge-light" style="color: dark">{{ $case->id }}</span>
             </p>
@@ -36,10 +36,10 @@
         </div>
         <div class="card-body">
             <form action="javascript:void(0)" method="POST" id="form" enctype="multipart/form-data" class="needs-validation" novalidate>
-                <input type="hidden" name="inboxId" id="" value="{{ $inbox->id }}">
-                <input type="hidden" name="caseId" id="" value="{{ $case->id }}">
-                <input type="hidden" name="taskId" id="" value="{{ $task->id }}">
-                <input type="hidden" name="processId" id="" value="{{ $process->id }}">
+                <input type="hidden" name="inboxId" id="inboxId" value="{{ $inbox->id }}">
+                <input type="hidden" name="caseId" id="caseId" value="{{ $case->id }}">
+                <input type="hidden" name="taskId" id="taskId" value="{{ $task->id }}">
+                <input type="hidden" name="processId" id="processId" value="{{ $process->id }}">
                 @include('SimpleWorkflowView::Core.Form.preview', [
                     'form' => $form,
                     'task' => $task,
