@@ -13,5 +13,7 @@
             "email": "mkhodroo@yahoo.com"
         }
     ],
-    "require": {}
+    "require": {
+        "morilog/jalali": "3.*"
+    }
 }
