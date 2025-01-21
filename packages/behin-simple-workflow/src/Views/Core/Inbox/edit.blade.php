@@ -1,6 +1,10 @@
 @extends('behin-layouts.app')
 
 @section('content')
+<div class="container card p-2">
+    <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $inbox->case_id) }}"
+        class="btn btn-sm btn-primary">{{ trans('fields.Back') }}</a>
+</div>
     <div class="container table-responsive card p-2">
         <h2>{{ trans('fields.Edit Inbox') }}</h2>
         @if (session('error'))

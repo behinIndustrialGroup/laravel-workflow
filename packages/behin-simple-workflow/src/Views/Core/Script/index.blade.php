@@ -12,6 +12,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Executive File</th>
                         <th>Actions</th>
@@ -20,6 +21,7 @@
                 <tbody>
                     @foreach ($scripts as $script)
                         <tr>
+                            <td>{{ $script->id }}</td>
                             <td>{{ $script->name }}</td>
                             <td>{{ $script->executive_file }}</td>
                             <td>

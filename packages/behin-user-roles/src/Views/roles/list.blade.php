@@ -9,8 +9,21 @@
                         <th>شناسه</th>
                         <th>نام</th>
                         <th>ایجاد</th>
+                        <th>اقدام</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @foreach ($roles as $role)
+                        <tr>
+                            <td>{{ $role->id }}</td>
+                            <td>{{ $role->name }}</td>
+                            <td>{{ $role->created_at }}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{{ route('role.show', $role->id) }}"><i class="fa fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>
@@ -18,20 +31,20 @@
 
 @section('script')
     <script>
-        var table = create_datatable(
-            "role-table",
-            "{{ route('role.list') }}",
-            [
-                {data : 'id'},
-                {data : 'name'},
-                {data : 'created_at'}
-            ]
-        )
+        // var table = create_datatable(
+        //     "role-table",
+        //     "{{ route('role.list') }}",
+        //     [
+        //         {data : 'id'},
+        //         {data : 'name'},
+        //         {data : 'created_at'}
+        //     ]
+        // )
 
-        table.on('click', 'tr', function(){
-            var data = table.row( this ).data();
-            show_edit_modal(data.id);
-        })
+        // table.on('click', 'tr', function(){
+        //     var data = table.row( this ).data();
+        //     show_edit_modal(data.id);
+        // })
 
         function show_edit_modal(id){
             var fd = new FormData();

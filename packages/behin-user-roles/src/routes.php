@@ -6,9 +6,10 @@ use BehinUserRoles\Controllers\GetMethodsController;
 use BehinUserRoles\Controllers\GetRoleController;
 use BehinUserRoles\Controllers\UserController;
 
-Route::name('role.')->prefix('role')->middleware(['web', 'auth',Access::class])->group(function(){
+Route::name('role.')->prefix('role')->middleware(['web', 'auth'])->group(function(){
     Route::get('list-form', [GetRoleController::class, 'listForm'])->name('listForm');
     Route::get('list', [GetRoleController::class, 'list'])->name('list');
+    Route::get('show/{id}', [GetRoleController::class, 'show'])->name('show');
     Route::post('get', [GetRoleController::class, 'get'])->name('get');
     Route::post('edit', [GetRoleController::class, 'edit'])->name('edit');
     Route::post('change-user-role', [GetRoleController::class, 'changeUserRole'])->name('changeUserRole');

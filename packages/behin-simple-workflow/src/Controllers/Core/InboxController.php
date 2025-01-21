@@ -60,7 +60,12 @@ class InboxController extends Controller
     public static function changeStatusByInboxId($inboxId, $status)
     {
         $inboxRow = self::getById($inboxId);
-        $inboxRow->status = $status;
+        if($inboxRow->status == 'done' and $inboxRow->actor != Auth::id()){
+            $inboxRow->status = 'doneByOther';
+        }
+        else{
+            $inboxRow->status = $status;
+        }
         $inboxRow->save();
     }
 

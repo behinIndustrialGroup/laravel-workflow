@@ -79,11 +79,18 @@ class RoutingController extends Controller
         $taskId = $request->taskId;
         $process = ProcessController::getById($processId);
         $inbox = InboxController::getById($request->inboxId);
+
+        if(in_array($inbox->status , ['done', 'doneByOther'])){
+            return response()->json([
+               'status' => 400,
+               'msg' => trans('fields.Task Has Been Done Previously')
+            ]);
+        }
+
         $task = $inbox->task;
         $form = $task->executiveElement();
         $requiredFields = FormController::requiredFields($form->id);
         $result = self::save($request, $requiredFields);
-        Log::info($result);
         if ($result['status'] != 200) {
             return $result;
         }

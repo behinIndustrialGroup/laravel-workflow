@@ -18,8 +18,8 @@
                     <tr>
                         <th>#</th>
                         <th>{{ trans('fields.Process Title') }}</th>
-                        <th>{{ trans('fields.Task Title') }}</th>
                         <th>{{ trans('fields.Case Number') }}</th>
+                        <th>{{ trans('fields.Case Name') }}</th>
                         <th>{{ trans('fields.Actions') }}</th>
                     </tr>
                 </thead>
@@ -28,8 +28,8 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $row->task->process->name }}</td>
-                            <td>{{ $row->task->name }}</td>
                             <td>{{ $row->case->number }}</td>
+                            <td>{{ $row->case_name }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case->id) }}"
                                     class="btn btn-sm btn-primary">{{ trans('fields.Show More') }}</a>
@@ -39,7 +39,7 @@
                 </tbody>
             </table>
         @endif
-        
+
     </div>
 @endsection
 

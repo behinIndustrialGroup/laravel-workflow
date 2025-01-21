@@ -283,14 +283,36 @@ audio{
     width: 100% !important;
     height: 25px !important;
   }
-  
+
   .direct-chat-timestamp{
     font-size: 15px !important;
     direction: ltr !important;
     color: rgb(0, 0, 0) !important;
   }
-  
+
   .direct-chat-name{
     display: block !important;
     color: rgb(0, 0, 0) !important;
+  }
+
+  .bg-new{
+    background-color: #4670f8e8 !important;
+  }
+  .bg-inProgress{
+    background-color: #f5d33c !important;
+  }
+  .bg-opened{
+    background-color: #ffff00 !important;
+  }
+  .bg-done{
+    background-color: #059f00 !important;
+  }
+  .bg-canceled{
+    background-color: #ff0000 !important;
+  }
+  .bg-draft{
+    background-color: #6f0080 !important;
+  }
+  .bg-doneByOther{
+    background-color: #059f00 !important;
   }

@@ -23,7 +23,8 @@
                         <th>{{ trans('fields.Case Title') }}</th>
                         <th>{{ trans('fields.Actor') }}</th>
                         <th>{{ trans('fields.Status') }}</th>
-                        <th>{{ trans('fields.Received At') }}</th>
+                        <th>{{ trans('fields.Created At') }}</th>
+                        <th>{{ trans('fields.Updated At') }}</th>
                         <th>{{ trans('fields.Actions') }}</th>
                     </tr>
                 </thead>
@@ -37,15 +38,10 @@
                             <td>{{ $row->case_name }}</td>
                             <td>{{ getUserInfo($row->actor)?->name }}</td>
                             <td>
-                                @if ($row->status == 'new')
-                                    <span class="badge bg-primary">{{ trans('fields.New') }}</span>
-                                @elseif($row->status == 'in_progress')
-                                    <span class="badge bg-warning">{{ trans('fields.In Progress') }}</span>
-                                @else
-                                    <span class="badge bg-success">{{ trans('fields.Completed') }}</span>
-                                @endif
+                                <span class="badge bg-{{$row->status}}">{{ trans('fields.' . $row->status) }}</span>
                             </td>
                             <td>{{ $row->created_at->format('Y-m-d H:i') }}</td>
+                            <td>{{ $row->created_at == $row->updated_at ? '' : $row->updated_at->format('Y-m-d H:i') }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
                                     class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>
@@ -55,7 +51,7 @@
                 </tbody>
             </table>
         @endif
-        
+
     </div>
 @endsection
 
@@ -66,7 +62,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
             order: [
-                [6, 'desc']
+                [7, 'desc']
             ]
         });
     </script>

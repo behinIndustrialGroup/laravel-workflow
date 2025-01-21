@@ -1,17 +1,29 @@
-<?php 
+<?php
 
 namespace BehinUserRoles\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use BehinInit\App\Http\Controllers\AccessController;
 use Illuminate\Http\Request;
 use BehinInit\App\Models\Access;
 use BehinUserRoles\Models\Role;
 
 class GetRoleController extends Controller
 {
+    public static function hasNotAccess(){
+        $access = new AccessController('User Roles');
+        if($access->check()){
+            return false;
+        }
+        return true;
+    }
     function listForm() {
-        return view('URPackageView::roles.list');
+        if(self::hasNotAccess()){
+            abort(403, 'Access denied');
+        }
+        $roles = self::getAll();
+        return view('URPackageView::roles.list', compact('roles'));
     }
 
     function list() {
@@ -22,6 +34,15 @@ class GetRoleController extends Controller
 
     public static function getAll() {
         return Role::get();
+    }
+
+    public function show($id) {
+        if(self::hasNotAccess()){
+            abort(403, 'Access denied');
+        }
+        $role = self::getById($id);
+        $methods = GetMethodsController::getByRoleAccess($role->id);
+        return view('URPackageView::roles.show', compact('role', 'methods'));
     }
 
 
@@ -44,6 +65,7 @@ class GetRoleController extends Controller
                 ]
             );
         }
+        return redirect()->back()->with('success', 'Role updated successfully');
         return response('ok');
     }
 
@@ -56,5 +78,9 @@ class GetRoleController extends Controller
 
     public static function getByName($name){
         return Role::where('name', $name)->first();
+    }
+
+    public static function getById($id){
+        return Role::find($id);
     }
 }
