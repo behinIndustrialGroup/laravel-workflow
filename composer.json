@@ -9,7 +9,8 @@
         "barryvdh/laravel-translation-manager": "^0.6.6",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "melipayamak/php": "1.0.0"
+        "melipayamak/php": "1.0.0",
+        "morilog/jalali": "3.*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

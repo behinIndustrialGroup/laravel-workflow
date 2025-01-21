@@ -40,8 +40,8 @@
                             <td>
                                 <span class="badge bg-{{$row->status}}">{{ trans('fields.' . $row->status) }}</span>
                             </td>
-                            <td>{{ $row->created_at->format('Y-m-d H:i') }}</td>
-                            <td>{{ $row->created_at == $row->updated_at ? '' : $row->updated_at->format('Y-m-d H:i') }}</td>
+                            <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
+                            <td dir="ltr">{{ $row->created_at == $row->updated_at ? '' : toJalali($row->updated_at)->format('Y-m-d H:i') }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
                                     class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>

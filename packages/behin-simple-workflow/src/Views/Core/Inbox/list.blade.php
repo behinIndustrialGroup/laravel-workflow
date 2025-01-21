@@ -48,7 +48,7 @@
                                     <span class="badge bg-success">{{ trans('fields.Completed') }}</span>
                                 @endif
                             </td>
-                            <td>{{ $row->created_at->format('Y-m-d H:i') }}</td>
+                            <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.view', $row->id) }}"
                                     class="btn btn-sm btn-primary">{{ trans('fields.View') }}<i
