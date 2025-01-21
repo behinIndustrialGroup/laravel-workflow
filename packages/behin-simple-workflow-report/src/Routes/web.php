@@ -13,6 +13,7 @@ use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use BehinProcessMaker\Models\PMVariable;
 use BehinProcessMaker\Models\PmVars;
@@ -22,6 +23,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('index', [ReportController::class, 'index'])->name('index');
     Route::resource('report', ReportController::class);
     Route::resource('summary-report', SummaryReportController::class);
+    Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
     Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment');
     Route::get('import', function () {

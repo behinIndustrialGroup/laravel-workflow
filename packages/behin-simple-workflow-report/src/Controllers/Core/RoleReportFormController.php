@@ -10,16 +10,18 @@ use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
+use BehinUserRoles\Controllers\GetRoleController;
+use BehinUserRoles\Models\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SummaryReportController extends Controller
+class RoleReportFormController extends Controller
 {
     public function index(): View
     {
-        $processes = getProcesses();
-        return view('SimpleWorkflowReportView::Core.Summary.index', compact('processes'));
+        $roles = GetRoleController::getAll();
+        return view('SimpleWorkflowReportView::Core.Role.index', compact('roles'));
     }
 
     public function show($process_id)
@@ -44,4 +46,11 @@ class SummaryReportController extends Controller
 
         return view('SimpleWorkflowReportView::Core.Report.edit', compact('case','form','process'));
     }
+
+    public static function update(Request $request, Role $role){
+        $role->summary_report_form_id = $request->summary_report_form_id;
+        $role->save();
+        return redirect()->back();
+    }
+
 }

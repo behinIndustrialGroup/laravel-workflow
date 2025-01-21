@@ -94,6 +94,12 @@ if(!function_exists('toJalali')){
     }
 }
 
+if(!function_exists('getFormInformation')){
+    function getFormInformation($id){
+        return FormController::getById($id);
+    }
+}
+
 
 
 

@@ -56,6 +56,6 @@ class Cases extends Model
     }
 
     public function whereIs(){
-        return Inbox::where('case_id', $this->id)->whereNotIn('status', ['done'])->get();
+        return Inbox::where('case_id', $this->id)->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
     }
 }
