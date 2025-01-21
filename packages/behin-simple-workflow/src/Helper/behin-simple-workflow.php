@@ -8,7 +8,7 @@ use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflow\Controllers\Core\ScriptController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
-
+use Morilog\Jalali\Jalalian;
 
 if (!function_exists('getProcesses')) {
     function getProcesses() {
@@ -78,6 +78,19 @@ if (!function_exists('getUserInfo')) {
             return $user;
         }
         return User::where('pm_user_uid', $userId)->first();
+    }
+}
+
+if (!function_exists('runScript')) {
+    function runScript($id, $caseId) {
+        return ScriptController::runScript($id, $caseId);
+    }
+}
+
+if(!function_exists('toJalali')){
+    function toJalali($date){
+        $jDate = Jalalian::fromCarbon($date);
+        return $jDate;
     }
 }
 
