@@ -54,6 +54,9 @@ class GetRoleController extends Controller
     }
 
     function edit(Request $r) {
+        Role::where('id', $r->role_id)->update([
+            'name' => $r->name,
+        ]);
         foreach(GetMethodsController::getAll() as $method){
             Access::updateOrCreate(
                 [
@@ -82,5 +85,31 @@ class GetRoleController extends Controller
 
     public static function getById($id){
         return Role::find($id);
+    }
+
+    
+    public static function getRoleAccess($role_id){
+        return Access::where('role_id', $role_id)->get();
+    }
+    
+
+
+    public static function copy($id){
+        $role = self::getById($id);
+        $newRole = $role->replicate();
+        $newRole->save();
+
+        foreach (self::getRoleAccess($role->id) as $access) {
+            Access::updateOrCreate(
+                [
+                    'role_id' => $newRole->id,
+                    'method_id' => $access->method_id
+                ],
+                [
+                    'access' => $access->access
+                ]
+            );
+        }
+        return redirect()->back()->with('success', 'Role copied successfully');
     }
 }
