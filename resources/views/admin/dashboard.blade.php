@@ -53,7 +53,7 @@
                         class="fa fa-arrow-circle-left"></i></a>
             </div>
         </div>
-        @if (auth()->user()->access('منو >>گزارشات کارتابل>>لیست'))
+        @if (auth()->user()->access('منو >>گزارشات کارتابل>>خلاصه'))
             <div class="col-sm-3 ">
                 <!-- small box -->
                 <div class="small-box bg-warning">
@@ -65,7 +65,7 @@
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="{{ route('simpleWorkflowReport.report.index') }}"
+                    <a href="{{ route('simpleWorkflowReport.summary-report.index') }}"
                         class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
