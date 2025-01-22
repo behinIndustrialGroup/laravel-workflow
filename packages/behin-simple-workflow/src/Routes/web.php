@@ -1,6 +1,7 @@
 <?php
 
 use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
+use Behin\SimpleWorkflow\Controllers\Core\DoneInboxController;
 use Behin\SimpleWorkflow\Controllers\Core\EntityController;
 use Behin\SimpleWorkflow\Controllers\Core\FieldController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
@@ -52,6 +53,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
 
     Route::name('inbox.')->prefix('inbox')->group(function(){
         Route::get('', [ InboxController::class, 'index' ])->name('index');
+        Route::get('done-inbox', [ DoneInboxController::class, 'index' ])->name('done');
         // Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
         Route::get('cases', [ InboxController::class, 'showCases' ])->name('cases.list');
         Route::get('cases/{caseId}/inboxes', [ InboxController::class, 'showInboxes' ])->name('cases.inboxes');

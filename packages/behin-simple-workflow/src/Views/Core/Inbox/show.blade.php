@@ -14,8 +14,10 @@
         <div class="card-body">
             <p class="mb-0">
                 {{ trans('fields.Case Number') }}: <span class="badge badge-secondary">{{ $case->number }}</span> <br>
-                {{ trans('fields.Creator') }}: <span class="badge badge-light">{{ getUserInfo($case->creator)->name }}</span> <br>
-                {{ trans('fields.Created At') }}: <span class="badge badge-light" dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</span>
+                {{ trans('fields.Creator') }}: <span class="badge badge-light">{{ getUserInfo($case->creator)->name }}</span>
+                <br>
+                {{ trans('fields.Created At') }}: <span class="badge badge-light"
+                    dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</span>
                 <br>
                 <span class="badge badge-light" style="color: dark">{{ $case->id }}</span>
             </p>
@@ -35,7 +37,8 @@
             <h6 class="m-0 font-weight-bold text-primary">{{ $form->name }}</h6>
         </div>
         <div class="card-body">
-            <form action="javascript:void(0)" method="POST" id="form" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form action="javascript:void(0)" method="POST" id="form" enctype="multipart/form-data"
+                class="needs-validation" novalidate>
                 <input type="hidden" name="inboxId" id="inboxId" value="{{ $inbox->id }}">
                 <input type="hidden" name="caseId" id="caseId" value="{{ $case->id }}">
                 <input type="hidden" name="taskId" id="taskId" value="{{ $task->id }}">
@@ -52,23 +55,44 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-end bg-white p-2 mt-2">
-        @if ($inbox->status == 'draft')
-            <button class="btn btn-sm btn-outline-info m-1" onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
-        @else
-        <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
-            <i class="fa fa-save"></i> {{ trans('fields.Save') }}
-        </button>
-        <button class="btn btn-sm btn-outline-danger m-1" onclick="saveAndNextForm()">
-            <i class="fa fa-save"></i>  <i class="fa fa-arrow-left"></i>{{ trans('fields.Save and next') }}
-        </button>
-        @endif
-    </div>
+    @if (in_array($inbox->status, ['done', 'doneByOther']))
+        <div class="card shadow-sm mb-2">
+            <div class="card-body">
+                <p class="m-0">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    {{ trans('fields.Done At') }}:
+                    <span class="badge badge-light" dir="ltr">
+                        {{ toJalali($inbox->updated_at)->format('Y-m-d H:i') }}
+                    </span>
+                    <br>
+                    {{ trans('fields.Done By') }}:
+                    <span class="badge badge-light">
+                        {{ getUserInfo($inbox->actor)->name }}
+                    </span>
+                </p>
+            </div>
+        </div>
+    @else
+        <div class="d-flex justify-content-end bg-white p-2 mt-2">
+            @if ($inbox->status == 'draft')
+                <button class="btn btn-sm btn-outline-info m-1"
+                    onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
+            @else
+                <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
+                    <i class="fa fa-save"></i> {{ trans('fields.Save') }}
+                </button>
+                <button class="btn btn-sm btn-outline-danger m-1" onclick="saveAndNextForm()">
+                    <i class="fa fa-save"></i> <i class="fa fa-arrow-left"></i>{{ trans('fields.Save and next') }}
+                </button>
+            @endif
+        </div>
+    @endif
 @endsection
 
 @section('script')
     <script>
         initial_view()
+
         function createCaseNumberAndSave() {
             var form = $('#form')[0];
             var fd = new FormData(form);
