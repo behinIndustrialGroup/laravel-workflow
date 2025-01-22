@@ -70,10 +70,10 @@ class GetRoleController extends Controller
     }
 
     function changeUserRole(Request $r) {
-        User::where('id', $r->user_id)->update([
+        User::where('id', $r->id)->update([
             'role_id' => $r->role_id
         ]);
-        return response('ok');
+        return redirect()->back()->with('success', 'User role updated successfully');
     }
 
     public static function getByName($name){

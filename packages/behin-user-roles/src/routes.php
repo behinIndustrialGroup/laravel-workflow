@@ -12,7 +12,7 @@ Route::name('role.')->prefix('role')->middleware(['web', 'auth'])->group(functio
     Route::get('show/{id}', [GetRoleController::class, 'show'])->name('show');
     Route::post('get', [GetRoleController::class, 'get'])->name('get');
     Route::post('edit', [GetRoleController::class, 'edit'])->name('edit');
-    Route::post('change-user-role', [GetRoleController::class, 'changeUserRole'])->name('changeUserRole');
+    Route::put('change-user-role', [GetRoleController::class, 'changeUserRole'])->name('changeUserRole');
 });
 
 Route::name('method.')->prefix('method')->middleware(['web', 'auth',Access::class])->group(function(){
