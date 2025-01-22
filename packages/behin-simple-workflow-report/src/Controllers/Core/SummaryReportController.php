@@ -31,15 +31,12 @@ class SummaryReportController extends Controller
     public function edit($caseId) {
         $case = CaseController::getById($caseId);
         $process = $case->process;
-        if(Auth::user()->role_id == 1){
-            $formId = "";
-        }elseif(Auth::user()->role_id == 2){
-            $formId = "";
-        }elseif(Auth::user()->role_id == 3){
-            $formId = "";
-        }else{
-            $formId = "";
+        $summaryForm = RoleReportFormController::getSummaryReportFormByRoleId(Auth::user()->role_id);
+        if($summaryForm == null){
+            return redirect()->route('simpleWorkflowReport.summary-report.show', $case->process_id)->with('error', trans('Form not found'));
         }
+        $formId = $summaryForm->summary_form_id;
+
         $form = FormController::getById($formId);
 
         return view('SimpleWorkflowReportView::Core.Report.edit', compact('case','form','process'));

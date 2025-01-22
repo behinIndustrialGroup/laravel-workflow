@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Controllers\Core\InboxController;
 use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Process;
+use Behin\SimpleWorkflowReport\Models\Core\RoleForm;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use BehinUserRoles\Controllers\GetRoleController;
 use BehinUserRoles\Models\Role;
@@ -21,7 +22,12 @@ class RoleReportFormController extends Controller
     public function index(): View
     {
         $roles = GetRoleController::getAll();
-        return view('SimpleWorkflowReportView::Core.Role.index', compact('roles'));
+        $role_forms = self::getAll();
+        return view('SimpleWorkflowReportView::Core.Role.index', compact('roles', 'role_forms'));
+    }
+
+    public static function getAll(){
+        return RoleForm::get();
     }
 
     public function show($process_id)
@@ -30,27 +36,23 @@ class RoleReportFormController extends Controller
         return view('SimpleWorkflowReportView::Core.Summary.show', compact('process'));
     }
 
-    public function edit($caseId) {
-        $case = CaseController::getById($caseId);
-        $process = $case->process;
-        if(Auth::user()->role_id == 1){
-            $formId = "";
-        }elseif(Auth::user()->role_id == 2){
-            $formId = "";
-        }elseif(Auth::user()->role_id == 3){
-            $formId = "";
-        }else{
-            $formId = "";
-        }
-        $form = FormController::getById($formId);
-
-        return view('SimpleWorkflowReportView::Core.Report.edit', compact('case','form','process'));
-    }
-
     public static function update(Request $request, Role $role){
-        $role->summary_report_form_id = $request->summary_report_form_id;
+        $role->summary_form_id = $request->summary_form_id;
         $role->save();
         return redirect()->back();
+    }
+
+    public static function store(Request $request){
+        $row = RoleForm::create([
+            'role_id' => $request->role_id,
+            'summary_form_id' => $request->summary_form_id,
+            'process_id' => $request->process_id
+        ]);
+        return redirect()->back();
+    }
+
+    public static function getSummaryReportFormByRoleId($role_id){
+        return RoleForm::where('role_id', $role_id)->first();
     }
 
 }
