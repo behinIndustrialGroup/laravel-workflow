@@ -35,6 +35,8 @@
                     </div>
                 </div>
             </div>
+            <form action="{{ route('user.ChangePass', ['id' => $user->id]) }}" method="POST">
+                @csrf
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">{{ __('fields.New Password') }}</span>
@@ -44,8 +46,14 @@
                     <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
                 </div>
             </div>
+            </form>
             <hr>
+            <form action="{{ route('role.changeUserRole') }}" method="POST">
+
             <div class="input-group mb-3">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="id" value="{{ $user->id }}">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="role_id">{{ __('fields.Role') }}</label>
                 </div>
@@ -59,6 +67,8 @@
                     <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
                 </div>
             </div>
+        </form>
+
         </div>
     </div>
     {{-- <div class="row">
