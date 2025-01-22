@@ -156,34 +156,3 @@
         </div>
     </div> --}}
 @endsection
-@section('script')
-    <script>
-        function change_role() {
-            send_ajax_request(
-                "{{ route('role.changeUserRole') }}",
-                $('#role-table').serialize(),
-                function(response) {
-                    console.log(response);
-                }
-            )
-        }
-        $("#check_all").on('click', function() {
-            $('#access_tbl input:checkbox').prop('checked', 'true');
-        });
-
-        // function create_pm_user(){
-        //     var fd = new FormData();
-        //     fd.append('username', "{{ $user->pm_username }}");
-        //     fd.append('firstname', "{{ $user->name }}");
-        //     fd.append('lastname', "{{ $user->name }}");
-        //     send_ajax_formdata_request(
-        //         '{{ route('MkhodrooProcessMaker.api.user.create') }}',
-        //         fd,
-        //         function(response){
-        //             console.log(response);
-
-        //         }
-        //     )
-        // }
-    </script>
-@endsection
