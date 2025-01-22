@@ -8,14 +8,14 @@
 @section('content')
     <div class="container">
         @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
@@ -76,7 +76,7 @@
                                             @endphp
                                             <td>{!! $w !!}</td>
                                             <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
-                                            <td><a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><button class="btn btn-primary btn-sm fa fa-external-link">{{ trans('fields.Show More') }}</button></a></td>
+                                            <td><a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
