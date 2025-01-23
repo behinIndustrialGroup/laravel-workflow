@@ -1,6 +1,6 @@
 @extends('behin-layouts.app')
 
-@section('title', trans('Edit Form') . ' - ' . $form->name)
+@section('title', $form->name)
 
 @php
     $index = 0;
