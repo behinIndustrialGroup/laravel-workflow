@@ -29,6 +29,7 @@
                                 <th>{{ trans('Id') }}</th>
                                 <th style="width: 90px">{{ trans('Order') }}</th>
                                 <th>{{ trans('Field Name') }}</th>
+                                <th>{{ trans('Field Name') }}</th>
                                 <th>{{ trans('Required') }}</th>
                                 <th>{{ trans('Read Only') }}</th>
                                 <th>{{ trans('Class') }}</th>
@@ -43,11 +44,9 @@
                                         <td dir="ltr"><input type="text" name="order[{{ $index }}]" id=""
                                                 class="form-control text-center"
                                                 value="{{ isset($field->order) ? $field->order : '' }}"></td>
-                                        <td dir="ltr">
-                                            <input type="text" name="fieldName[{{ $index }}]"
-                                                class="form-control text-center" value="{{ $field->fieldName }}">
-                                                {{ trans('fields.' . $field->fieldName) }}
-                                            </td>
+                                        <td>{{ trans('fields.' . $field->fieldName) }}</td>
+                                        <td dir="ltr"><input type="text" name="fieldName[{{ $index }}]"
+                                                class="form-control text-center" value="{{ $field->fieldName }}"></td>
                                         <td><input type="checkbox" name="required[{{ $index }}]"
                                                 {{ $field->required == 'on' ? 'checked' : '' }}></td>
                                         <td>
