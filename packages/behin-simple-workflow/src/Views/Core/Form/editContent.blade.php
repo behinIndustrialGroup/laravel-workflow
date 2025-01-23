@@ -11,7 +11,9 @@
 @section('content')
     <div class="container">
         <div class="card row col-sm-12 p-2">
-            <a href="{{ route('simpleWorkflow.form.index') }}" class="btn btn-primary col-sm-2">{{ trans('Back To Forms') }}</a>
+            <a href="{{ route('simpleWorkflow.form.index') }}" class="btn btn-sm btn-primary col-sm-2">{{ trans('Back To Forms') }}</a>
+            <a class="btn btn-sm btn-success"
+                                    href="{{ route('simpleWorkflow.form.edit', ['id' => $form->id]) }}">{{ trans('Edit') }}</a>
         </div>
         <div class="card row col-sm-12">
             <div class="col-md-12">
