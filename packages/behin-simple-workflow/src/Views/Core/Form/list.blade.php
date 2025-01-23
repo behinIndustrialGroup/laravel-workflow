@@ -1,5 +1,9 @@
 @extends('behin-layouts.app')
 
+@section('title')
+    {{ trans('Form List') }}
+@endsection
+
 @section('content')
     <div class="container">
         <table class="table">
