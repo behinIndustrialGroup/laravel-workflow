@@ -37,6 +37,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::get('index', [ FormController::class, 'index' ])->name('index');
         Route::get('edit/{id}', [ FormController::class, 'edit' ])->name('edit');
         Route::post('update', [ FormController::class, 'update' ])->name('update');
+        Route::get('edit-content/{id}', [ FormController::class, 'editContent' ])->name('editContent');
+        Route::post('updateContent', [ FormController::class, 'updateContent' ])->name('updateContent');
         Route::post('store', [ FormController::class, 'store' ])->name('store');
         Route::post('create', [ FormController::class, 'createForm' ])->name('create');
         Route::post('copy', [ FormController::class, 'copy' ])->name('copy');

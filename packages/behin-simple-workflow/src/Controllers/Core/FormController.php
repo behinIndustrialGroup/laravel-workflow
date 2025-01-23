@@ -69,6 +69,22 @@ class FormController extends Controller
         return redirect()->back();
     }
 
+    public function editContent($id){
+        $form = self::getById($id);
+        return view('SimpleWorkflowView::Core.Form.editContent')->with([
+            'form' => $form
+        ]);
+    }
+
+    public function updateContent(Request $request){
+
+        $form = self::getById($request->formId);
+        $form->content = $request->content;
+        $form->name = $request->name;
+        $form->save();
+        return redirect()->back();
+    }
+
     public function store(Request $request)
     {
         $form = self::getById($request->formId);

@@ -33,7 +33,7 @@ class SummaryReportController extends Controller
         $process = $case->process;
         $summaryForm = RoleReportFormController::getSummaryReportFormByRoleId(Auth::user()->role_id);
         if($summaryForm == null){
-            return redirect()->route('simpleWorkflowReport.summary-report.show', $case->process_id)->with('error', trans('Form not found'));
+            return redirect()->back()->with('error', trans('Form not found'));  
         }
         $formId = $summaryForm->summary_form_id;
 
