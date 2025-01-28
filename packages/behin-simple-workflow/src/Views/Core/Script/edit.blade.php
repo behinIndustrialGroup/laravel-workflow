@@ -1,5 +1,9 @@
 @extends('behin-layouts.app')
 
+@section('title')
+    اصلاح اسکریپت: {{ $script->name }}
+@endsection
+
 @section('content')
     <h1>Edit Script</h1>
     <div class="row">
