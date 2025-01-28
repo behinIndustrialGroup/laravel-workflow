@@ -2,6 +2,7 @@
 
 
 @section('title')
+    خلاصه گزارش فرایند {{ $process->name }}
 @endsection
 
 

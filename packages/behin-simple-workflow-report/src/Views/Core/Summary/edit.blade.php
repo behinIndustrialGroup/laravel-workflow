@@ -6,7 +6,7 @@
 @endphp
 
 @section('title')
-    گزارش: {{ $case->getVariable('customer_name') }}
+    خلاصه گزارش: {{ $case->getVariable('customer_name') }}
 @endsection
 
 
