@@ -30,17 +30,17 @@
     @endif
 
     <div class="row">
-        <div class="col-md-6 card">
+        <div class="col-md-6 card shadow-sm p-3">
             <form action="{{ route('simpleWorkflow.scripts.update', $script->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" name="name" value="{{ $script->name }}" required>
+                <div class="mb-3">
+                    <label for="name" class="form-label">{{ trans('Name') }}</label>
+                    <input type="text" name="name" id="name" class="form-control" value="{{ $script->name }}" required>
                 </div>
-                <div class="form-group">
-                    <label>Executive File:</label>
-                    <select name="executive_file" class="form-control">
+                <div class="mb-3">
+                    <label for="executive_file" class="form-label">{{ trans('Executive File') }}</label>
+                    <select name="executive_file" id="executive_file" class="form-select select2">
                         @foreach (File::files(base_path('packages/behin-simple-workflow/src/Controllers/Scripts')) as $file)
                             <option value="{{ str_replace('.php', '', $file->getFilename()) }}"
                                 {{ $script->executive_file . '.php' == $file->getFilename() ? 'selected' : '' }}>
@@ -49,11 +49,7 @@
                         @endforeach
                     </select>
                 </div>
-                {{-- <div class="form-group">
-                    <label>Content (JSON):</label>
-                    <textarea name="content">{{ $script->content }}</textarea>
-                </div> --}}
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
             </form>
         </div>
         <div class="col-md-6 card">
@@ -105,6 +101,7 @@
 
 @section('script')
     <script>
+        initial_view();
         function test() {
             var form = $('#test-form')[0];
             var fd = new FormData(form);
