@@ -79,7 +79,7 @@
                     @method('PUT')
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
-                        style="text-align: left; white-space: pre;" dir="ltr">{{ $executive_file_content }}</textarea>
+                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $executive_file_content }}</textarea>
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                 </form>
             @else
