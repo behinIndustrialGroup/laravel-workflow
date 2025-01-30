@@ -61,7 +61,7 @@
                     <datalist id="cases">
                         <option value="">{{ trans('fields.Choose') }}</option>
                         @foreach (getCases() as $case)
-                            <option value="{{ $case->id }}">{{ $case->number }} {{ $case->name }} </option>
+                            <option value="{{ $case->id }}">{{ $case->number }} {{ $case->process->name }} </option>
                         @endforeach
                     </datalist>
                 </div>
