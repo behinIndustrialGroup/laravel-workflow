@@ -13,7 +13,7 @@ class ScriptController extends Controller
 {
     public function index()
     {
-        $scripts = Script::all();
+        $scripts = Script::orderBy('created_at', 'desc')->get();
         return view('SimpleWorkflowView::Core.Script.index', compact('scripts'));
     }
 
@@ -29,8 +29,14 @@ class ScriptController extends Controller
             'executive_file' => 'nullable|string',
             'content' => 'nullable|json',
         ]);
+        if($request->executive_file){
+            $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $request->executive_file . '.php');
+            if(!file_exists($filePath)){
+                file_put_contents($filePath, '<?php');
+            }
+        }
 
-        Script::create($request->only('name', 'executive_file', 'content'));
+        Script::updateOrCreate($request->only('name'), $request->only('executive_file'));
 
         return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script created successfully.');
     }
