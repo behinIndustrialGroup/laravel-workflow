@@ -15,6 +15,9 @@
 
 @section('content')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+
     <h1>Edit Script</h1>
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -79,9 +82,9 @@
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
-                    <div id="editor" style="height: 600px; width: 100%;">{{ $executive_file_content }}</div>
+                    <div id="editor" style="height: 600px; width: 100%;">{{$executive_file_content }}</div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
-                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{!! $executive_file_content !!}</textarea>
+                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{$executive_file_content }}</textarea>
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                 </form>
             @else
@@ -130,16 +133,20 @@
     <script>
         const editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai"); // انتخاب تم
-        editor.session.setMode("ace/mode/php"); // تنظیم زبان
-        editor.setValue(`{!! $executive_file_content !!}`); // بارگذاری محتوای فایل
-        // اطمینان از نمایش کاراکترهای خام به جای HTML entities
-        editor.getSession().setUseWorker(false); // غیرفعال کردن تحلیلگر پیش‌فرض
-        editor.setOption("wrap", true); // فعال‌سازی خط‌بندی خودکار
-
+        editor.session.setMode("ace/mode/php"); // تنظیم زبان PHP
+    
+        
+    
+        // غیرفعال کردن تحلیلگر پیش‌فرض Ace
+        editor.getSession().setUseWorker(false); 
+    
+        // فعال‌سازی خط‌بندی خودکار
+        editor.setOption("wrap", true);
+    
+        // ذخیره محتوا به textarea مخفی
         editor.session.on('change', function() {
-            // محتوا را در صورت نیاز می‌توانید در اینجا بگیرید
             $('#executive_file_content').val(editor.getValue());
-            // console.log(editor.getValue());
         });
     </script>
+    
 @endsection
