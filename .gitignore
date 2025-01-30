@@ -17,4 +17,3 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/packages/behin-simple-workflow/src/Controllers/Scripts
