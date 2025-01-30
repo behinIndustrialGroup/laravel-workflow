@@ -51,7 +51,7 @@ class ScriptController extends Controller
         if ($request->executive_file_content) {
             $file = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
             file_put_contents($file, $request->executive_file_content);
-            return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script updated successfully.');
+            return redirect()->route('simpleWorkflow.scripts.edit', $script->id)->with('success', 'Script updated successfully.');
         }
 
         $script->update($request->only('name', 'executive_file', 'content'));
