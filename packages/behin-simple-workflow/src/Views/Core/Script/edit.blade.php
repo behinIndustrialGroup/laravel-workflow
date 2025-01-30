@@ -14,6 +14,7 @@
 @endphp
 
 @section('content')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
     <h1>Edit Script</h1>
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -67,7 +68,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary ml-2" onclick="test()">{{ trans('fields.Test') }}</button>
             </form>
-            <h5 class="mt-3" dir="ltr" >
+            <h5 class="mt-3" dir="ltr">
                 <pre style="text-align: left; white-space: pre;" dir="ltr">{{ trans('fields.Result') }}</pre>
             </h5>
             <div id="result" dir="ltr" style="text-align: left; white-space: pre;"></div>
@@ -78,8 +79,9 @@
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
+                    <div id="editor" style="height: 600px; width: 100%;">{{ $executive_file_content }}</div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
-                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $executive_file_content }}</textarea>
+                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{!! $executive_file_content !!}</textarea>
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                 </form>
             @else
@@ -108,13 +110,15 @@
                 fd,
                 function(response) {
                     console.log(response);
-                    $('#result').html('<pre style="text-align: left; white-space: pre;" dir="ltr">' + response + '</pre>');
+                    $('#result').html('<pre style="text-align: left; white-space: pre;" dir="ltr">' + response +
+                        '</pre>');
                 },
                 function(er) {
                     console.log(er);
                     result = er.responseJSON.message
                     if (result) {
-                        $('#result').html('<pre style="text-align: left; white-space: pre;" dir="ltr">' + result + '</pre>');
+                        $('#result').html('<pre style="text-align: left; white-space: pre;" dir="ltr">' + result +
+                            '</pre>');
                     } else {
                         $('#result').html('{{ trans('fields.True') }}')
                     }
@@ -122,5 +126,20 @@
                 }
             )
         }
+    </script>
+    <script>
+        const editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai"); // انتخاب تم
+        editor.session.setMode("ace/mode/php"); // تنظیم زبان
+        editor.setValue(`{!! $executive_file_content !!}`); // بارگذاری محتوای فایل
+        // اطمینان از نمایش کاراکترهای خام به جای HTML entities
+        editor.getSession().setUseWorker(false); // غیرفعال کردن تحلیلگر پیش‌فرض
+        editor.setOption("wrap", true); // فعال‌سازی خط‌بندی خودکار
+
+        editor.session.on('change', function() {
+            // محتوا را در صورت نیاز می‌توانید در اینجا بگیرید
+            $('#executive_file_content').val(editor.getValue());
+            // console.log(editor.getValue());
+        });
     </script>
 @endsection
