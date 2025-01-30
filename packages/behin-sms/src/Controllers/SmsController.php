@@ -58,7 +58,7 @@ class SmsController extends Controller
         $postFields = array(
             "mobile" => $to,
             "templateId" => $tempCode,
-            "parameters" => array($parameter)
+            "parameters" => $parameter
         );
         $postFields = json_encode($postFields);
 
