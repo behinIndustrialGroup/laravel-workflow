@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\Sms\Controllers\SmsController;
 use Illuminate\Http\Request;
 
 class SendSmsToExpert extends Controller
@@ -21,8 +22,18 @@ class SendSmsToExpert extends Controller
 
     public function execute()
     {
-
-
+        $variables = $this->case->variables();
+        $expert_head = $variables->where('key', 'mapa_expert')->first()?->value;
+        if($expert_head){
+            $user = getUserInfo($expert_head);
+            if($user){
+                $params = [
+                    "name" => "NAME",
+                    "value" => $user?->name
+                ];
+                $result = SmsController::sendByTemp($user->email, 140535, $params);
+            }
+        }
     }
 
 }
