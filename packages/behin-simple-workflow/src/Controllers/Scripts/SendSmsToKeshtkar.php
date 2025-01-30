@@ -10,7 +10,7 @@ use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\Sms\Controllers\SmsController;
 use Illuminate\Http\Request;
 
-class SendSmsToExpert extends Controller
+class SendSmsToKeshtkar extends Controller
 {
     protected $case;
     public function __construct($case)
