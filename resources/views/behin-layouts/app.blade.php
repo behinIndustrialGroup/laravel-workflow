@@ -89,7 +89,7 @@
     </div>
 
         <script src="{{ url('public/behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js')  . '?' . config('app.version') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script> --}}
         <script src="{{ url('public/behin/behin-dist/plugins/knob/jquery.knob.js')  . '?' . config('app.version') }}"></script>
         <script src="{{ url('public/behin/behin-dist/plugins/daterangepicker/daterangepicker.js')  . '?' . config('app.version') }}"></script>
         <script src="{{ url('public/behin/behin-dist/plugins/datepicker/bootstrap-datepicker.js')  . '?' . config('app.version') }}"></script>
