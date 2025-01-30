@@ -42,11 +42,17 @@ class ScriptController extends Controller
 
     public function update(Request $request, Script $script)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'executive_file' => 'nullable|string',
-            'content' => 'nullable|json',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'executive_file' => 'nullable|string',
+        //     'content' => 'nullable|json',
+        // ]);
+
+        if ($request->executive_file_content) {
+            $file = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
+            file_put_contents($file, $request->executive_file_content);
+            return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script updated successfully.');
+        }
 
         $script->update($request->only('name', 'executive_file', 'content'));
 
@@ -82,7 +88,7 @@ class ScriptController extends Controller
         // return $script->execute();
     }
 
-    public static function test(Request $request,$id)
+    public static function test(Request $request, $id)
     {
         try {
             $result = self::runScript($id, $request->caseId, true);

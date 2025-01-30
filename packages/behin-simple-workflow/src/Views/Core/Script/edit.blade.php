@@ -4,6 +4,12 @@
     اصلاح اسکریپت: {{ $script->name }}
 @endsection
 
+@php
+    $executive_file_content = File::get(
+        base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php'),
+    );
+@endphp
+
 @section('content')
     <h1>Edit Script</h1>
     <div class="row">
@@ -51,6 +57,16 @@
             <h5 class="mt-3">{{ trans('fields.Result') }}</h5>
             <div id="result"></div>
         </div>
+        <div class="col-md-12 card" dir="ltr">
+            <form action="{{ route('simpleWorkflow.scripts.update', $script->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
+                <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
+                    style="text-align: left; white-space: pre;" dir="ltr">{{ $executive_file_content }}</textarea>
+                <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
+            </form>
+        </div>
     </div>
 @endsection
 
@@ -69,9 +85,9 @@
                 function(er) {
                     console.log(er);
                     result = er.responseJSON.message
-                    if(result){
+                    if (result) {
                         $('#result').html(result);
-                    }else{
+                    } else {
                         $('#result').html('{{ trans('fields.True') }}')
                     }
                     hide_loading();
