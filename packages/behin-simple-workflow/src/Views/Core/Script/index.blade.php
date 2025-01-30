@@ -1,5 +1,9 @@
 @extends('behin-layouts.app')
 
+@section('title')
+    {{ trans('fields.Script List') }}
+@endsection
+
 @section('content')
     <h1>Scripts</h1>
     <div class="row">
