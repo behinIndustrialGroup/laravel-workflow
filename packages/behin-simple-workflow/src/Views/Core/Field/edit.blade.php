@@ -1,5 +1,9 @@
 @extends('behin-layouts.app')
 
+@section('title')
+    {{ trans('fields.Edit Field') . ' - ' . $field->name }}
+@endsection
+
 @section('content')
     <h1>Edit Field</h1>
     <a href="{{ route('simpleWorkflow.fields.index') }}" class="btn btn-secondary mb-3">
