@@ -61,6 +61,21 @@
                                 @endforeach
                             @endif
                     </select>
+                    @if ($task->type == 'form')
+                        <a href="{{ route('simpleWorkflow.form.edit', ['id' => $task->executive_element_id]) }}">
+                            {{ trans('Edit') }}
+                        </a>
+                    @endif
+                    @if ($task->type == 'script')
+                        <a href="{{ route('simpleWorkflow.scripts.edit', ['script' => $task->executive_element_id]) }}">
+                            {{ trans('Edit') }}
+                        </a>
+                    @endif
+                    @if ($task->type == 'condition')
+                        <a href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
+                            {{ trans('Edit') }}
+                        </a>
+                    @endif
                 </div>
             </div>
             <div class="row mb-3">
