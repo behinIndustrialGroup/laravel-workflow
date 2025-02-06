@@ -20,7 +20,7 @@
                 </a>
             </div>
         </div>
-        <div class="card row col-sm-12 p-2">
+        <div class="card row col-sm-12 p-2" style="border: 1px solid #0da95b !important;">
             <form action="{{ route('simpleWorkflow.form.store') }}" method="POST" class="mb-3" id="createForm">
                 @csrf
                 <input type="hidden" name="formId" value="{{ $form->id }}">
@@ -54,12 +54,12 @@
                 </table>
             </form>
         </div>
-        <div class="card row col-sm-12">
+        <div class="card row col-sm-12" style="border: 1px solid #dc3545 !important;">
             <div class="col-md-12">
                 <form action="{{ route('simpleWorkflow.form.update') }}" method="POST" class="mb-3">
                     @csrf
                     <input type="hidden" name="formId" value="{{ $form->id }}">
-                    <div class="form-group bg-primary">
+                    <div class="form-group bg-danger ">
                         <label for="name">{{ trans('Form Name') }}:</label>
                         <input type="text" name="name" value="{{ $form->name }}" class="form-control"
                             id="name" placeholder="{{ trans('Enter form name') }}">
@@ -128,13 +128,13 @@
                         @endif
 
                     </div>
-                    <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ trans('Update') }}</button>
                 </form>
 
             </div>
             
         </div>
-        <div class="card row col-sm-12 mb-4">
+        <div class="card row col-sm-12 mb-4" style="border: 1px solid #1f9bda !important;">
             <div class="card-header bg-primary">{{ trans('Preview') }}</div>
             <div class="col-md-12">
                 @include('SimpleWorkflowView::Core.Form.preview', ['form' => $form])
