@@ -24,7 +24,7 @@
                                     href="{{ route('simpleWorkflow.form.edit', ['id' => $form->id]) }}">{{ trans('Edit') }}</a>
                                     <a class="btn btn-sm btn-success"
                                     href="{{ route('simpleWorkflow.form.editContent', ['id' => $form->id]) }}">{{ trans('Edit Content') }}</a>
-                                    <button class="btn btn-sm btn-info"><i class="fa fa-copy" onclick="copyForm('{{ $form->id }}')"></i></button>
+                                    <button class="btn btn-sm btn-info" onclick="copyForm('{{ $form->id }}')"><i class="fa fa-copy" ></i></button>
                                     <button class="btn btn-sm btn-danger" onclick="deleteForm('{{ $form->id }}')"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>
