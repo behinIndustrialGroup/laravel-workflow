@@ -5,8 +5,8 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <table class="table">
+    <div class="container table-responsive card p-2">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>{{ trans('Id') }}</th>
