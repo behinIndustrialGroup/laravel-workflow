@@ -4,7 +4,7 @@
     $content = collect($content)->sortBy('order')->toArray();
 @endphp
 <script src="{{ url('packages/behin-form-builder/src/js/signature_pad.umd.min.js') }}"></script>
-<div class="row">
+<div class="row col-sm-12 p-0 m-0">
     @foreach ($content as $field)
         @php
             $fieldLabel = trans('SimpleWorkflowLang::fields.' . $field->fieldName);
