@@ -70,7 +70,7 @@
                                 <div class="card {{ $field->class ?? '' }}">
                                     <div class="card-header" id="heading_{{ $index }}">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link btn-block text-right" type="button"
+                                            <button class="btn btn-block text-right" type="button"
                                                 data-toggle="collapse" data-target="#collapse_{{ $index }}"
                                                 aria-expanded="true" aria-controls="collapse_{{ $index }}">
                                                 {{ trans('fields.' . $field->fieldName) }}
