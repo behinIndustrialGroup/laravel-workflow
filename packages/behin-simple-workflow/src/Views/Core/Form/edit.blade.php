@@ -10,102 +10,132 @@
 
 @section('content')
     <div class="container">
+        <div class="card shadow-sm p-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <a href="{{ route('simpleWorkflow.form.index') }}" class="btn btn-outline-primary">
+                    <i class="fa fa-arrow-left mr-2"></i> {{ trans('Back To Forms') }}
+                </a>
+                <a href="{{ route('simpleWorkflow.form.editContent', ['id' => $form->id]) }}" class="btn btn-primary">
+                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit Content') }}
+                </a>
+            </div>
+        </div>
         <div class="card row col-sm-12 p-2">
-            <a href="{{ route('simpleWorkflow.form.index') }}"
-                class="btn btn-sm btn-primary col-sm-2">{{ trans('Back To Forms') }}</a>
-            <a class="btn btn-sm btn-success"
-                href="{{ route('simpleWorkflow.form.editContent', ['id' => $form->id]) }}">{{ trans('Edit Content') }}</a>
+            <form action="{{ route('simpleWorkflow.form.store') }}" method="POST" class="mb-3" id="createForm">
+                @csrf
+                <input type="hidden" name="formId" value="{{ $form->id }}">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="10">{{ trans('Order') }}</th>
+                            <th>{{ trans('Field Name') }}</th>
+                            <th>{{ trans('Required') }}</th>
+                            <th>{{ trans('Read Only') }}</th>
+                            <th>{{ trans('Class') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td><input type="text" name="order" id="" class="form-control text-center">
+                            </td>
+                            <td>
+                                <select name="fieldName" id="" class="form-control select2" dir="ltr">
+                                    @include('SimpleWorkflowView::Core.Form.all-fields-options', ['form' => $form])
+                                </select>
+                            </td>
+                            <td><input type="checkbox" name="required" id=""></td>
+                            <td><input type="checkbox" name="readOnly" id=""></td>
+                            <td><input type="text" name="class" id="" class="form-control text-center">
+                            </td>
+                            <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
         </div>
         <div class="card row col-sm-12">
             <div class="col-md-12">
                 <form action="{{ route('simpleWorkflow.form.update') }}" method="POST" class="mb-3">
                     @csrf
                     <input type="hidden" name="formId" value="{{ $form->id }}">
-                    <label for="">{{ trans('Form Name') }}:</label>
-                    <input type="text" name="name" value="{{ $form->name }}" class="form-control" id="">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>{{ trans('Id') }}</th>
-                                <th style="width: 90px">{{ trans('Order') }}</th>
-                                <th>{{ trans('Field Name') }}</th>
-                                <th>{{ trans('Field Name') }}</th>
-                                <th>{{ trans('Required') }}</th>
-                                <th>{{ trans('Read Only') }}</th>
-                                <th>{{ trans('Class') }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (is_array($content))
-                                @foreach ($content as $field)
-                                    <tr id="tr_{{ $index }}">
-                                        <td>{{ $index + 1 }} </td>
-                                        <td dir="ltr"><input type="text" name="order[{{ $index }}]" id=""
-                                                class="form-control text-center"
-                                                value="{{ isset($field->order) ? $field->order : '' }}"></td>
-                                        <td>{{ trans('fields.' . $field->fieldName) }}</td>
-                                        <td dir="ltr"><input type="text" name="fieldName[{{ $index }}]"
-                                                class="form-control text-center" value="{{ $field->fieldName }}"></td>
-                                        <td><input type="checkbox" name="required[{{ $index }}]"
-                                                {{ $field->required == 'on' ? 'checked' : '' }}></td>
-                                        <td>
-                                            <input type="checkbox" name="readOnly[{{ $index }}]"
-                                                {{ $field->readOnly == 'on' ? 'checked' : '' }}>
-                                        </td>
-                                        <td><input type="text" name="class[{{ $index }}]"
-                                                class="form-control text-center" value="{{ $field->class }}"
-                                                dir="ltr"></td>
-                                        <td></td>
-                                    </tr>
-                                    @php
-                                        $index++;
-                                    @endphp
-                                @endforeach
-                            @endif
+                    <div class="form-group bg-primary">
+                        <label for="name">{{ trans('Form Name') }}:</label>
+                        <input type="text" name="name" value="{{ $form->name }}" class="form-control"
+                            id="name" placeholder="{{ trans('Enter form name') }}">
+                    </div>
+                    <div class="accordion row" id="accordionExample">
+                        @if (is_array($content))
+                            @foreach ($content as $field)
+                                <div class="card {{ $field->class ?? '' }}">
+                                    <div class="card-header" id="heading_{{ $index }}">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-right" type="button"
+                                                data-toggle="collapse" data-target="#collapse_{{ $index }}"
+                                                aria-expanded="true" aria-controls="collapse_{{ $index }}">
+                                                {{ trans('fields.' . $field->fieldName) }}
+                                            </button>
+                                        </h2>
+                                    </div>
 
-                        </tbody>
-                    </table>
+                                    <div id="collapse_{{ $index }}" class="collapse"
+                                        aria-labelledby="heading_{{ $index }}" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <th>{{ trans('Id') }} {{ $index + 1 }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>{{ trans('Order') }}
+                                                        <input type="text" name="order[{{ $index }}]"
+                                                            id="" class="form-control text-center"
+                                                            value="{{ isset($field->order) ? $field->order : '' }}">
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>{{ trans('Field Name') }}<br>
+                                                        <select name="fieldName[{{ $index }}]" id="" class="form-control select2" dir="ltr">
+                                                            @include('SimpleWorkflowView::Core.Form.all-fields-options', ['form' => $form, 'selectedField' => $field->fieldName])
+                                                        </select>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>{{ trans('Required') }}
+                                                        <input type="checkbox" name="required[{{ $index }}]"
+                                                            {{ $field->required == 'on' ? 'checked' : '' }}>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>{{ trans('Read Only') }}
+                                                        <input type="checkbox" name="readOnly[{{ $index }}]"
+                                                            {{ $field->readOnly == 'on' ? 'checked' : '' }}>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>{{ trans('Class') }}
+                                                        <input type="text" name="class[{{ $index }}]"
+                                                            class="form-control text-center" value="{{ $field->class }}"
+                                                            dir="ltr"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                @php
+                                    $index++;
+                                @endphp
+                            @endforeach
+                        @endif
+
+                    </div>
                     <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
                 </form>
-                <form action="{{ route('simpleWorkflow.form.store') }}" method="POST" class="mb-3" id="createForm">
-                    @csrf
-                    <input type="hidden" name="formId" value="{{ $form->id }}">
-                    <table class="table table-striped bg-info">
-                        <thead>
-                            <tr>
-                                <th>{{ trans('Id') }}</th>
-                                <th>{{ trans('Order') }}</th>
-                                <th>{{ trans('Field Name') }}</th>
-                                <th>{{ trans('Required') }}</th>
-                                <th>{{ trans('Read Only') }}</th>
-                                <th>{{ trans('Class') }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td><input type="text" name="order" id="" class="form-control text-center">
-                                </td>
-                                <td>
-                                    <select name="fieldName" id="" class="form-control select2">
-                                        @foreach (getProcessFields() as $field)
-                                            <option value="{{ $field->name }}">{{ $field->name }} ({{ $field->type }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" name="required" id=""></td>
-                                <td><input type="checkbox" name="readOnly" id=""></td>
-                                <td><input type="text" name="class" id="" class="form-control text-center">
-                                </td>
-                                <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </form>
+
             </div>
+            
+        </div>
+        <div class="card row col-sm-12 mb-4">
+            <div class="card-header bg-primary">{{ trans('Preview') }}</div>
             <div class="col-md-12">
                 @include('SimpleWorkflowView::Core.Form.preview', ['form' => $form])
             </div>

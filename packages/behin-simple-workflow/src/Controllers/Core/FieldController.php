@@ -81,6 +81,10 @@ class FieldController extends Controller
     }
 
     public static function getByName($fieldName) {
-        return Fields::where('name', $fieldName)->first();
+        $field = Fields::where('name', $fieldName)->first();
+        if($field){
+            return $field;
+        }
+        return null;
     }
 }

@@ -16,7 +16,7 @@
 @section('content')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
 
     <h1>Edit Script</h1>
     @if ($errors->any())
@@ -36,7 +36,8 @@
                 @method('PUT')
                 <div class="mb-3">
                     <label for="name" class="form-label">{{ trans('Name') }}</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ $script->name }}" required>
+                    <input type="text" name="name" id="name" class="form-control" value="{{ $script->name }}"
+                        required>
                 </div>
                 <div class="mb-3">
                     <label for="executive_file" class="form-label">{{ trans('Executive File') }}</label>
@@ -78,9 +79,9 @@
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
-                    <div id="editor" style="height: 600px; width: 100%;">{{$executive_file_content }}</div>
+                    <div id="editor" style="height: 600px; width: 100%;">{{ $executive_file_content }}</div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
-                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{$executive_file_content }}</textarea>
+                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $executive_file_content }}</textarea>
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                 </form>
             @else
@@ -102,6 +103,7 @@
 @section('script')
     <script>
         initial_view();
+
         function test() {
             var form = $('#test-form')[0];
             var fd = new FormData(form);
@@ -131,19 +133,18 @@
         const editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai"); // انتخاب تم
         editor.session.setMode("ace/mode/php"); // تنظیم زبان PHP
-    
-        
-    
+
+
+
         // غیرفعال کردن تحلیلگر پیش‌فرض Ace
-        editor.getSession().setUseWorker(false); 
-    
+        editor.getSession().setUseWorker(false);
+
         // فعال‌سازی خط‌بندی خودکار
         editor.setOption("wrap", true);
-    
+
         // ذخیره محتوا به textarea مخفی
         editor.session.on('change', function() {
             $('#executive_file_content').val(editor.getValue());
         });
     </script>
-    
 @endsection
