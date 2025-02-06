@@ -136,7 +136,7 @@
         </div>
         <div class="card row col-sm-12 mb-4" style="border: 1px solid #1f9bda !important;">
             <div class="card-header bg-primary">{{ trans('Preview') }}</div>
-            <div class="col-md-12">
+            <div class="row col-sm-12 p-0 m-0">
                 @include('SimpleWorkflowView::Core.Form.preview', ['form' => $form])
             </div>
         </div>
