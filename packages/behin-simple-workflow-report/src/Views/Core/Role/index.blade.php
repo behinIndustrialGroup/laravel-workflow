@@ -52,7 +52,9 @@
                                                         @endforeach
                                                 </td>
                                                 <td>
-                                                    {{ getFormInformation($item->summary_form_id)?->name ?? '' }}
+
+                                                    <a
+                                                        href="{{ route('simpleWorkflow.form.edit', ['id' => $item->summary_form_id]) }}">{{ getFormInformation($item->summary_form_id)?->name ?? '' }}</a>
                                                     <input type="text" name="summary_form_id" id=""
                                                         class="form-control" list="forms">
                                                     <datalist id="forms">
@@ -76,14 +78,16 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <input type="text" name="process_id" id="" class="form-control" list="processes">
+                                                <input type="text" name="process_id" id="" class="form-control"
+                                                    list="processes">
                                                 <datalist id="processes">
                                                     @foreach (getProcesses() as $process)
                                                         <option value="{{ $process->id }}">{{ $process->name }}</option>
                                                     @endforeach
                                             </td>
                                             <td>
-                                                <input type="text" name="role_id" id="" class="form-control" list="roles">
+                                                <input type="text" name="role_id" id="" class="form-control"
+                                                    list="roles">
                                                 <datalist id="roles">
                                                     @foreach ($roles as $role)
                                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -99,8 +103,7 @@
                                                 </datalist>
                                             </td>
                                             <td>
-                                                <button
-                                                    class="btn btn-sm btn-primary">{{ trans('fields.Store') }}</button>
+                                                <button class="btn btn-sm btn-primary">{{ trans('fields.Store') }}</button>
                                             </td>
                                         </tr>
                                     </form>
