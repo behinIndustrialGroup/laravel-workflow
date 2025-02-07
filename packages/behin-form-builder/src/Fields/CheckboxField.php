@@ -31,7 +31,7 @@ class CheckboxField extends AbstractField
         }
         $s .= '>&nbsp;';
         $s .= trans('fields.' . $this->name);
-        if($this->attributes['required'] == 'on'){
+        if($this->attributes['required'] == 'on' && $this->attributes['readonly'] != 'on'){
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label>';

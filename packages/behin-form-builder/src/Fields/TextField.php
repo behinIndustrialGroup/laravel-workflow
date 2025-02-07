@@ -11,7 +11,7 @@ class TextField extends AbstractField
         $s = '<div class="form-group">';
         $s .= '<label>';
         $s .= trans('fields.' . $this->name);
-        if($this->attributes['required'] == 'on'){
+        if($this->attributes['required'] == 'on' && $this->attributes['readonly'] != 'on'){
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label>';
