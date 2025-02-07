@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="container table-responsive card p-2">
-        <table class="table table-striped">
+        <table class="table table-striped" id="form-list">
             <thead>
                 <tr>
                     <th>{{ trans('Id') }}</th>
@@ -47,6 +47,11 @@
 
 @section('script')
     <script>
+        $('#form-list').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            }
+        });
         function create_process() {
             var form = $('#create-process-form')[0];
             var fd = new FormData(form);
