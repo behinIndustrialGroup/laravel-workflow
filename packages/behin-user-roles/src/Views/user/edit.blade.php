@@ -89,6 +89,39 @@
             </form>
 
         </div>
+        <div class="card p-2">
+            @foreach ($user->departments() as $item)
+                <div class="card col-sm-2">
+                    <div class="card-header">
+                        {{ $item->department()->name }}
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{{ route('user.removeFromDepartment', ['id' => $user->id]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="departmentId" value="{{ $item->department()->id }}">
+                            <button type="submit" class="btn btn-danger">{{ __('fields.Remove') }}</button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+            <form method="post" action="{{ route('user.addToDepartment', ['id' => $user->id]) }}">
+                @csrf
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="department_id">{{ __('fields.Department') }}</label>
+                    </div>
+                    <select class="custom-select" name="department_id" id="department_id">
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}">{{ $department->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">{{ __('fields.Add') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     {{-- <div class="row">
         <div class="col-sm-12">

@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use BehinUserRoles\Controllers\GetRoleController;
 use BehinUserRoles\Models\User;
+use BehinUserRoles\Controllers\DepartmentController;
+use BehinUserRoles\Models\UserDepartment;
 
 class UserController extends Controller
 {
-
+    public static function getAll() {
+        return User::get();
+    }
     public function index($id)
     {
         if($id == 'all'):
@@ -20,7 +24,8 @@ class UserController extends Controller
 
             return view('URPackageView::user.edit')->with([
                 'user' => User::find($id),
-                'roles' => GetRoleController::getAll()
+                'roles' => GetRoleController::getAll(),
+                'departments' => DepartmentController::getAll($id)
             ]);
         endif;
     }
@@ -60,5 +65,24 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    public function addToDepartment(Request $r, $id){
+        $user = User::find($id);
+        $department_id = $r->department_id;
+        UserDepartment::updateOrCreate([
+            'user_id' => $id,
+            'department_id' => $department_id
+        ]);
+        return redirect()->back()->with('success', 'User added to department successfully');
+    }
+
+    public function removeFromDepartment(Request $r, $id){
+        $user = User::find($id);
+        $departmentId = $r->departmentId;
+        UserDepartment::where([
+            'user_id' => $id,
+            'department_id' => $departmentId
+        ])->delete();
+        return redirect()->back()->with('success', 'User removed from department successfully');
+    }
 
 }

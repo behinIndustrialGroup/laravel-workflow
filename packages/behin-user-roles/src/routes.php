@@ -1,6 +1,7 @@
 <?php
 
 use BehinInit\App\Http\Middleware\Access;
+use BehinUserRoles\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
 use BehinUserRoles\Controllers\GetMethodsController;
 use BehinUserRoles\Controllers\GetRoleController;
@@ -31,4 +32,8 @@ Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(functio
     Route::post('/{id}/change-ip', [UserController::class, 'ChangeIp'])->name('change-user-ip');
 
     Route::post('/{id}/changeShowInReport', [UserController::class, 'changeShowInReport']);
+    Route::post('/{id}/addToDepartment', [UserController::class, 'addToDepartment'])->name('user.addToDepartment');
+    Route::delete('/{id}/removeFromDepartment', [UserController::class, 'removeFromDepartment'])->name('user.removeFromDepartment');
 });
+
+Route::resource('department', DepartmentController::class);

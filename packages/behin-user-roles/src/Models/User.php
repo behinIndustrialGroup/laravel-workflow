@@ -78,4 +78,8 @@ class User extends Authenticatable
         return Role::find($this->role_id);
     }
 
+    function departments(){
+        return UserDepartment::where('user_id', $this->id)->get();
+    }
+
 }
