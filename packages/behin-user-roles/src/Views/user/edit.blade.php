@@ -6,68 +6,87 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="card p-2">
             <a href="{{ route('user.all', 'all') }}" class="btn btn-primary">بازگشت به لیست کاربران</a>
-
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="id">شناسه</label>
-                        <input type="text" class="form-control" id="id" value="{{ $user->id }}" readonly>
+            <div class="row mb-3">
+                <form action="{{ route('user.update', $user->id) }}" method="POST" class="row col-12 form-horizontal">
+                    @csrf
+                    @method('PUT')
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="id">شناسه</label>
+                            <input type="text" class="form-control" id="id" value="{{ $user->id }}" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="name">نام</label>
-                        <input type="text" class="form-control" id="name" value="{{ $user->name }}" readonly>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="name">نام</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="email">نام کاربری</label>
-                        <input type="text" class="form-control" id="email" value="{{ $user->email }}" readonly>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="email">نام کاربری</label>
+                            <input type="text" class="form-control" id="email" name="email" value="{{ $user->email }}">
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="role">نقش</label>
-                        <input type="text" class="form-control" id="role" value="{{ $user->role()->name ?? '' }}" readonly>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="role">نقش</label>
+                            <input type="text" class="form-control" id="role"
+                                value="{{ $user->role()->name ?? '' }}" readonly>
+                        </div>
                     </div>
-                </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary">{{ __('fields.Update') }}</button>
+                    </div>
+                </form>
             </div>
             <form action="{{ route('user.ChangePass', ['id' => $user->id]) }}" method="POST">
                 @csrf
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">{{ __('fields.New Password') }}</span>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">{{ __('fields.New Password') }}</span>
+                    </div>
+                    <input type="password" class="form-control" name="pass" placeholder="{{ __('fields.New Password') }}"
+                        aria-label="Password" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
+                    </div>
                 </div>
-                <input type="password" class="form-control" name="pass" placeholder="{{ __('fields.New Password') }}" aria-label="Password" aria-describedby="basic-addon1">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
-                </div>
-            </div>
             </form>
             <hr>
             <form action="{{ route('role.changeUserRole') }}" method="POST">
 
-            <div class="input-group mb-3">
+                <div class="input-group mb-3">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="id" value="{{ $user->id }}">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="role_id">{{ __('fields.Role') }}</label>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="role_id">{{ __('fields.Role') }}</label>
+                    </div>
+                    <select class="custom-select" name="role_id" id="role_id">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}"
+                                @if ($user->role_id == $role->id) {{ 'selected' }} @endif>
+                                {{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
+                    </div>
                 </div>
-                <select class="custom-select" name="role_id" id="role_id">
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}" @if ($user->role_id == $role->id) {{ 'selected' }} @endif>
-                            {{ $role->name }}</option>
-                    @endforeach
-                </select>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="submit">{{ __('fields.Change') }}</button>
-                </div>
-            </div>
-        </form>
+            </form>
 
         </div>
     </div>

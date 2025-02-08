@@ -25,11 +25,19 @@ class UserController extends Controller
         endif;
     }
 
+    public function update(Request $r, $id) {
+        User::where('id', $id)->update([
+            'name' => $r->name,
+            'email' => $r->email
+        ]);
+        return redirect()->back()->with('success', 'User updated successfully');
+    }
+
 
     public function ChangePass(Request $request, $id)
     {
         User::where('id', $id)->update([ 'password' => Hash::make($request->pass) ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Password changed successfully');
     }
 
     function changePMUsername(Request $r, $id) {

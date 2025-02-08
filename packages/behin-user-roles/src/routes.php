@@ -24,6 +24,7 @@ Route::name('method.')->prefix('method')->middleware(['web', 'auth',Access::clas
 Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(function () {
     Route::get('/{id}', [UserController::class, 'index'])->name('user.all');
     Route::post('/{id}', [UserController::class, 'AccessReg']);
+    Route::put('/{id}/update', [UserController::class, 'update'])->name('user.update');
 
     Route::post('/{id}/changepass', [UserController::class, 'ChangePass'])->name('user.ChangePass');
     Route::post('/{id}/change-pm-username', [UserController::class, 'changePMUsername'])->name('change-pm-username');
