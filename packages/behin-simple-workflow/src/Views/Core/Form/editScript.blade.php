@@ -19,28 +19,31 @@
                     <i class="fa fa-arrow-left mr-2"></i> {{ trans('Back To Forms') }}
                 </a>
                 <a href="{{ route('simpleWorkflow.form.edit', ['id' => $form->id]) }}" class="btn btn-primary">
-                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit Content') }}
+                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit ') }}
                 </a>
-                <a href="{{ route('simpleWorkflow.form.editScript', ['id' => $form->id]) }}" class="btn btn-primary">
-                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit Script') }}
+                <a href="{{ route('simpleWorkflow.form.editContent', ['id' => $form->id]) }}" class="btn btn-primary">
+                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit Content') }}
                 </a>
             </div>
         </div>
         <div class="card">
             <div class="row">
                 <div class="col-sm-12">
-                    <form action="{{ route('simpleWorkflow.form.updateContent') }}" method="POST" class="mb-3">
+                    <form action="{{ route('simpleWorkflow.form.updateScript') }}" method="POST" class="mb-3">
                         @csrf
                         <input type="hidden" name="formId" value="{{ $form->id }}">
                         <label for="">{{ trans('Form Name') }}:</label>
                         <input type="text" name="name" value="{{ $form->name }}" class="form-control" id="">
-                        <label for="">{{ trans('Form Content') }}:</label>
-                        <textarea name="content" class="form-control" dir="ltr" id="" cols="30" rows="30">{{ $form->content }}</textarea>
+                        <label for="">{{ trans('Form Scripts') }}:</label>
+                        <div id="editor" style="height: 600px; width: 100%;">{{ $form->scripts }}</div>
+                        <textarea name="scripts" id="scripts" style="display: none" class="form-control" dir="ltr" id="" cols="30" rows="30">{{ $form->scripts }}</textarea>
                         <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
                     </form>
                 </div>
+                
             </div>
         </div>
+        
         <div class="col-sm-12">
             @include('SimpleWorkflowView::Core.Form.preview', ['form' => $form])
         </div>

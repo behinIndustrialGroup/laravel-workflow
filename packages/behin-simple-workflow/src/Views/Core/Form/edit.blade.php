@@ -15,6 +15,9 @@
                 <a href="{{ route('simpleWorkflow.form.index') }}" class="btn btn-outline-primary">
                     <i class="fa fa-arrow-left mr-2"></i> {{ trans('Back To Forms') }}
                 </a>
+                <a href="{{ route('simpleWorkflow.form.editScript', ['id' => $form->id]) }}" class="btn btn-primary">
+                    <i class="fa fa-edit mr-2"></i> {{ trans('Edit Script') }}
+                </a>
                 <a href="{{ route('simpleWorkflow.form.editContent', ['id' => $form->id]) }}" class="btn btn-primary">
                     <i class="fa fa-edit mr-2"></i> {{ trans('Edit Content') }}
                 </a>

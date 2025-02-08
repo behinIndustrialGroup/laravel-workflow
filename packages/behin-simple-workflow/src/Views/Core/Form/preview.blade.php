@@ -185,3 +185,5 @@
         @endisset
     @endforeach
 </div>
+
+{!! $form->scripts !!}

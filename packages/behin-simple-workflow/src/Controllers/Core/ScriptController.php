@@ -74,7 +74,7 @@ class ScriptController extends Controller
         return Script::find($id);
     }
 
-    public static function runScript($id, $caseId, $forTest = false)
+    public static function runScript($id, $caseId = null, $forTest = false)
     {
         return DB::transaction(function () use ($id, $caseId, $forTest) {
             $script = self::getById($id);
@@ -102,5 +102,16 @@ class ScriptController extends Controller
             $result = $e->getMessage();
         }
         return $result;
+    }
+
+    public static function runFromView(Request $request, $id)
+    {
+        return DB::transaction(function () use ($id, $request) {
+            $script = self::getById($id);
+            $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
+            $script = new $executiveFile();
+            $output = $script->execute($request);
+            return $output;
+        });
     }
 }

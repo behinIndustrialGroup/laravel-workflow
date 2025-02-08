@@ -39,6 +39,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('update', [ FormController::class, 'update' ])->name('update');
         Route::get('edit-content/{id}', [ FormController::class, 'editContent' ])->name('editContent');
         Route::post('updateContent', [ FormController::class, 'updateContent' ])->name('updateContent');
+        Route::get('edit-script/{id}', [ FormController::class, 'editScript' ])->name('editScript');
+        Route::post('updateScript', [ FormController::class, 'updateScript' ])->name('updateScript');
         Route::post('store', [ FormController::class, 'store' ])->name('store');
         Route::post('create', [ FormController::class, 'createForm' ])->name('create');
         Route::post('copy', [ FormController::class, 'copy' ])->name('copy');
@@ -47,7 +49,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
 
     Route::resource('scripts', ScriptController::class);
     Route::post('scripts/{id}/test', [ ScriptController::class, 'test' ])->name('scripts.test');
-    Route::get('scripts/{id}/run/{caseId}', [ ScriptController::class, 'runScript' ])->name('scripts.run');
+    Route::any('scripts/{id}/run', [ ScriptController::class, 'runFromView' ])->name('scripts.run');
 
     Route::resource('conditions', ConditionController::class);
     Route::resource('task-actors', TaskActorController::class);
