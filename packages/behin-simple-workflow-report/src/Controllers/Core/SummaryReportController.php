@@ -31,7 +31,7 @@ class SummaryReportController extends Controller
     public function edit($caseId) {
         $case = CaseController::getById($caseId);
         $process = $case->process;
-        $summaryForm = RoleReportFormController::getSummaryReportFormByRoleId(Auth::user()->role_id);
+        $summaryForm = RoleReportFormController::getSummaryReportFormByRoleId(Auth::user()->role_id, $process->id);
         if($summaryForm == null){
             return redirect()->back()->with('error', trans('Form not found'));  
         }

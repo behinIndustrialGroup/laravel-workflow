@@ -51,8 +51,8 @@ class RoleReportFormController extends Controller
         return redirect()->back();
     }
 
-    public static function getSummaryReportFormByRoleId($role_id){
-        return RoleForm::where('role_id', $role_id)->first();
+    public static function getSummaryReportFormByRoleId($role_id, $process_id){
+        return RoleForm::where('role_id', $role_id)->where('process_id', $process_id)->first();
     }
 
 }
