@@ -36,4 +36,4 @@ Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(functio
     Route::delete('/{id}/removeFromDepartment', [UserController::class, 'removeFromDepartment'])->name('user.removeFromDepartment');
 });
 
-Route::resource('department', DepartmentController::class);
+Route::resource('department', DepartmentController::class)->middleware(['web', 'auth']);
