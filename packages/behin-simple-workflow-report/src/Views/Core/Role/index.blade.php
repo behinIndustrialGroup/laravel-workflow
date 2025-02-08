@@ -8,6 +8,16 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">فرم های گزارش نقش ها</div>
@@ -25,7 +35,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($role_forms as $item)
-                                        <form action="{{ route('simpleWorkflowReport.role.update', ['role' => $item]) }}"
+                                        <form
+                                            action="{{ route('simpleWorkflowReport.role.update', ['role' => $item->id]) }}"
                                             method="POST">
                                             @csrf
                                             @method('PUT')
@@ -48,7 +59,8 @@
                                                         value="{{ $item->role_id }}" class="form-control" list="roles">
                                                     <datalist id="roles">
                                                         @foreach ($roles as $role)
-                                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                            <option value="{{ $role->id }}">{{ $role->name }}
+                                                            </option>
                                                         @endforeach
                                                 </td>
                                                 <td>
@@ -56,7 +68,8 @@
                                                     <a
                                                         href="{{ route('simpleWorkflow.form.edit', ['id' => $item->summary_form_id]) }}">{{ getFormInformation($item->summary_form_id)?->name ?? '' }}</a>
                                                     <input type="text" name="summary_form_id" id=""
-                                                        class="form-control" list="forms">
+                                                        value="{{ $item->summary_form_id }}" class="form-control"
+                                                        list="forms">
                                                     <datalist id="forms">
                                                         @foreach (getProcessForms() as $form)
                                                             <option value="{{ $form->id }}">{{ $form->name }}
@@ -67,6 +80,14 @@
                                                 <td>
                                                     <button
                                                         class="btn btn-sm btn-primary">{{ trans('fields.Update') }}</button>
+                                                    <form
+                                                        action="{{ route('simpleWorkflowReport.role.destroy', ['role' => $item->id]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-sm btn-danger"><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         </form>

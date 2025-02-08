@@ -36,10 +36,12 @@ class RoleReportFormController extends Controller
         return view('SimpleWorkflowReportView::Core.Summary.show', compact('process'));
     }
 
-    public static function update(Request $request, Role $role){
+    public static function update(Request $request, RoleForm $role){
         $role->summary_form_id = $request->summary_form_id;
         $role->save();
-        return redirect()->back();
+        return redirect()->back()->with([
+            'success' => trans('fields.Role form updated successfully')
+        ]);
     }
 
     public static function store(Request $request){
@@ -49,6 +51,14 @@ class RoleReportFormController extends Controller
             'process_id' => $request->process_id
         ]);
         return redirect()->back();
+    }
+
+    public static function destroy($id){
+        $roleForm = RoleForm::findOrFail($id);
+        $roleForm->delete();
+        return redirect()->back()->with([
+            'success' => trans('fields.Role form deleted successfully')
+        ]);
     }
 
     public static function getSummaryReportFormByRoleId($role_id, $process_id){
