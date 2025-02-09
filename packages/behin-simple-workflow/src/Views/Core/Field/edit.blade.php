@@ -48,6 +48,7 @@
                 <option value="title" @if ($field->type == 'title') selected @endif>{{ trans('Title') }}</option>
 
                 <option value="div" @if ($field->type == 'div') selected @endif>{{ trans('Div') }}</option>
+                <option value="button" @if ($field->type == 'button') selected @endif>{{ trans('Button') }}</option>
             </select>
         </div>
         @if ($field->type == 'entity')

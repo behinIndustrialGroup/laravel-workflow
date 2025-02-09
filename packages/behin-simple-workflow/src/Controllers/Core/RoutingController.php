@@ -80,10 +80,10 @@ class RoutingController extends Controller
         $process = ProcessController::getById($processId);
         $inbox = InboxController::getById($request->inboxId);
 
-        if(in_array($inbox->status , ['done', 'doneByOther'])){
+        if (in_array($inbox->status, ['done', 'doneByOther'])) {
             return response()->json([
-               'status' => 400,
-               'msg' => trans('fields.Task Has Been Done Previously')
+                'status' => 400,
+                'msg' => trans('fields.Task Has Been Done Previously')
             ]);
         }
 
@@ -112,7 +112,7 @@ class RoutingController extends Controller
         } else {
             foreach ($taskChildren as $childTask) {
                 $result = self::executeNextTask($childTask, $caseId);
-                if($result == 'break'){
+                if ($result == 'break') {
                     break;
                 }
                 if ($result) {
@@ -145,6 +145,63 @@ class RoutingController extends Controller
             'status' => 200,
             'msg' => trans('Saved')
         ]);
+    }
+
+    public static function jumpTo(Request $request)
+    {
+        $caseId = $request->caseId;
+        $processId = $request->processId;
+        $taskId = $request->taskId;
+        $nextTask = TaskController::getById($request->next_task_id);
+        $process = ProcessController::getById($processId);
+        $inbox = InboxController::getById($request->inboxId);
+
+        if (in_array($inbox->status, ['done', 'doneByOther'])) {
+            return response()->json([
+                'status' => 400,
+                'msg' => trans('fields.Task Has Been Done Previously')
+            ]);
+        }
+
+        $task = $inbox->task;
+        $form = $task->executiveElement();
+        $result = self::save($request);
+        if ($result['status'] != 200) {
+            return $result;
+        }
+        if ($process->number_of_error) {
+            return response()->json([
+                'status' => 400,
+                'msg' => trans('fields.Process Has Error')
+            ]);
+        }
+
+        $result = self::executeNextTask($nextTask, $caseId);
+        if ($result) {
+            return $result;
+        }
+        if ($task->type == 'form') {
+            if ($task->assignment_type == 'normal') {
+                $inboxes = InboxController::getAllByTaskIdAndCaseId($task->id, $caseId);
+                foreach ($inboxes as $inbox) {
+                    InboxController::changeStatusByInboxId($inbox->id, 'done');
+                }
+                // InboxController::changeStatusByInboxId($request->inboxId, 'done');
+                //از این رکورد در اینباکس یک یا چمد ردیف وجود دارد
+                // وضعیت همه رکوردها باید در اینباکس به انجام شده تغییر کند
+            }
+            if ($task->assignment_type == 'dynamic') {
+                InboxController::changeStatusByInboxId($request->inboxId, 'done');
+                //از این رکورد در اینباکس یک ردیف وجود دارد
+                // وضعیت همین رکورد باید در اینباکس به انجام شده تغییر کند
+            }
+            if ($task->assignment_type == 'parallel') {
+                InboxController::changeStatusByInboxId($inbox->id, 'done');
+                // از این رکورد چند ردیف در اینباکس وجود دارد
+                // همه باید وضعیت انجام شده تغییر کنند
+            }
+        }
+        return redirect()->route('simpleWorkflow.inbox.index');
     }
 
     public static function executeNextTask($task, $caseId)

@@ -7,7 +7,7 @@
 @endphp
 
 @section('content')
-    @if(session('error'))
+    @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
@@ -17,7 +17,7 @@
             {{ trans('Back to list') }}
         </a>
     </div>
-    <form action="{{ route('simpleWorkflow.task.update', $task->id) }}" method="POST" class="p-4 border rounded bg-light">
+    <form action="{{ route('simpleWorkflow.task.update', $task->id) }}" method="POST" class="card row col-sm-12">
         @csrf
         @method('PUT')
         <div class="panel-heading p-2 bg-light">
@@ -37,29 +37,29 @@
                     <select name="executive_element_id" class="form-control select2">
                         <option value="">{{ trans('Select an option') }}</option>
                         @if ($task->type == 'form')
-                                @foreach ($forms as $form)
-                                    <option value="{{ $form->id }}"
-                                        {{ $form->id == $task->executive_element_id ? 'selected' : '' }}>
-                                        {{ $form->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                            @if ($task->type == 'script')
-                                @foreach ($scripts as $script)
-                                    <option value="{{ $script->id }}"
-                                        {{ $script->id == $task->executive_element_id ? 'selected' : '' }}>
-                                        {{ $script->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                            @if ($task->type == 'condition')
-                                @foreach ($conditions as $condition)
-                                    <option value="{{ $condition->id }}"
-                                        {{ $condition->id == $task->executive_element_id ? 'selected' : '' }}>
-                                        {{ $condition->name }}
-                                    </option>
-                                @endforeach
-                            @endif
+                            @foreach ($forms as $form)
+                                <option value="{{ $form->id }}"
+                                    {{ $form->id == $task->executive_element_id ? 'selected' : '' }}>
+                                    {{ $form->name }}
+                                </option>
+                            @endforeach
+                        @endif
+                        @if ($task->type == 'script')
+                            @foreach ($scripts as $script)
+                                <option value="{{ $script->id }}"
+                                    {{ $script->id == $task->executive_element_id ? 'selected' : '' }}>
+                                    {{ $script->name }}
+                                </option>
+                            @endforeach
+                        @endif
+                        @if ($task->type == 'condition')
+                            @foreach ($conditions as $condition)
+                                <option value="{{ $condition->id }}"
+                                    {{ $condition->id == $task->executive_element_id ? 'selected' : '' }}>
+                                    {{ $condition->name }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                     @if ($task->type == 'form')
                         <a href="{{ route('simpleWorkflow.form.edit', ['id' => $task->executive_element_id]) }}">
@@ -72,7 +72,8 @@
                         </a>
                     @endif
                     @if ($task->type == 'condition')
-                        <a href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
+                        <a
+                            href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
                             {{ trans('Edit') }}
                         </a>
                     @endif
@@ -84,7 +85,8 @@
                     <select name="parent_id" id="parent_id" class="form-control select2">
                         <option value="">{{ trans('None') }}</option>
                         @foreach ($task->process->tasks() as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>{{ $item->name }}</option>
+                            <option value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>
+                                {{ $item->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -94,8 +96,9 @@
                 <div class="col-sm-10">
                     <select name="next_element_id" id="next_element_id" class="form-control select2">
                         <option value="">{{ trans('None') }}</option>
-                    @foreach ($task->process->tasks() as $item)
-                        <option value="{{ $item->id }}" {{ $item->id == $task->next_element_id ? 'selected' : '' }}>{{ $item->name }}</option>
+                        @foreach ($task->process->tasks() as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $item->id == $task->next_element_id ? 'selected' : '' }}>{{ $item->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -105,15 +108,18 @@
                 <div class="col-sm-10">
                     <select name="assignment_type" id="assignment_type" class="form-control">
                         <option value="">{{ trans('None') }}</option>
-                        <option value="normal" {{ $task->assignment_type == 'normal' ? 'selected' : '' }}>{{ trans('Normal') }}</option>
-                        <option value="dynamic" {{ $task->assignment_type == 'dynamic' ? 'selected' : '' }}>{{ trans('Dynamic') }}</option>
+                        <option value="normal" {{ $task->assignment_type == 'normal' ? 'selected' : '' }}>
+                            {{ trans('Normal') }}</option>
+                        <option value="dynamic" {{ $task->assignment_type == 'dynamic' ? 'selected' : '' }}>
+                            {{ trans('Dynamic') }}</option>
                     </select>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="case_name" class="col-sm-2 col-form-label">{{ trans('Case Name') }}</label>
                 <div class="col-sm-10">
-                    <input type="text" name="case_name" class="form-control" dir="ltr" value="{{ $task->case_name }}">
+                    <input type="text" name="case_name" class="form-control" dir="ltr"
+                        value="{{ $task->case_name }}">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
@@ -122,7 +128,7 @@
 
         </div>
     </form>
-    <div class="panel-heading p-4 bg-white mt-3">
+    <div class="card row col-sm-12">
         <table class="table table-stripped">
             <thead>
                 <tr>
@@ -148,8 +154,9 @@
                             <form action="{{ route('simpleWorkflow.task-actors.destroy', $value->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button >{{ trans('Delete') }}</button></td>
-                            </form>
+                                <button>{{ trans('Delete') }}</button>
+                        </td>
+                        </form>
 
                     </tr>
                 @endforeach
@@ -162,12 +169,13 @@
                         <td></td>
                         <td>
                             <input type="text" name="task_id" id="" value="{{ $task->id }}" class="d-none">
-                            <input type="text" name="task_name" id="" value="{{ $task->name }}" class="form-control">
+                            <input type="text" name="task_name" id="" value="{{ $task->name }}"
+                                class="form-control">
                         </td>
                         <td></td>
                         <td>
                             <input type="text" name="actor" id="" list="actors">
-                            
+
 
                             <datalist id="actors">
                                 @foreach (App\Models\User::all() as $actor)
@@ -179,6 +187,10 @@
                     </tr>
                 </tfoot>
             </form>
+        </table>
+    </div>
+    <div class="row card col-sm-12">
+        @include('SimpleWorkflowView::Core.TaskJump.edit', ['task' => $task])
     </div>
 @endsection
 

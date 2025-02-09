@@ -177,6 +177,14 @@
                         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                     ]) !!}
                 @endif
+                @if ($fieldDetails->type == 'button')
+                    {!! Form::button($fieldId, [
+                        'class' => $field->class,
+                        'id' => $fieldId,
+                        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                    ]) !!}
+                @endif
             </div>
         @else
             @isset($childForm)

@@ -3,6 +3,7 @@
 namespace MyFormBuilder\Services;
 
 use MyFormBuilder\Contracts\FormBuilderInterface;
+use MyFormBuilder\Fields\ButtonField;
 use MyFormBuilder\Fields\DateField;
 use MyFormBuilder\Fields\TextField;
 use MyFormBuilder\Fields\EmailField;
@@ -49,6 +50,15 @@ class FormBuilder
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new TitleField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function button(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new ButtonField($name, $attributes))->render();
         return $this;
     }
 

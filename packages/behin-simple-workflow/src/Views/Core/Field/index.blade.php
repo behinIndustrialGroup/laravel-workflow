@@ -27,6 +27,7 @@
                 <option value="entity">entity</option>
                 <option value="title">title</option>
                 <option value="div">div</option>
+                <option value="button">button</option>
             </select>
         </div>
         <div class="col-sm-4">

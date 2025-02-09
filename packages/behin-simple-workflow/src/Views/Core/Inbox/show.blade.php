@@ -78,6 +78,11 @@
                 <button class="btn btn-sm btn-outline-info m-1"
                     onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
             @else
+                @if ($task->jumps->count() > 0)
+                    <button class="btn btn-sm btn-outline-warning m-1" onclick="showJumpModal()">
+                        <i class="fa fa-send"></i> {{ trans('fields.Send Manully') }}
+                    </button>
+                @endif
                 <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
                     <i class="fa fa-save"></i> {{ trans('fields.Save') }}
                 </button>
@@ -144,6 +149,17 @@
                     } else {
                         show_error(response.msg);
                     }
+                }
+            )
+        }
+
+        function showJumpModal(task_id) {
+            send_ajax_get_request(
+                '{{ route('simpleWorkflow.task-jump.show', [$task->id , $inbox->id , $case->id , $process->id] ) }}',
+                function(response) {
+                    open_admin_modal_with_data(response, '', function() {
+                        initial_view()
+                    })
                 }
             )
         }

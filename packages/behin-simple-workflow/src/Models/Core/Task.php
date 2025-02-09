@@ -74,4 +74,8 @@ class Task extends Model
     public function actors(){
         return $this->hasMany(TaskActor::class, 'task_id');
     }
+
+    public function jumps(){
+        return $this->hasMany(TaskJump::class, 'task_id');
+    }
 }
