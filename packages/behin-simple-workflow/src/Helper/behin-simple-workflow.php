@@ -73,6 +73,9 @@ if (!function_exists('taskHasError')) {
 
 if (!function_exists('getUserInfo')) {
     function getUserInfo($userId) {
+        if(!$userId){
+            return null;
+        }
         $user = User::find($userId);
         if($user){
             return $user;
