@@ -30,18 +30,16 @@
                         </tr>
                 @endforeach
             </tbody>
-            <tfoot>
-                <form action="{{ route('simpleWorkflow.form.create') }}" method="POST">
-                    @csrf
-                    <tr>
-                        <td></td>
-                        <td><input type="text" name="name" id="" value=""></td>
-                        </td>
-                        <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
-                    </tr>
-                </form>
-            </tfoot>
         </table>
+        <form action="{{ route('simpleWorkflow.form.create') }}" method="POST">
+            @csrf
+            <tr>
+                <td></td>
+                <td><input type="text" name="name" id="" value=""></td>
+                </td>
+                <td><button class="btn btn-success">{{ trans('Create') }}</button></td>
+            </tr>
+        </form>
     </div>
 @endsection
 

@@ -61,17 +61,17 @@
                             @endforeach
                         @endif
                     </select>
-                    @if ($task->type == 'form')
+                    @if ($task->type == 'form' and $task->executive_element_id)
                         <a href="{{ route('simpleWorkflow.form.edit', ['id' => $task->executive_element_id]) }}">
                             {{ trans('Edit') }}
                         </a>
                     @endif
-                    @if ($task->type == 'script')
+                    @if ($task->type == 'script' and $task->executive_element_id)
                         <a href="{{ route('simpleWorkflow.scripts.edit', ['script' => $task->executive_element_id]) }}">
                             {{ trans('Edit') }}
                         </a>
                     @endif
-                    @if ($task->type == 'condition')
+                    @if ($task->type == 'condition' and $task->executive_element_id)
                         <a
                             href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
                             {{ trans('Edit') }}
@@ -148,7 +148,7 @@
                         <td>{{ $value->id }}</td>
                         <td>{{ $value->task->name }}</td>
                         <td>{{ $value->task->assignment_type }}</td>
-                        <td>{{ is_numeric($value->actor) ? getUserInfo($value->actor)->name : $value->actor }}</td>
+                        <td>{{ is_numeric($value->actor) ? getUserInfo($value->actor)?->name : $value->actor }}</td>
                         <td>{{ $value->created_at }}</td>
                         <td>
                             <form action="{{ route('simpleWorkflow.task-actors.destroy', $value->id) }}" method="POST">

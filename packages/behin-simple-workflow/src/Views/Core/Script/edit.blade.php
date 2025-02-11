@@ -36,6 +36,11 @@
                 @method('PUT')
                 <div class="mb-3">
                     <label for="name" class="form-label">{{ trans('Name') }}</label>
+                    <input type="text" name="" id="" class="form-control" value="{{ $script->id }}"
+                        readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">{{ trans('Name') }}</label>
                     <input type="text" name="name" id="name" class="form-control" value="{{ $script->name }}"
                         required>
                 </div>

@@ -24,6 +24,8 @@ class Entity extends Model
         'columns',
         'uses',
         'class_contents',
+        'model_name',
+        'namespace',
     ];
 
 }

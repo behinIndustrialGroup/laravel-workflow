@@ -70,6 +70,7 @@ class EntityController extends Controller
     {
         // $columns = str_replace('\r', '', $entity->columns);
         $columns = explode("\n", $entity->columns);
+        $entity->db_table_name = 'wf_entity_' . $entity->name;
         $ar = [];
         foreach ($columns as $column) {
             $deatils = explode(',', $column);
@@ -84,14 +85,14 @@ class EntityController extends Controller
             // $column['name'] = $deatils[0];
         }
 
-        if (Schema::hasTable('wf_entity_' . $entity->name)) {
-            Schema::table('wf_entity_' . $entity->name, function ($table) use ($ar, $entity) {
+        if (Schema::hasTable($entity->db_table_name)) {
+            Schema::table($entity->db_table_name, function ($table) use ($ar, $entity) {
                 foreach ($ar as $column) {
                     $name = $column['name'];
                     $type = $column['type'];
                     $nullable = $column['nullable'] == 'yes' ? true : false;
                     // $table->$type($name)->nullable($nullable)->change();
-                    if (Schema::hasColumn('wf_entity_' . $entity->name, $name)) {
+                    if (Schema::hasColumn($entity->db_table_name, $name)) {
                         $table->$type($name)->nullable($nullable)->change();
                         echo "Column $name updated successfully. <br>";
                     } else {
@@ -101,41 +102,44 @@ class EntityController extends Controller
             });
             echo "Table $entity->name updated successfully.";
         } else {
-            Schema::create('wf_entity_' . $entity->name, function ($table) use ($ar) {
+            Schema::create($entity->db_table_name, function ($table) use ($ar) {
                 $table->id();
                 foreach ($ar as $column) {
                     $name = $column['name'];
                     $type = $column['type'];
                     $nullable = $column['nullable'] == 'yes' ? true : false;
                     $table->$type($name)->nullable($nullable);
-
                 }
                 $table->timestamps();
                 $table->softDeletes();
             });
             echo "Table $entity->name created successfully.";
         }
-        $entitypath = __DIR__. '/../../Models/Entities';
-        if(!file_exists($entitypath)){
+        $entitypath = __DIR__ . '/../../Models/Entities';
+        if (!file_exists($entitypath)) {
             mkdir($entitypath, 0777, true);
         }
-        $entityFile = __DIR__. '/../../Models/Entities/'. ucfirst($entity->name). '.php';
-        if(!file_exists($entityFile)){
-            $entityFileContent = "<?php \n";
-            $entityFileContent.= "namespace Behin\SimpleWorkflow\Models\Entities; \n";
-            $entityFileContent.= $entity->uses;
-            $entityFileContent.= "\n class ".ucfirst($entity->name)." extends Model \n";
-            $entityFileContent.= "{ \n";
-            $entityFileContent.= "    public \$table = 'wf_entity_".strtolower($entity->name)."'; \n";
-            $entityFileContent.= "    protected \$fillable = [";
-            foreach ($ar as $column) {
-                $entityFileContent.= "'".str_replace('\r', '', $column['name'])."', ";
-            }
-            $entityFileContent.= "]; \n";
-            $entityFileContent.= "}";
-            file_put_contents($entityFile, $entityFileContent);
-            echo "Entity class ".ucfirst($entity->name)." created successfully.";
+        $entityFile = __DIR__ . '/../../Models/Entities/' . ucfirst($entity->name) . '.php';
+        $entity->namespace = "Behin\SimpleWorkflow\Models\Entities";
+        $entity->model_name = ucfirst($entity->name);
+        $entity->save();
+        if (file_exists($entityFile)) {
+            unlink($entityFile);
         }
-
+        $entityFileContent = "<?php \n";
+        $entityFileContent .= "namespace " . $entity->namespace . "; \n";
+        $entityFileContent .= $entity->uses;
+        $entityFileContent .= "\n class " . $entity->model_name . " extends Model \n";
+        $entityFileContent .= "{ \n";
+        $entityFileContent .= "    public \$table = '" . $entity->db_table_name . "'; \n";
+        $entityFileContent .= "    protected \$fillable = [";
+        foreach ($ar as $column) {
+            $entityFileContent .= "'" . str_replace('\r', '', $column['name']) . "', ";
+        }
+        $entityFileContent .= "]; \n";
+        $entityFileContent .= $entity->class_contents;
+        $entityFileContent .= "}";
+        file_put_contents($entityFile, $entityFileContent);
+        echo "Entity class " . ucfirst($entity->name) . " created successfully.";
     }
 }

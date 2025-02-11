@@ -63,6 +63,9 @@ class FieldController extends Controller
         if($request->columns !== null){
             $attributes['columns'] = $request->columns;
         }
+        if($request->id !== null){
+            $attributes['id'] = $request->id;
+        }
         $field->update([
             'name' => $request->name,
             'type' => $request->type,

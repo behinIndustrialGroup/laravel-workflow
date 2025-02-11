@@ -170,7 +170,7 @@
                         'columns' => is_string($fieldAttributes?->columns) ? $fieldAttributes?->columns : null,
                         'query' => is_string($fieldAttributes?->query) ? $fieldAttributes?->query : null,
                         'class' => 'form-control',
-                        'id' => $fieldId,
+                        'id' => $fieldAttributes?->id,
                         'required' => $required,
                         'readonly' => $readOnly,
                         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,

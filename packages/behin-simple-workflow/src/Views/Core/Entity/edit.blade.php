@@ -9,6 +9,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
     <div class="container table-responsive card p-2">
+        <div class="row mb-3 text-left" dir="ltr">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Model Information</h5>
+                        <div class="mb-2">
+                            <span class="text-muted">Model Name:</span>
+                            <span class="ms-2">{{ $entity->model_name }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted">Namespace:</span>
+                            <span class="ms-2">{{ $entity->namespace }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted">DB Table Name:</span>
+                            <span class="ms-2">{{ $entity->db_table_name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form action="{{ route('simpleWorkflow.entities.update', $entity->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -27,7 +48,7 @@
                 'rows' => 5,
             ]) !!}
             <span dir="ltr" style="display:block; float:left">name,type,nullable(yes,no)</span>
-            <label for="class_uses">{{ trans('fields.Class Uses') }}</label>
+            <label for="class_uses">{{ trans('fields.Columns') }}</label>
             <div id="columns_editor" style="height: 200px; width: 100%;">{{ $entity->columns }}</div>
             <textarea name="columns" id="class_columns" class="form-control"
                 style="display: none;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->columns }}</textarea>

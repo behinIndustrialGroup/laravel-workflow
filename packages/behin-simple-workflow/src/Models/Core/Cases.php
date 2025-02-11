@@ -58,4 +58,8 @@ class Cases extends Model
     public function whereIs(){
         return Inbox::where('case_id', $this->id)->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
     }
+
+    public function previousTask(){
+        return Inbox::where('case_id', $this->id)->whereIn('status', ['done'])->orderBy('created_at', 'desc')->first();
+    }
 }
