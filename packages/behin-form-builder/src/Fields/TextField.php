@@ -8,10 +8,11 @@ class TextField extends AbstractField
 {
     public function render(): string
     {
+        $readonly = $this->attributes['readonly'] ?? '';
         $s = '<div class="form-group">';
         $s .= '<label>';
         $s .= trans('fields.' . $this->name);
-        if($this->attributes['required'] == 'on' && $this->attributes['readonly'] != 'on'){
+        if($this->attributes['required'] == 'on' && $readonly != 'on'){
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label>';

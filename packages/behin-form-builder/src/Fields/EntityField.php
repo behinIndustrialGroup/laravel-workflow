@@ -8,6 +8,7 @@ class EntityField extends AbstractField
 {
     public function render(): string
     {
+        $id = $this->attributes['id'] ?? '';
         $columns = $this->attributes['columns'] ?? ''; // ['id', 'name' ect. 0 => 'id', 1 => 'name' ect.
         $columns = str_replace("\r", "", $columns);
         $columns = explode("\n", $columns);
@@ -15,7 +16,7 @@ class EntityField extends AbstractField
         $s .= '<label>';
         $s .= trans('fields.' . $this->name);
         $s .= '</label>';
-        $s .= '<table class="table table-bordered">';
+        $s .= '<table class="table table-bordered" id="'.$id.'">';
         $s .= '<thead>';
         $s.= '<tr>';
         foreach ($columns as $column) {
@@ -23,6 +24,7 @@ class EntityField extends AbstractField
         }
         $s .= '</tr>';
         $s .= '</thead>';
+        $s .= '<tbody></tbody>';
         $query = $this->attributes['query'] ?? null;
         if($query){
             $rows = DB::select($query);
@@ -36,6 +38,11 @@ class EntityField extends AbstractField
             }
         }
         $s .= '</table>';
+        if(isset($this->attributes['script'])){
+            $s .= '<script>';
+            $s .= $this->attributes['script'];
+            $s .= '</script>';
+        }
         $s .= '</div>';
         return $s;
     }
