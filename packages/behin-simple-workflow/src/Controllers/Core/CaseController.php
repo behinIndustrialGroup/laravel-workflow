@@ -17,7 +17,7 @@ class CaseController extends Controller
         return Cases::find($id);
     }
 
-    public static function create($processId, $creator, $name = null, $inDraft = false)
+    public static function create($processId, $creator, $name = null, $inDraft = false, $caseNumber = null)
     {
         if($inDraft) {
             return Cases::create([
@@ -27,7 +27,7 @@ class CaseController extends Controller
                 'creator' => $creator
             ]);
         }
-        $newNumber = self::getNewCaseNumber($processId);
+        $newNumber = $caseNumber? $caseNumber : self::getNewCaseNumber($processId);
         return Cases::create([
             'process_id' => $processId,
             'number' => $newNumber,
@@ -37,8 +37,12 @@ class CaseController extends Controller
     }
 
     public static function getNewCaseNumber($processId){
-        $lastNumber = Cases::where('process_id', $processId)->orderBy('number', 'desc')->first()?->number;
-        $newNumber = $lastNumber? $lastNumber + 1 : config('workflow.caseStartValue');
+        if(config('workflow.caseNumberingPerProcess')){
+            $lastNumber = Cases::where('process_id', $processId)->orderBy('number', 'desc')->first()?->number;
+        }else{
+            $lastNumber = Cases::orderBy('number', 'desc')->first()?->number;
+        }
+        $newNumber = $lastNumber ? $lastNumber + 1 : config('workflow.caseStartValue');
         return $newNumber;
     }
 

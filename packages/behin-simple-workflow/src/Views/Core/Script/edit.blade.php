@@ -30,7 +30,7 @@
     @endif
 
     <div class="row">
-        <div class="col-md-6 card shadow-sm p-3">
+        <div class="col-md-4 card shadow-sm p-3">
             <form action="{{ route('simpleWorkflow.scripts.update', $script->id) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -57,8 +57,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
             </form>
-        </div>
-        <div class="col-md-6 card">
             <form action="javascript:void(0)" method="POST" id="test-form" class="form-inline">
                 @csrf
                 <div class="form-group">
@@ -78,17 +76,17 @@
             </h5>
             <div id="result" dir="ltr" style="text-align: left; white-space: pre;"></div>
         </div>
-        <div class="col-md-12 card" dir="ltr">
+        <div class="col-md-8 card">
             @if ($executive_file_content)
-                <form action="{{ route('simpleWorkflow.scripts.update', $script->id) }}" method="POST">
+                <form action="javascript:void(0)" method="POST" id="content-form">
                     @csrf
                     @method('PUT')
-                    <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
-                    <div id="editor" style="height: 600px; width: 100%;">{{ $executive_file_content }}</div>
+                    <div id="editor" style="height: 80vh; width: 100%;">{{ $executive_file_content }}</div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
-                        style="text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $executive_file_content }}</textarea>
-                    <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
+                        style="text-align: left; white-space: pre; font-family: Monospace; display: none" dir="ltr">{{ $executive_file_content }}</textarea>
                 </form>
+                <button class="btn btn-primary mt-3" onclick="saveContent()">{{ trans('fields.Save') }}</button>
+
             @else
                 <form action="{{ route('simpleWorkflow.scripts.store', $script->id) }}" method="POST">
                     @csrf
@@ -100,6 +98,9 @@
                     <button type="submit" class="btn btn-primary mt-3">{{ trans('fields.Save') }}</button>
                 </form>
             @endif
+        </div>
+        <div class="col-md-12 card" dir="ltr">
+            
 
         </div>
     </div>
@@ -130,6 +131,21 @@
                         $('#result').html('{{ trans('fields.True') }}')
                     }
                     hide_loading();
+                }
+            )
+        }
+
+        function saveContent() {
+            var form = $('#content-form')[0];
+            var fd = new FormData(form);
+            send_ajax_formdata_request(
+                "{{ route('simpleWorkflow.scripts.update', $script->id) }}",
+                fd,
+                function(response) {
+                    show_message('{{ trans('fields.SuccessfullySaved') }}')
+                },
+                function(er) {
+                    console.log(er);
                 }
             )
         }

@@ -36,7 +36,7 @@ class Cases extends Model
 
     public function variables()
     {
-        return VariableController::getVariablesByCaseId($this->id);
+        return VariableController::getVariablesByCaseId($this->id, $this->process_id);
     }
 
     public function getVariable($name)

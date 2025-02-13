@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\DB;
 
 class VariableController extends Controller
 {
-    public static function getVariablesByCaseId($caseId)
+    public static function getVariablesByCaseId($caseId, $processId = null)
     {
+        if ($processId) {
+            return Variable::where('case_id', $caseId)->where('process_id', $processId)->get();
+        }
         return Variable::where('case_id', $caseId)->get();
     }
 

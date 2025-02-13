@@ -44,7 +44,9 @@
                             </td>
                             <td>
                                 <select name="fieldName" id="" class="form-control select2" dir="ltr">
-                                    @include('SimpleWorkflowView::Core.Form.all-fields-options', ['form' => $form])
+                                    @include('SimpleWorkflowView::Core.Form.all-fields-options', [
+                                        'form' => $form,
+                                    ])
                                 </select>
                             </td>
                             <td><input type="checkbox" name="required" id=""></td>
@@ -73,9 +75,9 @@
                                 <div class="card {{ $field->class ?? '' }}">
                                     <div class="card-header" id="heading_{{ $index }}">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-block text-right" type="button"
-                                                data-toggle="collapse" data-target="#collapse_{{ $index }}"
-                                                aria-expanded="true" aria-controls="collapse_{{ $index }}">
+                                            <button class="btn btn-block text-right" type="button" data-toggle="collapse"
+                                                data-target="#collapse_{{ $index }}" aria-expanded="true"
+                                                aria-controls="collapse_{{ $index }}">
                                                 {{ trans('fields.' . $field->fieldName) }}
                                             </button>
                                         </h2>
@@ -96,10 +98,26 @@
                                                     </th>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{ trans('Field Name') }}<br>
-                                                        <select name="fieldName[{{ $index }}]" id="" class="form-control select2" dir="ltr">
-                                                            @include('SimpleWorkflowView::Core.Form.all-fields-options', ['form' => $form, 'selectedField' => $field->fieldName])
+                                                    <th>{{ trans('Field Name') }}
+                                                        @if ($editId = getFieldDetailsByName($field->fieldName)?->id)
+                                                            <a
+                                                                href="{{ route('simpleWorkflow.fields.edit', ['field' => $editId]) }}">{{ trans('fields.Edit') }}</a>
+                                                        @else
+                                                            <a
+                                                                href="{{ route('simpleWorkflow.form.edit', ['id' => $field->fieldName]) }}">{{ trans('fields.Edit') }}</a>
+                                                        @endif
+                                                        <br>
+                                                        <select name="fieldName[{{ $index }}]" id=""
+                                                            class="form-control select2" dir="ltr">
+                                                            @include(
+                                                                'SimpleWorkflowView::Core.Form.all-fields-options',
+                                                                [
+                                                                    'form' => $form,
+                                                                    'selectedField' => $field->fieldName,
+                                                                ]
+                                                            )
                                                         </select>
+                                                        
                                                     </th>
                                                 </tr>
                                                 <tr>
@@ -135,7 +153,7 @@
                 </form>
 
             </div>
-            
+
         </div>
         <div class="card row col-sm-12 mb-4" style="border: 1px solid #1f9bda !important;">
             <div class="card-header bg-primary">{{ trans('Preview') }}</div>
