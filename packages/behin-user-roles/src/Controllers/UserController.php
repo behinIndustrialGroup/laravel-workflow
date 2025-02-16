@@ -30,6 +30,22 @@ class UserController extends Controller
         endif;
     }
 
+    public function create()
+    {
+        $roles = GetRoleController::getAll();
+        return view('URPackageView::user.create')->with(['roles' => $roles]);
+    }
+
+    public function store(Request $request) {
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'password' => Hash::make($request->password)
+        ]);
+        return redirect()->back()->with('success', 'User created successfully');
+    }
+
     public function update(Request $r, $id) {
         User::where('id', $id)->update([
             'name' => $r->name,

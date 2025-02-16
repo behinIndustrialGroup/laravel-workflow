@@ -60,10 +60,10 @@ class FieldController extends Controller
             'script' => $request->script,
             'datalist_from_database' => $request->datalist_from_database
         ];
-        if($request->columns !== null){
+        if ($request->columns !== null) {
             $attributes['columns'] = $request->columns;
         }
-        if($request->id !== null){
+        if ($request->id !== null) {
             $attributes['id'] = $request->id;
         }
         $field->update([
@@ -73,19 +73,21 @@ class FieldController extends Controller
         ]);
 
         return redirect()->route('simpleWorkflow.fields.edit', $field->id)->with('success', 'Fields updated successfully.');
-
     }
 
-    public static function getAll() {
+    public static function getAll()
+    {
         return Fields::orderBy('created_at')->get();
     }
-    public static function getById($id) {
+    public static function getById($id)
+    {
         return Fields::find($id);
     }
 
-    public static function getByName($fieldName) {
+    public static function getByName($fieldName)
+    {
         $field = Fields::where('name', $fieldName)->first();
-        if($field){
+        if ($field) {
             return $field;
         }
         return null;

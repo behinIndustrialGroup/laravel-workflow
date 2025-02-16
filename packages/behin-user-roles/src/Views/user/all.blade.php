@@ -8,8 +8,8 @@
     <div class="container">
         <div class="card ">
             <div class="card-header">
-                <a href="{{route('register')}}">
-                    <button>
+                <a href="{{route('users.create')}}">
+                    <button class="btn btn-primary">
                         ایجاد کاربر
                     </button>
                 </a>
