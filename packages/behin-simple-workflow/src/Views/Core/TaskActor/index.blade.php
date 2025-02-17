@@ -16,6 +16,7 @@
                 <tr>
                     <td>{{ trans('Row') }}</td>
                     <td>{{ trans('ID') }}</td>
+                    <td>{{ trans('Task ID') }}</td>
                     <td>{{ trans('Task') }}</td>
                     <td>{{ trans('Task Assignment Type') }}</td>
                     <td>{{ trans('Actor') }}</td>
@@ -28,6 +29,7 @@
                     <tr>
                         <td>{{ $key + 1 }} </td>
                         <td>{{ $value->id }}</td>
+                        <td>{{ $value->task->id }}</td>
                         <td>{{ $value->task->name }}</td>
                         <td>{{ $value->task->assignment_type }}</td>
                         <td>{{ $value->actor }}</td>
@@ -38,7 +40,6 @@
                                 @method('DELETE')
                                 <button >{{ trans('Delete') }}</button></td>
                             </form>
-
                     </tr>
                 @endforeach
             </tbody>
