@@ -111,6 +111,7 @@ class RoutingController extends Controller
             }
         } else {
             foreach ($taskChildren as $childTask) {
+                Log::info("Parent Task:" . $task->name . " Child Task:" . $childTask->name);
                 $result = self::executeNextTask($childTask, $caseId);
                 if ($result == 'break') {
                     break;
@@ -236,11 +237,23 @@ class RoutingController extends Controller
                 }
                 if ($task->next_element_id) {
                     $nextTask = TaskController::getById($task->next_element_id);
-                    self::executeNextTask($nextTask, $caseId);
+                    $result = self::executeNextTask($nextTask, $caseId);
+                    if($result == 'break'){
+                        return 'break';
+                    }
+                    if ($result) {
+                        return $result;
+                    }
                 }
                 $taskChildren = $task->children();
                 foreach ($taskChildren as $task) {
-                    self::executeNextTask($task, $caseId);
+                    $result = self::executeNextTask($task, $caseId);
+                    if($result == 'break'){
+                        return 'break';
+                    }
+                    if ($result) {
+                        return $result;
+                    }
                 }
             }
             if ($task->type == 'condition') {
@@ -251,16 +264,33 @@ class RoutingController extends Controller
                 if ($result) {
                     $nextTask = $condition->nextIfTrue();
                     if ((bool)$nextTask) {
-                        self::executeNextTask($nextTask, $caseId);
+                        $result = self::executeNextTask($nextTask, $caseId);
+                        if($result == 'break'){
+                            return 'break';
+                        }
+                        if ($result) {
+                            return $result;
+                        }
                     } else {
                         if ($task->next_element_id) {
                             $nextTask = TaskController::getById($task->next_element_id);
-                            self::executeNextTask($nextTask, $caseId);
+                            $result = self::executeNextTask($nextTask, $caseId);
+                            if($result == 'break'){
+                                return 'break';
+                            }
+                            if ($result) {
+                                return $result;
+                            }
                         }
                         $taskChildren = $task->children();
                         foreach ($taskChildren as $task) {
-                            // print($task->name);
-                            self::executeNextTask($task, $caseId);
+                            $result = self::executeNextTask($task, $caseId);
+                            if($result == 'break'){
+                                return 'break';
+                            }
+                            if ($result) {
+                                return $result;
+                            }
                         }
                     }
 
