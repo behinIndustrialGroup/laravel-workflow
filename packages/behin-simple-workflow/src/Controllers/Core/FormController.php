@@ -23,6 +23,12 @@ class FormController extends Controller
         $fields = json_decode($form->content);
         $ar = [];
         foreach($fields as $field){
+            $fieldDetails = getFieldDetailsByName($field->fieldName);
+            if(!$fieldDetails){
+                $formId = $field->fieldName;
+                $childAr = self::requiredFields($formId);
+                $ar = array_merge($ar, $childAr); 
+            }
             if($field->required == 'on'){
                 $ar[] = $field->fieldName;
             }
@@ -60,7 +66,6 @@ class FormController extends Controller
                     'class' => $request->class[$index]
                 ];
             }
-
             $index++;
         }
         $form->content = json_encode($ar);
