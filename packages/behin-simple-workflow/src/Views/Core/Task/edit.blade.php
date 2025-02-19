@@ -26,10 +26,15 @@
                 class="badge bg-{{ $task->type == 'form' ? 'primary' : ($task->type == 'script' ? 'success' : 'warning') }}">
                 {{ ucfirst($task->type) }}
             </span>
-            <input type="hidden" name="id" value="{{ $task->id }}">
+            <div class="row mb-3">
+                <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('ID') }}</label>
+                <input type="text" name="id" id="" class="col-sm-10 form-control" value="{{ $task->id }}" readonly>
+            </div>
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Name') }}</label>
-                <input type="text" name="name" id="" class="form-control" value="{{ $task->name }}">
+                <div class="col-sm-10">
+                    <input type="text" name="name" id="" class="form-control" value="{{ $task->name }}">
+                </div>
             </div>
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Executive File') }}</label>
