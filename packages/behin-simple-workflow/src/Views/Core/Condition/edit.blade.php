@@ -7,10 +7,19 @@
 @section('content')
     <h1>{{ trans('fields.Edit Condition') }}</h1>
     <h2>{{ $condition->name }}</h2>
-    <div class="container p-4 border rounded shadow-sm bg-light">
+    <div class="container p-4 border rounded shadow-sm bg-light table-responsive">
         <form action="{{ route('simpleWorkflow.conditions.update', $condition->id) }}" method="POST">
             @csrf
             @method('PUT')
+            <div class="mb-3">
+                <label for="name" class="form-label">{{ trans('Name') }}</label>
+                <input type="text" name="name" id="name" class="form-control" value="{{ $condition->name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="next_if_true" class="form-label">{{ trans('Next If True') }}</label>
+                <input type="text" name="next_if_true" id="next_if_true" class="form-control"
+                    value="{{ $condition->next_if_true }}" >
+            </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -18,7 +27,6 @@
                         <th>{{ trans('fields.Field Name') }}</th>
                         <th>{{ trans('fields.Operation') }}</th>
                         <th>{{ trans('fields.Value') }}</th>
-                        <th>{{ trans('fields.Task') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -52,16 +60,6 @@
                                 </td>
                                 <td><input type="text" name="value[{{ $index }}]" class="form-control"
                                         value="{{ $row->value }}"></td>
-                                <td><input type="text" name="task[{{ $index }}]" class="form-control"
-                                        value="{{ $row->task }}" list="tasks">
-                                    <datalist id="tasks">
-                                        @foreach (getProcessTasks() as $task)
-                                            <option value="{{ $task->id }}"
-                                                {{ $task->id == $row->task ? 'selected' : '' }}>{{ $task->name }}
-                                            </option>
-                                        @endforeach
-                                    </datalist>
-                                </td>
                                 <td>
                                     <button class="btn btn-danger" type="button" onclick="removeTr(this)"><i
                                             class="fa fa-trash"></i></button>
@@ -98,14 +96,6 @@
                         </td>
                         <td><input type="text" name="value[{{ $index }}]" class="form-control" id=""
                                 value="">
-                        </td>
-                        <td><input type="text" name="task[{{ $index }}]" class="form-control" id=""
-                                value="" list="tasks">
-                            <datalist id="tasks">
-                                @foreach (getProcessTasks() as $task)
-                                    <option value="{{ $task->id }}">{{ $task->name }}</option>
-                                @endforeach
-                            </datalist>
                         </td>
                         <td><button class="btn btn-success" type="submit">{{ trans('Edit') }}</button></td>
                     </tr>
