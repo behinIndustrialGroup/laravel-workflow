@@ -5,6 +5,7 @@ namespace Behin\SimpleWorkflow\Controllers\Core;
 use App\Http\Controllers\Controller;
 use Behin\SimpleWorkflow\Models\Core\Condition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ConditionController extends Controller
 {
@@ -47,12 +48,13 @@ class ConditionController extends Controller
                     'fieldName' => $fieldName,
                     'operation' => $request->operation[$index],
                     'value' => $request->value[$index],
-                    'task' => $request->task[$index],
                 ];
             }
 
             $index++;
         }
+        $Condition->name = $request->name;
+        $Condition->next_if_true = $request->next_if_true;
         $Condition->content = json_encode($ar);
         $Condition->save();
         return redirect()->back();
@@ -76,6 +78,7 @@ class ConditionController extends Controller
             // print($value);
             $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
             // print($c);
+            // Log::info($Condition->name . ": " .$c);
             if(!$c){
                 // print($value);
                 return false;
