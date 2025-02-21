@@ -19,8 +19,8 @@
                     <div class="card-body">
                         <div class="table-responsive" id="body">
                             <form action="javascript:void(0)" method="POST" id="form">
-                                <input type="hidden" name="caseId" id="" value="{{ $case->id }}">
-                                <input type="hidden" name="processId" id="" value="{{ $process->id }}">
+                                <input type="hidden" name="caseId" id="caseId" value="{{ $case->id }}">
+                                <input type="hidden" name="processId" id="processId" value="{{ $process->id }}">
                                 @include('SimpleWorkflowView::Core.Form.preview', [
                                     'form' => $form,
                                     'case' => $case,
