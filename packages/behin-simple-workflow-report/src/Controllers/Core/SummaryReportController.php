@@ -39,6 +39,6 @@ class SummaryReportController extends Controller
 
         $form = FormController::getById($formId);
 
-        return view('SimpleWorkflowReportView::Core.Report.edit', compact('case','form','process'));
+        return view('SimpleWorkflowReportView::Core.Summary.edit', compact('case','form','process'));
     }
 }
