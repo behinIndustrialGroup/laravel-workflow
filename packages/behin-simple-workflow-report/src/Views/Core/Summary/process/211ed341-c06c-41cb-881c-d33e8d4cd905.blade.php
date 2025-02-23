@@ -36,6 +36,7 @@
                                         <th>مدت مرخصی (برای مرخصی های روزانه)</th>
                                         <th>مدیر دپارتمان</th>
                                         <th>تایید مدیر دپارتمان</th>
+                                        <th>اقدام</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,6 +56,7 @@
                                             <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
                                             <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
                                             <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                            <td><a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
