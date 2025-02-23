@@ -1,9 +1,19 @@
 @extends('behin-layouts.app')
 
-
 @section('title')
     خلاصه گزارش فرایند {{ $process->name }}
 @endsection
+
+@php
+    use Illuminate\Support\Facades\DB;
+
+    $monthlyLeaves = DB::table('wf_entity_timeoffs')
+        ->select('user', 'request_year', 'request_month', DB::raw('SUM(duration) as total_duration'))
+        ->groupBy('user', 'request_year', 'request_month')
+        ->orderBy('request_year', 'desc')
+        ->orderBy('request_month', 'desc')
+        ->get();
+@endphp
 
 
 @section('content')
@@ -15,8 +25,38 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
+                @if (auth()->user()->access('خلاصه گزارش فرایند: مرخصی > گزارش ماهانه مرخصی کاربران'))
+                    <div class="card">
+                        <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>نام کاربر</th>
+                                            <th>سال</th>
+                                            <th>ماه</th>
+                                            <th>مجموع مرخصی (ساعت)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($monthlyLeaves as $leave)
+                                            <tr>
+                                                <td>{{ getUserInfo($leave->user)?->name }}</td>
+                                                <td>{{ $leave->request_year }}</td>
+                                                <td>{{ $leave->request_month }}</td>
+                                                <td>{{ $leave->total_duration }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="card">
-                    <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
+                    <div class="card-header text-center bg-warning">لیست پرونده های فرآیند {{ $process->name }}</div>
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -56,7 +96,10 @@
                                             <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
                                             <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
                                             <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                            <td><a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
+                                            <td><a
+                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><button
+                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
