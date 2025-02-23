@@ -25,6 +25,10 @@ class SummaryReportController extends Controller
     public function show($process_id)
     {
         $process= ProcessController::getById($process_id);
+        $view = 'SimpleWorkflowReportView::Core.Summary.process.' . $process_id;
+        if(view()->exists($view)){
+            return view($view, compact('process'));
+        }
         return view('SimpleWorkflowReportView::Core.Summary.show', compact('process'));
     }
 
