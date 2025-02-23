@@ -17,7 +17,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
-                    
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="draft-list">
@@ -71,6 +71,17 @@
     <script>
         initial_view();
         $('#draft-list').DataTable({
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn btn-sm-default',
+                attr: {
+                    style: 'direction: ltr'
+                }
+            }],
             "order": [
                 [1, "desc"]
             ],
