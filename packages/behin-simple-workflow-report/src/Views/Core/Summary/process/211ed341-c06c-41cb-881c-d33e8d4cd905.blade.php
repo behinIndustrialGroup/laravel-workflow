@@ -53,7 +53,7 @@
                                             <td>{{ $case->getVariable('timeoff_start_date') }}</td>
                                             <td>{{ $case->getVariable('timeoff_end_date') }}</td>
                                             <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
-                                            <td>{{ $case->getVariable('department_manager') }}</td>
+                                            <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
                                             <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
                                         </tr>
                                     @endforeach
