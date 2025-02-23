@@ -26,14 +26,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach($processes as $process)
-                                        <tr>
-                                            <td>{{ $process->id }}</td>
-                                            <td>{{ $process->name }}</td>
-                                            <td>{{ $process->description }}</td>
-                                            <td>
-                                                <a href="{{ route('simpleWorkflowReport.summary-report.show', [ 'summary_report' => $process ]) }}" class="btn btn-primary btn-sm">مشاهده گزارش</a>
-                                            </td>
-                                        </tr>
+                                        @if(auth()->user()->access('خلاصه گزارش فرایند: '. $process->name))
+                                            <tr>
+                                                <td>{{ $process->id }}</td>
+                                                <td>{{ $process->name }}</td>
+                                                <td>{{ $process->description }}</td>
+                                                <td>
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.show', [ 'summary_report' => $process ]) }}" class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
