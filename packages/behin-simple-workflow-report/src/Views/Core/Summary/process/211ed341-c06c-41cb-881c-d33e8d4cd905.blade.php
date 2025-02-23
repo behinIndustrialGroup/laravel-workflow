@@ -8,7 +8,14 @@
     use Illuminate\Support\Facades\DB;
 
     $monthlyLeaves = DB::table('wf_entity_timeoffs')
-        ->select('user', 'request_year', 'request_month', DB::raw('SUM(duration) as total_duration'))
+        ->select(
+            'user',
+            'request_year',
+            'request_month',
+            DB::raw('SUM(CASE WHEN approved = 1 THEN duration ELSE 0 END) as approved_leaves'),
+            DB::raw('SUM(CASE WHEN approved = 0 THEN duration ELSE 0 END) as pending_or_rejected_leaves'),
+            DB::raw('SUM(duration) as total_leaves'),
+        )
         ->groupBy('user', 'request_year', 'request_month')
         ->orderBy('request_year', 'desc')
         ->orderBy('request_month', 'desc')
@@ -36,6 +43,8 @@
                                             <th>نام کاربر</th>
                                             <th>سال</th>
                                             <th>ماه</th>
+                                            <th>مجموع تایید شده</th>
+                                            <th>تایید نشده / در انتظار تایید</th>
                                             <th>مجموع مرخصی (ساعت)</th>
                                         </tr>
                                     </thead>
@@ -45,7 +54,9 @@
                                                 <td>{{ getUserInfo($leave->user)?->name }}</td>
                                                 <td>{{ $leave->request_year }}</td>
                                                 <td>{{ $leave->request_month }}</td>
-                                                <td>{{ $leave->total_duration }}</td>
+                                                <td>{{ $leave->approved_leaves }}</td>
+                                                <td>{{ $leave->pending_or_rejected_leaves }}</td>
+                                                <td>{{ $leave->total_leaves }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
