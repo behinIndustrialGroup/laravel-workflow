@@ -25,9 +25,11 @@ class FormController extends Controller
         foreach($fields as $field){
             $fieldDetails = getFieldDetailsByName($field->fieldName);
             if(!$fieldDetails){
-                $formId = $field->fieldName;
-                $childAr = self::requiredFields($formId);
-                $ar = array_merge($ar, $childAr); 
+                if($field->readOnly != 'on'){
+                    $formId = $field->fieldName;
+                    $childAr = self::requiredFields($formId);
+                    $ar = array_merge($ar, $childAr); 
+                }
             }
             if($field->required == 'on'){
                 $ar[] = $field->fieldName;
