@@ -25,7 +25,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="id">شناسه</label>
-                            <input type="text" class="form-control" id="id" value="{{ $user->id }}" readonly>
+                            <input type="text" class="form-control" id="id" value="{{ $user->id }}">
                         </div>
                     </div>
                     <div class="col-6">
