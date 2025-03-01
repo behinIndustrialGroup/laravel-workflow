@@ -20,6 +20,7 @@
                     <thead>
                         <tr>
                             <th>شناسه</th>
+                            <th>شماره پرسنلی</th>
                             <th>نام</th>
                             <th>نام کاربری</th>
                             <th>نقش</th>
@@ -30,6 +31,7 @@
                     @foreach($users as $user)
                         <tr>
                             <td>{{$user->id}}</td>
+                            <td>{{$user->number}}</td>
                             <td>{{$user->name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->role()->name ?? ''}}</td>
