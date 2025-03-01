@@ -57,10 +57,10 @@
                                                 <td>{{ getUserInfo($leave->user)?->name }}</td>
                                                 <td>{{ $leave->request_year }}</td>
                                                 <td>{{ $leave->request_month }}</td>
-                                                <td>{{ round($leave->approved_leaves, 2) }}</td>
-                                                <td>{{ $leave->pending_or_rejected_leaves }}</td>
-                                                <td>{{ round($leave->total_leaves) }}</td>
-                                                <td>{{ round(240 - $leave->total_leaves, 2) }}</td>
+                                                <td dir="ltr">{{ round($leave->approved_leaves, 2) }}</td>
+                                                <td dir="ltr">{{ $leave->pending_or_rejected_leaves }}</td>
+                                                <td dir="ltr">{{ round($leave->total_leaves) }}</td>
+                                                <td dir="ltr">{{ round(240 - $leave->total_leaves, 2) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
