@@ -37,7 +37,7 @@
                         <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران</div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="timeoff-report">
                                     <thead>
                                         <tr>
                                             <th>شماره پرسنلی</th>
@@ -130,6 +130,25 @@
 @section('script')
     <script>
         initial_view();
+        $('#timeoff-report').DataTable({
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn btn-sm-default',
+                attr: {
+                    style: 'direction: ltr'
+                }
+            }],
+            "order": [
+                [1, "desc"]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            }
+        });
         $('#draft-list').DataTable({
             dom: 'Bfrtip',
             buttons: [{
