@@ -40,23 +40,27 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
+                                            <th>شماره پرسنلی</th>
                                             <th>نام کاربر</th>
                                             <th>سال</th>
                                             <th>ماه</th>
                                             <th>مجموع تایید شده</th>
                                             <th>تایید نشده / در انتظار تایید</th>
                                             <th>مجموع مرخصی (ساعت)</th>
+                                            <th>مانده مرخصی (ساعت)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($monthlyLeaves as $leave)
                                             <tr>
+                                                <td>{{ getUserInfo($leave->user)?->number }}</td>
                                                 <td>{{ getUserInfo($leave->user)?->name }}</td>
                                                 <td>{{ $leave->request_year }}</td>
                                                 <td>{{ $leave->request_month }}</td>
-                                                <td>{{ $leave->approved_leaves }}</td>
+                                                <td>{{ round($leave->approved_leaves) }}</td>
                                                 <td>{{ $leave->pending_or_rejected_leaves }}</td>
-                                                <td>{{ $leave->total_leaves }}</td>
+                                                <td>{{ round($leave->total_leaves) }}</td>
+                                                <td>{{ round(240 - $leave->total_leaves) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
