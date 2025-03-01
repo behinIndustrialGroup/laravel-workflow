@@ -143,7 +143,7 @@
                 }
             }],
             "order": [
-                [0, "desc"]
+                [0, "asc"]
             ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
