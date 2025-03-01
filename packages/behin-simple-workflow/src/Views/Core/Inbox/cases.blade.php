@@ -28,7 +28,7 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $row->task->process->name }}</td>
-                            <td>{{ $row->case->number }}</td>
+                            <td>{{ $row->case->number ?? '' }}</td>
                             <td>{{ $row->case_name }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case->id) }}"
