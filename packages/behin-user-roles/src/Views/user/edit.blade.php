@@ -30,6 +30,12 @@
                     </div>
                     <div class="col-6">
                         <div class="form-group">
+                            <label for="id">شماره پرسنلی</label>
+                            <input type="text" name="number" class="form-control" id="id" value="{{ $user->number }}">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
                             <label for="name">نام</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
@@ -38,13 +44,6 @@
                         <div class="form-group">
                             <label for="email">نام کاربری</label>
                             <input type="text" class="form-control" id="email" name="email" value="{{ $user->email }}">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="role">نقش</label>
-                            <input type="text" class="form-control" id="role"
-                                value="{{ $user->role()->name ?? '' }}" readonly>
                         </div>
                     </div>
                     <div class="col-6">
