@@ -96,26 +96,28 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($process->cases as $case)
-                                        <tr>
-                                            {{-- <td>{{ $loop->iteration }}</td> --}}
-                                            <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $case->number }}</td>
-                                            <td>{{ $case->creator()?->name }}</td>
+                                        @if ($case->getVariable('department_manager'))
+                                            <tr>
+                                                {{-- <td>{{ $loop->iteration }}</td> --}}
+                                                <td class="d-none">{{ $case->id }}</td>
+                                                <td>{{ $case->number }}</td>
+                                                <td>{{ $case->creator()?->name }}</td>
 
-                                            <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_start_time') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_end_time') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_start_date') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_start_date') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_end_date') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
-                                            <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
-                                            <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                            <td><a
-                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><button
-                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
-                                            </td>
-                                        </tr>
+                                                <td>{{ $case->getVariable('timeoff_request_type') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_start_time') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_end_time') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_start_date') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_start_date') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_end_date') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
+                                                <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
+                                                <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                                <td><a
+                                                        href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><button
+                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
