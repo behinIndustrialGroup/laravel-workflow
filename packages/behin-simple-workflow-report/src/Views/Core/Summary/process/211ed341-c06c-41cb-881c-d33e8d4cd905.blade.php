@@ -164,24 +164,36 @@
                                             $case->getVariable('timeoff_request_type') === 'روزانه' &&
                                                 $case->getVariable('department_manager') &&
                                                 $case->getVariable('user_department_manager_approval'))
-                                            <tr>
-                                                <td class="d-none">{{ $case->id }}</td>
-                                                <td>{{ $case->number }}</td>
-                                                <td>{{ $case->creator()?->name }}</td>
-                                                <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_start_date') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_end_date') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
-                                                <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
-                                                <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                                <td>
-                                                    <a
-                                                        href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
-                                                        <button
-                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            @php
+                                                $today = Carbon::today();
+                                                $end_date = convertPersianToEnglish(
+                                                    $case->getVariable('timeoff_end_date'),
+                                                );
+                                                $gregorianEndDate = Jalalian::fromFormat('Y-m-d', $end_date)
+                                                    ->toCarbon();
+                                                $diff = $today->diffInDays($gregorianEndDate);
+                                            @endphp
+                                            @if ($diff >= 0)
+                                                <tr>
+                                                    <td class="d-none">{{ $case->id }}</td>
+                                                    <td>{{ $diff . $case->number }}</td>
+                                                    <td>{{ $case->creator()?->name }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_request_type') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_start_date') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_end_date') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
+                                                    <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
+                                                    </td>
+                                                    <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                                    <td>
+                                                        <a
+                                                            href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
+                                                            <button
+                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @endforeach
                                 </tbody>
