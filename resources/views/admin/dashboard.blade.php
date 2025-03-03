@@ -103,7 +103,7 @@
                 </div>
                 <a href="{{ route('simpleWorkflow.process.start', [
                         'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
-                        'inDraft' => true,
+                        'inDraft' => 0,
                         'force' => 0,
                         'redirect' => true,
                         ]) }}" class="small-box-footer">{{ trans('ثبت') }} <i
