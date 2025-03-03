@@ -214,5 +214,43 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
         });
+        $('#hourly-leaves').DataTable({
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn btn-sm-default',
+                attr: {
+                    style: 'direction: ltr'
+                }
+            }],
+            "order": [
+                [4, "desc"]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            }
+        })
+        $('#daily-leaves').DataTable({
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                className: 'btn btn-sm-default',
+                attr: {
+                    style: 'direction: ltr'
+                }
+            }],
+            "order": [
+                [4, "desc"]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            }
+        })
     </script>
 @endsection
