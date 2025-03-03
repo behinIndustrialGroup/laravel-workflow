@@ -6,6 +6,8 @@
 
 @php
     use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Carbon;
+    use Morilog\Jalali\Jalalian;
 
     $monthlyLeaves = DB::table('wf_entity_timeoffs')
         ->select(
@@ -93,25 +95,41 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($process->cases as $case)
-                                        @if ($case->getVariable('timeoff_request_type') === 'ساعتی' && $case->getVariable('department_manager') && $case->getVariable('user_department_manager_approval'))
-                                            <tr>
-                                                <td class="d-none">{{ $case->id }}</td>
-                                                <td>{{ $case->number }}</td>
-                                                <td>{{ $case->creator()?->name }}</td>
-                                                <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_start_time') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_end_time') }}</td>
-                                                <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
-                                                <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                                <td>
-                                                    <a
-                                                        href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
-                                                        <button
-                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                        @if (
+                                            $case->getVariable('timeoff_request_type') === 'ساعتی' &&
+                                                $case->getVariable('department_manager') &&
+                                                $case->getVariable('user_department_manager_approval'))
+                                            @php
+                                                $today = Carbon::today();
+                                                $start_date = convertPersianToEnglish(
+                                                    $case->getVariable('timeoff_hourly_request_start_date'),
+                                                );
+                                                $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
+                                                    ->toCarbon()
+                                                    ->format('Y-m-d');
+                                                $diff = $today->diffInDays($gregorianStartDate);
+                                            @endphp
+                                            @if ($diff >= 0)
+                                                <tr>
+                                                    <td class="d-none">{{ $case->id }}</td>
+                                                    <td>{{ $case->number }}</td>
+                                                    <td>{{ $case->creator()?->name }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_request_type') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_start_time') }}</td>
+                                                    <td>{{ $case->getVariable('timeoff_end_time') }}</td>
+                                                    <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
+                                                    </td>
+                                                    <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                                    <td>
+                                                        <a
+                                                            href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
+                                                            <button
+                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @endforeach
                                 </tbody>
@@ -142,7 +160,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($process->cases as $case)
-                                        @if ($case->getVariable('timeoff_request_type') === 'روزانه' && $case->getVariable('department_manager') && $case->getVariable('user_department_manager_approval'))
+                                        @if (
+                                            $case->getVariable('timeoff_request_type') === 'روزانه' &&
+                                                $case->getVariable('department_manager') &&
+                                                $case->getVariable('user_department_manager_approval'))
                                             <tr>
                                                 <td class="d-none">{{ $case->id }}</td>
                                                 <td>{{ $case->number }}</td>
