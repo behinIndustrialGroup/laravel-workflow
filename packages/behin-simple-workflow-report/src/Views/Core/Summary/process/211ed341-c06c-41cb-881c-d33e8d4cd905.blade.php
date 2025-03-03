@@ -99,7 +99,7 @@
                                                 <td>{{ $case->number }}</td>
                                                 <td>{{ $case->creator()?->name }}</td>
                                                 <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                                <td>{{ $case->getVariable('timeoff_start_date') }}</td>
+                                                <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
                                                 <td>{{ $case->getVariable('timeoff_start_time') }}</td>
                                                 <td>{{ $case->getVariable('timeoff_end_time') }}</td>
                                                 <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}</td>
