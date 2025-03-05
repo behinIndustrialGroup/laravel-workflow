@@ -16,12 +16,17 @@
             'request_month',
             DB::raw('SUM(CASE WHEN approved = 1 THEN duration ELSE 0 END) as approved_leaves'),
             DB::raw('SUM(CASE WHEN approved = 0 THEN duration ELSE 0 END) as pending_or_rejected_leaves'),
-            DB::raw('SUM(duration) as total_leaves'),
+            DB::raw('SUM(CASE WHEN type = "ساعتی" THEN duration ELSE duration*8 END) as total_leaves'),
         )
         ->groupBy('user', 'request_year', 'request_month')
         ->orderBy('request_year', 'desc')
         ->orderBy('request_month', 'desc')
         ->get();
+
+    $today = Carbon::today();
+    $todayShamsi = Jalalian::fromCarbon($today);
+    $thisMonth = $todayShamsi->getMonth();
+    $totalLeaves = $thisMonth * 20;
 @endphp
 
 
@@ -33,22 +38,117 @@
             </div>
         @endif
         <div class="row justify-content-center">
+
             <div class="col-md-12">
                 @if (auth()->user()->access('خلاصه گزارش فرایند: مرخصی > گزارش ماهانه مرخصی کاربران'))
                     <div class="card">
-                        <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران</div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="timeoff-report">
-                                    <thead>
+                        @php
+                            $hourlyLeaves = [];
+                            $thisMonthLeaves = [];
+                        @endphp
+                        @if (isset($_GET['userId']))
+                            <a href="{{ route('simpleWorkflowReport.summary-report.show', $process->id) }}">
+                                <button class="btn btn-primary btn-sm">{{ trans('fields.Back') }}</button>
+                            </a>
+                            @php
+                                $isFiltered = true;
+                                $user = getUserInfo($_GET['userId']);
+                            @endphp
+                            @foreach ($process->cases as $case)
+                                @if (
+                                    $case->getVariable('timeoff_request_type') === 'ساعتی' &&
+                                        $case->getVariable('department_manager') &&
+                                        $case->getVariable('user_department_manager_approval') &&
+                                        $case->creator == $_GET['userId']
+                                )
+                                    @php
+                                        $today = Carbon::today();
+                                        $start_date = convertPersianToEnglish(
+                                            $case->getVariable('timeoff_hourly_request_start_date'),
+                                        );
+                                        $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
+                                            ->toCarbon()
+                                            ->format('Y-m-d');
+                                        $diff = $today->diffInMonths($gregorianStartDate);
+                                    @endphp
+                                    @if ($diff == 0)
+                                        @php
+                                            $hourlyLeaves[] = $case;
+                                        @endphp
+                                    @endif
+                                @endif
+                                @if (
+                                    $case->getVariable('timeoff_request_type') === 'روزانه' &&
+                                        $case->getVariable('department_manager') &&
+                                        $case->getVariable('user_department_manager_approval') &&
+                                        $case->creator == $_GET['userId']
+                                )
+                                    @php
+                                        $today = Carbon::today();
+                                        $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
+                                        $gregorianEndDate = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
+                                        $diff = $today->diffInMonths($gregorianEndDate);
+                                    @endphp
+                                    @if ($diff == 0)
+                                        @php
+                                            $thisMonthLeaves[] = $case;
+                                        @endphp
+                                    @endif
+                                @endif
+                            @endforeach
+                        @else
+                            @foreach ($process->cases as $case)
+                                @if (
+                                    $case->getVariable('timeoff_request_type') === 'ساعتی' &&
+                                        $case->getVariable('department_manager') &&
+                                        $case->getVariable('user_department_manager_approval'))
+                                    @php
+                                        $today = Carbon::today();
+                                        $start_date = convertPersianToEnglish(
+                                            $case->getVariable('timeoff_hourly_request_start_date'),
+                                        );
+                                        $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
+                                            ->toCarbon()
+                                            ->format('Y-m-d');
+                                        $diff = $today->diffInDays($gregorianStartDate);
+                                    @endphp
+                                    @if ($diff == 0)
+                                        @php
+                                            $hourlyLeaves[] = $case;
+                                        @endphp
+                                    @endif
+                                @endif
+                                @if (
+                                    $case->getVariable('timeoff_request_type') === 'روزانه' &&
+                                        $case->getVariable('department_manager') &&
+                                        $case->getVariable('user_department_manager_approval'))
+                                    @php
+                                        $today = Carbon::today();
+                                        $start_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
+                                        $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
+                                            ->toCarbon()
+                                            ->format('Y-m-d');
+                                        $diff = $today->diffInDays($gregorianStartDate);
+                                    @endphp
+                                    @if ($diff == 0)
+                                        @php
+                                            $thisMonthLeaves[] = $case;
+                                        @endphp
+                                    @endif
+                                @endif
+                            @endforeach
+                        @endif
+                        @if (!isset($isFiltered))
+                            <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="timeoff-report">
+                                        <thead>
                                         <tr>
                                             <th>شماره پرسنلی</th>
                                             <th>نام کاربر</th>
                                             <th>سال</th>
                                             <th>ماه</th>
-                                            <th>مجموع تایید شده</th>
-                                            <th>تایید نشده / در انتظار تایید</th>
-                                            <th>مجموع مرخصی</th>
                                             <th>مانده مرخصی</th>
                                         </tr>
                                     </thead>
@@ -59,21 +159,41 @@
                                                 <td>{{ getUserInfo($leave->user)?->name }}</td>
                                                 <td>{{ $leave->request_year }}</td>
                                                 <td>{{ $leave->request_month }}</td>
-                                                <td dir="ltr">{{ round($leave->approved_leaves, 2) }}</td>
-                                                <td dir="ltr">{{ $leave->pending_or_rejected_leaves }}</td>
-                                                <td dir="ltr">{{ round($leave->total_leaves) }}</td>
-                                                <td dir="ltr">{{ round(240 - $leave->total_leaves, 2) }}</td>
+                                                <td dir="ltr">
+                                                    <form
+                                                        action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
+                                                        method="POST" id="leave-form">
+                                                        @csrf
+                                                        <input type="hidden" name="userId" id=""
+                                                            value="{{ $leave->user }}">
+                                                        <input type="hidden" name="restBySystem" id=""
+                                                            class="form-control"
+                                                            value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+                                                        <input type="text" name="restByUser" id="" value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+                                                        <input type="submit" value="ثبت" name="" id="">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <a
+                                                        href="?userId={{ $leave->user }}&year={{ $leave->request_year }}&month={{ $leave->request_month }}">
+                                                        <button
+                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        @endIf
                     </div>
                 @endif
 
                 <div class="card">
-                    <div class="card-header text-center bg-warning">جدول مرخصی های ساعتی</div>
+                    <div class="card-header text-center bg-warning">
+                        جدول مرخصی های ساعتی {{ $user->name ?? '' }}
+                    </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -94,43 +214,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($process->cases as $case)
-                                        @if (
-                                            $case->getVariable('timeoff_request_type') === 'ساعتی' &&
-                                                $case->getVariable('department_manager') &&
-                                                $case->getVariable('user_department_manager_approval'))
-                                            @php
-                                                $today = Carbon::today();
-                                                $start_date = convertPersianToEnglish(
-                                                    $case->getVariable('timeoff_hourly_request_start_date'),
-                                                );
-                                                $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
-                                                    ->toCarbon()
-                                                    ->format('Y-m-d');
-                                                $diff = $today->diffInDays($gregorianStartDate);
-                                            @endphp
-                                            @if ($diff >= 0)
-                                                <tr>
-                                                    <td class="d-none">{{ $case->id }}</td>
-                                                    <td>{{ $case->number }}</td>
-                                                    <td>{{ $case->creator()?->name }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_start_time') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_end_time') }}</td>
-                                                    <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
-                                                    </td>
-                                                    <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                                    <td>
-                                                        <a
-                                                            href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
-                                                            <button
-                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endif
+                                    @foreach ($hourlyLeaves as $case)
+                                        <tr>
+                                            <td class="d-none">{{ $case->id }}</td>
+                                            <td>{{ $case->number }}</td>
+                                            <td>{{ $case->creator()?->name }}</td>
+                                            <td>{{ $case->getVariable('timeoff_request_type') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_start_time') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_end_time') }}</td>
+                                            <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
+                                            </td>
+                                            <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
+                                                    <button
+                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -138,7 +241,9 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center bg-warning">جدول مرخصی های روزانه</div>
+                    <div class="card-header text-center bg-warning">
+                    جدول مرخصی های روزانه {{ $user->name ?? '' }}
+                    </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -159,42 +264,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($process->cases as $case)
-                                        @if (
-                                            $case->getVariable('timeoff_request_type') === 'روزانه' &&
-                                                $case->getVariable('department_manager') &&
-                                                $case->getVariable('user_department_manager_approval'))
-                                            @php
-                                                $today = Carbon::today();
-                                                $end_date = convertPersianToEnglish(
-                                                    $case->getVariable('timeoff_end_date'),
-                                                );
-                                                $gregorianEndDate = Jalalian::fromFormat('Y-m-d', $end_date)
-                                                    ->toCarbon();
-                                                $diff = $today->diffInDays($gregorianEndDate);
-                                            @endphp
-                                            @if ($diff >= 0)
-                                                <tr>
-                                                    <td class="d-none">{{ $case->id }}</td>
-                                                    <td>{{ $diff . $case->number }}</td>
-                                                    <td>{{ $case->creator()?->name }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_start_date') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_end_date') }}</td>
-                                                    <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
-                                                    <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
-                                                    </td>
-                                                    <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                                    <td>
-                                                        <a
-                                                            href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
-                                                            <button
-                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endif
+                                    @foreach ($thisMonthLeaves as $case)
+                                        <tr>
+                                            <td class="d-none">{{ $case->id }}</td>
+                                            <td>{{ $diff . $case->number }}</td>
+                                            <td>{{ $case->creator()?->name }}</td>
+                                            <td>{{ $case->getVariable('timeoff_request_type') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_start_date') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_end_date') }}</td>
+                                            <td>{{ $case->getVariable('timeoff_daily_request_duration') }}</td>
+                                            <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
+                                            </td>
+                                            <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
+                                                    <button
+                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -241,7 +330,8 @@
                 }
             }],
             "order": [
-                [1, "desc"]
+                [1, "desc"],
+                [2, 'desc']
             ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"

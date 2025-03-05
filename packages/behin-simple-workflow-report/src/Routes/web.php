@@ -4,7 +4,6 @@ use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
 use Behin\SimpleWorkflow\Controllers\Core\FieldController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\InboxController;
-use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflow\Controllers\Core\RoutingController;
 use Behin\SimpleWorkflow\Controllers\Core\ScriptController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskActorController;
@@ -12,6 +11,7 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
@@ -26,6 +26,11 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
     Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment');
+    Route::name('process.')->prefix('process')->group(function(){
+        Route::prefix('{processId}')->group(function(){
+            Route::post('update', [ProcessController::class, 'update'])->name('update');
+        });
+    });
     Route::get('import', function () {
         $cases = PmVars::groupBy('case_id')->get();
         foreach ($cases as $case) {
