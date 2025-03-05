@@ -62,16 +62,13 @@
                                         $case->creator == $_GET['userId']
                                 )
                                     @php
-                                        $today = Carbon::today();
                                         $start_date = convertPersianToEnglish(
                                             $case->getVariable('timeoff_hourly_request_start_date'),
                                         );
-                                        $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
-                                            ->toCarbon()
-                                            ->format('Y-m-d');
-                                        $diff = $today->diffInMonths($gregorianStartDate);
+                                        $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
+                                        echo $startMonth;
                                     @endphp
-                                    @if ($diff == 0)
+                                    @if ($thisMonth == $startMonth)
                                         @php
                                             $hourlyLeaves[] = $case;
                                         @endphp
