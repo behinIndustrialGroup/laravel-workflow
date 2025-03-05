@@ -311,6 +311,7 @@
                     style: 'direction: ltr'
                 }
             }],
+            "pageLength": 50,
             "order": [
                 [0, "asc"]
             ],
