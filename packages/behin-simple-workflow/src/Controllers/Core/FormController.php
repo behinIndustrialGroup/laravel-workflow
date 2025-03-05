@@ -18,6 +18,22 @@ class FormController extends Controller
         return Form::get();
     }
 
+    public static function getFormFields($id){
+        $form = self::getById($id);
+        $fields = json_decode($form->content);
+        $ar = [];
+        foreach($fields as $field){
+            $fieldDetails = getFieldDetailsByName($field->fieldName);
+            if($fieldDetails){
+                $ar[] = $field->fieldName;
+            }else{
+                $childAr = self::getFormFields($field->fieldName);
+                $ar = array_merge($ar, $childAr);
+            }
+        }
+        return $ar;         
+    }
+
     public static function requiredFields($id){
         $form = self::getById($id);
         $fields = json_decode($form->content);
