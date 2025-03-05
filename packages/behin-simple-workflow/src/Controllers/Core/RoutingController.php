@@ -34,6 +34,7 @@ class RoutingController extends Controller
         InboxController::changeStatusByInboxId($inboxId, 'new');
         return self::save($request);
     }
+
     public static function save(Request $request, $requiredFields = [])
     {
         $request->validate([
@@ -42,10 +43,16 @@ class RoutingController extends Controller
         ]);
         $processId = $request->processId;
         $caseId = $request->caseId;
+        $taskId = $request->taskId;
+        $formId = TaskController::getById($taskId)->executive_element_id;
 
         $vars = $request->all();
+        $formFields = FormController::getFormFields($formId);
 
         foreach ($vars as $key => $value) {
+            if(!in_array($key, $formFields)){
+                continue;
+            }
             if (gettype($value) == 'object') {
                 VariableController::saveFile($processId, $caseId, $key, $value);
             } else {
