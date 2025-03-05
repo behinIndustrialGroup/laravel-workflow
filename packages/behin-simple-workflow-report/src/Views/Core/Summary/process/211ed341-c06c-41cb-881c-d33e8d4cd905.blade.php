@@ -81,11 +81,10 @@
                                 )
                                     @php
                                         $today = Carbon::today();
-                                        $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
-                                        $gregorianEndDate = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
-                                        $diff = $today->diffInMonths($gregorianEndDate);
+                                        $start_date = convertPersianToEnglish($case->getVariable('timeoff_start_date'));
+                                        $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                                     @endphp
-                                    @if ($diff == 0)
+                                    @if ($thisMonth == $startMonth)
                                         @php
                                             $thisMonthLeaves[] = $case;
                                         @endphp
