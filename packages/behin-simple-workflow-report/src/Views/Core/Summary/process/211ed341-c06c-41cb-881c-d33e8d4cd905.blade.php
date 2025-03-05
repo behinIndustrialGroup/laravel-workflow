@@ -66,7 +66,6 @@
                                             $case->getVariable('timeoff_hourly_request_start_date'),
                                         );
                                         $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
-                                        echo $startMonth;
                                     @endphp
                                     @if ($thisMonth == $startMonth)
                                         @php
@@ -127,7 +126,7 @@
                                             ->format('Y-m-d');
                                         $diff = $today->diffInDays($gregorianStartDate);
                                     @endphp
-                                    @if ($diff == 0)
+                                    @if ($diff >= 0)
                                         @php
                                             $thisMonthLeaves[] = $case;
                                         @endphp
@@ -265,7 +264,7 @@
                                     @foreach ($thisMonthLeaves as $case)
                                         <tr>
                                             <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $diff . $case->number }}</td>
+                                            <td>{{ $case->number }}</td>
                                             <td>{{ $case->creator()?->name }}</td>
                                             <td>{{ $case->getVariable('timeoff_request_type') }}</td>
                                             <td>{{ $case->getVariable('timeoff_start_date') }}</td>
