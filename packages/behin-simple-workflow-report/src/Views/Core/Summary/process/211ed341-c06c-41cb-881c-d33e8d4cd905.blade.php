@@ -108,7 +108,7 @@
                                             ->format('Y-m-d');
                                         $diff = $today->diffInDays($gregorianStartDate);
                                     @endphp
-                                    @if ($diff == 0)
+                                    @if ($diff >= 0)
                                         @php
                                             $hourlyLeaves[] = $case;
                                         @endphp
