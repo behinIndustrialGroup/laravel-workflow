@@ -150,6 +150,7 @@
                                             <th>سال</th>
                                             <th>ماه</th>
                                             <th>مانده مرخصی</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -317,26 +318,6 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
         });
-        $('#draft-list').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                className: 'btn btn-sm-default',
-                attr: {
-                    style: 'direction: ltr'
-                }
-            }],
-            "order": [
-                [1, "desc"],
-                [2, 'desc']
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            }
-        });
         $('#hourly-leaves').DataTable({
             dom: 'Bfrtip',
             buttons: [{
@@ -350,7 +331,8 @@
                 }
             }],
             "order": [
-                [4, "desc"]
+                [4, "desc"],
+                [5, "desc"]
             ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
@@ -369,7 +351,8 @@
                 }
             }],
             "order": [
-                [4, "desc"]
+                [4, "desc"],
+                [5, "desc"]
             ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
