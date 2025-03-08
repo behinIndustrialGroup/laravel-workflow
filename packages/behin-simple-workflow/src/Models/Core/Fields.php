@@ -6,11 +6,13 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Fields extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     public $incrementing = false;
     protected $keyType = 'string';
     public $table = 'wf_fields';

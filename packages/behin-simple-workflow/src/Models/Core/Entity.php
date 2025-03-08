@@ -8,11 +8,14 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Entity extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
     public $incrementing = false;
     protected $keyType = 'string';
     public $table = 'wf_entities';

@@ -7,12 +7,14 @@ use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 
 class Cases extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     public $incrementing = false;
     protected $keyType = 'string';
     public $table = 'wf_cases';

@@ -6,12 +6,14 @@ use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 
 class Inbox extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     public $incrementing = false;
     protected $keyType = 'string';
     public $table = 'wf_inbox';
