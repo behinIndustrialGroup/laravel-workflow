@@ -140,49 +140,56 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="timeoff-report">
                                         <thead>
-                                        <tr>
-                                            <th>شماره پرسنلی</th>
-                                            <th>نام کاربر</th>
-                                            <th>سال</th>
-                                            <th>ماه</th>
-                                            <th>مانده مرخصی</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($monthlyLeaves as $leave)
                                             <tr>
-                                                <td>{{ getUserInfo($leave->user)?->number }}</td>
-                                                <td>{{ getUserInfo($leave->user)?->name }}</td>
-                                                <td>{{ $leave->request_year }}</td>
-                                                <td>{{ $leave->request_month }}</td>
-                                                <td dir="ltr">
-                                                    <form
-                                                        action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
-                                                        method="POST" id="leave-form">
-                                                        @csrf
-                                                        <input type="hidden" name="userId" id=""
-                                                            value="{{ $leave->user }}">
-                                                        <input type="hidden" name="restBySystem" id=""
-                                                            class="form-control"
-                                                            value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
-                                                        <input type="text" name="restByUser" id="" value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
-                                                        <input type="submit" value="ثبت" name="" id="">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <a
-                                                        href="?userId={{ $leave->user }}&year={{ $leave->request_year }}&month={{ $leave->request_month }}">
-                                                        <button
-                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                    </a>
-                                                </td>
+                                                <th>شماره پرسنلی</th>
+                                                <th>نام کاربر</th>
+                                                <th>سال</th>
+                                                <th>ماه</th>
+                                                <th>مانده مرخصی</th>
+                                                <th></th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($monthlyLeaves as $leave)
+                                                <tr>
+                                                    <td>{{ getUserInfo($leave->user)?->number }}</td>
+                                                    <td>{{ getUserInfo($leave->user)?->name }}</td>
+                                                    <td>{{ $leave->request_year }}</td>
+                                                    <td>{{ $leave->request_month }}</td>
+                                                    <td dir="ltr">
+                                                        @if (auth()->user()->access('تغییر مانده مرخصی ها'))
+                                                            <form
+                                                                action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
+                                                                method="POST" id="leave-form">
+                                                                @csrf
+                                                                <input type="hidden" name="userId" id=""
+                                                                    value="{{ $leave->user }}">
+                                                                <input type="hidden" name="restBySystem" id=""
+                                                                    class="form-control"
+                                                                    value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+                                                                <input type="text" name="restByUser" id=""
+                                                                    value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+
+                                                                <input type="submit" value="ثبت" name=""
+                                                                    id="">
+                                                            </form>
+                                                        @else
+                                                            {{ round($totalLeaves - $leave->total_leaves, 2) }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            href="?userId={{ $leave->user }}&year={{ $leave->request_year }}&month={{ $leave->request_month }}">
+                                                            <button
+                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
                         @endIf
                     </div>
                 @endif
@@ -239,7 +246,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header text-center bg-warning">
-                    جدول مرخصی های روزانه {{ $user->name ?? '' }}
+                        جدول مرخصی های روزانه {{ $user->name ?? '' }}
                     </div>
 
                     <div class="card-body">
