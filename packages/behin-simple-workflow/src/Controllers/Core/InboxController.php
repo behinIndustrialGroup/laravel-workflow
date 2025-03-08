@@ -137,9 +137,9 @@ class InboxController extends Controller
             if (!isset($form->content)) {
                 return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('Form not found'));
             }
-            if(!TaskActorController::userIsAssignToTask($task->id, Auth::id())){
-                return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('You are not assigned to this task'));
-            }
+            // if(!TaskActorController::userIsAssignToTask($task->id, Auth::id())){
+            //     return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('You are not assigned to this task'));
+            // }
             return view('SimpleWorkflowView::Core.Inbox.show')->with([
                 'inbox' => $inbox,
                 'case' => $case,
