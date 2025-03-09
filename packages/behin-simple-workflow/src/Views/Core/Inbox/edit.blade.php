@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <label for="case_name">{{ trans('fields.Case Name') }}:</label>
                         <input type="text" name="case_name" id="case_name" class="form-control"
-                            value="{{ $inbox->case_name }}" required>
+                            value="{{ $inbox->case_name }}" >
                     </div>
                     <div class="form-group">
                         <label for="case_id">{{ trans('fields.Case ID') }}:</label>
