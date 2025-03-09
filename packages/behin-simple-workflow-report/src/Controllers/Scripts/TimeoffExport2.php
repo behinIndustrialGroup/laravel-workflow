@@ -54,6 +54,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                 if ($type === 'روزانه' && $department_manager && $user_department_manager_approval && $case->creator == $this->userId) {
                     $start_date = convertPersianToEnglish($case->getVariable('timeoff_start_date'));
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
+                    $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                     if ($thisMonth == $startMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
                         $thisMonthLeaves[] = [
@@ -61,7 +62,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             getUserInfo($case->creator)->name,
                             $type,
                             $start_date,
-                            $start_date,
+                            $end_date,
                             $case->getVariable('user_department_manager_approval'),
                             $case->getVariable('user_department_manager_description'),
                             // $duration,
