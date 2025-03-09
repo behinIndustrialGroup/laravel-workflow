@@ -154,10 +154,11 @@ class InboxController extends Controller
     public function delete(Request $request, $id)
     {
         $inbox = self::getById($id);
-        if($inbox->status == 'draft'){
+        // if($inbox->status == 'draft'){
             $inbox->delete();
             return redirect()->route('simpleWorkflow.inbox.index')->with('success', trans('fields.Inbox deleted successfully'));
-        }
+        // }
+        
     }
 
     public static function createCaseName(Task $task, $caseId)
