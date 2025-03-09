@@ -47,6 +47,7 @@
                             $hourlyLeaves = [];
                             $thisMonthLeaves = [];
                         @endphp
+
                         @if (isset($_GET['userId']))
                             <a href="{{ route('simpleWorkflowReport.summary-report.show', $process->id) }}">
                                 <button class="btn btn-primary btn-sm">{{ trans('fields.Back') }}</button>
@@ -135,7 +136,11 @@
                             @endforeach
                         @endif
                         @if (!isset($isFiltered))
-                            <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران</div>
+                            <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران
+                                <a href="{{ route('simpleWorkflowReport.process.export', $process->id) }}">
+                                    <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
+                                </a>
+                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="timeoff-report">
@@ -298,22 +303,13 @@
         </div>
     </div>
 @endsection
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
 @section('script')
     <script>
         initial_view();
         $('#timeoff-report').DataTable({
             dom: 'Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                className: 'btn btn-sm-default',
-                attr: {
-                    style: 'direction: ltr'
-                }
-            }],
             "pageLength": 50,
             "order": [
                 [0, "asc"]
@@ -331,7 +327,11 @@
                 },
                 className: 'btn btn-sm-default',
                 attr: {
-                    style: 'direction: ltr'
+                    style: 'direction: rtl'
+                },
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $(sheet).find('row c').attr('s', '51'); // تنظیم استایل برای راست به چپ
                 }
             }],
             "order": [
@@ -341,7 +341,7 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
-        })
+        });
         $('#daily-leaves').DataTable({
             dom: 'Bfrtip',
             buttons: [{
@@ -351,7 +351,24 @@
                 },
                 className: 'btn btn-sm-default',
                 attr: {
-                    style: 'direction: ltr'
+                    style: 'direction: rtl'
+                },
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                    // اضافه کردن style برای راست به چپ
+                    var cols = $(sheet).find('cols col');
+                    cols.each(function() {
+                        $(this).attr('style', 'direction: rtl !important;');
+                    });
+
+                    // اضافه کردن padding به شیت برای رعایت راست به چپ
+                    var rows = $(sheet).find('row');
+                    rows.each(function() {
+                        $(this).children().each(function() {
+                            $(this).attr('s', '41'); // تغییر استایل برای راست به چپ
+                        });
+                    });
                 }
             }],
             "order": [
@@ -361,6 +378,6 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
-        })
+        });
     </script>
 @endsection

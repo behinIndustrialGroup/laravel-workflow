@@ -29,6 +29,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::name('process.')->prefix('process')->group(function(){
         Route::prefix('{processId}')->group(function(){
             Route::post('update', [ProcessController::class, 'update'])->name('update');
+            Route::get('export', [ProcessController::class, 'export'])->name('export');
         });
     });
     Route::get('import', function () {

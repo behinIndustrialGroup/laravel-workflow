@@ -34,5 +34,6 @@ return [
     FormBuilderServiceProvider::class,
     CityProvider::class,
     SimpleWorkflowReportProvider::class,
-    ManagerServiceProvider::class
+    ManagerServiceProvider::class,
+    Maatwebsite\Excel\ExcelServiceProvider::class,
 ];
