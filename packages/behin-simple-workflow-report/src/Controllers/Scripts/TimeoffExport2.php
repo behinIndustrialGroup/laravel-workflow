@@ -38,8 +38,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                         getUserInfo($case->creator)->number,
                         getUserInfo($case->creator)->name,
                         $type,
-                        $start_date . ' - ' . $start_date,
-                        $start_date,
+                        $start_date . ' - ' . $case->getVariable('timeoff_start_time'),
+                        $start_date . ' - ' . $case->getVariable('timeoff_end_time'),
                         // $case->getVariable('timeoff_hourly_request_duration'),
                     ];
                 }
