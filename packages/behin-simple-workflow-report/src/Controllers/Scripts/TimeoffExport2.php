@@ -43,6 +43,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             $type,
                             $start_date . ' - ' . $case->getVariable('timeoff_start_time'),
                             $start_date . ' - ' . $case->getVariable('timeoff_end_time'),
+                            $case->getVariable('user_department_manager_approval'),
+                            $case->getVariable('user_department_manager_description'),
                             // $case->getVariable('timeoff_hourly_request_duration'),
                         ];
                     }
@@ -60,6 +62,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             $type,
                             $start_date,
                             $start_date,
+                            $case->getVariable('user_department_manager_approval'),
+                            $case->getVariable('user_department_manager_description'),
                             // $duration,
                         ];
                     }
@@ -84,6 +88,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             $type,
                             $start_date . ' - ' . $case->getVariable('timeoff_start_time'),
                             $start_date . ' - ' . $case->getVariable('timeoff_end_time'),
+                            $case->getVariable('user_department_manager_approval'),
+                            $case->getVariable('user_department_manager_description'),
                             // $case->getVariable('timeoff_hourly_request_duration'),
                         ];
                     }
@@ -104,6 +110,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             $type,
                             $start_date,
                             $start_date,
+                            $case->getVariable('user_department_manager_approval'),
+                            $case->getVariable('user_department_manager_description'),
                             // $duration,
                         ];
                     }
@@ -136,6 +144,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             'نوع',
             'شروع',
             'پایان',
+            'تایید مدیر دپارتمان',
+            'توضیحات مدیر دپارتمان',
             // 'مدت',
         ];
     }
@@ -150,7 +160,9 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
         $sheet->getColumnDimension('C')->setWidth(10); // ستون نوع
         $sheet->getColumnDimension('D')->setWidth(20); // ستون شروع
         $sheet->getColumnDimension('E')->setWidth(20); // ستون پایان
-
+        $sheet->getColumnDimension('F')->setWidth(20); // ستون تایید مدیر دپارتمان
+        $sheet->getColumnDimension('G')->setWidth(30); // ستون توضیحات مدیر دپارتمان
+        $sheet->getStyle('G')->getAlignment()->setWrapText(true);
         // تنظیم استایل سرستون‌ها و سایر سلول‌ها
         return [
             1    => ['font' => ['bold' => true]], // بولد کردن سرستون‌ها
