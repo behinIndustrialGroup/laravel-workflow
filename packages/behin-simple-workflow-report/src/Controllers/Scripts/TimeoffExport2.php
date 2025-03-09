@@ -102,6 +102,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                         ->toCarbon()
                         ->format('Y-m-d');
                     $diff = $today->diffInDays($gregorianStartDate);
+                    $end_date  = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                     if ($diff >= 0) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
                         $thisMonthLeaves[] = [
@@ -109,7 +110,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                             getUserInfo($case->creator)->name,
                             $type,
                             $start_date,
-                            $start_date,
+                            $end_date,
                             $case->getVariable('user_department_manager_approval'),
                             $case->getVariable('user_department_manager_description'),
                             // $duration,
