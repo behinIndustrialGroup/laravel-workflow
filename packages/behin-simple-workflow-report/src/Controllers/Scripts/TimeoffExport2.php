@@ -28,14 +28,19 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
         $thisMonthLeaves = [];
         $hourlyLeaves = [];
         if ($this->userId) {
+            $duration = 0;
             foreach ($process->cases as $case) {
                 $type = $case->getVariable('timeoff_request_type');
                 $department_manager = $case->getVariable('department_manager');
                 $user_department_manager_approval = $case->getVariable('user_department_manager_approval');
                 $start_date = $case->getVariable('timeoff_hourly_request_start_date');
                 $start_date = convertPersianToEnglish($start_date);
+                
                 if ($type === 'ساعتی' && $department_manager && $user_department_manager_approval && $case->creator == $this->userId) {
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
+                    $startTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_start_time'))->timestamp;
+                    $endTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_end_time'))->timestamp;
+                    $duration += ($endTime - $startTime) / 3600;
                     if ($thisMonth == $startMonth) {
                         $hourlyLeaves[] = [
                             getUserInfo($case->creator)->number,
@@ -53,8 +58,11 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
 
                 if ($type === 'روزانه' && $department_manager && $user_department_manager_approval && $case->creator == $this->userId) {
                     $start_date = convertPersianToEnglish($case->getVariable('timeoff_start_date'));
+                    $startDateGregorian = Jalalian::fromFormat('Y-m-d', $start_date)->toCarbon();
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
+                    $endDateGregorian = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
+                    $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     if ($thisMonth == $startMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
                         $thisMonthLeaves[] = [
@@ -120,6 +128,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                 }
             }
         }
+        
         $merged = collect(array_merge($hourlyLeaves, $thisMonthLeaves))->sortBy(function ($item) {
             // استخراج تاریخ و ساعت از متن
             $dateTimeParts = explode(' - ', $item[3]);
@@ -135,6 +144,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             // ایجاد یک شیء Carbon برای مرتب‌سازی
             return \Carbon\Carbon::createFromFormat('Y-m-d', implode('-', $gregorianDate))->timestamp;
         });
+        $merged[] = ['', '' ,'' , 'مجموع', $duration, '', '', ''];
         return $merged;
     }
 
