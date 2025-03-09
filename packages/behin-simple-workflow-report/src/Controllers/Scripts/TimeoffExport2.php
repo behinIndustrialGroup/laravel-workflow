@@ -65,7 +65,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     }
                 }
             }
-        }else{
+        } else {
             foreach ($process->cases as $case) {
                 $type = $case->getVariable('timeoff_request_type');
                 $department_manager = $case->getVariable('department_manager');
@@ -88,8 +88,8 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                         ];
                     }
                 }
-    
-    
+
+
                 if ($type === 'روزانه' && $department_manager && $user_department_manager_approval) {
                     $start_date = convertPersianToEnglish($case->getVariable('timeoff_start_date'));
                     $gregorianStartDate = Jalalian::fromFormat('Y-m-d', $start_date)
@@ -114,14 +114,14 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             // استخراج تاریخ و ساعت از متن
             $dateTimeParts = explode(' - ', $item[3]);
             $persianDate = $dateTimeParts[0];
-        
+
             // تبدیل تاریخ شمسی به میلادی (اگر از کتابخانه `morilog/jalali` استفاده می‌کنید)
             $gregorianDate = \Morilog\Jalali\CalendarUtils::toGregorian(
                 substr($persianDate, 0, 4), // سال
                 substr($persianDate, 5, 2), // ماه
                 substr($persianDate, 8, 2)  // روز
             );
-        
+
             // ایجاد یک شیء Carbon برای مرتب‌سازی
             return \Carbon\Carbon::createFromFormat('Y-m-d', implode('-', $gregorianDate))->timestamp;
         });
@@ -145,6 +145,11 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
     {
         // تنظیم راست به چپ برای کل سلول‌ها
         $sheet->setRightToLeft(true);
+        $sheet->getColumnDimension('A')->setWidth(10); // ستون شماره پرسنلی
+        $sheet->getColumnDimension('B')->setWidth(20); // ستون نام
+        $sheet->getColumnDimension('C')->setWidth(10); // ستون نوع
+        $sheet->getColumnDimension('D')->setWidth(20); // ستون شروع
+        $sheet->getColumnDimension('E')->setWidth(20); // ستون پایان
 
         // تنظیم استایل سرستون‌ها و سایر سلول‌ها
         return [

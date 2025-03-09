@@ -52,7 +52,11 @@ class TimeoffExport implements FromCollection, WithHeadings, WithStyles
     {
         // تنظیم راست به چپ برای کل سلول‌ها
         $sheet->setRightToLeft(true);
-
+        $sheet->getColumnDimension('A')->setWidth(10); // ستون شماره پرسنلی
+        $sheet->getColumnDimension('B')->setWidth(20); // ستون نام
+        $sheet->getColumnDimension('C')->setWidth(5); // ستون نوع
+        $sheet->getColumnDimension('D')->setWidth(5); // ستون شروع
+        $sheet->getColumnDimension('E')->setWidth(10); // ستون پایان
         // تنظیم استایل سرستون‌ها و سایر سلول‌ها
         return [
             1    => ['font' => ['bold' => true]], // بولد کردن سرستون‌ها
