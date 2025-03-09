@@ -202,6 +202,9 @@
                 <div class="card">
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های ساعتی {{ $user->name ?? '' }}
+                        <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id, 'userId' => $user->id ?? '']) }}">
+                            <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
+                        </a>
                     </div>
 
                     <div class="card-body">
@@ -252,6 +255,9 @@
                 <div class="card">
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های روزانه {{ $user->name ?? '' }}
+                        <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id]) }}">
+                            <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
+                        </a>
                     </div>
 
                     <div class="card-body">
@@ -309,7 +315,6 @@
     <script>
         initial_view();
         $('#timeoff-report').DataTable({
-            dom: 'Bfrtip',
             "pageLength": 50,
             "order": [
                 [0, "asc"]
@@ -319,21 +324,6 @@
             }
         });
         $('#hourly-leaves').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                className: 'btn btn-sm-default',
-                attr: {
-                    style: 'direction: rtl'
-                },
-                customize: function(xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $(sheet).find('row c').attr('s', '51'); // تنظیم استایل برای راست به چپ
-                }
-            }],
             "order": [
                 [4, "desc"],
                 [5, "desc"]
@@ -343,34 +333,6 @@
             }
         });
         $('#daily-leaves').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                className: 'btn btn-sm-default',
-                attr: {
-                    style: 'direction: rtl'
-                },
-                customize: function(xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                    // اضافه کردن style برای راست به چپ
-                    var cols = $(sheet).find('cols col');
-                    cols.each(function() {
-                        $(this).attr('style', 'direction: rtl !important;');
-                    });
-
-                    // اضافه کردن padding به شیت برای رعایت راست به چپ
-                    var rows = $(sheet).find('row');
-                    rows.each(function() {
-                        $(this).children().each(function() {
-                            $(this).attr('s', '41'); // تغییر استایل برای راست به چپ
-                        });
-                    });
-                }
-            }],
             "order": [
                 [4, "desc"],
                 [5, "desc"]

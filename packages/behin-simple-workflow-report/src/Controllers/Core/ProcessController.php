@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport;
+use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport2;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -46,5 +47,10 @@ class ProcessController extends Controller
     public function export($processId){
         $process = CoreProcessController::getById($processId);
         return Excel::download(new TimeoffExport, 'timeoff_report.xlsx');
+    }
+
+    public function export2($processId, $userId = null){
+        $process = CoreProcessController::getById($processId);
+        return Excel::download(new TimeoffExport2($userId), 'timeoff_report2.xlsx');
     }
 }
