@@ -111,7 +111,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             }
         }
         $merged = array_merge($hourlyLeaves, $thisMonthLeaves);
-        return collect($merged)->groupBy('user_number');
+        return collect($merged)->orderBy('start_date');
     }
 
     public function headings(): array
