@@ -152,14 +152,4 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             1    => ['font' => ['bold' => true]], // بولد کردن سرستون‌ها
         ];
     }
-    public function columnWidths(): array
-    {
-        return [
-            'A' => 20,
-            'B' => 30,
-            'C' => 40,
-            'D' => 80,
-            'E' => 80,
-        ];
-    }
 }
