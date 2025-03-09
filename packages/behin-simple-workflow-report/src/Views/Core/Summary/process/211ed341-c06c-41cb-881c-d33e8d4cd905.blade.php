@@ -200,7 +200,7 @@
                 @endif
 
                 <div class="card">
-                    <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id]) }}">
+                    <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id, 'userId' => $_GET['userId'] ?? '']) }}">
                         <button class="btn btn-primary btn-sm">{{ trans('fields.Excel') }}</button>
                     </a>
                     <div class="card-header text-center bg-warning">
