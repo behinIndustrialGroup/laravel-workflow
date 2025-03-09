@@ -110,8 +110,23 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                 }
             }
         }
-        $merged = array_merge($hourlyLeaves, $thisMonthLeaves);
-        return collect($merged)->sortBy('start_date');
+        $merged = collect(array_merge($hourlyLeaves, $thisMonthLeaves))->sortBy(function ($item) {
+            // استخراج تاریخ و ساعت از متن
+            $dateTimeParts = explode(' - ', $item[3]);
+            $persianDate = $dateTimeParts[0];
+            $time = $dateTimeParts[1];
+        
+            // تبدیل تاریخ شمسی به میلادی (اگر از کتابخانه `morilog/jalali` استفاده می‌کنید)
+            $gregorianDate = \Morilog\Jalali\CalendarUtils::toGregorian(
+                substr($persianDate, 0, 4), // سال
+                substr($persianDate, 5, 2), // ماه
+                substr($persianDate, 8, 2)  // روز
+            );
+        
+            // ایجاد یک شیء Carbon برای مرتب‌سازی
+            return \Carbon\Carbon::createFromFormat('Y-m-d H:i', implode('-', $gregorianDate) . ' ' . $time)->timestamp;
+        });
+        return $merged;
     }
 
     public function headings(): array
@@ -135,6 +150,16 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
         // تنظیم استایل سرستون‌ها و سایر سلول‌ها
         return [
             1    => ['font' => ['bold' => true]], // بولد کردن سرستون‌ها
+        ];
+    }
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 20,
+            'B' => 30,
+            'C' => 40,
+            'D' => 80,
+            'E' => 80,
         ];
     }
 }
