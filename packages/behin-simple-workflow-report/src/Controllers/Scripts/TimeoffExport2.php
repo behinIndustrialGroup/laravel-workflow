@@ -114,7 +114,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             // استخراج تاریخ و ساعت از متن
             $dateTimeParts = explode(' - ', $item[3]);
             $persianDate = $dateTimeParts[0];
-            $time = $dateTimeParts[1];
+            // $time = $dateTimeParts[1];
         
             // تبدیل تاریخ شمسی به میلادی (اگر از کتابخانه `morilog/jalali` استفاده می‌کنید)
             $gregorianDate = \Morilog\Jalali\CalendarUtils::toGregorian(
@@ -124,7 +124,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
             );
         
             // ایجاد یک شیء Carbon برای مرتب‌سازی
-            return \Carbon\Carbon::createFromFormat('Y-m-d H:i', implode('-', $gregorianDate) . ' ' . $time)->timestamp;
+            return \Carbon\Carbon::createFromFormat('Y-m-d', implode('-', $gregorianDate))->timestamp;
         });
         return $merged;
     }
