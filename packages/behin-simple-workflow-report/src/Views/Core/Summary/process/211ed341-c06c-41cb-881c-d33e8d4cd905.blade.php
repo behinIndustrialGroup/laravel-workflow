@@ -138,7 +138,7 @@
                         @if (!isset($isFiltered))
                             <div class="card-header text-center bg-success">گزارش ماهانه مرخصی کاربران
                                 <a href="{{ route('simpleWorkflowReport.process.export', $process->id) }}">
-                                    <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
+                                    <button class="btn btn-primary btn-sm">{{ trans('fields.Excel') }}</button>
                                 </a>
                             </div>
                             <div class="card-body">
@@ -200,11 +200,12 @@
                 @endif
 
                 <div class="card">
+                    <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id]) }}">
+                        <button class="btn btn-primary btn-sm">{{ trans('fields.Excel') }}</button>
+                    </a>
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های ساعتی {{ $user->name ?? '' }}
-                        <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id, 'userId' => $user->id ?? '']) }}">
-                            <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
-                        </a>
+                        
                     </div>
 
                     <div class="card-body">
@@ -255,9 +256,7 @@
                 <div class="card">
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های روزانه {{ $user->name ?? '' }}
-                        <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id]) }}">
-                            <button class="btn btn-primary btn-sm">{{ trans('fields.Download') }}</button>
-                        </a>
+                        
                     </div>
 
                     <div class="card-body">
