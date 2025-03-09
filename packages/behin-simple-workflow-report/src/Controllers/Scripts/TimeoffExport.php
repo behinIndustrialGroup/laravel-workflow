@@ -30,6 +30,7 @@ class TimeoffExport implements FromCollection, WithHeadings, WithStyles
             ->join('users', 'wf_entity_timeoffs.user', '=', 'users.id')
             ->where('approved', 1)
             ->groupBy('wf_entity_timeoffs.user', 'wf_entity_timeoffs.request_year', 'wf_entity_timeoffs.request_month')
+            ->orderBy('users.number')
             ->orderBy('wf_entity_timeoffs.request_year', 'desc')
             ->orderBy('wf_entity_timeoffs.request_month', 'desc')
             ->get();
