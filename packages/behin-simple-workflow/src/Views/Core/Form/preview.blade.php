@@ -34,6 +34,15 @@
                         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                     ]) !!}
                 @endif
+                @if ($fieldDetails->type == 'help')
+                    {!! Form::help($fieldId, [
+                        'options' => isset($fieldAttributes?->options) ? $fieldAttributes?->options : null,
+                        'class' => '',
+                        'id' => $fieldId,
+                        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+                        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+                    ]) !!}
+                @endif
                 @if ($fieldDetails->type == 'location')
                     @php
                         $defaultLat = isset($variables)

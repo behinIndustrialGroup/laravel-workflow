@@ -49,10 +49,13 @@
 
                 <option value="div" @if ($field->type == 'div') selected @endif>{{ trans('Div') }}</option>
                 <option value="button" @if ($field->type == 'button') selected @endif>{{ trans('Button') }}</option>
+                <option value="help" @if ($field->type == 'help') selected @endif>{{ trans('Help') }}</option>
             </select>
         </div>
         @if ($field->type == 'entity')
             @include('SimpleWorkflowView::Core.Field.entity', ['field' => $field])
+        @elseif($field->type == 'help')
+            @include('SimpleWorkflowView::Core.Field.help', ['field' => $field])
         @else
             @if ($field->type == 'select' || $field->type == 'select-multiple')
                 <div class="mb-3">

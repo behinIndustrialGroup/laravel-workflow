@@ -28,6 +28,7 @@
                 <option value="title">title</option>
                 <option value="div">div</option>
                 <option value="button">button</option>
+                <option value="help">help</option>
             </select>
         </div>
         <div class="col-sm-4">
