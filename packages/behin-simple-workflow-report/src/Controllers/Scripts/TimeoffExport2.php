@@ -40,6 +40,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $startTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_start_time'))->timestamp;
                     $endTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_end_time'))->timestamp;
+                    $dur = ($endTime - $startTime) / 3600;
                     if($user_department_manager_approval == "تایید است"){
                         $duration += ($endTime - $startTime) / 3600;
                     }
@@ -64,6 +65,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                     $endDateGregorian = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
+                    $dur = ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     if($user_department_manager_approval == "تایید است"){
                         $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     }
