@@ -40,7 +40,9 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $startTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_start_time'))->timestamp;
                     $endTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_end_time'))->timestamp;
-                    $duration += ($endTime - $startTime) / 3600;
+                    if($user_department_manager_approval == "تایید است"){
+                        $duration += ($endTime - $startTime) / 3600;
+                    }
                     if ($thisMonth == $startMonth) {
                         $hourlyLeaves[] = [
                             getUserInfo($case->creator)->number,
@@ -62,7 +64,9 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                     $endDateGregorian = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
-                    $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
+                    if($user_department_manager_approval == "تایید است"){
+                        $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
+                    }
                     if ($thisMonth == $startMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
                         $thisMonthLeaves[] = [
