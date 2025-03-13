@@ -118,9 +118,16 @@
                     viewMode: 'day',
                     initialValue: false,
                     format: 'YYYY-MM-DD',
-                    initialValueType: 'persian'
+                    initialValueType: 'persian',
+                    calendar: {
+                        persian:{
+                            leapYearMode: 'astronomical',
+                            locale: 'fa'
+                        }
+                    }
                 });
             }
+            
 
 
 
