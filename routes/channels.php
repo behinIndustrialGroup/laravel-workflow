@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::routes([
-    'middleware' => ['web', 'auth'],
-    'prefix' => 'laravel-workflow'
-]);
-Broadcast::channel('private-user', function ($user) {
-    return array('name' => $user->name);
-});
+// Broadcast::routes([
+//     'middleware' => ['web', 'auth'],
+//     'prefix' => 'laravel-workflow'
+// ]);
+// Broadcast::channel('private-user', function ($user) {
+//     return array('name' => $user->name);
+// });
