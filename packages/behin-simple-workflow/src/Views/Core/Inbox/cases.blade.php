@@ -14,7 +14,7 @@
         </div> --}}
         @else
             <table class="table table-striped" id="inbox-list">
-                <thead>
+                <thead class="table-dark">
                     <tr>
                         <th>#</th>
                         <th>{{ trans('fields.Process Title') }}</th>
@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach ($rows as $index => $row)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $index + 1 }} <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case->id) }}" target="_blank"><i class="fa fa-external-link"></i></a></td>
                             <td>{{ $row->task->process->name }}</td>
                             <td>{{ $row->case->number ?? '' }}</td>
                             <td>{{ $row->case_name }}</td>
@@ -50,7 +50,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
             order: [
-                [6, 'desc']
+                [2, 'desc']
             ]
         });
     </script>

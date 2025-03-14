@@ -17,14 +17,15 @@ class CaseController extends Controller
         return Cases::find($id);
     }
 
-    public static function create($processId, $creator, $name = null, $inDraft = false, $caseNumber = null)
+    public static function create($processId, $creator, $name = null, $inDraft = false, $caseNumber = null, $parentId = null)
     {
         if($inDraft) {
             return Cases::create([
                 'process_id' => $processId,
                 'number' => null,
                 'name' => $name,
-                'creator' => $creator
+                'creator' => $creator,
+                'parent_id' => $parentId
             ]);
         }
         $newNumber = $caseNumber? $caseNumber : self::getNewCaseNumber($processId);
@@ -32,7 +33,8 @@ class CaseController extends Controller
             'process_id' => $processId,
             'number' => $newNumber,
             'name' => $name,
-            'creator' => $creator
+            'creator' => $creator,
+            'parent_id' => $parentId
         ]);
     }
 

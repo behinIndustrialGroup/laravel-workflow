@@ -66,7 +66,7 @@ class ProcessController extends Controller
         ]);
     }
 
-    public static function start($taskId, $force = false, $redirect = true, $inDraft = false, $caseNumber = null, $creator = null)
+    public static function start($taskId, $force = false, $redirect = true, $inDraft = false, $caseNumber = null, $creator = null, $parentId = null)
     {
         $task = TaskController::getById($taskId);
         if(!$force)
@@ -80,7 +80,7 @@ class ProcessController extends Controller
             }
         }
         $creator = $creator ? $creator : Auth::user()->id;
-        $case = CaseController::create($task->process_id, $creator, null, $inDraft, $caseNumber);
+        $case = CaseController::create($task->process_id, $creator, null, $inDraft, $caseNumber, $parentId);
         $status = $inDraft ? 'draft' : 'new';
         $inbox = InboxController::create($taskId, $case->id, $creator, $status);
         if($redirect)
@@ -104,7 +104,7 @@ class ProcessController extends Controller
         return $hasError;
     }
 
-    public static function startFromScript($taskId, $creator, $caseNumber = null){
-        return self::start($taskId, true, false, false, $caseNumber, $creator);
+    public static function startFromScript($taskId, $creator, $caseNumber = null, $parentId){
+        return self::start($taskId, true, false, false, $caseNumber, $creator, $parentId);
     }
 }
