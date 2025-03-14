@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Events\NewInboxEvent;
+
+
 class InboxController extends Controller
 {
     public static function getById($id): Inbox
@@ -37,6 +40,7 @@ class InboxController extends Controller
             // 'case_name' => $createCaseName
         ]);
         self::editCaseName($inbox->id, $createCaseName);
+        broadcast(new NewInboxEvent($inbox))->toOthers();
         return $inbox;
     }
 

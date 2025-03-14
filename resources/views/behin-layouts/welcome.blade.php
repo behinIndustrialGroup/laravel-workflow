@@ -24,13 +24,14 @@
 		<link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom-style.css')  . '?' . config('app.version') }}">
 		<link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom.css')  . '?' . config('app.version') }}">
 		<link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/select2/select2.min.css')  . '?' . config('app.version') }}">
-		<link rel="stylesheet" href="{{ url('public/behin/plugins/persian-datepicker/persian-datepicker.css')  . '?' . config('app.version') }}">
+		{{-- <link rel="stylesheet" href="{{ url('public/behin/plugins/persian-datepicker/persian-datepicker.css')  . '?' . config('app.version') }}"> --}}
 	
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+		<link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.css')  . '?' . config('app.version') }}">
+
 		@yield('style')
 	
 		<script src="{{ url('public/behin/behin-dist/plugins/jquery/jquery.min.js')  . '?' . config('app.version') }}"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<script src="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.js')  . '?' . config('app.version') }}"></script>
 	
 		<script src="{{ url('public/behin/behin-js/ajax.js')  . '?' . config('app.version') }}"></script>
 		<script src="{{ url('public/behin/behin-js/dataTable.js')  . '?' . config('app.version') }}"></script>
@@ -42,7 +43,7 @@
 	<div class="limiter">
 		@include('behin-layouts.alert')
 
-		<div class="container-login100" style="background-image: url('{{ url('public/behin/login/images/bg-01.jpg') }}');">
+		<div class="container-login100" style="">
 			@yield('content')
 		</div>
 	</div>
@@ -63,11 +64,11 @@
 		function initial_view(){
                 $('.select2').select2();
                 $('.select2').css('width', '100%')
-                $(".persian-date").persianDatepicker({
-                    viewMode: 'year',
-                    format: 'YYYY-MM-DD',
-                    initialValueType: 'persian'
-                });
+                // $(".persian-date").persianDatepicker({
+                //     viewMode: 'year',
+                //     format: 'YYYY-MM-DD',
+                //     initialValueType: 'persian'
+                // });
             }
 	</script>
 	
