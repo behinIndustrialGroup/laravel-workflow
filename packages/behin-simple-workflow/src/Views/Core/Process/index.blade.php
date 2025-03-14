@@ -15,7 +15,7 @@
                             <a href="{{ route('simpleWorkflow.process.create') }}" class="btn btn-success">{{ trans('Create') }}</a>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body table-responsive">
                         <table class="table table-striped projects">
                             <thead>
                                 <tr>
