@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\PushNotifications;
 use BehinInit\App\Http\Middleware\Access;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
 });
 
 Route::get('/pusher/beams-auth', function (Request $request) {
-    $user = auth()->user()->id;
+    $userId = auth()->user()->id;
+    $user = User::find($userId);
     return response()->json([
         'token' => $user->beams_token
     ]);
