@@ -33,7 +33,8 @@ class Cases extends Model
         'process_id',
         'number',
         'name',
-        'creator'
+        'creator',
+        'parent_id'
     ];
 
     public function variables()
@@ -58,7 +59,10 @@ class Cases extends Model
     }
 
     public function whereIs(){
-        return Inbox::where('case_id', $this->id)->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
+        $childCaseId = Cases::where('parent_id', $this->id)->get()->pluck('id')->toArray();
+        return Inbox::where(function($query) use($childCaseId){
+            $query->where('case_id', $this->id)->orWhereIn('case_id', $childCaseId);
+        })->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
     }
 
     public function previousTask(){
