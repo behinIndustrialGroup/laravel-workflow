@@ -16,6 +16,9 @@
     @php
         $children = $child->children();
     @endphp
+    @if ($child->next_element_id)
+        {{ $child->id }} --> {{ $child->next_element_id }}
+    @endif
     @if (count($children))
         @include('SimpleWorkflowView::Core.Task.tree1', [
             'children' => $children,
