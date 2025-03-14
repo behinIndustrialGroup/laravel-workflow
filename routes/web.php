@@ -27,11 +27,7 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
 
 Route::get('/pusher/beams-auth', function (Request $request) {
     $userID = auth()->id(); // بررسی احراز هویت
-    $userIDInQueryParam = $request->query('user_id');
-
-    if ($userID != $userIDInQueryParam) {
-        return response('درخواست نامعتبر', 401);
-    }
+    
 
     $beamsClient = new PushNotifications([
         'instanceId' => env('PUSHER_INSTANCE_ID'),
