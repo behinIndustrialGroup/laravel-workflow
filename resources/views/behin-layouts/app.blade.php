@@ -148,28 +148,17 @@
                 return beamsClient.setUserId(userId, beamsToken);
             })
             .catch(console.error);
-
-        const beamsTokenProvider = {
-            fetchToken: () => {
-                return fetch('{{ url('pusher/beams-auth') }}', {
-                        method: 'GET',
-                        credentials: 'include' // مهم برای احراز هویت
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('خطا در دریافت توکن');
-                        }
-                        return response.json();
-                    })
-                    .then(data => data.token);
-            }
-        };
-
-        beamsClient
-            .start()
-            .then(() => beamsClient.setUserId('{{ auth()->id() }}', beamsTokenProvider))
-            .then(() => console.log("توکن با موفقیت اختصاص داده شد."))
-            .catch(console.error);
+        beamsClient.getUserId()
+            .then(userId => {
+                if (userId) {
+                    console.log(`توکن با موفقیت به کاربر ${userId} تخصیص داده شده است.`);
+                } else {
+                    console.log('هیچ کاربری به توکن اختصاص داده نشده است.');
+                }
+            })
+            .catch(err => {
+                console.error('خطا در دریافت اطلاعات کاربر:', err);
+            });
     </script>
     <script>
         // Pusher.logToConsole = true;
