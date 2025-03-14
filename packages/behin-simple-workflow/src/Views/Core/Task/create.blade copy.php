@@ -56,36 +56,69 @@
         <button onclick="check_error()" class="btn btn-danger">
             {{ trans('fields.Check Error') }}
         </button>
-        <div class="table-responsive">
-            <div class="mermaid" style="width: 1000px">
-                graph TD
-                @foreach ($process->startTasks() as $task)
-                    @php
-                        if($task->type == 'form')
-                            $taskClass = 'task-form';
-                        if($task->type == 'script')
-                            $taskClass = 'task-script';
-                        if($task->type == 'condition')
-                            $taskClass = 'task-condition';
-    
-                    @endphp
-                    {{ $task->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"
-                        href='{{ route('simpleWorkflow.task.edit', $task->id) }}'>{{ $task->name }}</a>"]:::{{ $taskClass }}
+        <div class="mermaid">
+            graph TD
+            @foreach ($process->startTasks() as $task)
+                @php
+                    if($task->type == 'form')
+                        $taskClass = 'task-form';
+                    if($task->type == 'script')
+                        $taskClass = 'task-script';
+                    if($task->type == 'condition')
+                        $taskClass = 'task-condition';
+
+                @endphp
+                {{ $task->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"
+                    href='{{ route('simpleWorkflow.task.edit', $task->id) }}'>{{ $task->name }}</a>"]:::{{ $taskClass }}
+                @php
+                    $children = $task->children();
+                @endphp
+                @if (count($children))
+                    @include('SimpleWorkflowView::Core.Task.tree1', [
+                        'children' => $children,
+                        'task' => $task,
+                    ])
+                @endif
+            @endforeach
+        </div>
+        
+        @foreach ($process->startTasks() as $task)
+            @php
+                $bgColor =
+                    $task->type == 'form' ? 'bg-primary' : ($task->type == 'script' ? 'bg-success' : 'bg-warning');
+            @endphp
+            <div class="">
+                @csrf
+                <div class="p-2 bg-light">
+                    <a type="submit" class="" style=""
+                        href="{{ route('simpleWorkflow.task.edit', $task->id) }}"><i class="fa fa-edit"></i></a>
+                    <strong class="">
+                        <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
+                        <span class="badge {{ $bgColor }}">
+                            {{ ucfirst($task->type) }}
+                        </span>
+                    </strong>
+                    @if ($error = taskHasError($task->id))
+                        <i class="fa fa-exclamation-triangle text-danger" title="{{ $error['descriptions'] }}"></i>
+                    @endif
+
+
+                </div>
+                <div id="{{ $task->id }}" class="">
+                    {{-- <div class="panel-body"> --}}
                     @php
                         $children = $task->children();
                     @endphp
                     @if (count($children))
-                        @include('SimpleWorkflowView::Core.Task.tree1', [
+                        @include('SimpleWorkflowView::Core.Task.tree', [
                             'children' => $children,
-                            'task' => $task,
+                            'level' => 1,
                         ])
                     @endif
-                @endforeach
+                    {{-- </div> --}}
+                </div>
             </div>
-        </div>
-        
-        
-        
+        @endforeach
 
 
 

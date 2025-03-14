@@ -20,19 +20,6 @@
                 </span>
                 <input type="hidden" name="id" value="{{ $child->id }}">
                 <div class="" style="display: inline">
-                    {{-- <span class="badge {{ $bgColor }}">{{ trans('Executive File') }} :
-                        {{ $child->executive_element_id ? $child->executiveElement()->name : '' }}
-                    </span>
-                    @if ($child->assignment_type)
-                        <span class="badge {{ $bgColor }}">{{ trans('Assignment') }}:
-                            {{ $child->assignment_type }}
-                        </span>
-                    @endif
-                    @if ($child->actors()->count() > 0)
-                        <span class="badge bg-info">{{ trans('Actors') }}:
-                            {{ $child->actors()->pluck('actor')->implode(', ') }}
-                        </span>
-                    @endif --}}
                     @if ($child->next_element_id)
                         @php
                             $bgColor =
