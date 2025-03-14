@@ -1,4 +1,4 @@
-<div class="card shadow-sm mb-4">
+<div class="card shadow-sm mb-4 bg-dark">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">{{ $task->name ?? '' }} - {{ $inbox->case_name ?? '' }}</h6>
     </div>
