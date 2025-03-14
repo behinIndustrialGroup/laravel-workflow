@@ -55,6 +55,7 @@
 @section('script')
     <script>
         @if (auth()->id())
+            show_message("به صفحه داشبورد منتقل میشوید")
             window.location = "{{ url('admin') }}"
         @endif
         function submit() {
@@ -63,7 +64,7 @@
                 $('#login-form').serialize(),
                 function(response) {
                     show_message("به صفحه داشبورد منتقل میشوید")
-                    
+                    window.location = "{{ url('admin') }}"
                 },
                 function(response) {
                     // console.log(response);
