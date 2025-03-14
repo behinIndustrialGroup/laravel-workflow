@@ -1,39 +1,23 @@
 <?php
 
-use Barryvdh\TranslationManager\ManagerServiceProvider;
-use Behin\PMCaseNumbering\PackageServiceProvider;
-use Behin\SimpleWorkflow\SimpleWorkflowProvider;
-use Behin\SimpleWorkflowReport\SimpleWorkflowReportProvider;
-use Behin\Sms\SmsProvider;
-use BehinFileControl\BehinFileControlProvider;
-use BehinInit\BehinInitProvider;
-use BehinLogging\ServiceProvider;
-use BehinProcessMaker\BehinProcessMakerProvider;
-use BehinProcessMakerAdmin\BehinProcessMakerAdminProvider;
-use BehinUserRoles\UserRolesServiceProvider;
-use FileService\FileServiceProvider;
-use Mkhodroo\Cities\CityProvider;
-use MyFormBuilder\FormBuilderServiceProvider;
-use TodoList\TodoListProvider;
-use UserProfile\UserProfileProvider;
-
 return [
     App\Providers\AppServiceProvider::class,
-    BehinInitProvider::class,
-    UserRolesServiceProvider::class,
-    UserProfileProvider::class,
-    BehinProcessMakerProvider::class,
-    BehinFileControlProvider::class,
-    ServiceProvider::class,
-    BehinProcessMakerAdminProvider::class,
-    SmsProvider::class,
-    PackageServiceProvider::class,
-    TodoListProvider::class,
-    FileServiceProvider::class,
-    SimpleWorkflowProvider::class,
-    FormBuilderServiceProvider::class,
-    CityProvider::class,
-    SimpleWorkflowReportProvider::class,
-    ManagerServiceProvider::class,
+    App\Providers\BroadcastServiceProvider::class,
+    Barryvdh\TranslationManager\ManagerServiceProvider::class,
+    BehinFileControl\BehinFileControlProvider::class,
+    BehinInit\BehinInitProvider::class,
+    BehinLogging\ServiceProvider::class,
+    BehinProcessMakerAdmin\BehinProcessMakerAdminProvider::class,
+    BehinProcessMaker\BehinProcessMakerProvider::class,
+    BehinUserRoles\UserRolesServiceProvider::class,
+    Behin\PMCaseNumbering\PackageServiceProvider::class,
+    Behin\SimpleWorkflowReport\SimpleWorkflowReportProvider::class,
+    Behin\SimpleWorkflow\SimpleWorkflowProvider::class,
+    Behin\Sms\SmsProvider::class,
+    FileService\FileServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
+    Mkhodroo\Cities\CityProvider::class,
+    MyFormBuilder\FormBuilderServiceProvider::class,
+    TodoList\TodoListProvider::class,
+    UserProfile\UserProfileProvider::class,
 ];

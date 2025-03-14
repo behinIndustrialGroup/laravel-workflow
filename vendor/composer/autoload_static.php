@@ -191,6 +191,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'F' => 
         array (
             'Fruitcake\\Cors\\' => 15,
+            'Firebase\\JWT\\' => 13,
             'FileService\\' => 12,
             'Fidry\\CpuCoreCounter\\' => 21,
             'Faker\\' => 6,
@@ -615,6 +616,10 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
         'FileService\\' => 
         array (
             0 => __DIR__ . '/../..' . '/packages/behin-file-service/src',
@@ -759,6 +764,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
     );
 
     public static $classMap = array (
+        'App\\Events\\NewInboxEvent' => __DIR__ . '/../..' . '/app/Events/NewInboxEvent.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
         'App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/EmailVerificationNotificationController.php',
@@ -774,6 +780,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
+        'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\View\\Components\\AppLayout' => __DIR__ . '/../..' . '/app/View/Components/AppLayout.php',
         'App\\View\\Components\\GuestLayout' => __DIR__ . '/../..' . '/app/View/Components/GuestLayout.php',
         'Assert\\Assert' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/Assert.php',
@@ -900,6 +907,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'Behin\\SimpleWorkflow\\Controllers\\Core\\FormController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/FormController.php',
         'Behin\\SimpleWorkflow\\Controllers\\Core\\InboxController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/InboxController.php',
         'Behin\\SimpleWorkflow\\Controllers\\Core\\ProcessController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/ProcessController.php',
+        'Behin\\SimpleWorkflow\\Controllers\\Core\\PushNotifications' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/PushNotifications.php',
         'Behin\\SimpleWorkflow\\Controllers\\Core\\RoutingController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/RoutingController.php',
         'Behin\\SimpleWorkflow\\Controllers\\Core\\ScriptController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/ScriptController.php',
         'Behin\\SimpleWorkflow\\Controllers\\Core\\TaskActorController' => __DIR__ . '/../..' . '/packages/behin-simple-workflow/src/Controllers/Core/TaskActorController.php',
@@ -1860,6 +1868,14 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'FileService\\FileServiceProvider' => __DIR__ . '/../..' . '/packages/behin-file-service/src/FileServiceProvider.php',
         'FileService\\Services\\File\\FileService' => __DIR__ . '/../..' . '/packages/behin-file-service/src/Services/File/FileService.php',
         'FileService\\Services\\File\\FileToolsService' => __DIR__ . '/../..' . '/packages/behin-file-service/src/Services/File/FileToolsService.php',
+        'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
+        'Firebase\\JWT\\CachedKeySet' => __DIR__ . '/..' . '/firebase/php-jwt/src/CachedKeySet.php',
+        'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWK' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWK.php',
+        'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
+        'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
+        'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
+        'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',

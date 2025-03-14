@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -12,51 +11,71 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/font-awesome/css/font-awesome.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/font-awesome/css/font-awesome.min.css') . '?' . config('app.version') }}">
     <!-- Ionicons -->
     {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/adminlte.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/dist/css/adminlte.min.css') . '?' . config('app.version') }}">
     <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/datepicker/datepicker3.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/datepicker/datepicker3.css') . '?' . config('app.version') }}">
     <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/daterangepicker/daterangepicker-bs3.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/daterangepicker/daterangepicker-bs3.css') . '?' . config('app.version') }}">
     <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') . '?' . config('app.version') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- bootstrap rtl -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/bootstrap-rtl.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/dist/css/bootstrap-rtl.min.css') . '?' . config('app.version') }}">
     <!-- template rtl version -->
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom-style.css')  . '?' . config('app.version') }}">
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/dist/css/custom-style.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/dist/css/custom.css') . '?' . config('app.version') }}">
 
     {{-- <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/custom.css')  . '?' . config('app.version') }}"> --}}
-    <link rel="stylesheet" type="text/css" href="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.css')  . '?' . config('app.version') }}" />
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/dist/css/dropzone.min.css')  . '?' . config('app.version') }}">
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.css') . '?' . config('app.version') }}" />
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/dist/css/dropzone.min.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.css') . '?' . config('app.version') }}">
     {{-- <link rel="stylesheet" href="{{ Url('public/behin/behin-dist/dist/css/persian-datepicker-0.4.5.min.css')  . '?' . config('app.version') }}" /> --}}
     {{-- <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ url('public/behin/behin-dist/persian-date-picker/persian-datepicker.css') }}">
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/mapp/css/mapp.min.css')  . '?' . config('app.version') }}">
-    <link rel="stylesheet" href="{{ url('public/behin/behin-dist/plugins/mapp/css/fa/style.css')  . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/mapp/css/mapp.min.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet"
+        href="{{ url('public/behin/behin-dist/plugins/mapp/css/fa/style.css') . '?' . config('app.version') }}">
     @yield('style')
 
     <script src="{{ url('public/behin/behin-dist/plugins/jquery/jquery.min.js') . '?' . config('app.version') }}"></script>
     {{-- <script type="text/javascript" src="https://cdn.map.ir/web-sdk/1.4.2/js/jquery-3.2.1.min.js"></script> --}}
-    <script src="{{ url('public/behin/behin-dist/plugins/datatables/jquery.dataTables.js')  . '?' . config('app.version') }}"></script>
-    <script src="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.js')  . '?' . config('app.version') }}"></script>
-    <script src="{{ url('public/behin/behin-dist/persian-date-picker/persian-date.js')  . '?' . config('app.version') }}"></script>
-    <script src="{{ url('public/behin/behin-dist/persian-date-picker/persian-datepicker.js')  . '?' . config('app.version') }}"></script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/datatables/jquery.dataTables.js') . '?' . config('app.version') }}">
+    </script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/datatables/dataTables.bootstrap4.js') . '?' . config('app.version') }}">
+    </script>
+    <script src="{{ url('public/behin/behin-dist/persian-date-picker/persian-date.js') . '?' . config('app.version') }}">
+    </script>
+    <script
+        src="{{ url('public/behin/behin-dist/persian-date-picker/persian-datepicker.js') . '?' . config('app.version') }}">
+    </script>
 
 
-    <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.env.js')  . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.env.js') . '?' . config('app.version') }}"></script>
 
 
-    <script src="{{ url('public/behin/behin-js/ajax.js')  . '?' . config('app.version') }}"></script>
-    <script src="{{ url('public/behin/behin-js/dataTable.js')  . '?' . config('app.version') }}"></script>
-    <script src="{{ url('public/behin/behin-js/dropzone.js')  . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-js/ajax.js') . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-js/dataTable.js') . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-js/dropzone.js') . '?' . config('app.version') }}"></script>
 
 
 
@@ -88,74 +107,107 @@
         </aside>
     </div>
 
-        <script src="{{ url('public/behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js')  . '?' . config('app.version') }}"></script>
-        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script> --}}
-        <script src="{{ url('public/behin/behin-dist/plugins/knob/jquery.knob.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-dist/plugins/daterangepicker/daterangepicker.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-dist/plugins/datepicker/bootstrap-datepicker.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-dist/dist/js/adminlte.js')  . '?' . config('app.version') }}"></script>
-        <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-        <script src="{{ url('public/behin/behin-dist/plugins/select2/select2.full.min.js')}}"></script>
-        {{-- <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js') . '?' . config('app.version') }}">
+    </script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script> --}}
+    <script src="{{ url('public/behin/behin-dist/plugins/knob/jquery.knob.js') . '?' . config('app.version') }}"></script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/daterangepicker/daterangepicker.js') . '?' . config('app.version') }}">
+    </script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/datepicker/bootstrap-datepicker.js') . '?' . config('app.version') }}">
+    </script>
+    <script
+        src="{{ url('public/behin/behin-dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') . '?' . config('app.version') }}">
+    </script>
+    <script src="{{ url('public/behin/behin-dist/dist/js/adminlte.js') . '?' . config('app.version') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="{{ url('public/behin/behin-dist/plugins/select2/select2.full.min.js') }}"></script>
+    {{-- <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
         <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
         <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> --}}
-        <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.min.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.js')  . '?' . config('app.version') }}"></script>
-        <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-        <script>
-            // راه‌اندازی Pusher
-            Pusher.logToConsole = true;
-        
-            var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
-                cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
-                encrypted: true
+    <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.min.js') . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.js') . '?' . config('app.version') }}"></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <script>
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: '6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b',
+        });
+
+        beamsClient
+            .start()
+            .then(() => {
+                // از توکن ذخیره شده برای ارتباط دستگاه با کاربر استفاده کنید
+                const userId = "{{ Auth::id() }}"; // شناسه کاربر که در دیتابیس ذخیره شده
+                const beamsToken = "{{ Auth::user()->beams_token }}"; // توکن Beams که در هنگام ورود ذخیره کرده‌اید
+
+                return beamsClient.setUserId(userId, beamsToken);
+            })
+            .catch(console.error);
+
+        beamsClient.getUserId()
+            .then(userId => {
+                if (userId) {
+                    console.log(`توکن با موفقیت به کاربر ${userId} تخصیص داده شده است.`);
+                } else {
+                    console.log('هیچ کاربری به توکن اختصاص داده نشده است.');
+                }
+            })
+            .catch(err => {
+                console.error('خطا در دریافت اطلاعات کاربر:', err);
             });
-        
-            // دریافت نوتیفیکیشن در کانال کاربر
-            var channel = pusher.subscribe('private-user.{{ auth()->id() }}');
-        
-            channel.bind('NewInboxEvent', function(data) {
-                alert('پرونده جدید: ' + data.case_name);
-            });
-        </script>
+    </script>
+    <script>
+        // Pusher.logToConsole = true;
+
+        // var pusher = new Pusher("{{ config('broadcasting.connections.pusher.key') }}", {
+        //     cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+        //     encrypted: true,
+        //     channelAuthorization: {
+        //         endpoint: "/laravel-workflow/broadcasting/auth",
+        //         headers: {
+        //             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //     }
+        // });
+
+        // // دریافت نوتیفیکیشن در کانال کاربر
+        // var channel = pusher.subscribe("private-user.{{ auth()->id() }}");
+
+        // channel.bind('NewInboxEvent', function(data) {
+        //     alert('پرونده جدید: ' + data.case_name);
+        // });
+    </script>
 
 
 
 
-        <script>
-
-            function initial_view(){
-                $('.select2').select2();
-                $('.select2').css('width', '100%')
-                $(".persian-date").persianDatepicker({
-                    viewMode: 'day',
-                    initialValue: false,
-                    format: 'YYYY-MM-DD',
-                    initialValueType: 'persian',
-                    calendar: {
-                        persian:{
-                            leapYearMode: 'astronomical',
-                            locale: 'fa'
-                        }
+    <script>
+        function initial_view() {
+            $('.select2').select2();
+            $('.select2').css('width', '100%')
+            $(".persian-date").persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
                     }
-                });
-            }
-            
+                }
+            });
+        }
+    </script>
 
-
-
-
-
-
-
-        </script>
-
-        <script src="{{ url('public/behin/behin-js/loader.js')  . '?' . config('app.version') }}"></script>
-        <script src="{{ url('public/behin/behin-js/scripts.js')  . '?' . config('app.version') }}"></script>
-        @yield('script')
+    <script src="{{ url('public/behin/behin-js/loader.js') . '?' . config('app.version') }}"></script>
+    <script src="{{ url('public/behin/behin-js/scripts.js') . '?' . config('app.version') }}"></script>
+    @yield('script')
     </div>
 
 

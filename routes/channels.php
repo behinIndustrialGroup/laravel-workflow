@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('inbox.{userId}', function ($user, $userId) {
-    return (int) $user->id === (int) $userId;
+Broadcast::routes([
+    'middleware' => ['web', 'auth'],
+    'prefix' => 'laravel-workflow'
+]);
+Broadcast::channel('private-user', function ($user) {
+    return array('name' => $user->name);
 });

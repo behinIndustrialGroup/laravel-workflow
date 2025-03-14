@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Events\\NewInboxEvent' => $baseDir . '/app/Events/NewInboxEvent.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
     'App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController' => $baseDir . '/app/Http/Controllers/Auth/EmailVerificationNotificationController.php',
@@ -21,6 +22,7 @@ return array(
     'App\\Http\\Requests\\ProfileUpdateRequest' => $baseDir . '/app/Http/Requests/ProfileUpdateRequest.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Providers\\BroadcastServiceProvider' => $baseDir . '/app/Providers/BroadcastServiceProvider.php',
     'App\\View\\Components\\AppLayout' => $baseDir . '/app/View/Components/AppLayout.php',
     'App\\View\\Components\\GuestLayout' => $baseDir . '/app/View/Components/GuestLayout.php',
     'Assert\\Assert' => $vendorDir . '/beberlei/assert/lib/Assert/Assert.php',
@@ -147,6 +149,7 @@ return array(
     'Behin\\SimpleWorkflow\\Controllers\\Core\\FormController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/FormController.php',
     'Behin\\SimpleWorkflow\\Controllers\\Core\\InboxController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/InboxController.php',
     'Behin\\SimpleWorkflow\\Controllers\\Core\\ProcessController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/ProcessController.php',
+    'Behin\\SimpleWorkflow\\Controllers\\Core\\PushNotifications' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/PushNotifications.php',
     'Behin\\SimpleWorkflow\\Controllers\\Core\\RoutingController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/RoutingController.php',
     'Behin\\SimpleWorkflow\\Controllers\\Core\\ScriptController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/ScriptController.php',
     'Behin\\SimpleWorkflow\\Controllers\\Core\\TaskActorController' => $baseDir . '/packages/behin-simple-workflow/src/Controllers/Core/TaskActorController.php',
@@ -1107,6 +1110,14 @@ return array(
     'FileService\\FileServiceProvider' => $baseDir . '/packages/behin-file-service/src/FileServiceProvider.php',
     'FileService\\Services\\File\\FileService' => $baseDir . '/packages/behin-file-service/src/Services/File/FileService.php',
     'FileService\\Services\\File\\FileToolsService' => $baseDir . '/packages/behin-file-service/src/Services/File/FileToolsService.php',
+    'Firebase\\JWT\\BeforeValidException' => $vendorDir . '/firebase/php-jwt/src/BeforeValidException.php',
+    'Firebase\\JWT\\CachedKeySet' => $vendorDir . '/firebase/php-jwt/src/CachedKeySet.php',
+    'Firebase\\JWT\\ExpiredException' => $vendorDir . '/firebase/php-jwt/src/ExpiredException.php',
+    'Firebase\\JWT\\JWK' => $vendorDir . '/firebase/php-jwt/src/JWK.php',
+    'Firebase\\JWT\\JWT' => $vendorDir . '/firebase/php-jwt/src/JWT.php',
+    'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => $vendorDir . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
+    'Firebase\\JWT\\Key' => $vendorDir . '/firebase/php-jwt/src/Key.php',
+    'Firebase\\JWT\\SignatureInvalidException' => $vendorDir . '/firebase/php-jwt/src/SignatureInvalidException.php',
     'Fruitcake\\Cors\\CorsService' => $vendorDir . '/fruitcake/php-cors/src/CorsService.php',
     'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => $vendorDir . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
     'GrahamCampbell\\ResultType\\Error' => $vendorDir . '/graham-campbell/result-type/src/Error.php',
