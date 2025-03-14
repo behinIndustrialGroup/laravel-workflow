@@ -26,16 +26,9 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
 });
 
 Route::get('/pusher/beams-auth', function (Request $request) {
-    $userID = auth()->id(); // بررسی احراز هویت
-    
-
-    $beamsClient = new PushNotifications([
-        'instanceId' => env('PUSHER_INSTANCE_ID'),
-        'secretKey' => env('PUSHER_SECRET_KEY')
+    return response()->json([
+        'token' => auth()->beams_token
     ]);
-
-    $beamsToken = $beamsClient->generateToken($userID);
-    return response()->json($beamsToken);
 })->middleware('auth');
 
 Route::get('build-app', function(){
