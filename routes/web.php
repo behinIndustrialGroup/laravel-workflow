@@ -26,8 +26,9 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
 });
 
 Route::get('/pusher/beams-auth', function (Request $request) {
+    $user = auth()->user()->id;
     return response()->json([
-        'token' => auth()->beams_token
+        'token' => $user->beams_token
     ]);
 })->middleware('auth');
 
