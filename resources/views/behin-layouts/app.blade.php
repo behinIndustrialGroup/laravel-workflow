@@ -135,7 +135,7 @@
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
     <script>
         const beamsClient = new PusherPushNotifications.Client({
-            instanceId: '6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b',
+            instanceId: '{{ env('PUSHER_INSTANCE_ID') }}',
         });
 
         beamsClient
@@ -149,17 +149,27 @@
             })
             .catch(console.error);
 
-        beamsClient.getUserId()
-            .then(userId => {
-                if (userId) {
-                    console.log(`توکن با موفقیت به کاربر ${userId} تخصیص داده شده است.`);
-                } else {
-                    console.log('هیچ کاربری به توکن اختصاص داده نشده است.');
-                }
-            })
-            .catch(err => {
-                console.error('خطا در دریافت اطلاعات کاربر:', err);
-            });
+        const beamsTokenProvider = {
+            fetchToken: () => {
+                return fetch('{{ url('pusher/beams-auth') }}', {
+                        method: 'GET',
+                        credentials: 'include' // مهم برای احراز هویت
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('خطا در دریافت توکن');
+                        }
+                        return response.json();
+                    })
+                    .then(data => data.token);
+            }
+        };
+
+        beamsClient
+            .start()
+            .then(() => beamsClient.setUserId('{{ auth()->id() }}', beamsTokenProvider))
+            .then(() => console.log("توکن با موفقیت اختصاص داده شد."))
+            .catch(console.error);
     </script>
     <script>
         // Pusher.logToConsole = true;

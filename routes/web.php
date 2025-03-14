@@ -1,5 +1,6 @@
 <?php
 
+use Behin\SimpleWorkflow\Controllers\Core\PushNotifications;
 use BehinInit\App\Http\Middleware\Access;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -24,29 +25,21 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
     })->name('dashboard');
 });
 
-Route::any('/broadcasting/auth', function () {
-    $response = Http::withHeaders([
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer 9924F201697A95F35835AF36734EB0BA50E9B99E7E5484EB00F1D3D52E51B90F',
-    ])
-    ->post('https://6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b.pushnotifications.pusher.com/publish_api/v1/instances/6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b/publishes', [
-        'interests' => ['hello'],
-        'web' => [
-            'notification' => [
-                'title' => 'Hello',
-                'body' => 'Hello, world!',
-            ],
-        ],
-    ]);
-    
-    // بررسی پاسخ دریافتی
-    if ($response->successful()) {
-        // درخواست موفقیت‌آمیز بوده است
-        dd($response->json());
-    } else {
-        // درخواست با خطا مواجه شده است
-        dd($response->body());
+Route::get('/pusher/beams-auth', function (Request $request) {
+    $userID = auth()->id(); // بررسی احراز هویت
+    $userIDInQueryParam = $request->query('user_id');
+
+    if ($userID != $userIDInQueryParam) {
+        return response('درخواست نامعتبر', 401);
     }
+
+    $beamsClient = new PushNotifications([
+        'instanceId' => env('PUSHER_INSTANCE_ID'),
+        'secretKey' => env('PUSHER_SECRET_KEY')
+    ]);
+
+    $beamsToken = $beamsClient->generateToken($userID);
+    return response()->json($beamsToken);
 })->middleware('auth');
 
 Route::get('build-app', function(){

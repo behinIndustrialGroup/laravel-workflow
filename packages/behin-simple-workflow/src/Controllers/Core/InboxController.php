@@ -138,7 +138,10 @@ class InboxController extends Controller
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
         $user = User::find($inbox->actor);
-        $publishResponse = new PushNotificationController(["instanceId" => "6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b", "secretKey" => "9924F201697A95F35835AF36734EB0BA50E9B99E7E5484EB00F1D3D52E51B90F"]);
+        $publishResponse = new PushNotificationController([
+            'instanceId' => env('PUSHER_INSTANCE_ID'),
+            'secretKey' => env('PUSHER_SECRET_KEY')
+        ]);
         $publishResponse->publishToUsers(["user-".$user->id], [
             'web' => [
                 'notification' => [

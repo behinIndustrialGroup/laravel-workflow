@@ -28,7 +28,10 @@ class LoginController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        $publishResponse = new PushNotificationController(["instanceId" => "6eb4fa4d-2ab6-4d5e-bd9c-68f5668c732b", "secretKey" => "9924F201697A95F35835AF36734EB0BA50E9B99E7E5484EB00F1D3D52E51B90F"]);
+        $publishResponse = new PushNotificationController([
+            'instanceId' => env('PUSHER_INSTANCE_ID'),
+            'secretKey' => env('PUSHER_SECRET_KEY')
+        ]);
         $userId = Auth::user()->id;
         $user = User::find($userId);
         $beamsToken = $publishResponse->generateToken($userId);
