@@ -94,7 +94,7 @@
                                 <option value="<" ><</option>
                                 <option value=">=" >>=</option>
                                 <option value="<=" ><=</option>
-                                <option value="!=" !=</option>
+                                <option value="!="> !=</option>
                             </select>
                         </td>
                         <td><input type="text" name="value[{{ $index }}]" class="form-control" id=""
