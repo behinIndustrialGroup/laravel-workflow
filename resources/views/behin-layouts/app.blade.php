@@ -136,21 +136,13 @@
     <script>
         console.log("{{ config('broadcasting.pusher.instanceId') }}");
         console.log("{{ config('broadcasting.pusher.secretKey') }}");
-        
-        const beamsClient = new PusherPushNotifications.Client({
-            instanceId: '{{ config('broadcasting.pusher.instanceId') }}',
-            secretKey: '{{ config('broadcasting.pusher.secretKey') }}',
+        const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
+            url: "{{ url('/pusher/beams-auth') }}"
         });
 
         beamsClient
             .start()
-            .then(() => {
-                // از توکن ذخیره شده برای ارتباط دستگاه با کاربر استفاده کنید
-                const userId = "{{ Auth::id() }}"; // شناسه کاربر که در دیتابیس ذخیره شده
-                const beamsToken = "{{ Auth::user()->beams_token }}"; // توکن Beams که در هنگام ورود ذخیره کرده‌اید
-
-                return beamsClient.setUserId(userId, beamsToken);
-            })
+            .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
             .catch(console.error);
         beamsClient.getUserId()
             .then(userId => {
