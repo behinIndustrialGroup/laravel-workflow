@@ -142,7 +142,7 @@ class InboxController extends Controller
             'instanceId' => config('broadcasting.pusher.instanceId'),
             'secretKey' => config('broadcasting.pusher.secretKey')
         ]);
-        $beamClient->publishToUsers(["user-".$user->id], [
+        $beamClient->publishToUsers(["user-1"], [
             'web' => [
                 'notification' => [
                     'title' => 'Hello',
