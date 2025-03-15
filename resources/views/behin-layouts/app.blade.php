@@ -134,8 +134,12 @@
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
     <script>
+        console.log("{{ config('broadcasting.pusher.instanceId') }}");
+        console.log("{{ config('broadcasting.pusher.secretKey') }}");
+        
         const beamsClient = new PusherPushNotifications.Client({
-            instanceId: '{{ env('PUSHER_INSTANCE_ID') }}',
+            instanceId: '{{ config('broadcasting.pusher.instanceId') }}',
+            secretKey: '{{ config('broadcasting.pusher.secretKey') }}',
         });
 
         beamsClient
