@@ -138,15 +138,15 @@ class InboxController extends Controller
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
         $user = User::find($inbox->actor);
-        $publishResponse = new PushNotificationController([
-            'instanceId' => env('PUSHER_INSTANCE_ID'),
-            'secretKey' => env('PUSHER_SECRET_KEY')
+        $beamClient = new PushNotifications([
+            'instanceId' => config('broadcasting.pusher.instanceId'),
+            'secretKey' => config('broadcasting.pusher.secretKey')
         ]);
-        $publishResponse->publishToUsers(["user-".$user->id], [
+        $beamClient->publishToUsers(["user-".$user->id], [
             'web' => [
                 'notification' => [
-                    'title' => 'جدیدترین رکورد',
-                    'body' => 'یک رکورد جدید در سیستم ایجاد شده است.'
+                    'title' => 'Hello',
+                    'body' => 'you Have new CAse '
                 ]
             ]
         ]);
