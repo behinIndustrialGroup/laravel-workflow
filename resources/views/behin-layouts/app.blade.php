@@ -140,6 +140,9 @@
             url: "{{ url('/pusher/beams-auth') }}"
         });
 
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: "{{ config('broadcasting.pusher.instanceId') }}",
+        });
         beamsClient
             .start()
             .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
