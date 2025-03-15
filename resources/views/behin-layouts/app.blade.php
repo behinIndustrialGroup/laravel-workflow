@@ -134,19 +134,21 @@
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
     <script>
-        console.log("{{ config('broadcasting.pusher.instanceId') }}");
-        console.log("{{ config('broadcasting.pusher.secretKey') }}");
-        const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
-            url: "{{ url('/pusher/beams-auth') }}"
-        });
-
         const beamsClient = new PusherPushNotifications.Client({
             instanceId: "{{ config('broadcasting.pusher.instanceId') }}",
         });
-        beamsClient
-            .start()
-            .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
-            .catch(console.error);
+        @if (!Auth::user()->beams_token)
+            const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
+                url: "{{ url('/pusher/beams-auth') }}"
+            });
+
+
+            beamsClient
+                .start()
+                .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
+                .catch(console.error);
+        @endif
+
         beamsClient.getUserId()
             .then(userId => {
                 if (userId) {
