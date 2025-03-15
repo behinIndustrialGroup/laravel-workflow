@@ -137,17 +137,15 @@
         const beamsClient = new PusherPushNotifications.Client({
             instanceId: "{{ config('broadcasting.pusher.instanceId') }}",
         });
-        @if (!Auth::user()->beams_token)
-            const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
-                url: "{{ url('/pusher/beams-auth') }}"
-            });
+        const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
+            url: "{{ url('/pusher/beams-auth') }}"
+        });
 
 
-            beamsClient
-                .start()
-                .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
-                .catch(console.error);
-        @endif
+        beamsClient
+            .start()
+            .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
+            .catch(console.error);
 
         beamsClient.getUserId()
             .then(userId => {
