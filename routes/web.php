@@ -27,10 +27,16 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class
 });
 
 Route::get('/pusher/beams-auth', function (Request $request) {
+    $beamsClient = new PushNotifications([
+        'instanceId' => config('broadcasting.pusher.instanceId'),
+        'secretKey' => config('broadcasting.pusher.secretKey')
+    ]);
     $userId = auth()->user()->id;
-    $user = User::find($userId);
+    $beamsToken = $beamsClient->generateToken('user-'.$userId);
+    // $user = User::find($userId);
+    return response()->json($beamsToken);
     return response()->json([
-        'token' => $user->beams_token
+        'token' => $beamsToken
     ]);
 })->middleware('auth');
 

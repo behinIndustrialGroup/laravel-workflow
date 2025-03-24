@@ -27,7 +27,7 @@ class InboxController extends Controller
     public static function create($taskId, $caseId, $actor, $status = 'new', $caseName = null)
     {
         $task = TaskController::getById($taskId);
-        if($caseName == null)
+        if ($caseName == null)
             $createCaseName = self::createCaseName($task, $caseId);
         else
             $createCaseName = $caseName;
@@ -40,7 +40,7 @@ class InboxController extends Controller
             // 'case_name' => $createCaseName
         ]);
         self::editCaseName($inbox->id, $createCaseName);
-        
+
         return $inbox;
     }
 
@@ -64,10 +64,9 @@ class InboxController extends Controller
     public static function changeStatusByInboxId($inboxId, $status)
     {
         $inboxRow = self::getById($inboxId);
-        if($inboxRow->status == 'done' and $inboxRow->actor != Auth::id()){
+        if ($inboxRow->status == 'done' and $inboxRow->actor != Auth::id()) {
             $inboxRow->status = 'doneByOther';
-        }
-        else{
+        } else {
             $inboxRow->status = $status;
         }
         $inboxRow->save();
@@ -138,18 +137,21 @@ class InboxController extends Controller
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
         $user = User::find($inbox->actor);
-        $beamClient = new PushNotifications([
+        $beamsClient = new PushNotifications([
             'instanceId' => config('broadcasting.pusher.instanceId'),
             'secretKey' => config('broadcasting.pusher.secretKey')
         ]);
-        $beamClient->publishToUsers(["user-1"], [
-            'web' => [
-                'notification' => [
-                    'title' => 'Hello',
-                    'body' => 'you Have new CAse '
-                ]
-            ]
-        ]);
+
+        $publishResponse = $beamsClient->publishToUsers(
+            array("user-$user->id"),
+            array(
+              "web" => array(
+                "notification" => array(
+                  "title" => "کارجدید",
+                  "body" => "کار جدید بهتون ارجاع داده شد"
+                )
+              )
+          ));
         if ($task->type == 'form') {
             if (!isset($form->content)) {
                 return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('Form not found'));
@@ -172,10 +174,10 @@ class InboxController extends Controller
     {
         $inbox = self::getById($id);
         // if($inbox->status == 'draft'){
-            $inbox->delete();
-            return redirect()->route('simpleWorkflow.inbox.index')->with('success', trans('fields.Inbox deleted successfully'));
+        $inbox->delete();
+        return redirect()->route('simpleWorkflow.inbox.index')->with('success', trans('fields.Inbox deleted successfully'));
         // }
-        
+
     }
 
     public static function createCaseName(Task $task, $caseId)

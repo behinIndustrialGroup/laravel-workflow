@@ -141,44 +141,14 @@
             url: "{{ url('/pusher/beams-auth') }}"
         });
 
-
+        // beamsClient.stop().catch(console.error);
         beamsClient
             .start()
-            .then(() => beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider))
-            .catch(console.error);
-
-        beamsClient.getUserId()
-            .then(userId => {
-                if (userId) {
-                    console.log(`توکن با موفقیت به کاربر ${userId} تخصیص داده شده است.`);
-                } else {
-                    console.log('هیچ کاربری به توکن اختصاص داده نشده است.');
-                }
+            .then(() => {
+                // beamsClient.stop().catch(console.error);
+                beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider)
             })
-            .catch(err => {
-                console.error('خطا در دریافت اطلاعات کاربر:', err);
-            });
-    </script>
-    <script>
-        // Pusher.logToConsole = true;
-
-        // var pusher = new Pusher("{{ config('broadcasting.connections.pusher.key') }}", {
-        //     cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
-        //     encrypted: true,
-        //     channelAuthorization: {
-        //         endpoint: "/laravel-workflow/broadcasting/auth",
-        //         headers: {
-        //             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //     }
-        // });
-
-        // // دریافت نوتیفیکیشن در کانال کاربر
-        // var channel = pusher.subscribe("private-user.{{ auth()->id() }}");
-
-        // channel.bind('NewInboxEvent', function(data) {
-        //     alert('پرونده جدید: ' + data.case_name);
-        // });
+            .catch(console.error);
     </script>
 
 
