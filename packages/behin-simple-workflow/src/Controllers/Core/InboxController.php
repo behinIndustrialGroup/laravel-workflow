@@ -143,7 +143,7 @@ class InboxController extends Controller
         ]);
 
         $publishResponse = $beamsClient->publishToUsers(
-            array("user-$user->id"),
+            array("user-mobile-$user->id"),
             array(
               "web" => array(
                 "notification" => array(

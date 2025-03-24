@@ -32,7 +32,7 @@ Route::get('/pusher/beams-auth', function (Request $request) {
         'secretKey' => config('broadcasting.pusher.secretKey')
     ]);
     $userId = auth()->user()->id;
-    $beamsToken = $beamsClient->generateToken('user-'.$userId);
+    $beamsToken = $beamsClient->generateToken('user-mobile-'.$userId);
     // $user = User::find($userId);
     return response()->json($beamsToken);
     return response()->json([

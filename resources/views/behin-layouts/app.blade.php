@@ -146,7 +146,7 @@
             .start()
             .then(() => {
                 // beamsClient.stop().catch(console.error);
-                beamsClient.setUserId("user-{{ Auth::id() }}", beamsTokenProvider)
+                beamsClient.setUserId("user-moblie-{{ Auth::id() }}", beamsTokenProvider)
             })
             .catch(console.error);
     </script>
