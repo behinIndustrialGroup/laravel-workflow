@@ -36,7 +36,9 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    $leavesRequests = DB::table('wf_entity_timeoffs')->join('wf_variables', 'wf_variables.value', '=', 'wf_entity_timeoffs.uniqueId')->get();
+    $leavesRequests = DB::table('wf_variables')->select(
+        DB::raw('CASE WHEN key = "timeoff_hourly_request_start_date" THEN value END as start_date')
+    )->where('process_id', $process->id)->get();
     echo '<pre>';
     foreach ($leavesRequests as $leavesRequest) {
         print_r($leavesRequest);
