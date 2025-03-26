@@ -142,8 +142,10 @@
                                         $today = Carbon::today();
                                         $start_date = convertPersianToEnglish($case->getVariable('timeoff_start_date'));
                                         $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
+                                        $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
+                                        $endMonth = Jalalian::fromFormat('Y-m-d', $end_date)->format('%m');
                                     @endphp
-                                    @if ($thisMonth == $startMonth)
+                                    @if ($thisMonth == $startMonth || $thisMonth == $endMonth)
                                         @php
                                             $thisMonthLeaves[] = $case;
                                         @endphp
