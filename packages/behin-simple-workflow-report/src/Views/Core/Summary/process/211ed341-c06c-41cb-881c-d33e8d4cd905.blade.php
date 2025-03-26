@@ -101,11 +101,11 @@
                                         $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                                         $endMonth = Jalalian::fromFormat('Y-m-d', $end_date)->format('%m');
                                     @endphp
-                                    {{-- @if ($thisMonth == $startMonth || $thisMonth == $endMonth) --}}
+                                    @if ($thisMonth == $startMonth || $thisMonth == $endMonth)
                                         @php
                                             $thisMonthLeaves[] = $case;
                                         @endphp
-                                    {{-- @endif --}}
+                                    @endif
                                 @endif
                             @endforeach
                         @else
