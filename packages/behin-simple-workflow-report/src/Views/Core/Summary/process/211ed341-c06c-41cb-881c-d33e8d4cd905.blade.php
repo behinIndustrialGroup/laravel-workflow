@@ -36,14 +36,46 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    $leavesRequests = DB::table('wf_variables')->select(
-        DB::raw('CASE WHEN key = "timeoff_hourly_request_start_date" THEN value END as start_date')
-    )->where('process_id', $process->id)->get();
-    echo '<pre>';
-    foreach ($leavesRequests as $leavesRequest) {
-        print_r($leavesRequest);
+    $leavesRequests = DB::table('wf_entity_timeoffs')->get();
+    foreach ($process->cases as $case) {
+        $uniqueId = $case->getVariable('timeoff_uniqueId');
+        $type = $case->getVariable('timeoff_request_type');
+        if($type === 'ساعتی'){
+            $start = $case->getVariable('timeoff_hourly_request_start_date');
+            $start = convertPersianToEnglish($start);
+            $start = Jalalian::fromFormat('Y-m-d', $start);
+            $startYear = $start->getYear();
+            $startMonth = $start->getMonth();
+            $startDay = $start->getDay();
+            $endYear = $start->getYear();
+            $endMonth = $start->getMonth();
+            $endDay = $start->getDay();
+        }else{
+            $start = $case->getVariable('timeoff_start_date');
+            $start = convertPersianToEnglish($start);
+            $start = Jalalian::fromFormat('Y-m-d', $start);
+            $startYear = $start->getYear();
+            $startMonth = $start->getMonth();
+            $startDay = $start->getDay();
+            $end = $case->getVariable('timeoff_end_date');
+            $end = convertPersianToEnglish($end);
+            $end = Jalalian::fromFormat('Y-m-d', $end);
+            $endYear = $end->getYear();
+            $endMonth = $end->getMonth();
+            $endDay = $end->getDay();
+        }
+        $leavesRequests = $leavesRequests->where('uniqueId', $uniqueId);
+        if($leavesRequests->count() > 0) {
+            $leavesRequests = $leavesRequests->first();
+            $leavesRequests->start_year = $startYear;
+            $leavesRequests->start_month = $startMonth;
+            $leavesRequests->start_day = $startDay;
+            $leavesRequests->end_year = $endYear;
+            $leavesRequests->end_month = $endMonth;
+            $leavesRequests->end_day = $endDay;
+            $leavesRequests->save();
+        }
     }
-    echo '</pre>';
 @endphp
 
 
