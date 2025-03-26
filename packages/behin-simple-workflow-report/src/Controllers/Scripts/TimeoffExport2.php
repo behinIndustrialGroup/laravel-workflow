@@ -69,7 +69,7 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $dur = ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     if($user_department_manager_approval == "تایید است"){
                         // $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
-                        $duration += $case->getVaribale('timeoff_daily_request_duration') *8;
+                        $duration += $case->getVariable('timeoff_daily_request_duration') *8;
                     }
                     if ($thisMonth == $startMonth || $thisMonth == $endMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
