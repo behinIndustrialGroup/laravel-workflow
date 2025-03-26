@@ -99,7 +99,7 @@ class ScriptController extends Controller
         try {
             $result = self::runScript($id, $request->caseId, true);
         } catch (\Exception $e) {
-            $result = $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile();
+            $result = $e->getMessage();
         }
         return $result;
     }
