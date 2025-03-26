@@ -17,8 +17,8 @@
     $monthlyLeaves = DB::table('wf_entity_timeoffs')
         ->select(
             'user',
-            'request_year',
-            'request_month',
+            'start_year',
+            'start_month',
             DB::raw('SUM(CASE WHEN approved = 1 THEN duration ELSE 0 END) as approved_leaves'),
             DB::raw('SUM(CASE WHEN approved = 0 THEN duration ELSE 0 END) as pending_or_rejected_leaves'),
             DB::raw('SUM(CASE WHEN type = "ساعتی" THEN duration ELSE duration*8 END) as total_leaves'),
@@ -36,55 +36,8 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    foreach ($process->cases as $case) {
-        $uniqueId = $case->getVariable('timeoff_uniqueId');
-        $type = $case->getVariable('timeoff_request_type');
-        $startYear = null;
-        $startMonth = null;
-        $startDay = null;
-        $endYear = null;
-        $endMonth = null;
-        $endDay = null;
-        if ($type === 'ساعتی') {
-            $start = $case->getVariable('timeoff_hourly_request_start_date');
-            $start = convertPersianToEnglish($start);
-            if ($start) {
-                $start = Jalalian::fromFormat('Y-m-d', $start);
-                $startYear = $start->getYear();
-                $startMonth = $start->getMonth();
-                $startDay = $start->getDay();
-                $endYear = $start->getYear();
-                $endMonth = $start->getMonth();
-                $endDay = $start->getDay();
-            }
-        } else {
-            $start = $case->getVariable('timeoff_start_date');
-            $start = convertPersianToEnglish($start);
-            if ($start) {
-                $start = Jalalian::fromFormat('Y-m-d', $start);
-                $startYear = $start->getYear();
-                $startMonth = $start->getMonth();
-                $startDay = $start->getDay();
-                $end = $case->getVariable('timeoff_end_date');
-                $end = convertPersianToEnglish($end);
-                $end = Jalalian::fromFormat('Y-m-d', $end);
-                $endYear = $end->getYear();
-                $endMonth = $end->getMonth();
-                $endDay = $end->getDay();
-            }
-        }
-        $leavesRequests = DB::table('wf_entity_timeoffs')->where('uniqueId', $uniqueId);
-        if ($leavesRequests) {
-            $leavesRequests->update([
-                'start_year' => $startYear,
-                'start_month' => $startMonth,
-                'start_day' => $startDay,
-                'end_year' => $endYear,
-                'end_month' => $endMonth,
-                'end_day' => $endDay,
-            ]);
-        }
-    }
+    
+    
 @endphp
 
 
@@ -218,8 +171,8 @@
                                                 <tr>
                                                     <td>{{ getUserInfo($leave->user)?->number }}</td>
                                                     <td>{{ getUserInfo($leave->user)?->name }}</td>
-                                                    <td>{{ $leave->request_year }}</td>
-                                                    <td>{{ $leave->request_month }}</td>
+                                                    <td>{{ $leave->start_year }}</td>
+                                                    <td>{{ $leave->start_month }}</td>
                                                     <td dir="ltr">
                                                         @if (auth()->user()->access('تغییر مانده مرخصی ها'))
                                                             <form
@@ -243,7 +196,7 @@
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="?userId={{ $leave->user }}&year={{ $leave->request_year }}&month={{ $leave->request_month }}">
+                                                            href="?userId={{ $leave->user }}&year={{ $leave->start_year }}&month={{ $leave->start_month }}">
                                                             <button
                                                                 class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
                                                         </a>
