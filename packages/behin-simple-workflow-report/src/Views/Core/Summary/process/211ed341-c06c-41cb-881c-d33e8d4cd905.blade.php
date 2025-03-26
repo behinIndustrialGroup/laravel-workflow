@@ -36,44 +36,53 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    $leavesRequests = DB::table('wf_entity_timeoffs')->get();
     foreach ($process->cases as $case) {
         $uniqueId = $case->getVariable('timeoff_uniqueId');
         $type = $case->getVariable('timeoff_request_type');
-        if($type === 'ساعتی'){
+        $startYear = null;
+        $startMonth = null;
+        $startDay = null;
+        $endYear = null;
+        $endMonth = null;
+        $endDay = null;
+        if ($type === 'ساعتی') {
             $start = $case->getVariable('timeoff_hourly_request_start_date');
             $start = convertPersianToEnglish($start);
-            $start = Jalalian::fromFormat('Y-m-d', $start);
-            $startYear = $start->getYear();
-            $startMonth = $start->getMonth();
-            $startDay = $start->getDay();
-            $endYear = $start->getYear();
-            $endMonth = $start->getMonth();
-            $endDay = $start->getDay();
-        }else{
+            if ($start) {
+                $start = Jalalian::fromFormat('Y-m-d', $start);
+                $startYear = $start->getYear();
+                $startMonth = $start->getMonth();
+                $startDay = $start->getDay();
+                $endYear = $start->getYear();
+                $endMonth = $start->getMonth();
+                $endDay = $start->getDay();
+            }
+        } else {
             $start = $case->getVariable('timeoff_start_date');
             $start = convertPersianToEnglish($start);
-            $start = Jalalian::fromFormat('Y-m-d', $start);
-            $startYear = $start->getYear();
-            $startMonth = $start->getMonth();
-            $startDay = $start->getDay();
-            $end = $case->getVariable('timeoff_end_date');
-            $end = convertPersianToEnglish($end);
-            $end = Jalalian::fromFormat('Y-m-d', $end);
-            $endYear = $end->getYear();
-            $endMonth = $end->getMonth();
-            $endDay = $end->getDay();
+            if ($start) {
+                $start = Jalalian::fromFormat('Y-m-d', $start);
+                $startYear = $start->getYear();
+                $startMonth = $start->getMonth();
+                $startDay = $start->getDay();
+                $end = $case->getVariable('timeoff_end_date');
+                $end = convertPersianToEnglish($end);
+                $end = Jalalian::fromFormat('Y-m-d', $end);
+                $endYear = $end->getYear();
+                $endMonth = $end->getMonth();
+                $endDay = $end->getDay();
+            }
         }
-        $leavesRequests = $leavesRequests->where('uniqueId', $uniqueId);
-        if($leavesRequests->count() > 0) {
-            $leavesRequests = $leavesRequests->first();
-            $leavesRequests->start_year = $startYear;
-            $leavesRequests->start_month = $startMonth;
-            $leavesRequests->start_day = $startDay;
-            $leavesRequests->end_year = $endYear;
-            $leavesRequests->end_month = $endMonth;
-            $leavesRequests->end_day = $endDay;
-            $leavesRequests->save();
+        $leavesRequests = DB::table('wf_entity_timeoffs')->where('uniqueId', $uniqueId);
+        if ($leavesRequests) {
+            $leavesRequests->update([
+                'start_year' => $startYear,
+                'start_month' => $startMonth,
+                'start_day' => $startDay,
+                'end_year' => $endYear,
+                'end_month' => $endMonth,
+                'end_day' => $endDay,
+            ]);
         }
     }
 @endphp
@@ -248,12 +257,13 @@
                 @endif
 
                 <div class="card">
-                    <a href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id, 'userId' => $_GET['userId'] ?? '']) }}">
+                    <a
+                        href="{{ route('simpleWorkflowReport.process.export2', ['processId' => $process->id, 'userId' => $_GET['userId'] ?? '']) }}">
                         <button class="btn btn-primary btn-sm">{{ trans('fields.Excel') }}</button>
                     </a>
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های ساعتی {{ $user->name ?? '' }}
-                        
+
                     </div>
 
                     <div class="card-body">
@@ -304,7 +314,7 @@
                 <div class="card">
                     <div class="card-header text-center bg-warning">
                         جدول مرخصی های روزانه {{ $user->name ?? '' }}
-                        
+
                     </div>
 
                     <div class="card-body">
