@@ -65,11 +65,12 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startMonth = Jalalian::fromFormat('Y-m-d', $start_date)->format('%m');
                     $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                     $endDateGregorian = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
+                    $endMonth = Jalalian::fromFormat('Y-m-d', $end_date)->format('%m');
                     $dur = ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     if($user_department_manager_approval == "تایید است"){
                         $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
                     }
-                    if ($thisMonth == $startMonth) {
+                    if ($thisMonth == $startMonth || $thisMonth == $endMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
                         $thisMonthLeaves[] = [
                             getUserInfo($case->creator)->number,
