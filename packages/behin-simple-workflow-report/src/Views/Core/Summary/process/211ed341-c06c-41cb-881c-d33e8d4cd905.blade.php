@@ -98,11 +98,11 @@
                                         $end_date = convertPersianToEnglish($case->getVariable('timeoff_end_date'));
                                         $endMonth = Jalalian::fromFormat('Y-m-d', $end_date)->format('%m');
                                     @endphp
-                                    @if ($thisMonth == $startMonth || $thisMonth == $endMonth)
+                                    {{-- @if ($thisMonth == $startMonth || $thisMonth == $endMonth) --}}
                                         @php
                                             $thisMonthLeaves[] = $case;
                                         @endphp
-                                    @endif
+                                    {{-- @endif --}}
                                 @endif
                             @endforeach
                         @else
@@ -196,7 +196,7 @@
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="?userId={{ $leave->user }}&year={{ $leave->start_year }}&month={{ $leave->start_month }}">
+                                                            href="?userId={{ $leave->user }}&year={{ $thisYear }}&month={{ $thisMonth }}">
                                                             <button
                                                                 class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
                                                         </a>
