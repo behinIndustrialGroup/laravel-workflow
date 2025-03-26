@@ -24,7 +24,7 @@
             DB::raw('SUM(CASE WHEN type = "ساعتی" THEN duration ELSE duration*8 END) as total_leaves'),
         )
         ->where('approved', 1)
-        ->where('request_year', $thisYear)
+        ->where('start_year', $thisYear)
         ->groupBy('user', 'request_year', 'request_month')
         ->orderBy('request_year', 'desc')
         ->orderBy('request_month', 'desc')
