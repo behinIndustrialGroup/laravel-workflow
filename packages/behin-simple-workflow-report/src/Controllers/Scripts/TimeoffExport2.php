@@ -41,10 +41,11 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $startTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_start_time'))->timestamp;
                     $endTime = Carbon::createFromFormat("H:i", $case->getVariable('timeoff_end_time'))->timestamp;
                     $dur = ($endTime - $startTime) / 3600;
-                    if($user_department_manager_approval == "تایید است"){
-                        $duration += ($endTime - $startTime) / 3600;
-                    }
+                    
                     if ($thisMonth == $startMonth) {
+                        if($user_department_manager_approval == "تایید است"){
+                            $duration += ($endTime - $startTime) / 3600;
+                        }
                         $hourlyLeaves[] = [
                             getUserInfo($case->creator)->number,
                             getUserInfo($case->creator)->name,
@@ -67,12 +68,13 @@ class TimeoffExport2 implements FromCollection, WithHeadings, WithStyles
                     $endDateGregorian = Jalalian::fromFormat('Y-m-d', $end_date)->toCarbon();
                     $endMonth = Jalalian::fromFormat('Y-m-d', $end_date)->format('%m');
                     $dur = ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
-                    if($user_department_manager_approval == "تایید است"){
-                        // $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
-                        $duration += $case->getVariable('timeoff_daily_request_duration') *8;
-                    }
+                    
                     if ($thisMonth == $startMonth || $thisMonth == $endMonth) {
                         // $duration = $case->getVariable('timeoff_daily_request_duration');
+                        if($user_department_manager_approval == "تایید است"){
+                            // $duration += ($startDateGregorian->diffInDays($endDateGregorian) + 1) * 8;
+                            $duration += $case->getVariable('timeoff_daily_request_duration') *8;
+                        }
                         $thisMonthLeaves[] = [
                             getUserInfo($case->creator)->number,
                             getUserInfo($case->creator)->name,
