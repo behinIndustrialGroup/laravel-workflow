@@ -37,9 +37,11 @@
     $totalLeaves = $thisMonth * 20;
 
     $leavesRequests = DB::table('wf_entity_timeoffs')->join('wf_variables', 'wf_variables.value', '=', 'wf_entity_timeoffs.uniqueId')->get();
+    echo '<pre>';
     foreach ($leavesRequests as $leavesRequest) {
         print_r($leavesRequest);
     }
+    echo '</pre>';
 @endphp
 
 
