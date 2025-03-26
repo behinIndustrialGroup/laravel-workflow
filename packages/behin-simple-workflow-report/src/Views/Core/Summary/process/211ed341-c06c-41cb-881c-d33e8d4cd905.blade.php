@@ -25,9 +25,9 @@
         )
         ->where('approved', 1)
         ->where('start_year', $thisYear)
-        ->groupBy('user', 'request_year', 'request_month')
-        ->orderBy('request_year', 'desc')
-        ->orderBy('request_month', 'desc')
+        ->groupBy('user', 'start_year', 'start_month')
+        ->orderBy('start_year', 'desc')
+        ->orderBy('start_month', 'desc')
         ->get();
 
     $today = Carbon::today();
