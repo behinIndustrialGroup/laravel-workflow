@@ -8,6 +8,11 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Carbon;
     use Morilog\Jalali\Jalalian;
+    $today = Carbon::today();
+    $todayShamsi = Jalalian::fromCarbon($today);
+    $thisYear = $todayShamsi->getYear();
+    $thisMonth = $todayShamsi->getMonth();
+    $totalLeaves = $thisMonth * 20;
 
     $monthlyLeaves = DB::table('wf_entity_timeoffs')
         ->select(
@@ -19,6 +24,7 @@
             DB::raw('SUM(CASE WHEN type = "ساعتی" THEN duration ELSE duration*8 END) as total_leaves'),
         )
         ->where('approved', 1)
+        ->where('request_year', $thisYear)
         ->groupBy('user', 'request_year', 'request_month')
         ->orderBy('request_year', 'desc')
         ->orderBy('request_month', 'desc')
@@ -26,8 +32,14 @@
 
     $today = Carbon::today();
     $todayShamsi = Jalalian::fromCarbon($today);
+    $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
+
+    $leavesRequests = DB::table('wf_entity_timeoffs')->join('wf_variables', 'wf_variables.value', '=', 'wf_entity_timeoffs.uniqueId')->get();
+    foreach ($leavesRequests as $leavesRequest) {
+        print_r($leavesRequest);
+    }
 @endphp
 
 
