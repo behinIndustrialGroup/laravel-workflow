@@ -20,7 +20,12 @@ class PushNotifications {
 
   private GuzzleHTTP\Client $client;
 
-  public function __construct(private array $options, GuzzleHTTP\Client|null $client = null) {
+  public function __construct(private array $options = [], GuzzleHTTP\Client|null $client = null) {
+    if($options == []){
+      $options['instanceId'] = config('broadcasting.pusher.instanceId');
+      $options['secretKey'] = config('broadcasting.pusher.secretKey');
+      $this->options = $options;
+    }
     if (!array_key_exists("instanceId", $this->options)) {
       throw new \Exception("Required 'instanceId' in Pusher\PushNotifications constructor options");
     }

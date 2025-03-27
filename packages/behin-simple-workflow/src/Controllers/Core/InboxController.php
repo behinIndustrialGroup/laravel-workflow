@@ -40,7 +40,7 @@ class InboxController extends Controller
             // 'case_name' => $createCaseName
         ]);
         self::editCaseName($inbox->id, $createCaseName);
-
+        $inbox->refresh();
         return $inbox;
     }
 
@@ -136,22 +136,8 @@ class InboxController extends Controller
         $process = ProcessController::getById($task->process_id);
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
-        $user = User::find($inbox->actor);
-        $beamsClient = new PushNotifications([
-            'instanceId' => config('broadcasting.pusher.instanceId'),
-            'secretKey' => config('broadcasting.pusher.secretKey')
-        ]);
-
-        $publishResponse = $beamsClient->publishToUsers(
-            array("user-mobile-$user->id"),
-            array(
-              "web" => array(
-                "notification" => array(
-                  "title" => "کارجدید",
-                  "body" => "کار جدید بهتون ارجاع داده شد"
-                )
-              )
-          ));
+        
+        
         if ($task->type == 'form') {
             if (!isset($form->content)) {
                 return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('Form not found'));
@@ -191,12 +177,15 @@ class InboxController extends Controller
 
         // جایگزینی متغیرها در عنوان
         $patterns = config('workflow.patterns');
+        // Log::info(json_encode($patterns));
 
 
         $replacements = [];
         foreach ($patterns as $key) {
-            $replacements[] = $variables[$key] ?? '';
+            // $title = str_replace('@' . $key, $variables[$key] ?? 'پیدا نشد', $title);
+            $replacements[] = $variables[$key] ?? 'پیدا نشد';
         }
+        // return $replacements;
 
         $p = [];
         foreach ($patterns as $key) {

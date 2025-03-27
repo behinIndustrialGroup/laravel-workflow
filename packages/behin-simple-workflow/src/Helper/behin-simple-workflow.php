@@ -15,21 +15,21 @@ use Morilog\Jalali\Jalalian;
 
 if (!function_exists('getProcesses')) {
     function getProcesses() {
-        Log::info("function getProcess Used By user". Auth::user()->name);
+        // Log::info("function getProcess Used By user". Auth::user()->name);
         return ProcessController::getAll();
     }
 }
 
 if (!function_exists('getCases')) {
     function getCases() {
-        Log::info("function getCases Used By user". Auth::user()->name);
+        // Log::info("function getCases Used By user". Auth::user()->name);
         return CaseController::getAll();
     }
 }
 
 if (!function_exists('getProcessForms')) {
     function getProcessForms() {
-        Log::info("function getProcessForms Used By user". Auth::user()->name);
+        // Log::info("function getProcessForms Used By user". Auth::user()->name);
         return FormController::getAll();
     }
 }
@@ -37,35 +37,35 @@ if (!function_exists('getProcessForms')) {
 
 if (!function_exists('getProcessScripts')) {
     function getProcessScripts() {
-        Log::info("function getProcessScripts Used By user". Auth::user()->name);
+        // Log::info("function getProcessScripts Used By user". Auth::user()->name);
         return ScriptController::getAll();
     }
 }
 
 if (!function_exists('getProcessConditions')) {
     function getProcessConditions() {
-        Log::info("function getProcessConditions Used By user". Auth::user()->name);
+        // Log::info("function getProcessConditions Used By user". Auth::user()->name);
         return ConditionController::getAll();
     }
 }
 
 if (!function_exists('getProcessTasks')) {
     function getProcessTasks() {
-        Log::info("function getProcessTasks Used By user". Auth::user()->name);
+        // Log::info("function getProcessTasks Used By user". Auth::user()->name);
         return TaskController::getAll();
     }
 }
 
 if (!function_exists('getProcessFields')) {
     function getProcessFields() {
-        Log::info("function getProcessFields Used By user". Auth::user()->name);
+        // Log::info("function getProcessFields Used By user". Auth::user()->name);
         return FieldController::getAll();
     }
 }
 
 if (!function_exists('getFieldDetailsByName')) {
     function getFieldDetailsByName($fieldName) {
-        Log::info("function getFieldDetailsByName Used By user". Auth::user()->name);
+        // Log::info("function getFieldDetailsByName Used By user". Auth::user()->name);
         return FieldController::getByName($fieldName);
     }
 }
@@ -78,14 +78,14 @@ if (!function_exists('previewForm')) {
 
 if (!function_exists('taskHasError')) {
     function taskHasError($taskId) {
-        Log::info("function taskHasError Used By user". Auth::user()->name);
+        // Log::info("function taskHasError Used By user". Auth::user()->name);
         return TaskController::TaskHasError($taskId);
     }
 }
 
 if (!function_exists('getUserInfo')) {
     function getUserInfo($userId) {
-        Log::info("function getUserInfo Used By user". Auth::user()->name);
+        // Log::info("function getUserInfo Used By user". Auth::user()->name);
         if(!$userId){
             return null;
         }
@@ -99,14 +99,14 @@ if (!function_exists('getUserInfo')) {
 
 if (!function_exists('runScript')) {
     function runScript($id, $caseId) {
-        Log::info("function runScript Used By user". Auth::user()->name);
+        // Log::info("function runScript Used By user". Auth::user()->name);
         return ScriptController::runScript($id, $caseId);
     }
 }
 
 if(!function_exists('toJalali')){
     function toJalali($date){
-        Log::info("function toJalali Used By user". Auth::user()->name);
+        // Log::info("function toJalali Used By user". Auth::user()->name);
         $jDate = Jalalian::fromCarbon($date);
         return $jDate;
     }
@@ -114,7 +114,7 @@ if(!function_exists('toJalali')){
 
 if(!function_exists('getFormInformation')){
     function getFormInformation($id){
-        Log::info("function getFormInformation Used By user". Auth::user()->name);
+        // Log::info("function getFormInformation Used By user". Auth::user()->name);
         return FormController::getById($id);
     }
 }

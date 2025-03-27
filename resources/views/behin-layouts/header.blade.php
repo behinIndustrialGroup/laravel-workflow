@@ -21,6 +21,7 @@ use App\CustomClasses\Access;
                 </a>
             </li>
         @endif
+        <button id="notification-btn" class="btn btn-sm btn-warning">فعال کردن نوتیفیکیشن</button>
     </ul>
 
     <!-- SEARCH FORM -->
@@ -58,9 +59,7 @@ use App\CustomClasses\Access;
         @include('UserProfileViews::partial-views.user-profile-icon')
 
         <li class="mr-4">
-            <a class="" href="{{ route('logout') }}">
-                <i class="fa fa-power-off"></i>
-            </a>
+            <button class="btn btn-sm btn-danger" onclick="logout()"><i class="fa fa-power-off"></i></button>
         </li>
     </ul>
 </nav>

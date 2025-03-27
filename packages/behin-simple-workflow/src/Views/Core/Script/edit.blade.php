@@ -81,7 +81,7 @@
                 <form action="javascript:void(0)" method="POST" id="content-form">
                     @csrf
                     @method('PUT')
-                    <div id="editor" style="height: 80vh; width: 100%;">{{ $executive_file_content }}</div>
+                    <div id="editor" style="height: 80vh; width: 100%;font-size: 16px;">{{ $executive_file_content }}</div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
                         style="text-align: left; white-space: pre; font-family: Monospace; display: none" dir="ltr">{{ $executive_file_content }}</textarea>
                 </form>
