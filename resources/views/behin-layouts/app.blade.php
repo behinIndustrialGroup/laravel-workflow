@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ url('public/behin/logo.ico') . '?' . config('app.version') }}">
+    <link rel="manifest" href="{{ url('manifest.json') . '?' . config('app.version') }}">
 
     <title>@yield('title')</title>
     <!-- Tell the browser to be responsive to screen width -->
@@ -164,7 +165,8 @@
 
             if (Notification.permission === 'granted') {
                 new Notification('نوتیفیکیشن فعال است', {
-                    body: 'شما قبلاً مجوز داده‌اید!'
+                    body: 'شما قبلاً مجوز داده‌اید!',
+                    icon: '{{ url('public/behin/logo.ico') }}'
                 });
             } else if (Notification.permission === 'denied') {
                 alert('شما مجوز نوتیفیکیشن را رد کرده‌اید. لطفاً از تنظیمات مرورگر آن را فعال کنید.');
