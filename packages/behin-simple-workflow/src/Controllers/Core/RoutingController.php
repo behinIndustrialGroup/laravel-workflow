@@ -229,7 +229,7 @@ class RoutingController extends Controller
                                 "notification" => array(
                                   "title" => "کارجدید",
                                   "body" => "کار جدید بهتون ارجاع داده شد: " . $inbox->case_name,
-                                  "icon" => "{{ url('public/behin/logo.png') }}"
+                                  "icon" => url('public/behin/logo.ico')
                                 )
                               )
                           ));
@@ -249,7 +249,7 @@ class RoutingController extends Controller
                                 "notification" => array(
                                   "title" => "کارجدید",
                                   "body" => "کار جدید بهتون ارجاع داده شد: " . $inbox->case_name,
-                                  "icon" => "{{ url('public/behin/logo.png') }}"
+                                  "icon" => url('public/behin/logo.ico')
                                 )
                               )
                           ));
