@@ -21,7 +21,7 @@ use App\CustomClasses\Access;
                 </a>
             </li>
         @endif
-        <button id="notification-btn" class="btn btn-sm btn-warning">فعال کردن نوتیفیکیشن</button>
+        {{-- <button id="notification-btn" class="btn btn-sm btn-warning">فعال کردن نوتیفیکیشن</button> --}}
     </ul>
 
     <!-- SEARCH FORM -->
