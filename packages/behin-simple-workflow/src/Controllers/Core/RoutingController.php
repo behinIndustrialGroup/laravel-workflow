@@ -5,6 +5,7 @@ namespace Behin\SimpleWorkflow\Controllers\Core;
 use App\Http\Controllers\Controller;
 use BaleBot\BaleBotProvider;
 use BaleBot\Controllers\BotController;
+use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
@@ -220,19 +221,12 @@ class RoutingController extends Controller
                     $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
                     foreach ($taskActors as $actor) {
                         $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
-                        $beamsClient = new PushNotifications();
-
-                        $publishResponse = $beamsClient->publishToUsers(
-                            array("user-mobile-$actor"),
-                            array(
-                              "web" => array(
-                                "notification" => array(
-                                  "title" => "کارجدید",
-                                  "body" => "کار جدید بهتون ارجاع داده شد: " . $inbox->case_name,
-                                  "icon" => url('public/behin/logo.ico')
-                                )
-                              )
-                          ));
+                        SendPushNotification::dispatch(
+                            $inbox->actor,
+                            'کار جدید',
+                            'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
+                            route('simpleWorkflow.inbox.view', $inbox->id)
+                        );
                     }
                     // echo json_encode($taskActors);
                 }
@@ -240,19 +234,12 @@ class RoutingController extends Controller
                     $taskActors = TaskActorController::getDynamicTaskActors($task->id, $caseId)->pluck('actor');
                     foreach ($taskActors as $actor) {
                         $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
-                        $beamsClient = new PushNotifications();
-
-                        $publishResponse = $beamsClient->publishToUsers(
-                            array("user-mobile-$actor"),
-                            array(
-                              "web" => array(
-                                "notification" => array(
-                                  "title" => "کارجدید",
-                                  "body" => "کار جدید بهتون ارجاع داده شد: " . $inbox->case_name,
-                                  "icon" => url('public/behin/logo.ico')
-                                )
-                              )
-                          ));
+                        SendPushNotification::dispatch(
+                            $inbox->actor,
+                            'کار جدید',
+                            'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
+                            route('simpleWorkflow.inbox.view', $inbox->id)
+                        );
                     }
                 }
                 if ($task->assignment_type == 'parallel') {
