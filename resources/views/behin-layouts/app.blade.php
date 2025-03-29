@@ -143,12 +143,19 @@
             url: "{{ url('/pusher/beams-auth') }}"
         });
 
-        // beamsClient.stop().catch(console.error);
-        beamsClient
-            .start()
-            .then(() => {
-                // beamsClient.stop().catch(console.error);
-                beamsClient.setUserId("user-moblie-{{ Auth::id() }}", beamsTokenProvider)
+        beamsClient.getUserId()
+            .then(userId => {
+                if (!userId) {
+                    beamsClient.start().then(() => {
+                        const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
+                            url: "{{ url('/pusher/beams-auth') }}"
+                        });
+                        beamsClient.setUserId("{{ config('broadcasting.pusher.prefix_user') }}{{ Auth::id() }}",
+                            beamsTokenProvider)
+                    })
+                }else{
+                    console.log('User ID:', userId);
+                }
             })
             .catch(console.error);
     </script>

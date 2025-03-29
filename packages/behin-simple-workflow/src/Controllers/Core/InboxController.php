@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Events\NewInboxEvent;
 use App\Models\User;
+use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 
 class InboxController extends Controller
 {
@@ -136,7 +137,12 @@ class InboxController extends Controller
         $process = ProcessController::getById($task->process_id);
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
-        
+        SendPushNotification::dispatch(
+            $inbox->actor,
+            'کار جدید',
+            'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
+            route('simpleWorkflow.inbox.view', $inbox->id)
+        );
         
         if ($task->type == 'form') {
             if (!isset($form->content)) {
