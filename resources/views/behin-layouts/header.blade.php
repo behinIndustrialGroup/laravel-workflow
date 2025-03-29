@@ -48,8 +48,8 @@ use App\CustomClasses\Access;
                 <a href="{{ url('admin/messages/list') }}" class="dropdown-item dropdown-footer">نمایش تماام پیام ها</a>
             </div>
         </li> --}}
-        <li class="mr-4">
-            <a href="{{ url('admin') }}" class="">
+        <li class="mr-2">
+            <a href="{{ url('admin') }}" class="btn btn-sm btn-warning">
                 <i class="fa fa-home"></i>
             </a>
         </li>
@@ -58,7 +58,7 @@ use App\CustomClasses\Access;
 
         @include('UserProfileViews::partial-views.user-profile-icon')
 
-        <li class="mr-4">
+        <li class="mr-2">
             <button class="btn btn-sm btn-danger" onclick="logout()"><i class="fa fa-power-off"></i></button>
         </li>
     </ul>
