@@ -176,8 +176,8 @@
                                         <tbody>
                                             @foreach ($monthlyLeaves as $leave)
                                                 <tr>
-                                                    <td>{{ getUserInfo($leave->user)?->number }}</td>
-                                                    <td>{{ getUserInfo($leave->user)?->name }}</td>
+                                                    <td>{{ getUserInfo($leave->user_id)?->number }}</td>
+                                                    <td>{{ getUserInfo($leave->user_id)?->name }}</td>
                                                     <td>{{ $leave->start_year }}</td>
                                                     <td>{{ $leave->start_month }}</td>
                                                     <td dir="ltr">
