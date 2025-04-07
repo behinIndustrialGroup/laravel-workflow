@@ -21,7 +21,8 @@
                 $query->where('start_year', $thisYear)
                     ->orWhere('end_year', $thisYear);
             })
-            ->where('approved', 1);
+            ->where('approved', 1)
+            ->whereNotIn('users.id', [1,43]);
     })
     ->select(
         'users.id as user_id',
