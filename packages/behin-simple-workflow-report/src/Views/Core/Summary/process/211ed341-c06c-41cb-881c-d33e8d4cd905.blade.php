@@ -15,29 +15,33 @@
     $totalLeaves = $thisMonth * 20;
 
     $monthlyLeaves = DB::table('users')
-    ->leftJoin('wf_entity_timeoffs', function($join) use ($thisYear) {
-        $join->on('users.id', '=', 'wf_entity_timeoffs.user')
-            ->where(function ($query) use ($thisYear) {
-                $query->where('start_year', $thisYear)
-                    ->orWhere('end_year', $thisYear);
-            })
-            ->where('approved', 1)
-            ->whereNot('users.id', 1)
-            ->whereNot('users.id', 43);
-    })
-    ->select(
-        'users.id as user_id',
-        'users.name as user_name',
-        'wf_entity_timeoffs.start_year',
-        'wf_entity_timeoffs.start_month',
-        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 1 THEN duration ELSE 0 END), 0) as approved_leaves'),
-        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 0 THEN duration ELSE 0 END), 0) as pending_or_rejected_leaves'),
-        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves')
-    )
-    ->groupBy('users.id', 'users.name', 'wf_entity_timeoffs.start_year', 'wf_entity_timeoffs.start_month')
-    ->orderBy('wf_entity_timeoffs.start_year', 'desc')
-    ->orderBy('wf_entity_timeoffs.start_month', 'desc')
-    ->get();
+        ->leftJoin('wf_entity_timeoffs', function ($join) use ($thisYear) {
+            $join
+                ->on('users.id', '=', 'wf_entity_timeoffs.user')
+                ->where(function ($query) use ($thisYear) {
+                    $query->where('start_year', $thisYear)->orWhere('end_year', $thisYear);
+                })
+                ->where('approved', 1);
+        })
+        ->select(
+            'users.id as user_id',
+            'users.name as user_name',
+            'wf_entity_timeoffs.start_year',
+            'wf_entity_timeoffs.start_month',
+            DB::raw(
+                'COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 1 THEN duration ELSE 0 END), 0) as approved_leaves',
+            ),
+            DB::raw(
+                'COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 0 THEN duration ELSE 0 END), 0) as pending_or_rejected_leaves',
+            ),
+            DB::raw(
+                'COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves',
+            ),
+        )
+        ->groupBy('users.id', 'users.name', 'wf_entity_timeoffs.start_year', 'wf_entity_timeoffs.start_month')
+        ->orderBy('wf_entity_timeoffs.start_year', 'desc')
+        ->orderBy('wf_entity_timeoffs.start_month', 'desc')
+        ->get();
 
     $today = Carbon::today();
     $todayShamsi = Jalalian::fromCarbon($today);
@@ -45,8 +49,6 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    
-    
 @endphp
 
 
@@ -177,40 +179,42 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($monthlyLeaves as $leave)
-                                                <tr>
-                                                    <td>{{ getUserInfo($leave->user_id)?->number }}</td>
-                                                    <td>{{ getUserInfo($leave->user_id)?->name }}</td>
-                                                    <td>{{ $leave->start_year }}</td>
-                                                    <td>{{ $leave->start_month }}</td>
-                                                    <td dir="ltr">
-                                                        @if (auth()->user()->access('تغییر مانده مرخصی ها'))
-                                                            <form
-                                                                action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
-                                                                method="POST" id="leave-form">
-                                                                @csrf
-                                                                <input type="hidden" name="userId" id=""
-                                                                    value="{{ $leave->user_id }}">
-                                                                <input type="hidden" name="restBySystem" id=""
-                                                                    class="form-control"
-                                                                    value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
-                                                                <input type="text" name="restByUser" id=""
-                                                                    value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+                                                @if (!in_array($leaves->user_id, [1, 43]))
+                                                    <tr>
+                                                        <td>{{ getUserInfo($leave->user_id)?->number }}</td>
+                                                        <td>{{ getUserInfo($leave->user_id)?->name }}</td>
+                                                        <td>{{ $leave->start_year }}</td>
+                                                        <td>{{ $leave->start_month }}</td>
+                                                        <td dir="ltr">
+                                                            @if (auth()->user()->access('تغییر مانده مرخصی ها'))
+                                                                <form
+                                                                    action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
+                                                                    method="POST" id="leave-form">
+                                                                    @csrf
+                                                                    <input type="hidden" name="userId" id=""
+                                                                        value="{{ $leave->user_id }}">
+                                                                    <input type="hidden" name="restBySystem" id=""
+                                                                        class="form-control"
+                                                                        value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
+                                                                    <input type="text" name="restByUser" id=""
+                                                                        value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
 
-                                                                <input type="submit" value="ثبت" name=""
-                                                                    id="">
-                                                            </form>
-                                                        @else
-                                                            {{ round($totalLeaves - $leave->total_leaves, 2) }}
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="?userId={{ $leave->user_id }}&year={{ $thisYear }}&month={{ $thisMonth }}">
-                                                            <button
-                                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                                    <input type="submit" value="ثبت" name=""
+                                                                        id="">
+                                                                </form>
+                                                            @else
+                                                                {{ round($totalLeaves - $leave->total_leaves, 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a
+                                                                href="?userId={{ $leave->user_id }}&year={{ $thisYear }}&month={{ $thisMonth }}">
+                                                                <button
+                                                                    class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
