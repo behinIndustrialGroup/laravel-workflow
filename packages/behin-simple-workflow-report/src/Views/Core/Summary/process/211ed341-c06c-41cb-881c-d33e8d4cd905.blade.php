@@ -14,24 +14,28 @@
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
 
-    $monthlyLeaves = DB::table('wf_entity_timeoffs')
-        ->select(
-            'user',
-            'start_year',
-            'start_month',
-            DB::raw('SUM(CASE WHEN approved = 1 THEN duration ELSE 0 END) as approved_leaves'),
-            DB::raw('SUM(CASE WHEN approved = 0 THEN duration ELSE 0 END) as pending_or_rejected_leaves'),
-            DB::raw('SUM(CASE WHEN type = "ساعتی" THEN duration ELSE duration*8 END) as total_leaves'),
-        )
-        ->where('approved', 1)
-        ->where(function($query) use($thisYear){
-            $query->where('start_year', $thisYear)
-                ->orWhere('end_year', $thisYear);
-        })
-        ->groupBy('user', 'start_year', 'start_month')
-        ->orderBy('start_year', 'desc')
-        ->orderBy('start_month', 'desc')
-        ->get();
+    $monthlyLeaves = DB::table('users')
+    ->leftJoin('wf_entity_timeoffs', function($join) use ($thisYear) {
+        $join->on('users.id', '=', 'wf_entity_timeoffs.user')
+            ->where(function ($query) use ($thisYear) {
+                $query->where('start_year', $thisYear)
+                    ->orWhere('end_year', $thisYear);
+            })
+            ->where('approved', 1);
+    })
+    ->select(
+        'users.id as user_id',
+        'users.name as user_name',
+        'wf_entity_timeoffs.start_year',
+        'wf_entity_timeoffs.start_month',
+        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 1 THEN duration ELSE 0 END), 0) as approved_leaves'),
+        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.approved = 0 THEN duration ELSE 0 END), 0) as pending_or_rejected_leaves'),
+        DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves')
+    )
+    ->groupBy('users.id', 'users.name', 'wf_entity_timeoffs.start_year', 'wf_entity_timeoffs.start_month')
+    ->orderBy('wf_entity_timeoffs.start_year', 'desc')
+    ->orderBy('wf_entity_timeoffs.start_month', 'desc')
+    ->get();
 
     $today = Carbon::today();
     $todayShamsi = Jalalian::fromCarbon($today);
