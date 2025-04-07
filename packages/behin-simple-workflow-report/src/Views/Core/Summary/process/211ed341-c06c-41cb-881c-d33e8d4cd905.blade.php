@@ -187,7 +187,7 @@
                                                                 method="POST" id="leave-form">
                                                                 @csrf
                                                                 <input type="hidden" name="userId" id=""
-                                                                    value="{{ $leave->user }}">
+                                                                    value="{{ $leave->user_id }}">
                                                                 <input type="hidden" name="restBySystem" id=""
                                                                     class="form-control"
                                                                     value="{{ round($totalLeaves - $leave->total_leaves, 2) }}">
@@ -203,7 +203,7 @@
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="?userId={{ $leave->user }}&year={{ $thisYear }}&month={{ $thisMonth }}">
+                                                            href="?userId={{ $leave->user_id }}&year={{ $thisYear }}&month={{ $thisMonth }}">
                                                             <button
                                                                 class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
                                                         </a>
