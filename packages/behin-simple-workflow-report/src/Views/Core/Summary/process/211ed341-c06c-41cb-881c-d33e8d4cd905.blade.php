@@ -179,7 +179,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($monthlyLeaves as $leave)
-                                                @if (!in_array($leaves->user_id, [1, 43]))
+                                                @if (!in_array($leave->user_id, [1, 43]))
                                                     <tr>
                                                         <td>{{ getUserInfo($leave->user_id)?->number }}</td>
                                                         <td>{{ getUserInfo($leave->user_id)?->name }}</td>
