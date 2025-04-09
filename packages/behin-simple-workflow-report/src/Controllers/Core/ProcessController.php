@@ -37,7 +37,9 @@ class ProcessController extends Controller
                 'duration' => $duration,
                 'approved' => 1,
                 'request_year' => $year,
+                'start_year' => $year,
                 'request_month' => Jalalian::now()->format('%m'),
+                'start_month' => Jalalian::now()->format('%m'),
                 'uniqueId' => 'به صورت دستی'
             ]
         );

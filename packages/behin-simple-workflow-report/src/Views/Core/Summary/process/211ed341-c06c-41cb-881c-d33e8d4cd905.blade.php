@@ -13,6 +13,23 @@
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
     $totalLeaves = $thisMonth * 20;
+    $users = DB::table('users')->get();
+    foreach($users as $user){
+        $approvedLeaves = DB::table('wf_entity_timeoffs')
+        ->select(
+                DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves')
+            )
+            ->where('user', $user->id)
+            ->where(function ($query) use ($thisYear) {
+                $query->where('start_year', $thisYear)->orWhere('end_year', $thisYear);
+            })
+            ->where('approved', 1)
+            ->first()->total_leaves;
+        $user->approvedLeaves = $approvedLeaves;
+        $restLeaves = ($thisMonth * 20) - $approvedLeaves;
+        $user->restLeaves = $restLeaves;
+            
+    }
 
     $monthlyLeaves = DB::table('users')
         ->leftJoin('wf_entity_timeoffs', function ($join) use ($thisYear) {
@@ -178,7 +195,44 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($monthlyLeaves as $leave)
+                                            @foreach ($users as $user)
+                                                @if (!in_array($user->id, [ 43]))
+                                                    <tr>
+                                                        <td>{{ $user->number }}</td>
+                                                        <td>{{ $user->name }}</td>
+                                                        <td>{{ $thisYear }}</td>
+                                                        <td>{{ $thisMonth }}</td>
+                                                        <td>
+                                                            @if (auth()->user()->access('تغییر مانده مرخصی ها'))
+                                                                <form
+                                                                    action="{{ route('simpleWorkflowReport.process.update', ['processId' => $process->id]) }}"
+                                                                    method="POST" id="leave-form">
+                                                                    @csrf
+                                                                    <input type="hidden" name="userId" id=""
+                                                                        value="{{ $user->id }}">
+                                                                    <input type="hidden" name="restBySystem" id=""
+                                                                        class="form-control"
+                                                                        value="{{ round($user->restLeaves, 2) }}">
+                                                                    <input type="text" name="restByUser" id=""
+                                                                        value="{{ round($user->restLeaves, 2) }}">
+                                                                    <input type="submit" value="ثبت" name=""
+                                                                        class="btn btn-primary btn-sm">
+                                                                </form>
+                                                            @else
+                                                                {{ round($user->restLeaves, 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a
+                                                                href="?userId={{ $user->id }}&year={{ $thisYear }}&month={{ $thisMonth }}">
+                                                                <button
+                                                                    class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            {{-- @foreach ($monthlyLeaves as $leave)
                                                 @if (!in_array($leave->user_id, [1, 43]))
                                                     <tr>
                                                         <td>{{ getUserInfo($leave->user_id)?->number }}</td>
@@ -215,7 +269,7 @@
                                                         </td>
                                                     </tr>
                                                 @endif
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
