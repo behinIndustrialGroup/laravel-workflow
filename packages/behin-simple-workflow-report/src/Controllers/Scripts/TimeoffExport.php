@@ -16,8 +16,35 @@ class TimeoffExport implements FromCollection, WithHeadings, WithStyles
     {
         $today = Carbon::today();
         $todayShamsi = Jalalian::fromCarbon($today);
+        $thisYear = $todayShamsi->getYear();
         $thisMonth = $todayShamsi->getMonth();
         $totalLeaves = $thisMonth * 20; // مقدار کل مرخصی‌ها بر اساس ماه جاری
+        $users = DB::table('users')->get();
+        $ar = [];
+        foreach ($users as $user) {
+            $approvedLeaves = DB::table('wf_entity_timeoffs')
+                ->select(
+                    DB::raw('COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves')
+                )
+                ->where('user', $user->id)
+                ->where(function ($query) use ($thisYear) {
+                    $query->where('start_year', $thisYear)->orWhere('end_year', $thisYear);
+                })
+                ->where('approved', 1)
+                ->first()->total_leaves;
+            $user->approvedLeaves = $approvedLeaves;
+            $restLeaves = ($thisMonth * 20) - $approvedLeaves;
+            $user->restLeaves = $restLeaves;
+            $ar[] = [
+                'user_number' => $user->number,
+                'user_name' => $user->name,
+                'request_year' => $thisYear,
+                'request_month' => $thisMonth,
+                'remaining_leaves' => $restLeaves
+            ];
+        }
+        return collect($ar);
+
 
         return DB::table('wf_entity_timeoffs')
             ->select(
