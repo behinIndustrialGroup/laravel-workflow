@@ -38,7 +38,7 @@
                 'COALESCE(SUM(CASE WHEN wf_entity_timeoffs.type = "ساعتی" THEN duration ELSE duration*8 END), 0) as total_leaves',
             ),
         )
-        ->groupBy('users.id', 'users.name', 'wf_entity_timeoffs.start_year', 'wf_entity_timeoffs.start_month')
+        ->groupBy('users.id', 'users.name', 'wf_entity_timeoffs.start_year')
         ->orderBy('wf_entity_timeoffs.start_year', 'desc')
         ->orderBy('wf_entity_timeoffs.start_month', 'desc')
         ->get();
