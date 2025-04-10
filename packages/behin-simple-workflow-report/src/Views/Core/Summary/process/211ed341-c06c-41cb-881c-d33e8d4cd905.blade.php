@@ -93,6 +93,7 @@
                             @php
                                 $isFiltered = true;
                                 $user = getUserInfo($_GET['userId']);
+                                $tableName = $user->name;
                             @endphp
                             @foreach ($process->cases as $case)
                                 @if (
@@ -284,7 +285,7 @@
                         <button class="btn btn-primary btn-sm">{{ trans('fields.Excel') }}</button>
                     </a>
                     <div class="card-header text-center bg-warning">
-                        جدول مرخصی های ساعتی {{ $user->name ?? '' }}
+                        جدول مرخصی های ساعتی {{ $tableName ?? '' }}
 
                     </div>
 
@@ -335,7 +336,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header text-center bg-warning">
-                        جدول مرخصی های روزانه {{ $user->name ?? '' }}
+                        جدول مرخصی های روزانه {{ $tableName ?? '' }}
 
                     </div>
 
