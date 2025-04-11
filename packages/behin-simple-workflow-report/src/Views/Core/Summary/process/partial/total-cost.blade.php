@@ -49,7 +49,7 @@
                 </div>
                 <div class="table-responsive">
                     <div class="card">
-                        <div class="card-header bg-success">
+                        <div class="card-header bg-success text-center">
                             گزارش مجموع هزینه های دریافت شده
                         </div>
                         <div class="card-body">
@@ -82,7 +82,7 @@
                                             $totalRepairCost += $row->repair_cost;
                                         @endphp
                                     @endforeach
-                                    <tr class="bg-info">
+                                    <tr class="bg-success">
                                         <td></td>
                                         <td></td>
                                         <td></td>
