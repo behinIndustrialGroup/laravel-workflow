@@ -1,3 +1,9 @@
+@if (isset($_GET['q']) && $_GET['q'] == 'total-cost')
+    @include('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost', ['process' => $process])
+    @php
+        exit();
+    @endphp
+@endif
 @extends('behin-layouts.app')
 
 
@@ -16,8 +22,18 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="card-header">
+                        <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
+                            <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
+                        </a>
+                        <a href="{{ url()->current() . '?q=total-cost' }}" class="btn btn-outline-primary float-right">
+                            <i class="fa fa-dollar"></i> {{ trans('fields.Fin Report') }}
+                        </a>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
-                    
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="draft-list">
@@ -40,13 +56,15 @@
                                 <tbody>
                                     @foreach ($process->cases as $case)
                                         @php
-                                            $name = $case->variables()->where('key', 'customer_fullname')->first()?->value;
+                                            $name = $case->variables()->where('key', 'customer_fullname')->first()
+                                                ?->value;
                                             $name .= ' ';
                                             $name .= $case
                                                 ->variables()
                                                 ->where('key', 'customer_workshop_or_ceo_name')
                                                 ->first()?->value;
-                                            $device_name = $case->variables()->where('key', 'device_name')->first()?->value;
+                                            $device_name = $case->variables()->where('key', 'device_name')->first()
+                                                ?->value;
 
                                             $mapa_expert = $case->variables()->where('key', 'mapa_expert')->first()
                                                 ?->value;
@@ -57,7 +75,9 @@
                                         <tr>
                                             {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $case->number }} <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a></td>
+                                            <td>{{ $case->number }} <a
+                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><i
+                                                        class="fa fa-external-link"></i></a></td>
                                             <td>{{ $case->creator()?->name }}</td>
 
                                             <td>{{ $name }}</td>
@@ -75,7 +95,10 @@
                                             @endphp
                                             <td>{!! $w !!}</td>
                                             <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
-                                            <td><a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
+                                            <td><a
+                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><button
+                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
