@@ -21,9 +21,11 @@
             $join->on('wf_variables.case_id', '=', 'mapa.case_id');
         })
         ->leftJoin('users', 'mapa.mapa_expert_id', '=', 'users.id')
+        ->leftJoin('wf_process', 'wf_cases.process_id', '=', 'wf_process.id')
         ->select(
             'wf_variables.case_id',
             'wf_cases.number',
+            'wf_process.name as process_name',
             DB::raw("MAX(CASE WHEN `key` = 'customer_workshop_or_ceo_name' THEN `value` ELSE '' END) AS customer"),
             DB::raw("MAX(CASE WHEN `key` = 'repair_cost' THEN `value` ELSE 0 END) AS repair_cost"),
             DB::raw("MAX(CASE WHEN `key` = 'payment_amount' THEN `value` ELSE 0 END) AS payment_amount"),
@@ -55,6 +57,7 @@
                                 <thead>
                                     <tr>
                                         <th>{{ trans('fields.case_number') }}</th>
+                                        <th>{{ trans('fields.process') }}</th>
                                         <th>{{ trans('fields.customer') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.repair_cost') }}</th>
@@ -69,6 +72,7 @@
                                     @foreach ($finTable as $row)
                                         <tr>
                                             <td>{{ $row->number }}</td>
+                                            <td>{{ $row->process_name }}</td>
                                             <td>{{ $row->customer }}</td>
                                             <td>{{ $row->mapa_expert_name }}</td>
                                             <td>{{ number_format($row->repair_cost) }}</td>
