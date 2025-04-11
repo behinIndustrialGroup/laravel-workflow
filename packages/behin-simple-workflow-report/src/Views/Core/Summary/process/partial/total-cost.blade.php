@@ -49,8 +49,8 @@
                 </div>
                 <div class="table-responsive">
                     <div class="card">
-                        <div class="card-header">
-                            گزارش مجموع هزینه های دریافت شده به ازای کارشناس
+                        <div class="card-header bg-success">
+                            گزارش مجموع هزینه های دریافت شده
                         </div>
                         <div class="card-body">
                             <table class="table" id="total-cost">
