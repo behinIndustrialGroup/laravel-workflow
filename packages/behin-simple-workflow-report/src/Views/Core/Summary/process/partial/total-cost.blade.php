@@ -2,7 +2,7 @@
 
 
 @section('title')
-    خلاصه گزارش فرایند {{ $process->name }}
+    گزارش مالی
 @endsection
 
 @php

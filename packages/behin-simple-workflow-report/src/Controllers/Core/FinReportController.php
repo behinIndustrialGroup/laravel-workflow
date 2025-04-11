@@ -20,6 +20,7 @@ class FinReportController extends Controller
 {
     public function index()
     {
+        return view('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost');
         $vars = VariableController::getAll($fields = ['case_number', 'customer_fullname', 'receive_date', 'device_name', 'repairman', 'payment_amount', 'last_status']);
         $statuses = Variable::where('key', 'last_status')->groupBy('value')->get();
         $repairmans = Variable::where('key', 'repairman')->groupBy('value')->get();
