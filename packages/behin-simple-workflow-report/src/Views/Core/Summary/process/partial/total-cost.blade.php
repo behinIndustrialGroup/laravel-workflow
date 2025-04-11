@@ -85,6 +85,7 @@
                                     <tr class="bg-info">
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td>مجموع</td>
                                         <td>{{ number_format($totalRepairCost) }}</td>
                                         <td>{{ number_format($totalPaymentAmount) }}</td>
