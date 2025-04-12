@@ -7,7 +7,7 @@ use Morilog\Jalali\Jalalian;
 
 class ReportHelper
 {
-    public static function getFilteredFinTable($year = null, $month = null)
+    public static function getFilteredFinTable($year = null, $month = null, $user = null)
     {
         $mapaSubquery = DB::table('wf_variables')
             ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))
@@ -37,6 +37,10 @@ class ReportHelper
             )
             ->groupBy('wf_variables.case_id')
             ->havingRaw('mapa_expert_id is not null');
+
+        if($user) {
+            $query->havingRaw('mapa_expert_id = ' . $user);
+        }
 
         if ($year && $month) {
             // تاریخ شروع ماه شمسی

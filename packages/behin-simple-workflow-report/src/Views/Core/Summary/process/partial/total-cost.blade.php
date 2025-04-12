@@ -18,9 +18,10 @@
 
     $year = isset($_GET['year']) ? $_GET['year'] : null;
     $month = isset($_GET['month']) ? $_GET['month'] : null;
+    $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی
-    $finTable = ReportHelper::getFilteredFinTable($year, $month);
+    $finTable = ReportHelper::getFilteredFinTable($year, $month, $quser);
     // پردازش آمار کاربران
     $users = DB::table('users')
         ->get()
@@ -62,16 +63,29 @@
                                     <label for="" class="col-sm-3 text-left">سال</label>
                                     <select name="year" id="" class="form-control col-sm-9">
                                         @for ($i = $thisYear; $i >= 1403; $i--)
-                                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
+                                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
+                                                {{ $i }}</option>
                                         @endfor
                                     </select>
                                 </div>
                                 <div class="col-sm-3 row">
                                     <label for="" class="col-sm-3 text-left">ماه</label>
                                     <select name="month" id="" class="form-control col-sm-9">
+                                        <option value="">{{ trans('fields.All') }}</option>
                                         @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>{{ $i }}</option>
+                                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>
+                                                {{ $i }}</option>
                                         @endfor
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 row">
+                                    <label for="" class="col-sm-3 text-left">کاربر</label>
+                                    <select name="quser" id="" class="form-control col-sm-9">
+                                        <option value="">{{ trans('fields.All') }}</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
@@ -94,14 +108,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $user)
-                                        <tr>
-                                            <td>{{ $user->number }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ number_format($user->total_external_repair_cost) }}</td>
-                                            <td>{{ number_format($user->total_internal_fix_cost) }}</td>
-                                            <td>{{ $user->repairs_done }}</td>
-                                            <td>{{ $user->repairs_pending }}</td>
-                                        </tr>
+                                        @if ($quser)
+                                            @if ($quser == $user->id)
+                                                <tr>
+                                                    <td>{{ $user->number }}</td>
+                                                    <td>{{ $user->name }}</td>
+                                                    <td>{{ number_format($user->total_external_repair_cost) }}</td>
+                                                    <td>{{ number_format($user->total_internal_fix_cost) }}</td>
+                                                    <td>{{ $user->repairs_done }}</td>
+                                                    <td>{{ $user->repairs_pending }}</td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td>{{ $user->number }}</td>
+                                                <td>{{ $user->name }}</td>
+                                                <td>{{ number_format($user->total_external_repair_cost) }}</td>
+                                                <td>{{ number_format($user->total_internal_fix_cost) }}</td>
+                                                <td>{{ $user->repairs_done }}</td>
+                                                <td>{{ $user->repairs_pending }}</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -139,14 +166,16 @@
                                             {{-- فرایند تعمیر در محل --}}
                                             @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
                                                 <td>{{ $row->number }}
-                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}" target="_blank">
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
+                                                        target="_blank">
                                                         <i class="fa fa-external-link"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                </td>
                                                 <td>{{ number_format($row->repair_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
@@ -156,14 +185,16 @@
                                             {{-- فرایند تعمیر در مدارپرداز --}}
                                             @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
                                                 <td>{{ $row->number }}
-                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}" target="_blank">
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
+                                                        target="_blank">
                                                         <i class="fa fa-external-link"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                </td>
                                                 <td>{{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
@@ -228,7 +259,7 @@
                         "footer": true
                     }
                 }, ],
-
+                "searching": false,
                 "pageLength": -1,
                 "order": [
                     [0, "asc"]
