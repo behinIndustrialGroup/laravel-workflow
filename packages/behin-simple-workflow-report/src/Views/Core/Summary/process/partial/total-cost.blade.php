@@ -88,9 +88,8 @@
                                         <td>{{ trans('fields.user_name') }}</td>
                                         <td>{{ trans('fields.total_external_repair_cost') }}</td>
                                         <td>{{ trans('fields.total_internal_fix_cost') }}</td>
-                                        <td>{{ trans('fields.total_income') }}</td>
-                                        <td>{{ trans('fields.total_repair') }}</td>
-                                        <td>{{ trans('fields.total_repair_pendding') }}</td>
+                                        <td>{{ trans('fields.repairs_done') }}</td>
+                                        <td>{{ trans('fields.repairs_pending') }}</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,7 +99,6 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ number_format($user->total_external_repair_cost) }}</td>
                                             <td>{{ number_format($user->total_internal_fix_cost) }}</td>
-                                            <td>{{ number_format($user->total_income) }}</td>
                                             <td>{{ $user->repairs_done }}</td>
                                             <td>{{ $user->repairs_pending }}</td>
                                         </tr>
