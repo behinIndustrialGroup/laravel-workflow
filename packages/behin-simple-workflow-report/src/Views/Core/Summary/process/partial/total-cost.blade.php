@@ -64,7 +64,7 @@
         ->each(function ($user) use ($finTable) {
             $user->total_repair_cost = $finTable->where('mapa_expert_id', $user->id)->sum('repair_cost');
             $user->total_repair = $finTable->where('mapa_expert_id', $user->id)->count();
-            $user->total_repair_pendding = $finTable->where('mapa_expert_id', $user->id)->where('repair_is_approved', 0)->count();
+            $user->total_repair_pendding = $finTable->where('mapa_expert_id', $user->id)->whereNull('repair_cost')->count();
         });
 
 @endphp
