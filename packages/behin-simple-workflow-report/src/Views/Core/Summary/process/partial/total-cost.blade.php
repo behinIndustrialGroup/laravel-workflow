@@ -138,7 +138,11 @@
                                         <tr>
                                             {{-- فرایند تعمیر در محل --}}
                                             @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
-                                                <td>{{ $row->number }}</td>
+                                                <td>{{ $row->number }}
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}" target="_blank">
+                                                        <i class="fa fa-external-link"></i>
+                                                    </a>
+                                                </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
@@ -151,7 +155,11 @@
                                             @endif
                                             {{-- فرایند تعمیر در مدارپرداز --}}
                                             @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
-                                                <td>{{ $row->number }}</td>
+                                                <td>{{ $row->number }}
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}" target="_blank">
+                                                        <i class="fa fa-external-link"></i>
+                                                    </a>
+                                                </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
