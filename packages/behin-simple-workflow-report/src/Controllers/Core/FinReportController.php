@@ -12,13 +12,14 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FinReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return view('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost');
         $vars = VariableController::getAll($fields = ['case_number', 'customer_fullname', 'receive_date', 'device_name', 'repairman', 'payment_amount', 'last_status']);

@@ -106,6 +106,9 @@ if (!function_exists('runScript')) {
 
 if(!function_exists('toJalali')){
     function toJalali($date){
+        if(gettype($date) == 'string'){
+            $date = Carbon::parse($date);
+        }
         // Log::info("function toJalali Used By user". Auth::user()->name);
         $jDate = Jalalian::fromCarbon($date);
         return $jDate;

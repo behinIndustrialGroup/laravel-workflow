@@ -9,68 +9,38 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Carbon;
     use Morilog\Jalali\Jalalian;
+    use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 
     $today = Carbon::today();
     $todayShamsi = Jalalian::fromCarbon($today);
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
 
-    function getFilteredFinTable($year = null, $month = null)
-    {
-        $mapaSubquery = DB::table('wf_variables')
-            ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))
-            ->where('key', 'mapa_expert')
-            ->groupBy('case_id');
+    $year = isset($_GET['year']) ? $_GET['year'] : null;
+    $month = isset($_GET['month']) ? $_GET['month'] : null;
 
-        $query = DB::table('wf_variables')
-            ->join('wf_cases', 'wf_variables.case_id', '=', 'wf_cases.id')
-            ->leftJoinSub($mapaSubquery, 'mapa', function ($join) {
-                $join->on('wf_variables.case_id', '=', 'mapa.case_id');
-            })
-            ->leftJoin('users', 'mapa.mapa_expert_id', '=', 'users.id')
-            ->leftJoin('wf_process', 'wf_cases.process_id', '=', 'wf_process.id')
-            ->select(
-                'wf_variables.case_id',
-                'wf_cases.number',
-                'wf_process.name as process_name',
-                DB::raw("MAX(CASE WHEN `key` = 'customer_workshop_or_ceo_name' THEN `value` ELSE '' END) AS customer"),
-                DB::raw("MAX(CASE WHEN `key` = 'repair_cost' THEN `value` ELSE 0 END) AS repair_cost"),
-                DB::raw("MAX(CASE WHEN `key` = 'payment_amount' THEN `value` ELSE 0 END) AS payment_amount"),
-                DB::raw("MAX(CASE WHEN `key` = 'visit_date' THEN `value` ELSE 0 END) AS visit_date"),
-                DB::raw("MAX(CASE WHEN `key` = 'visit_date' THEN `value` ELSE 0 END) AS visit_date"),
-                'users.name as mapa_expert_name',
-                'users.id as mapa_expert_id',
-            )
-            ->groupBy('wf_variables.case_id', 'wf_cases.number', 'users.name')
-            ->havingRaw('repair_cost != 0');
-
-        if ($year) {
-            $query->havingRaw('visit_date LIKE ?', ["%{$year}%"]);
-        }
-
-        if ($month) {
-            $query->havingRaw('visit_date LIKE ?', ["%-{$month}-%"]);
-        }
-
-        return $query->get();
-    }
-
-    $year = request()->get('year');
-    $month = request()->get('month');
-    $finTable = getFilteredFinTable($year, $month);
-    // استخراج هزینه کلی برای هر کاربر
+    // دریافت جدول اصلی
+    $finTable = ReportHelper::getFilteredFinTable($year, $month);
+    // پردازش آمار کاربران
     $users = DB::table('users')
         ->get()
         ->each(function ($user) use ($finTable) {
-            $user->total_repair_cost = $finTable->where('mapa_expert_id', $user->id)->sum('repair_cost');
-            $user->total_repair = $finTable->where('mapa_expert_id', $user->id)->count();
-            $user->total_repair_pendding = $finTable->where('mapa_expert_id', $user->id)->whereNull('repair_cost')->count();
+            $userItems = $finTable->where('mapa_expert_id', $user->id);
+            $user->total_external_repair_cost = $userItems->sum('repair_cost');
+            $user->total_internal_fix_cost = $userItems->sum('fix_cost');
+            $user->total_income = $user->total_external_repair_cost + $user->total_internal_fix_cost;
+            $user->repairs_done = $userItems->whereNotNull('fix_report_date')->count();
+            $user->repairs_pending = $userItems->whereNull('fix_report_date')->count();
         });
 
 @endphp
 
+
 @section('content')
     <div class="container">
+        {{-- <pre>
+            {{ dd($finTable) }}
+        </pre> --}}
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
@@ -81,35 +51,44 @@
                     </div>
                 </div>
                 {{-- عملکرد مالی پرسنل --}}
-                <div class="table-responsive">
+                <div class="">
                     <div class="card">
                         <div class="card-header bg-success text-center">
                             عملکرد مالی پرسنل
                         </div>
                         <div class="card-header bg-light">
                             <form action="{{ url()->current() }}" class=" row col-sm-12">
-                                <div class="col-sm-3">
-                                    سال
-                                    <input type="text" name="year" id="" class="form-control">
+                                <div class="col-sm-3 row">
+                                    <label for="" class="col-sm-3 text-left">سال</label>
+                                    <select name="year" id="" class="form-control col-sm-9">
+                                        @for ($i = $thisYear; $i >= 1403; $i--)
+                                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 row">
+                                    <label for="" class="col-sm-3 text-left">ماه</label>
+                                    <select name="month" id="" class="form-control col-sm-9">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                                 <div class="col-sm-3">
-                                    ماه
-                                    <input type="text" name="month" id="" class="form-control">
-                                </div>
-                                <div class="col-sm-3">
+                                    <label for=""></label>
                                     <input type="submit" class="btn btn-sm btn-primary" value="جستجو">
                                 </div>
                             </form>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table class="table" id="mapa-expert">
                                 <thead>
                                     <tr>
                                         <td>{{ trans('fields.user_number') }}</td>
                                         <td>{{ trans('fields.user_name') }}</td>
-                                        <td>{{ trans('fields.year') }}</td>
-                                        <td>{{ trans('fields.month') }}</td>
-                                        <td>{{ trans('fields.total_repair_cost') }}</td>
+                                        <td>{{ trans('fields.total_external_repair_cost') }}</td>
+                                        <td>{{ trans('fields.total_internal_fix_cost') }}</td>
+                                        <td>{{ trans('fields.total_income') }}</td>
                                         <td>{{ trans('fields.total_repair') }}</td>
                                         <td>{{ trans('fields.total_repair_pendding') }}</td>
                                     </tr>
@@ -119,11 +98,11 @@
                                         <tr>
                                             <td>{{ $user->number }}</td>
                                             <td>{{ $user->name }}</td>
-                                            <td>{{ $thisYear }}</td>
-                                            <td>{{ $thisMonth }}</td>
-                                            <td>{{ number_format($user->total_repair_cost) }}</td>
-                                            <td>{{ $user->total_repair }}</td>
-                                            <td>{{ $user->total_repair_pendding }}</td>
+                                            <td>{{ number_format($user->total_external_repair_cost) }}</td>
+                                            <td>{{ number_format($user->total_internal_fix_cost) }}</td>
+                                            <td>{{ number_format($user->total_income) }}</td>
+                                            <td>{{ $user->repairs_done }}</td>
+                                            <td>{{ $user->repairs_pending }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -134,12 +113,12 @@
                 </div>
 
                 {{-- گزارش کل مجموع هزینه های دریافت شده --}}
-                <div class="table-responsive">
+                <div class="">
                     <div class="card">
                         <div class="card-header bg-success text-center">
                             گزارش مجموع هزینه های دریافت شده
                         </div>
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table class="table" id="total-cost">
                                 <thead>
                                     <tr>
@@ -147,7 +126,7 @@
                                         <th>{{ trans('fields.process') }}</th>
                                         <th>{{ trans('fields.customer') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
-                                        <th>{{ trans('fields.visit_date') }}</th>
+                                        <th>{{ trans('fields.repair_date') }}</th>
                                         <th>{{ trans('fields.repair_cost') }}</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
                                     </tr>
@@ -159,17 +138,33 @@
                                     @endphp
                                     @foreach ($finTable as $row)
                                         <tr>
-                                            <td>{{ $row->number }}</td>
-                                            <td>{{ $row->process_name }}</td>
-                                            <td>{{ $row->customer }}</td>
-                                            <td>{{ $row->mapa_expert_name }}</td>
-                                            <td>{{ convertPersianToEnglish($row->visit_date) }}</td>
-                                            <td>{{ number_format($row->repair_cost) }}</td>
-                                            <td>{{ $row->payment_amount }}</td>
+                                            {{-- فرایند تعمیر در محل --}}
+                                            @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
+                                                <td>{{ $row->number }}</td>
+                                                <td>{{ $row->process_name }}</td>
+                                                <td>{{ $row->customer }}</td>
+                                                <td>{{ $row->mapa_expert_name }}</td>
+                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                                <td>{{ number_format($row->repair_cost) }}</td>
+                                                <td>{{ $row->payment_amount }}</td>
+                                                @php
+                                                    $totalRepairCost += $row->repair_cost;
+                                                @endphp
+                                            @endif
+                                            {{-- فرایند تعمیر در مدارپرداز --}}
+                                            @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
+                                                <td>{{ $row->number }}</td>
+                                                <td>{{ $row->process_name }}</td>
+                                                <td>{{ $row->customer }}</td>
+                                                <td>{{ $row->mapa_expert_name }}</td>
+                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                                <td>{{ number_format($row->fix_cost) }}</td>
+                                                <td>{{ $row->payment_amount }}</td>
+                                                @php
+                                                    $totalRepairCost += $row->fix_cost;
+                                                @endphp
+                                            @endif
                                         </tr>
-                                        @php
-                                            $totalRepairCost += $row->repair_cost;
-                                        @endphp
                                     @endforeach
                                     <tr class="bg-success">
                                         <td></td>
@@ -209,7 +204,28 @@
 
                 "pageLength": -1,
                 "order": [
-                    [1, "desc"]
+                    [0, "desc"]
+                ],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                },
+            });
+            $('#mapa-expert').DataTable({
+                "dom": 'Bfrtip',
+                "buttons": [{
+                    "extend": 'excelHtml5',
+                    "text": "خروجی اکسل",
+                    "title": "گزارش مجموع هزینه های دریافت شده به ازای کارشناس",
+                    "className": "btn btn-success btn-sm",
+                    "exportOptions": {
+                        "columns": ':visible',
+                        "footer": true
+                    }
+                }, ],
+
+                "pageLength": -1,
+                "order": [
+                    [0, "asc"]
                 ],
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
