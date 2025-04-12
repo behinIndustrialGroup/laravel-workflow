@@ -58,19 +58,20 @@
                             عملکرد مالی پرسنل
                         </div>
                         <div class="card-header bg-light">
-                            <form action="{{ url()->current() }}" class=" row col-sm-12">
-                                <div class="col-sm-3 row">
-                                    <label for="" class="col-sm-3 text-left">سال</label>
-                                    <select name="year" id="" class="form-control col-sm-9">
+                            <form action="{{ url()->current() }}" class="form-inline">
+                                <div class="form-group col-sm-3 ">
+                                    <label for="year" class="mr-2">سال</label>
+                                    <select name="year" id="year" class="form-control">
                                         @for ($i = $thisYear; $i >= 1403; $i--)
                                             <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
                                                 {{ $i }}</option>
                                         @endfor
                                     </select>
                                 </div>
-                                <div class="col-sm-3 row">
-                                    <label for="" class="col-sm-3 text-left">ماه</label>
-                                    <select name="month" id="" class="form-control col-sm-9">
+
+                                <div class="form-group col-sm-3">
+                                    <label for="month" class="mr-2">ماه</label>
+                                    <select name="month" id="month" class="form-control">
                                         <option value="">{{ trans('fields.All') }}</option>
                                         @for ($i = 1; $i <= 12; $i++)
                                             <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>
@@ -78,20 +79,23 @@
                                         @endfor
                                     </select>
                                 </div>
-                                <div class="col-sm-3 row">
-                                    <label for="" class="col-sm-3 text-left">کاربر</label>
-                                    <select name="quser" id="" class="form-control col-sm-9">
-                                        <option value="">{{ trans('fields.All') }}</option>
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
+
+                                <div class="form-group col-sm-3">
+                                    <label for="quser" class="mr-2">کاربر</label>
+                                    <div class="col-sm-9">
+                                        <select name="quser" id="quser" class="select2">
+                                            <option value="">{{ trans('fields.All') }}
+                                            </option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}"
+                                                    {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label for=""></label>
-                                    <input type="submit" class="btn btn-sm btn-primary" value="جستجو">
-                                </div>
+
+                                <input type="submit" class="btn btn-primary col-sm-3" value="جستجو">
                             </form>
                         </div>
                         <div class="card-body table-responsive">
