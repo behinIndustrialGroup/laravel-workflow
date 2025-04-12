@@ -5,6 +5,7 @@ namespace TodoList\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Services\File\FileService;
 use App\Models\User;
+use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Brick\Math\BigInteger;
 use Carbon\Carbon;
 use FileService\Controllers\FileServiceController;
@@ -17,10 +18,10 @@ use TodoList\Models\TodoFile;
 
 class TodoListController extends Controller
 {
-    public function index()
+    public function index($taskId = null)
     {
         $users = User::all();
-        return view('TodoListViews::index', compact('users'));
+        return view('TodoListViews::index', compact('users', 'taskId'));
     }
 
     public static function get($id)
@@ -31,7 +32,7 @@ class TodoListController extends Controller
     public function list()
     {
         $tasks = Todo::where('user_id', Auth::id())->orWhere('creator', Auth::id())->get()->each(function ($row) {
-            $row->creator_name = User::find($row->creator)->display_name;
+            $row->creator_name = User::find($row->creator)->name;
         });
         return [
             'data' => $tasks
@@ -48,6 +49,12 @@ class TodoListController extends Controller
             'reminder_date' => $request->reminder_date,
             'due_date' => $request->due_date,
         ]);
+        SendPushNotification::dispatch(
+            $request->creator,
+            'کار جدید',
+            $task->task,
+            route('todoList.index', [ 'id' => $task->id ])
+        );
         return response(trans("task assigned successfully"));
     }
 

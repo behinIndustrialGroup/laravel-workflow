@@ -21,7 +21,10 @@ use App\CustomClasses\Access;
                 </a>
             </li>
         @endif
-        {{-- <button id="notification-btn" class="btn btn-sm btn-warning">فعال کردن نوتیفیکیشن</button> --}}
+        <a href="{{ route('send-notification') }}" class="btn btn-sm btn-warning">
+            تست نوتیفیکیشن
+        </a>
+        
     </ul>
 
     <!-- SEARCH FORM -->

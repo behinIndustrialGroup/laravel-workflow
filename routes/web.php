@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\PushNotifications;
+use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use BehinInit\App\Http\Middleware\Access;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -37,6 +38,11 @@ Route::get('/pusher/beams-auth', function (Request $request) {
     // $user = User::find($userId);
     return response()->json($beamsToken);
 })->middleware('auth');
+
+Route::get('send-notification', function () {
+    SendPushNotification::dispatch(1, 'test', 'test', route('admin.dashboard'));
+    return 'تا دقایقی دیگر باید نوتیفیکیشن دریافت کنید';
+})->name('send-notification');
 
 Route::get('queue-work', function () {
     $limit = 5; // تعداد jobهای پردازش شده در هر درخواست

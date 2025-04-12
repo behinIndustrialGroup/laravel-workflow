@@ -132,26 +132,30 @@
 
         $(document).ready(function() {
             $("#due_date_view").persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
                 format: 'YYYY-MM-DD',
-                toolbox: {
-                    calendarSwitch: {
-                        enabled: true
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
                     }
                 },
-                initialValue: false,
                 observer: true,
                 altField: '#due_date'
             });
 
 
             $("#reminder_date_view").persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
                 format: 'YYYY-MM-DD',
-                toolbox: {
-                    calendarSwitch: {
-                        enabled: true
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
                     }
                 },
-                initialValue: false,
                 observer: true,
                 altField: '#reminder_date'
             });
@@ -230,6 +234,10 @@
                 }
             )
         }
+
+        @if ($taskId)
+            show_task_modal('{{ $taskId }}')
+        @endif
 
         var des = $('#description');
         var reminder_date = $('#reminder_date_view');

@@ -6,7 +6,7 @@ use TodoList\Controllers\OthersTodoListController;
 use TodoList\Controllers\TodoListController;
 
 Route::name('todoList.')->prefix('todo-list')->middleware(['web', 'auth'])->group(function(){
-    Route::get('index', [TodoListController::class, 'index'])->name('index');
+    Route::get('index/{id?}', [TodoListController::class, 'index'])->name('index');
     Route::get('list', [TodoListController::class, 'list'])->name('list');
     Route::post('create', [TodoListController::class, 'create'])->name('create');
     Route::post('edit', [TodoListController::class, 'edit'])->name('edit');
