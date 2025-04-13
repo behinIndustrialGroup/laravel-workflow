@@ -36,6 +36,7 @@ class ReportHelper
                 'users.id as mapa_expert_id'
             )
             ->groupBy('wf_variables.case_id')
+            ->whereNull('wf_cases.deleted_at')
             ->havingRaw('mapa_expert_id is not null');
 
         if($user) {
