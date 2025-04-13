@@ -17,8 +17,8 @@
     $thisMonth = $todayShamsi->getMonth();
 
     $year = isset($_GET['year']) ? $_GET['year'] : null;
-    $month = isset($_GET['month']) ? $_GET['month'] : null;
-    $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
+    $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
+    $quser = isset($_GET['quser']) ? $_GET['quser'] : $thisYear;
 
     // دریافت جدول اصلی
     $finTable = ReportHelper::getFilteredFinTable($year, $month, $quser);
@@ -104,8 +104,7 @@
                                     <tr>
                                         <td>{{ trans('fields.user_number') }}</td>
                                         <td>{{ trans('fields.user_name') }}</td>
-                                        <td>{{ trans('fields.total_external_repair_cost') }}</td>
-                                        <td>{{ trans('fields.total_internal_fix_cost') }}</td>
+                                        <td>{{ trans('fields.total_income') }}</td>
                                         <td>{{ trans('fields.repairs_done') }}</td>
                                         <td>{{ trans('fields.repairs_pending') }}</td>
                                     </tr>
@@ -117,8 +116,7 @@
                                                 <tr>
                                                     <td>{{ $user->number }}</td>
                                                     <td>{{ $user->name }}</td>
-                                                    <td>{{ number_format($user->total_external_repair_cost) }}</td>
-                                                    <td>{{ number_format($user->total_internal_fix_cost) }}</td>
+                                                    <td>{{ number_format($user->total_income) }}</td>
                                                     <td>{{ $user->repairs_done }}</td>
                                                     <td>{{ $user->repairs_pending }}</td>
                                                 </tr>
@@ -127,8 +125,7 @@
                                             <tr>
                                                 <td>{{ $user->number }}</td>
                                                 <td>{{ $user->name }}</td>
-                                                <td>{{ number_format($user->total_external_repair_cost) }}</td>
-                                                <td>{{ number_format($user->total_internal_fix_cost) }}</td>
+                                                <td>{{ number_format($user->total_income) }}</td>
                                                 <td>{{ $user->repairs_done }}</td>
                                                 <td>{{ $user->repairs_pending }}</td>
                                             </tr>
@@ -153,7 +150,6 @@
                                     <tr>
                                         <th>{{ trans('fields.case_number') }}</th>
                                         <th>{{ trans('fields.process') }}</th>
-                                        <th>{{ trans('fields.customer') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.repair_date') }}</th>
                                         <th>{{ trans('fields.repair_cost') }}</th>
@@ -176,7 +172,6 @@
                                                     </a>
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
-                                                <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
@@ -195,7 +190,6 @@
                                                     </a>
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
-                                                <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
