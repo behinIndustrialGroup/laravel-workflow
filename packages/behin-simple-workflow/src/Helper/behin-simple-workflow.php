@@ -109,6 +109,9 @@ if(!function_exists('toJalali')){
         if(gettype($date) == 'string'){
             $date = Carbon::parse($date);
         }
+        if(gettype($date) == 'integer'){
+            $date = Carbon::createFromTimestamp($date);
+        }
         // Log::info("function toJalali Used By user". Auth::user()->name);
         $jDate = Jalalian::fromCarbon($date);
         return $jDate;

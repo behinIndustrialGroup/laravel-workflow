@@ -16,12 +16,14 @@
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
 
-    $year = isset($_GET['year']) ? $_GET['year'] : null;
+    $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
     $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
-    $quser = isset($_GET['quser']) ? $_GET['quser'] : $thisYear;
+    $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+    $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی
     $finTable = ReportHelper::getFilteredFinTable($year, $month, $quser);
+
     // پردازش آمار کاربران
     $users = DB::table('users')
         ->get()
@@ -39,9 +41,6 @@
 
 @section('content')
     <div class="container">
-        {{-- <pre>
-            {{ dd($finTable) }}
-        </pre> --}}
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
