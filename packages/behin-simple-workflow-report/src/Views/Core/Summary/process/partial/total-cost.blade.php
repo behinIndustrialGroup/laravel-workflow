@@ -107,9 +107,13 @@
                                         <td>{{ trans('fields.total_income') }}</td>
                                         <td>{{ trans('fields.repairs_done') }}</td>
                                         <td>{{ trans('fields.repairs_pending') }}</td>
+                                        <td>{{ trans('fields.Action') }}</td>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $totalIncome = 0;
+                                    @endphp
                                     @foreach ($users as $user)
                                         @if ($quser)
                                             @if ($quser == $user->id)
@@ -119,7 +123,11 @@
                                                     <td>{{ number_format($user->total_income) }}</td>
                                                     <td>{{ $user->repairs_done }}</td>
                                                     <td>{{ $user->repairs_pending }}</td>
+                                                    <td></td>
                                                 </tr>
+                                                @php
+                                                    $totalIncome += $user->total_income;
+                                                @endphp
                                             @endif
                                         @else
                                             <tr>
@@ -128,7 +136,13 @@
                                                 <td>{{ number_format($user->total_income) }}</td>
                                                 <td>{{ $user->repairs_done }}</td>
                                                 <td>{{ $user->repairs_pending }}</td>
+                                                <td>
+                                                    <a href="{{ url()->current() . "?month=$month&year=$year&quser=$user->id" }}" class="btn btn-sm btn-info">{{ trans('fields.Show More') }}</a>
+                                                </td>
                                             </tr>
+                                            @php
+                                                $totalIncome += $user->total_income;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 </tbody>
