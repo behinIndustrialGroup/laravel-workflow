@@ -18,7 +18,6 @@
 
     $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
     $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
-    $month = str_pad($month, 2, '0', STR_PAD_LEFT);
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی

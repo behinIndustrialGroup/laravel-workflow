@@ -9,6 +9,9 @@ class ReportHelper
 {
     public static function getFilteredFinTable($year = null, $month = null, $user = null)
     {
+        if($month){
+            $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        }
         $mapaSubquery = DB::table('wf_variables')
             ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))
             ->where('key', 'mapa_expert')
@@ -53,16 +56,10 @@ class ReportHelper
         }
 
         if ($year && !$month) {
-            $from = Jalalian::fromFormat('Y-m-d', "$year-01-01")->toCarbon()->startOfDay();
-            $to = Jalalian::fromFormat('Y-m-d', "$year-12-29")->toCarbon()->endOfDay();
+            $from = Jalalian::fromFormat('Y-m-d', "$year-01-01")->toCarbon()->startOfDay()->timestamp;
+            $to = Jalalian::fromFormat('Y-m-d', "$year-12-29")->toCarbon()->endOfDay()->timestamp;
 
-            $query->whereExists(function ($subQuery) use ($from, $to) {
-                $subQuery->select(DB::raw(1))
-                    ->from('wf_variables as vars')
-                    ->whereColumn('vars.case_id', 'wf_variables.case_id')
-                    ->where('vars.key', 'fix_report')
-                    ->whereBetween('vars.updated_at', [$from, $to]);
-            });
+            $query->havingRaw('fix_report_date BETWEEN ? AND ?', [$from, $to]);
         }
 
         return $query->get();
