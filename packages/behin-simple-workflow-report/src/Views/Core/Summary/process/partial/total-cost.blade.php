@@ -145,6 +145,14 @@
                                             @endphp
                                         @endif
                                     @endforeach
+                                    <tr class="bg-success">
+                                        <td>1000</td>
+                                        <td>مجموع</td>
+                                        <td>{{ number_format($totalIncome) }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
