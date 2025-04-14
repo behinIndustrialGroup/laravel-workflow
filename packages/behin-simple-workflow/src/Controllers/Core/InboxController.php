@@ -45,6 +45,10 @@ class InboxController extends Controller
         return $inbox;
     }
 
+    public static function caseIsInUserInbox($caseId){
+        return Inbox::where('case_id', $caseId)->whereIn('status', ['new', 'opened', 'inProgress', 'draft'])->where('actor', Auth::id())->first();
+    }
+
     public static function editCaseName($inboxId, $caseName)
     {
         $inbox = InboxController::getById($inboxId);
@@ -145,12 +149,6 @@ class InboxController extends Controller
             // if(!TaskActorController::userIsAssignToTask($task->id, Auth::id())){
             //     return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('You are not assigned to this task'));
             // }
-            SendPushNotification::dispatch(
-                $inbox->actor,
-                'کار جدید',
-                'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
-                route('simpleWorkflow.inbox.view', $inbox->id)
-            );
             return view('SimpleWorkflowView::Core.Inbox.show')->with([
                 'inbox' => $inbox,
                 'case' => $case,
