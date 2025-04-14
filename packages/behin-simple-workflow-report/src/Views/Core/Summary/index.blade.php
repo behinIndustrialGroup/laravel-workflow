@@ -18,9 +18,9 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>شناسه</th>
+                                        <th class="d-none">شناسه</th>
                                         <th>عنوان فرآیند</th>
-                                        <th>توضیحات</th>
+                                        <th class="d-none">توضیحات</th>
                                         <th>عملیات</th>
                                     </tr>
                                 </thead>
@@ -28,9 +28,9 @@
                                     @foreach($processes as $process)
                                         @if(auth()->user()->access('خلاصه گزارش فرایند: '. $process->name))
                                             <tr>
-                                                <td>{{ $process->id }}</td>
+                                                <td class="d-none">{{ $process->id }}</td>
                                                 <td>{{ $process->name }}</td>
-                                                <td>{{ $process->description }}</td>
+                                                <td class="d-none">{{ $process->description }}</td>
                                                 <td>
                                                     <a href="{{ route('simpleWorkflowReport.summary-report.show', [ 'summary_report' => $process ]) }}" class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                                 </td>
