@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="row">
-        @if (auth()->user()->access('منو >>کارتابل>>فرایند جدید'))
+        @if (auth()->user()->access('آیکون پذیرش دستگاه جدید '))
             <div class="col-sm-3 ">
                 <!-- small box -->
                 <div class="small-box bg-primary">
