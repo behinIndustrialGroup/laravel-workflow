@@ -1,5 +1,9 @@
 @extends('behin-layouts.app')
 
+@php
+    dd($rows)
+@endphp
+
 @section('content')
     <div class="container table-responsive card p-2">
         <h2>{{ trans('fields.User Inbox') }}</h2>
