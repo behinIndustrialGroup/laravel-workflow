@@ -42,8 +42,10 @@
                             <td>{{ $row->case->number ?? '' }}</td>
                             <td>{{ $row->case_name }}</td>
                             <td>
-                                <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case?->id) }}"
-                                    class="btn btn-sm btn-primary">{{ trans('fields.Show More') }}</a>
+                                @if (isset($row->case->id))
+                                    <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case->id) }}"
+                                        class="btn btn-sm btn-primary">{{ trans('fields.Show More') }}</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
