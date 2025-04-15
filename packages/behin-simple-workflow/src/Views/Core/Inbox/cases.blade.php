@@ -30,7 +30,14 @@
                 <tbody>
                     @foreach ($rows as $index => $row)
                         <tr>
-                            <td>{{ $index + 1 }} <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case?->id) }}" target="_blank"><i class="fa fa-external-link"></i></a></td>
+                            <td>{{ $index + 1 }} 
+                                @if (isset($row->case->id))
+                                    <a href="{{ route('simpleWorkflow.inbox.cases.inboxes', $row->case->id) }}" target="_blank">
+                                        <i class="fa fa-external-link">
+                                        </i>
+                                    </a>
+                                @endif
+                            </td>
                             <td>{{ $row->task->process->name }}</td>
                             <td>{{ $row->case->number ?? '' }}</td>
                             <td>{{ $row->case_name }}</td>
