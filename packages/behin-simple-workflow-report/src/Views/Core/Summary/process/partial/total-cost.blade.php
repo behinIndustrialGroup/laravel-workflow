@@ -185,7 +185,7 @@
                                     @foreach ($finTable as $row)
                                         <tr>
                                             {{-- فرایند تعمیر در محل --}}
-                                            {{-- @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c') --}}
+                                            @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
                                                 <td>{{ $row->number }}
                                                     <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
                                                         target="_blank">
@@ -202,9 +202,9 @@
                                                     $totalRepairCost += $row->repair_cost;
                                                     $totalPaymentAmount += $row->payment_amount
                                                 @endphp
-                                            {{-- @endif --}}
+                                            @endif
                                             {{-- فرایند تعمیر در مدارپرداز --}}
-                                            {{-- @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
+                                            @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
                                                 <td>{{ $row->number }}
                                                     <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
                                                         target="_blank">
@@ -220,7 +220,7 @@
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
                                                 @endphp
-                                            @endif --}}
+                                            @endif
                                         </tr>
                                     @endforeach
                                     <tr class="bg-success">
