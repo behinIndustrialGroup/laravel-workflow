@@ -27,7 +27,7 @@ class RoleReportFormController extends Controller
     }
 
     public static function getAll(){
-        return RoleForm::get();
+        return RoleForm::orderBy('process_id')->get();
     }
 
     public function show($process_id)
