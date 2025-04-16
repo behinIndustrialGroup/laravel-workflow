@@ -195,7 +195,7 @@
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
-                                                <td>{{ number_format($row->repair_cost) }}</td>
+                                                <td>{{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
                                                     $totalRepairCost += $row->repair_cost;
