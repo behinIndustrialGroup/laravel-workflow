@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 {{-- عملکرد مالی پرسنل --}}
-                <div class="">
+                {{-- <div class="">
                     <div class="card">
                         <div class="card-header bg-success text-center">
                             عملکرد مالی پرسنل
@@ -156,7 +156,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> --}}
 
                 {{-- گزارش کل مجموع هزینه های دریافت شده --}}
                 <div class="">
