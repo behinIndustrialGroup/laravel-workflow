@@ -196,10 +196,10 @@
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
-                                                <td>{{ number_format($row->fix_cost) }}</td>
+                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{  number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
-                                                    $totalRepairCost += $row->repair_cost;
+                                                    $totalRepairCost += $row->fix_cost;
                                                     $totalPaymentAmount += $row->payment_amount
                                                 @endphp
                                             @endif
@@ -215,7 +215,7 @@
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
-                                                <td>{{ number_format($row->fix_cost) }}</td>
+                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
