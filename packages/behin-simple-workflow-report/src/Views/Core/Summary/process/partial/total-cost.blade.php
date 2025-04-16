@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 {{-- عملکرد مالی پرسنل --}}
-                {{-- <div class="">
+                <div class="">
                     <div class="card">
                         <div class="card-header bg-success text-center">
                             عملکرد مالی پرسنل
@@ -96,7 +96,8 @@
                                 <input type="submit" class="btn btn-primary col-sm-3" value="جستجو">
                             </form>
                         </div>
-                        <div class="card-body table-responsive">
+
+                        {{-- <div class="card-body table-responsive">
                             <table class="table" id="mapa-expert">
                                 <thead>
                                     <tr>
@@ -153,10 +154,10 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> --}}
                     </div>
 
-                </div> --}}
+                </div>
 
                 {{-- گزارش کل مجموع هزینه های دریافت شده --}}
                 <div class="">
