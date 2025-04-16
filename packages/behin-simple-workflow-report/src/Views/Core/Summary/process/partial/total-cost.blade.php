@@ -219,6 +219,7 @@
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
+                                                    $totalPaymentAmount += $row->payment_amount
                                                 @endphp
                                             @endif
                                         </tr>
