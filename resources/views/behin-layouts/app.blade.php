@@ -160,9 +160,6 @@
             .catch(console.error);
     </script>
     <script>
-        document.getElementById('notification-btn').addEventListener('click', () => {
-            checkNotificationPermission();
-        });
 
         function checkNotificationPermission() {
             if (!('Notification' in window)) {

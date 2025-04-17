@@ -33,6 +33,7 @@ class TodoListController extends Controller
     {
         $tasks = Todo::where('user_id', Auth::id())->orWhere('creator', Auth::id())->get()->each(function ($row) {
             $row->creator_name = User::find($row->creator)->name;
+            $row->user_name = User::find($row->user_id)->name;
         });
         return [
             'data' => $tasks
@@ -41,20 +42,23 @@ class TodoListController extends Controller
 
     public function create(Request $request)
     {
-        $task = Todo::create([
-            'creator' => $request->creator,
-            'user_id' => $request->user_id,
-            'task' => $request->task,
-            'description' => $request->description,
-            'reminder_date' => $request->reminder_date,
-            'due_date' => $request->due_date,
-        ]);
-        SendPushNotification::dispatch(
-            $request->creator,
-            'کار جدید',
-            $task->task,
-            route('todoList.index', [ 'id' => $task->id ])
-        );
+        $users = $request->user_id;
+        foreach ($users as $user) {
+            $task = Todo::create([
+                'creator' => $request->creator,
+                'user_id' => $user,
+                'task' => $request->task,
+                'description' => $request->description,
+                'reminder_date' => $request->reminder_date,
+                'due_date' => $request->due_date,
+            ]);
+            SendPushNotification::dispatch(
+                $request->creator,
+                'کار جدید',
+                $task->task,
+                route('todoList.index', [ 'id' => $task->id ])
+            );
+        }
         return response(trans("task assigned successfully"));
     }
 

@@ -40,13 +40,50 @@
                     <input type="hidden" id="due_date" name="due_date">
                     <input type="text" id="due_date_view" class="col-sm-10 form-control m-1"
                         placeholder="{{ __('Due Date') }}">
-                    <select name="user_id" id="assign_to" class="form-control form-control-sm m-1">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" @if (Auth::id() == $user->id) selected @endif>
-                                {{ $user->name }} : {{ $user->display_name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="col-sm-12" id="assign_to">
+                        <button type="button" id="toggleSelectBtn" class="btn btn-sm btn-primary mb-2"
+                            onclick="toggleSelectAllUsers()">انتخاب همه</button>
+
+                        <select name="user_id[]" id="userSelect" class="form-control form-control-sm m-1 select2"
+                            multiple="multiple">
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}" @if (Auth::id() == $user->id) selected @endif>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <script>
+                        let allSelected = false;
+
+                        function toggleSelectAllUsers() {
+                            const select = document.getElementById('userSelect');
+                            const button = document.getElementById('toggleSelectBtn');
+
+                            if (!allSelected) {
+                                // انتخاب همه
+                                for (let option of select.options) {
+                                    option.selected = true;
+                                }
+                                button.textContent = 'لغو انتخاب همه';
+                            } else {
+                                // لغو انتخاب همه
+                                for (let option of select.options) {
+                                    option.selected = false;
+                                }
+                                button.textContent = 'انتخاب همه';
+                            }
+
+                            // به‌روزرسانی select2
+                            $('.select2').trigger('change');
+
+                            // تغییر وضعیت
+                            allSelected = !allSelected;
+                        }
+                    </script>
+
+
                 </div>
             </div>
         </form>
@@ -61,6 +98,7 @@
                 <tr>
                     <th>کار</th>
                     <th>ایجاد کننده</th>
+                    <th>اقدام کننده</th>
                     <th>وضعیت</th>
                     <th>تاریخ یادآوری</th>
                     <th>تاریخ تحویل</th>
@@ -73,6 +111,7 @@
 @section('script')
     {{-- <script src="{{ url('public/packages/behin-todo-list/script.js') }}"></script> --}}
     <script>
+        initial_view();
         var table = create_datatable(
             'todos-table',
             "{{ route('todoList.list') }}",
@@ -82,7 +121,9 @@
                 {
                     data: 'creator_name'
                 },
-
+                {
+                    data: 'user_name'
+                },
                 {
                     data: 'done',
                     visible: false
