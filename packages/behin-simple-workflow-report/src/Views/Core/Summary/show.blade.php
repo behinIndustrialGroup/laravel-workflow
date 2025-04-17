@@ -5,7 +5,6 @@
     خلاصه گزارش فرایند {{ $process->name }}
 @endsection
 
-
 @section('content')
     <div class="container">
         @if (session('error'))
@@ -15,6 +14,7 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
+                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
                     
