@@ -21,16 +21,7 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
-                            <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
-                        </a>
-                        <a href="{{ url()->current() . '?q=total-cost' }}" class="btn btn-outline-primary float-right">
-                            <i class="fa fa-dollar"></i> {{ trans('fields.Fin Report') }}
-                        </a>
-                    </div>
-                </div>
+                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
 

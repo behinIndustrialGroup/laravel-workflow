@@ -79,6 +79,7 @@
         <div class="row justify-content-center">
 
             <div class="col-md-12">
+                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 @if (auth()->user()->access('خلاصه گزارش فرایند: مرخصی > گزارش ماهانه مرخصی کاربران'))
                     <div class="card">
                         @php
@@ -87,9 +88,6 @@
                         @endphp
 
                         @if (isset($_GET['userId']))
-                            <a href="{{ route('simpleWorkflowReport.summary-report.show', $process->id) }}">
-                                <button class="btn btn-primary btn-sm">{{ trans('fields.Back') }}</button>
-                            </a>
                             @php
                                 $isFiltered = true;
                                 $user = getUserInfo($_GET['userId']);
