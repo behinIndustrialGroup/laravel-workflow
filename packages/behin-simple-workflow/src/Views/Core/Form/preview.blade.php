@@ -38,7 +38,7 @@
                     {!! Form::help($fieldId, [
                         'options' => isset($fieldAttributes?->options) ? $fieldAttributes?->options : null,
                         'class' => '',
-                        'id' => $fieldId,
+                        'id' => $field->id ?? $fieldId,
                         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
                         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
                     ]) !!}
