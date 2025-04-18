@@ -200,3 +200,4 @@ class InboxController extends Controller
         return $title;
     }
 }
+
