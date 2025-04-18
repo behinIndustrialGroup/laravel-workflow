@@ -103,7 +103,7 @@ class EntityController extends Controller
             echo "Table $entity->name updated successfully.";
         } else {
             Schema::create($entity->db_table_name, function ($table) use ($ar) {
-                $table->id();
+                $table->string('id', 10)->primary();
                 foreach ($ar as $column) {
                     $name = $column['name'];
                     $type = $column['type'];
@@ -131,12 +131,23 @@ class EntityController extends Controller
         $entityFileContent .= $entity->uses;
         $entityFileContent .= "\n class " . $entity->model_name . " extends Model \n";
         $entityFileContent .= "{ \n";
+        $entityFileContent .= "    public \$incrementing = false; \n";
+        $entityFileContent .= "    protected \$keyType = 'string'; \n";
         $entityFileContent .= "    public \$table = '" . $entity->db_table_name . "'; \n";
         $entityFileContent .= "    protected \$fillable = [";
         foreach ($ar as $column) {
             $entityFileContent .= "'" . str_replace('\r', '', $column['name']) . "', ";
         }
         $entityFileContent .= "]; \n";
+
+        $entityFileContent .= "protected static function boot()
+        {
+            parent::boot();
+
+            static::creating(function (\$model) {
+                \$model->id = \$model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
+            });
+        }\n";
         $entityFileContent .= $entity->class_contents;
         $entityFileContent .= "}";
         file_put_contents($entityFile, $entityFileContent);
