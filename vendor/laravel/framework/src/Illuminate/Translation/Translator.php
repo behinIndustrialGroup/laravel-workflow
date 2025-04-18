@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\Translation\Loader;
 use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\NamespacedItemResolver;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -141,6 +142,23 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
         $locale = $locale ?: $this->locale;
+        $string = explode('.', $key);
+        if (count($string) == 2) {
+            $group = $string[0];
+            $mkey = $string[1];
+            $translation = DB::table('ltm_translations')->where('key', $mkey)->first();
+            if (!$translation) {
+                DB::table('ltm_translations')->insert([
+                    'status' => 0,
+                    'group' => $group,
+                    'locale' => config('app.locale'),
+                    'key' => $mkey,
+                    'value' => $mkey,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        }
 
         // For JSON translations, there is only one file per locale, so we will simply load
         // that file and then we will be ready to check the array for the key. These are
