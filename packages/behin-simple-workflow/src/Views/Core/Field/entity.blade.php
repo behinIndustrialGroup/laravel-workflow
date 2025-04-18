@@ -1,26 +1,30 @@
 @php
     $attributes = json_decode($field->attributes);
 @endphp
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+
 {!! Form::text('id', [
     'value' => $attributes?->id ?? null,
     'required' => false,
-    'dir' => 'ltr'
+    'dir' => 'ltr',
 ]) !!}
 {!! Form::textarea('columns', [
     'value' => $attributes?->columns ?? null,
     'required' => false,
-    'dir' => 'ltr'
+    'dir' => 'ltr',
 ]) !!}
 {!! Form::textarea('query', [
     'value' => $attributes?->query ?? null,
     'required' => false,
-    'dir' => 'ltr'
+    'dir' => 'ltr',
 ]) !!}
 
 {!! Form::textarea('style', [
     'value' => $attributes?->style ?? null,
     'required' => false,
-    'dir' => 'ltr'
+    'dir' => 'ltr',
 ]) !!}
 <div id="script-editor" style="height: 80vh; width: 100%;font-size: 16px;">{{ $attributes?->script ?? null }}</div>
 <textarea name="script" id="script" dir="ltr" class="d-none">{{ $attributes?->script ?? null }}</textarea>
