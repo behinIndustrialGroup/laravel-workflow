@@ -47,6 +47,11 @@ class Cases extends Model
         return VariableController::getVariable($this->process_id, $this->id, $name)?->value;
     }
 
+    public function saveVariable($name, $value)
+    {
+        return VariableController::save($this->process_id, $this->id, $name, $value);
+    }
+
     public function process()
     {
         return $this->belongsTo(Process::class, 'process_id');
