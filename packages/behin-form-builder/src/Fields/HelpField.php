@@ -19,7 +19,7 @@ class HelpField extends AbstractField
                 }
             }
             elseif($key == 'script'){
-                $s .= 'data-script="' . $value . '" ';
+
             }
             else{
                 $s .= $key . '="' . $value . '" ';
