@@ -26,7 +26,7 @@
     'required' => false,
     'dir' => 'ltr',
 ]) !!}
-<div id="script-editor" style="height: 80vh; width: 100%;font-size: 16px;">{{ $attributes?->script ?? null }}</div>
+<div id="script-editor" style="height: 500px; width: 100%;font-size: 16px;">{{ $attributes?->script ?? null }}</div>
 <textarea name="script" id="script" dir="ltr" class="d-none">{{ $attributes?->script ?? null }}</textarea>
 <script>
     const editor = ace.edit("script-editor");
