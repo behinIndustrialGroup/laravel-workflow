@@ -30,7 +30,11 @@ class HelpField extends AbstractField
         $s .= '<p>';
         $s .= $this->attributes['options'] ?? '';
         $s .= '</p>';
-
+        if(isset($this->attributes['script'])){
+            $s .= '<script>';
+            $s .= $this->attributes['script'];
+            $s .= '</script>';
+        }
         $s .= '</div>';
         return $s;
     }
