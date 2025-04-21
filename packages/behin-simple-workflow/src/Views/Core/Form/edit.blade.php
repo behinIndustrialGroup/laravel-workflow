@@ -24,10 +24,10 @@
             </div>
         </div>
         <div class="card row col-sm-12 p-2" style="border: 1px solid #0da95b !important;">
-            <form action="{{ route('simpleWorkflow.form.store') }}" method="POST" class="mb-3" id="createForm">
+            <form action="{{ route('simpleWorkflow.form.store') }}" method="POST" class="mb-3 table-responsive" id="createForm">
                 @csrf
                 <input type="hidden" name="formId" value="{{ $form->id }}">
-                <table class="table table-striped">
+                <table class="table">
                     <thead>
                         <tr>
                             <th width="10">{{ trans('Order') }}</th>
