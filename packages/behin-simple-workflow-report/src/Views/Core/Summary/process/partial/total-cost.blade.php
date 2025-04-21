@@ -231,7 +231,7 @@
                                     <tr class="bg-success">
                                         <td></td>
                                         <td>
-                                            داخلی: {{ $numberOfInternalProcess }}
+                                            داخلی: {{ $numberOfInternalProcess }}<br>
                                             خارجی: {{ $numberOfExternalProcess }}
                                         </td>
                                         <td></td>
