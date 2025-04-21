@@ -181,6 +181,8 @@
                                     @php
                                         $totalRepairCost = 0;
                                         $totalPaymentAmount = 0;
+                                        $numberOfInternalProcess = 0;
+                                        $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
                                         <tr>
@@ -200,7 +202,8 @@
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
-                                                    $totalPaymentAmount += $row->payment_amount
+                                                    $totalPaymentAmount += $row->payment_amount;
+                                                    $numberOfExternalProcess++;
                                                 @endphp
                                             @endif
                                             {{-- فرایند تعمیر در مدارپرداز --}}
@@ -219,14 +222,18 @@
                                                 <td>{{ $row->payment_amount }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
-                                                    $totalPaymentAmount += $row->payment_amount
+                                                    $totalPaymentAmount += $row->payment_amount;
+                                                    $numberOfInternalProcess++;
                                                 @endphp
                                             @endif
                                         </tr>
                                     @endforeach
                                     <tr class="bg-success">
                                         <td></td>
-                                        <td></td>
+                                        <td>
+                                            داخلی: {{ $numberOfInternalProcess }}
+                                            خارجی: {{ $numberOfExternalProcess }}
+                                        </td>
                                         <td></td>
                                         <td>مجموع</td>
                                         <td>{{ number_format($totalRepairCost) }}</td>
