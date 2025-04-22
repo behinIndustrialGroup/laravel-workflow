@@ -109,9 +109,9 @@ Route::get('test', function(){
                     $endTime = str_pad($endTime, 5, '0', STR_PAD_LEFT);
                     $gregorianEndDate = Jalalian::fromFormat('Y-m-d H:i', "$startDate $endTime")->toCarbon()->timestamp;
                     echo Carbon::createFromTimestamp($gregorianEndDate, 'Asia/Tehran') . "\t $endTime <br>";
-
+                    $case->saveVariable('start_timestamp', $gregorianStartDate);
+                    $case->saveVariable('end_timestamp', $gregorianEndDate);
                 }
-                
             }
         }
     }
