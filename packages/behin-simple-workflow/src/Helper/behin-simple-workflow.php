@@ -110,7 +110,7 @@ if(!function_exists('toJalali')){
             $date = Carbon::parse($date);
         }
         if(gettype($date) == 'integer'){
-            $date = Carbon::createFromTimestamp($date);
+            $date = Carbon::createFromTimestamp($date, 'Asia/Tehran');
         }
         // Log::info("function toJalali Used By user". Auth::user()->name);
         $jDate = Jalalian::fromCarbon($date);

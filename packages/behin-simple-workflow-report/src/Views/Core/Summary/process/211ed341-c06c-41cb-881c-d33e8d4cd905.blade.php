@@ -8,6 +8,8 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Carbon;
     use Morilog\Jalali\Jalalian;
+    use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
+    $now = Carbon::now();
     $today = Carbon::today();
     $todayShamsi = Jalalian::fromCarbon($today);
     $thisYear = $todayShamsi->getYear();
@@ -30,6 +32,8 @@
         $user->restLeaves = $restLeaves;
             
     }
+
+    $nowAndLater = Timeoffs::where('start_timestamp', '>', $now->timestamp)->where('approved', 1)->get();
 
     $monthlyLeaves = DB::table('users')
         ->leftJoin('wf_entity_timeoffs', function ($join) use ($thisYear) {
@@ -294,37 +298,22 @@
                                 <thead>
                                     <tr>
                                         <th class="d-none">شناسه</th>
-                                        <th>شماره پرونده</th>
+                                        <th class="d-none">شماره پرونده</th>
                                         <th>ایجاد کننده</th>
                                         <th>نوع مرخصی</th>
-                                        <th>تاریخ شروع</th>
-                                        <th>ساعت شروع</th>
-                                        <th>ساعت پایان</th>
-                                        <th>مدیر دپارتمان</th>
-                                        <th>تایید مدیر دپارتمان</th>
-                                        <th>اقدام</th>
+                                        <th> شروع</th>
+                                        <th> پایان</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($hourlyLeaves as $case)
+                                    @foreach ($nowAndLater->where('type', 'روزانه') as $row)
                                         <tr>
-                                            <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $case->number }}</td>
-                                            <td>{{ $case->creator()?->name }}</td>
-                                            <td>{{ $case->getVariable('timeoff_request_type') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_hourly_request_start_date') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_start_time') }}</td>
-                                            <td>{{ $case->getVariable('timeoff_end_time') }}</td>
-                                            <td>{{ getUserInfo($case->getVariable('department_manager'))?->name }}
-                                            </td>
-                                            <td>{{ $case->getVariable('user_department_manager_approval') }}</td>
-                                            <td>
-                                                <a
-                                                    href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}">
-                                                    <button
-                                                        class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
-                                                </a>
-                                            </td>
+                                            <td class="d-none">{{ $row->id }}</td>
+                                            <td class="d-none">{{ $row->case_number }}</td>
+                                            <td>{{ $row->user()?->name }}</td>
+                                            <td>{{ $row->type }}</td>
+                                            <td>{{ toJalali((int)$row->start_timestamp) }}</td>
+                                            <td>{{ toJalali((int)$row->end_timestamp) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

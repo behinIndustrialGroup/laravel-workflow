@@ -131,6 +131,7 @@ class EntityController extends Controller
         $entityFileContent .= $entity->uses;
         $entityFileContent .= "\n class " . $entity->model_name . " extends Model \n";
         $entityFileContent .= "{ \n";
+        $entityFileContent .= "    use SoftDeletes; \n";
         $entityFileContent .= "    public \$incrementing = false; \n";
         $entityFileContent .= "    protected \$keyType = 'string'; \n";
         $entityFileContent .= "    public \$table = '" . $entity->db_table_name . "'; \n";
