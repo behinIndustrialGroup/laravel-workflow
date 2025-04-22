@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\User;
+use Behin\SimpleWorkflow\Controllers\Core\CaseController;
 use Behin\SimpleWorkflow\Controllers\Core\PushNotifications;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
+use Behin\SimpleWorkflow\Models\Core\Cases;
+use Behin\SimpleWorkflow\Models\Core\Variable;
 use BehinInit\App\Http\Middleware\Access;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +20,7 @@ use UserProfile\Controllers\GetUserAgenciesController;
 use UserProfile\Controllers\NationalIdController;
 use UserProfile\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Http;
+use Morilog\Jalali\Jalalian;
 
 Route::get('', function(){
     return view('auth.login');
@@ -85,6 +90,31 @@ Route::get('build-app', function(){
     Artisan::call('view:clear');
     Artisan::call('migrate');
     return redirect()->back();
+});
+
+Route::get('test', function(){
+    $cases = Variable::where('key', 'timeoff_request_type')->where('value', 'ساعتی')->pluck('case_id');
+    foreach($cases as $caseId){
+        $case = CaseController::getById($caseId);
+        if($case){
+            $type = $case->getVariable('timeoff_request_type');
+            if($type == 'ساعتی'){
+                $startDate = $case->getVariable('timeoff_hourly_request_start_date');
+                $startDate = convertPersianToEnglish($startDate);
+                if(strlen($startDate) == 10){
+                    $startTime = $case->getVariable('timeoff_start_time');
+                    $startTime = str_pad($startTime, 5, '0', STR_PAD_LEFT);
+                    $gregorianStartDate = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
+                    $endTime = $case->getVariable('timeoff_end_time');
+                    $endTime = str_pad($endTime, 5, '0', STR_PAD_LEFT);
+                    $gregorianEndDate = Jalalian::fromFormat('Y-m-d H:i', "$startDate $endTime")->toCarbon()->timestamp;
+                    echo Carbon::createFromTimestamp($gregorianEndDate, 'Asia/Tehran') . "\t $endTime <br>";
+
+                }
+                
+            }
+        }
+    }
 });
 
 
