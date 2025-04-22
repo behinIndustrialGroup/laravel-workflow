@@ -15,10 +15,14 @@ use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
+use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
+use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
 use BehinProcessMaker\Models\PMVariable;
 use BehinProcessMaker\Models\PmVars;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['web', 'auth'])->group(function () {
     Route::get('index', [ReportController::class, 'index'])->name('index');
@@ -27,11 +31,20 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
     Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment');
+    Route::get('total-timeoff', function(){
+        return Excel::download(new TotalTimeoff, 'total_timeoff.xlsx');
+    })->name('totalTimeoff');
+
+    Route::get('user-timeoffs/{userId?}', function($userId){
+        return Excel::download(new UserTimeoffs($userId), 'timeoff_report.xlsx');
+    })->name('userTimeoffs');
+
+    Route::post('timeoff/update', [TimeoffController::class, 'update'])->name('timeoff.update');
+
     Route::name('process.')->prefix('process')->group(function(){
         Route::prefix('{processId}')->group(function(){
             Route::post('update', [ProcessController::class, 'update'])->name('update');
             Route::get('export', [ProcessController::class, 'export'])->name('export');
-            Route::get('export2/{userId?}', [ProcessController::class, 'export2'])->name('export2');
         });
     });
     Route::get('test', function(){
