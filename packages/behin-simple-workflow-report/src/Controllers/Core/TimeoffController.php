@@ -81,7 +81,7 @@ class TimeoffController extends Controller
                 ->orderBy('start_timestamp', 'desc')
                 ->get();
         } else {
-            $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')->where('start_timestamp', '>=', $startOfToday)->where('approved', 1)->get();
+            $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')->where('start_timestamp', '>=', $startOfToday)->where('approved', 1)->orderBy('start_timestamp', 'desc')->get();
         }
         return $items;
     }
