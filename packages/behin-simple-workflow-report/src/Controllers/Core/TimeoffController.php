@@ -44,9 +44,9 @@ class TimeoffController extends Controller
         $startOfThisJalaliYear = Jalalian::fromFormat('Y-m-d', $thisYear . '-01-01')->toCarbon()->timestamp;
         $users = DB::table('users')->whereNotIn('id', [1, 43]);
         if ($userId) {
-            $users = $users->where('id', $userId)->get();
+            $users = $users->where('id', $userId)->orderBy('number')->get();
         } else {
-            $users = $users->get();
+            $users = $users->orderBy('number')->get();
         }
         foreach ($users as $user) {
             $approvedLeaves = Timeoffs::select(
