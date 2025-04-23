@@ -176,4 +176,22 @@ Route::get('test2', function(){
     }
 });
 
+Route::get('test3', function(){
+    $timeoffs = Timeoffs::whereIn('request_month', ['01', '02'])->whereNot('uniqueId', 'به صورت دستی')->get();
+    $processId = "211ed341-c06c-41cb-881c-d33e8d4cd905";
+    foreach($timeoffs as $t){
+        $uniqueId = $t->uniqueId;
+        $var = Variable::where('key', 'timeoff_uniqueId')->where('value', $uniqueId)->first();
+        if($var){
+            $caseId = $var->case_id;
+            $case = CaseController::getById($caseId);
+            if($case){
+                $description = $case->getVariable('user_department_manager_description');
+                $t->description = $description;
+                $t->save();
+            }
+        }
+    }
+});
+
 
