@@ -16,7 +16,7 @@ use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
 class UserTimeoffs implements FromCollection, WithHeadings, WithStyles
 {
     public $userId;
-    public function __construct($userId)
+    public function __construct($userId =null)
     {
         $this->userId = $userId;
     }
