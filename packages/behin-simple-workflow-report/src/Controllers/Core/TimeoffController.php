@@ -78,6 +78,7 @@ class TimeoffController extends Controller
                 ->where('start_timestamp', '>=', $thisYearTimestamp)
                 ->where('approved', 1)
                 ->where('user', $userId)
+                ->orderBy('start_timestamp', 'desc')
                 ->get();
         } else {
             $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')->where('start_timestamp', '>=', $startOfToday)->where('approved', 1)->get();
