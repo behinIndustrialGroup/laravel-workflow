@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Morilog\Jalali\Jalalian;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
-
+use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 
 class UserTimeoffs implements FromCollection, WithHeadings, WithStyles
 {
@@ -22,21 +22,7 @@ class UserTimeoffs implements FromCollection, WithHeadings, WithStyles
     }
     public function collection()
     {
-        $todayShamsi = Jalalian::now();
-
-        $thisYear = $todayShamsi->getYear();
-        $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
-        $startOfThisJalaliYear = Jalalian::fromFormat('Y-m-d', $thisYear . '-01-01')->toCarbon()->timestamp;
-        $startOfThisJalaliMonth = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")->toCarbon()->timestamp;
-        $now = Carbon::now();
-        $today = Carbon::today();
-        $thisYearTimestamp = Carbon::create($thisYear, 1, 1)->timestamp;
-        $thisMonthTimestamp = Carbon::create($thisYear, $thisMonth, 1)->timestamp;
-        if ($this->userId) {
-            $items = Timeoffs::where('start_timestamp', '>', $thisYearTimestamp)->where('approved', 1)->where('user', $this->userId)->get();
-        } else {
-            $items = Timeoffs::where('start_timestamp', '>', $now->timestamp)->where('approved', 1)->get();
-        }
+        $items = TimeoffController::items($this->userId);
 
         $ar = [];
         $duration = 0;
