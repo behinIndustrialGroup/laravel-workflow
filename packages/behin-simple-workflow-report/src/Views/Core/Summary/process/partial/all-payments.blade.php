@@ -32,7 +32,7 @@
 </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">گزارش مالی</h3>
+            <h3 class="card-title">گزارش کل تعیین هزینه ها و دریافت هزینه ها</h3>
             <form action="{{ url()->current() }}" class="form-inline">
                 <div class="form-group col-sm-3 ">
                     <label for="year" class="mr-2">سال</label>
