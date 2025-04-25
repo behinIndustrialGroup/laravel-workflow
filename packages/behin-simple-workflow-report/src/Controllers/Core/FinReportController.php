@@ -12,10 +12,12 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Morilog\Jalali\Jalalian;
 
 class FinReportController extends Controller
 {
@@ -46,6 +48,19 @@ class FinReportController extends Controller
             $ar[] = $var;
         }
         return $sum;
+    }
+
+    public static function allPayments()
+    {
+        $rows = Financials::get();
+        foreach($rows as $row){
+            if($row->fix_cost_date){
+                $fix_cost_date = convertPersianToEnglish($row->fix_cost_date);
+                $row->fix_cost_date = Jalalian::fromFormat('Y-m-d', $fix_cost_date)->toCarbon()->timestamp;
+                $row->save();
+            }
+        }
+        return $rows;
     }
 
 }

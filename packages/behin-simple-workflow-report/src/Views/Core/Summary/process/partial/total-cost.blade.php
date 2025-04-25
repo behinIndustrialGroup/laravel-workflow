@@ -49,6 +49,11 @@
                         </a>
                     </div>
                 </div>
+                
+                {{-- کل دریافتی ها --}}
+                @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments')
+
+
                 {{-- عملکرد مالی پرسنل --}}
                 <div class="">
                     <div class="card">

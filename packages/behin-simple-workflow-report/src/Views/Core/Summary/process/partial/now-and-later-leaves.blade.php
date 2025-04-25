@@ -21,6 +21,7 @@
                         <th> شروع</th>
                         <th> پایان</th>
                         <th>مدت مرخصی</th>
+                        <th>توضیحات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,7 @@
                             <td dir="ltr">{{ toJalali((int)$row->start_timestamp)->format('Y-m-d H:i') }}</td>
                             <td dir="ltr">{{ toJalali((int)$row->end_timestamp)->format('Y-m-d H:i') }}</td>
                             <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 3600  }}</td>
+                            <td>{{ $row->description }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -59,6 +61,7 @@
                         <th>تاریخ شروع</th>
                         <th>تاریخ پایان</th>
                         <th>مدت مرخصی</th>
+                        <th>توضیحات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +74,7 @@
                             <td>{{ toJalali((int)$row->start_timestamp)->format('Y-m-d') }}</td>
                             <td>{{ toJalali((int)$row->end_timestamp)->format('Y-m-d') }}</td>
                             <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 3600 +1 }}</td>
+                            <td>{{ $row->description }}</td>
                         </tr>
                     @endforeach
                 </tbody>
