@@ -30,6 +30,11 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('summary-report', SummaryReportController::class);
     Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
+    Route::name('fin.')->prefix('fin')->group(function(){
+        Route::get('', [FinReportController::class, 'index'])->name('index');
+        Route::get('total-cost', [FinReportController::class, 'totalCost'])->name('totalCost');
+        Route::get('all-payments/{year?}/{month?}/{user?}', [FinReportController::class, 'allPayments'])->name('allPayments');
+    });
     Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment');
     Route::get('total-timeoff', function(){
         return Excel::download(new TotalTimeoff, 'total_timeoff.xlsx');

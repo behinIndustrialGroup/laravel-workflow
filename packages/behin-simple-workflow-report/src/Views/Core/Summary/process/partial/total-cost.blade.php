@@ -51,7 +51,10 @@
                 </div>
                 
                 {{-- کل دریافتی ها --}}
-                @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments')
+                <button class="btn btn-primary" onclick="window.location.href='{{ route('simpleWorkflowReport.fin.allPayments') }}'">
+                    
+                </button>
+                {{-- @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments') --}}
 
 
                 {{-- عملکرد مالی پرسنل --}}
