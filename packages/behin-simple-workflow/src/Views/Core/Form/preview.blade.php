@@ -197,7 +197,7 @@
             </div>
         @else
             @isset($childForm)
-                @include('SimpleWorkflowView::Core.Form.preview', ['form' => $childForm, 'mode' => $field->readOnly])
+                @include('SimpleWorkflowView::Core.Form.preview', ['form' => $childForm, 'mode' => $readOnly])
             @endisset
         @endisset
     @endforeach
