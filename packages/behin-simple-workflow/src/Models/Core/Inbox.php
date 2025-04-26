@@ -44,24 +44,24 @@ class Inbox extends Model
             $elapsedMinutes = $createdAt->diffInMinutes($now);
             $diff = $elapsedMinutes - $this->task->duration;
             if ($diff > 0) {
-                if($diff > 60){
-                    $diff = round($diff / 60);
-                    return "<span style='color: red;'>{$diff} h ". trans('fields.Expired') . "</span>"; // زمان گذشته
-                }
                 if($diff > 3600){
                     $diff = round($diff / 3600, 2);
                     return "<span style='color: red;'>{$diff} d ". trans('fields.Expired') . "</span>"; // زمان گذشته
                 }
+                if($diff > 60){
+                    $diff = round($diff / 60);
+                    return "<span style='color: red;'>{$diff} h ". trans('fields.Expired') . "</span>"; // زمان گذشته
+                }
                 return "<span style='color: red;'>{$diff} m ". trans('fields.Expired') . "</span>"; // زمان گذشته
             } else {
                 $diff = $this->task->duration - $elapsedMinutes;
-                if($diff > 60){
-                    $diff = round($diff / 60);
-                    return "<span style='color: green;'>{$diff} h ". trans('fields.Rest') . "</span>"; // هنوز در زمان
-                }
                 if($diff > 3600){
                     $diff = round($diff / 3600, 2);
                     return "<span style='color: green;'>{$diff} d ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                }
+                if($diff > 60){
+                    $diff = round($diff / 60);
+                    return "<span style='color: green;'>{$diff} h ". trans('fields.Rest') . "</span>"; // هنوز در زمان
                 }
                 return "<span style='color: green;'>{$diff} m ". trans('fields.Rest') . "</span>"; // هنوز در زمان
             }
