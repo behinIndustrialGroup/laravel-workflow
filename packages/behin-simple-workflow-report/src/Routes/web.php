@@ -10,6 +10,7 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskActorController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflowReport\Controllers\Core\ExpiredController;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
@@ -45,6 +46,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     })->name('userTimeoffs');
 
     Route::post('timeoff/update', [TimeoffController::class, 'update'])->name('timeoff.update');
+
+    Route::resource('expired-tasks', ExpiredController::class);
 
     Route::name('process.')->prefix('process')->group(function(){
         Route::prefix('{processId}')->group(function(){

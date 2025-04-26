@@ -15,8 +15,8 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="{{ route('simpleWorkflow.process.startListView') }}" class="small-box-footer">{{ trans('مشاهده') }} <i
-                            class="fa fa-arrow-circle-left"></i></a>
+                    <a href="{{ route('simpleWorkflow.process.startListView') }}"
+                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
         @endauth
@@ -32,8 +32,8 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="{{ route('simpleWorkflow.inbox.index') }}" class="small-box-footer">{{ trans('مشاهده') }} <i
-                            class="fa fa-arrow-circle-left"></i></a>
+                    <a href="{{ route('simpleWorkflow.inbox.index') }}" class="small-box-footer">{{ trans('مشاهده') }}
+                        <i class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
         @endauth
@@ -90,28 +90,44 @@
         @endif
 
         @if (auth()->user()->access('ثبت درخواست مرخصی'))
-        <div class="col-sm-3 ">
-            <!-- small box -->
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ trans('ثبت مرخصی') }}</h3>
+            <div class="col-sm-3 ">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ trans('ثبت مرخصی') }}</h3>
 
-                    <p>{{ trans('از این قسمت میتوانید مرخصی خود را ثبت کنید') }}</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-bag"></i>
-                </div>
-                <a href="{{ route('simpleWorkflow.process.start', [
+                        <p>{{ trans('از این قسمت میتوانید مرخصی خود را ثبت کنید') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{ route('simpleWorkflow.process.start', [
                         'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
                         'inDraft' => 0,
                         'force' => 0,
                         'redirect' => true,
-                        ]) }}" class="small-box-footer">{{ trans('ثبت') }} <i
-                        class="fa fa-arrow-circle-left"></i></a>
+                    ]) }}"
+                        class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></a>
+                </div>
             </div>
-        </div>
-    @endauth
-        
+        @endauth
+        @if (auth()->user()->access('وضعیت کارهای منقضی شده'))
+            <div class="col-sm-3 ">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ trans('وضعیت کارهای منقضی شده') }}</h3>
+
+                        <p>{{ trans('از این قسمت میتوانید وضعیت کارهای منقضی شده را مشاهده کنید') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{ route('simpleWorkflowReport.expired-tasks.index') }}"
+                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
+                </div>
+            </div>
+        @endif
     @endsection
 
     @section('script')
