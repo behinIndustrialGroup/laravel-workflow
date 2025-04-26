@@ -15,8 +15,13 @@ use Morilog\Jalali\Jalalian;
 class ExpiredController extends Controller
 {
     public static function index(){
-        $tasks = Task::whereNotNull('duration')->get();
-        $expiredTasks = Inbox::whereIn('task_id', $tasks->pluck('id'))->where('status', 'new')->with('task', 'actor')->get();
+        $now = Carbon::now();
+        $expiredTasks = Inbox::whereHas('task', function ($query) use ($now) {
+            $query->whereNotNull('duration');
+        })
+        ->whereRaw('UNIX_TIMESTAMP(created_at) + (SELECT duration FROM wf_task WHERE wf_task.id = wf_inbox.task_id) * 60 < ?', [$now->timestamp])
+        ->where('status', 'new')
+        ->get();
         return view('SimpleWorkflowReportView::Core.Summary.process.partial.expired-tasks', compact('expiredTasks'));
     }
 }
