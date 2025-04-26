@@ -128,6 +128,14 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <label for="duration" class="col-sm-2 col-form-label">{{ trans('Duration') }}</label>
+                <div class="col-sm-10">
+                    <input type="text" name="duration" class="form-control" dir="ltr"
+                        value="{{ $task->duration }}">
+                    {{ trans('fields.Minutes') }}
+                </div>
+            </div>
+            <div class="row mb-3">
                 <label for="color" class="col-sm-2 col-form-label">{{ trans('Color') }}</label>
                 <div class="col-sm-10 row">
                     <input type="text" name="color" class="form-control col-sm-10" dir="ltr"

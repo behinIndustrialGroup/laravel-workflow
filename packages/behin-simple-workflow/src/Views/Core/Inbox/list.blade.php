@@ -25,6 +25,7 @@
                         <th>{{ trans('fields.Case Number') }}</th>
                         <th>{{ trans('fields.Case Title') }}</th>
                         <th>{{ trans('fields.Status') }}</th>
+                        <th>{{ trans('fields.Deadline') }}</th>
                         <th>{{ trans('fields.Received At') }}</th>
                         <th>{{ trans('fields.Actions') }}</th>
                     </tr>
@@ -47,6 +48,9 @@
                                 @else
                                     <span class="badge bg-success">{{ trans('fields.Completed') }}</span>
                                 @endif
+                            </td>
+                            <td>
+                                {!! $row->time_status !!}
                             </td>
                             <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
                             <td>

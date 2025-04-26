@@ -36,6 +36,23 @@ class Inbox extends Model
         'case_name'
     ];
 
+    public function getTimeStatusAttribute()
+    {
+        if ($this->task && $this->task->duration) {
+            $createdAt = \Carbon\Carbon::parse($this->created_at);
+            $now = \Carbon\Carbon::now();
+            $elapsedMinutes = $createdAt->diffInMinutes($now);
+            $elapsedMinutes = round($elapsedMinutes, 2);
+            if ($elapsedMinutes > $this->task->duration) {
+                return "<span style='color: red;'>{$elapsedMinutes} ". trans('fields.Expired') . "</span>"; // زمان گذشته
+            } else {
+                return "<span style='color: green;'>{$elapsedMinutes} ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+            }
+        } else {
+            return "<span style='color: green;'></span>"; // بدون محدودیت
+        }
+    }
+
     public function task()
     {
         return $this->belongsTo(Task::class, 'task_id');
@@ -50,6 +67,4 @@ class Inbox extends Model
     {
         return $this->belongsTo(User::class, 'actor');
     }
-
 }
-

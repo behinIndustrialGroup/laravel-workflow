@@ -41,6 +41,7 @@ class Task extends Model
         'case_name',
         'color',
         'background',
+        'duration',
     ];
 
     public function getStyledNameAttribute()
