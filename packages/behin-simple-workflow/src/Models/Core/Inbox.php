@@ -42,11 +42,27 @@ class Inbox extends Model
             $createdAt = \Carbon\Carbon::parse($this->created_at);
             $now = \Carbon\Carbon::now();
             $elapsedMinutes = $createdAt->diffInMinutes($now);
-            $elapsedMinutes = round($elapsedMinutes, 2);
+            $elapsedMinutes = round($elapsedMinutes);
             if ($elapsedMinutes > $this->task->duration) {
-                return "<span style='color: red;'>{$elapsedMinutes} ". trans('fields.Expired') . "</span>"; // زمان گذشته
+                if($elapsedMinutes > 60){
+                    $elapsedMinutes = round($elapsedMinutes / 60);
+                    return "<span style='color: red;'>{$elapsedMinutes} h". trans('fields.Expired') . "</span>"; // زمان گذشته
+                }
+                if($elapsedMinutes > 3600){
+                    $elapsedMinutes = round($elapsedMinutes / 3600, 2);
+                    return "<span style='color: red;'>{$elapsedMinutes} d". trans('fields.Expired') . "</span>"; // زمان گذشته
+                }
+                return "<span style='color: red;'>{$elapsedMinutes} m". trans('fields.Expired') . "</span>"; // زمان گذشته
             } else {
-                return "<span style='color: green;'>{$elapsedMinutes} ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                if($elapsedMinutes > 60){
+                    $elapsedMinutes = round($elapsedMinutes / 60);
+                    return "<span style='color: green;'>{$elapsedMinutes} h". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                }
+                if($elapsedMinutes > 3600){
+                    $elapsedMinutes = round($elapsedMinutes / 3600, 2);
+                    return "<span style='color: green;'>{$elapsedMinutes} d". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                }
+                return "<span style='color: green;'>{$elapsedMinutes} m". trans('fields.Rest') . "</span>"; // هنوز در زمان
             }
         } else {
             return "<span style='color: green;'></span>"; // بدون محدودیت
