@@ -42,9 +42,9 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ trans('لیست کارها') }}</h3>
+                    <h3>{{ trans('اطلاع رسانی') }}</h3>
 
-                    <p>{{ trans('لیست کارهایی که ابلاغ شده است') }}</p>
+                    <p>{{ trans('آخرین اطلاع رسانی ها') }}</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
