@@ -73,7 +73,7 @@
                             <td>{{ $row->type }}</td>
                             <td>{{ toJalali((int)$row->start_timestamp)->format('Y-m-d') }}</td>
                             <td>{{ toJalali((int)$row->end_timestamp)->format('Y-m-d') }}</td>
-                            <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 3600 +1 }}</td>
+                            <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 86400 +1 }}</td>
                             <td>{{ $row->description }}</td>
                         </tr>
                     @endforeach
