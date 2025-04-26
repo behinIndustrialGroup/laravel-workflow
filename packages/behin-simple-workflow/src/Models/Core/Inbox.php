@@ -42,27 +42,28 @@ class Inbox extends Model
             $createdAt = \Carbon\Carbon::parse($this->created_at);
             $now = \Carbon\Carbon::now();
             $elapsedMinutes = $createdAt->diffInMinutes($now);
-            $elapsedMinutes = round($elapsedMinutes);
-            if ($elapsedMinutes > $this->task->duration) {
-                if($elapsedMinutes > 60){
-                    $elapsedMinutes = round($elapsedMinutes / 60);
-                    return "<span style='color: red;'>{$elapsedMinutes} h ". trans('fields.Expired') . "</span>"; // زمان گذشته
+            $diff = $elapsedMinutes - $this->task->duration;
+            if ($diff > 0) {
+                if($diff > 60){
+                    $diff = round($diff / 60);
+                    return "<span style='color: red;'>{$diff} h ". trans('fields.Expired') . "</span>"; // زمان گذشته
                 }
-                if($elapsedMinutes > 3600){
-                    $elapsedMinutes = round($elapsedMinutes / 3600, 2);
-                    return "<span style='color: red;'>{$elapsedMinutes} d ". trans('fields.Expired') . "</span>"; // زمان گذشته
+                if($diff > 3600){
+                    $diff = round($diff / 3600, 2);
+                    return "<span style='color: red;'>{$diff} d ". trans('fields.Expired') . "</span>"; // زمان گذشته
                 }
-                return "<span style='color: red;'>{$elapsedMinutes} m ". trans('fields.Expired') . "</span>"; // زمان گذشته
+                return "<span style='color: red;'>{$diff} m ". trans('fields.Expired') . "</span>"; // زمان گذشته
             } else {
-                if($elapsedMinutes > 60){
-                    $elapsedMinutes = round($elapsedMinutes / 60);
-                    return "<span style='color: green;'>{$elapsedMinutes} h ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                $diff = $this->task->duration - $elapsedMinutes;
+                if($diff > 60){
+                    $diff = round($diff / 60);
+                    return "<span style='color: green;'>{$diff} h ". trans('fields.Rest') . "</span>"; // هنوز در زمان
                 }
-                if($elapsedMinutes > 3600){
-                    $elapsedMinutes = round($elapsedMinutes / 3600, 2);
-                    return "<span style='color: green;'>{$elapsedMinutes} d ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                if($diff > 3600){
+                    $diff = round($diff / 3600, 2);
+                    return "<span style='color: green;'>{$diff} d ". trans('fields.Rest') . "</span>"; // هنوز در زمان
                 }
-                return "<span style='color: green;'>{$elapsedMinutes} m ". trans('fields.Rest') . "</span>"; // هنوز در زمان
+                return "<span style='color: green;'>{$diff} m ". trans('fields.Rest') . "</span>"; // هنوز در زمان
             }
         } else {
             return "<span style='color: green;'></span>"; // بدون محدودیت
