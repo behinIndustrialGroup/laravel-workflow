@@ -127,6 +127,34 @@
                         value="{{ $task->case_name }}">
                 </div>
             </div>
+            <div class="row mb-3">
+                <label for="color" class="col-sm-2 col-form-label">{{ trans('Color') }}</label>
+                <div class="col-sm-10 row">
+                    <input type="text" name="color" class="form-control col-sm-10" dir="ltr"
+                        value="{{ $task->color }}">
+                    <input type="color" id="color" class="col-sm-2" dir="ltr"
+                        value="{{ $task->color }}">
+                    <script>
+                        document.getElementById('color').addEventListener('change', function() {
+                            $('input[name=color]').val(this.value);
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="background" class="col-sm-2 col-form-label">{{ trans('Background') }}</label>
+                <div class="col-sm-10 row">
+                    <input type="text" name="background" class="form-control col-sm-10" dir="ltr"
+                        value="{{ $task->background }}">
+                    <input type="color" id="background" class="col-sm-2" dir="ltr"
+                        value="{{ $task->background }}">
+                    <script>
+                        document.getElementById('background').addEventListener('change', function() {
+                            $('input[name=background]').val(this.value);
+                        });
+                    </script>
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
 
 

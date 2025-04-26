@@ -39,7 +39,18 @@ class Task extends Model
         'next_element_id',
         'assignment_type',
         'case_name',
+        'color',
+        'background',
     ];
+
+    public function getStyledNameAttribute()
+    {
+        $color = $this->color ?? '#000000'; // رنگ پیش‌فرض مشکی
+        $background = $this->background ?? 'transparent'; // بک‌گراند پیش‌فرض
+        $name = e($this->name); // جلوگیری از مشکلات امنیتی XSS
+
+        return "<span style='color: {$color}; background: {$background}; padding:2px 4px; border-radius:4px;'>{$name}</span>";
+    }
 
     public function process()
     {
@@ -53,31 +64,36 @@ class Task extends Model
         return Task::where('parent_id', $this->id)->whereNot('id', $this->id)->get();
     }
 
-    public function errors(){
+    public function errors()
+    {
         return TaskController::TaskHasError($this->id);
     }
 
-    public function executiveElement(){
-        if($this->type == 'form'){
+    public function executiveElement()
+    {
+        if ($this->type == 'form') {
             return FormController::getById($this->executive_element_id);
         }
-        if($this->type == 'script'){
+        if ($this->type == 'script') {
             return ScriptController::getById($this->executive_element_id);
         }
-        if($this->type == 'condition'){
+        if ($this->type == 'condition') {
             return ConditionController::getById($this->executive_element_id);
         }
     }
 
-    public function nextTask(){
+    public function nextTask()
+    {
         return TaskController::getById($this->next_element_id);
     }
 
-    public function actors(){
+    public function actors()
+    {
         return $this->hasMany(TaskActor::class, 'task_id');
     }
 
-    public function jumps(){
+    public function jumps()
+    {
         return $this->hasMany(TaskJump::class, 'task_id');
     }
 }

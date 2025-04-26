@@ -34,7 +34,7 @@
                         <tr ondblclick="window.location.href = '{{ route('simpleWorkflow.inbox.view', $row->id) }}'">
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $row->task->process->name }}</td>
-                            <td>{{ $row->task->name }}</td>
+                            <td>{!! $row->task->styled_name !!}</td>
                             <td>{{ $row->case->number ?? '' }}</td>
                             <td>{{ $row->case_name }}</td>
                             <td>
