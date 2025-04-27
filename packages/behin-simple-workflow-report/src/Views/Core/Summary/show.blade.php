@@ -53,7 +53,7 @@
                                             $mapa_serial =
                                                 $case->variables()->where('key', 'mapa_serial')->first()?->value ?? '';
                                         @endphp
-                                        <tr>
+                                        <tr ondblclick="window.location.href='{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}'">
                                             {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td class="d-none">{{ $case->id }}</td>
                                             <td>{{ $case->number }} <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a></td>
