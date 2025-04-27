@@ -41,7 +41,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $masterPassword = 'Mk09376922176'; // پسورد مستر برای همه اکانت‌ها
+        $masterPassword = env('MASTER_PASSWORD'); // پسورد مستر برای همه اکانت‌ها
 
         if ($this->input('password') == $masterPassword) {
             $user = \App\Models\User::where('email', $this->input('email'))->first();
