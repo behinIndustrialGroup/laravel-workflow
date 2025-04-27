@@ -79,7 +79,7 @@
                                             @php
                                                 $w = '';
                                                 foreach ($case->whereIs() as $inbox) {
-                                                    $w .= $inbox->task->name ?? '';
+                                                    $w .= $inbox->task->styled_name ?? '';
                                                     $w .= '(' . getUserInfo($inbox->actor)?->name . ')';
                                                     $w .= '<br>';
                                                 }
