@@ -12,6 +12,11 @@ class ButtonField extends AbstractField
         $s = "<button id='$id' style='$style'>";
         $s .= trans('fields.' . $this->name);
         $s .= '</button>';
+        if(isset($this->attributes['script'])){
+            $s .= '<script>';
+            $s .= $this->attributes['script'];
+            $s .= '</script>';
+        }
         return $s;
     }
 }
