@@ -33,11 +33,11 @@
                                         {{-- <th>ردیف</th> --}}
                                         <th class="d-none">شناسه</th>
                                         <th>شماره پرونده</th>
-                                        <th>ایجاد کننده</th>
+                                        <th>کارشناس</th>
                                         <th>نام</th>
                                         <th>دستگاه</th>
                                         <th style="width: 100px">قطعه</th>
-                                        <th>کارشناس</th>
+                                        <th>ایجاد کننده</th>
                                         <th>سریال مپا</th>
                                         <th>آخرین وضعیت</th>
                                         <th>ایجاد شده در</th>
@@ -69,12 +69,12 @@
                                             <td>{{ $case->number }} <a
                                                     href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><i
                                                         class="fa fa-external-link"></i></a></td>
-                                            <td>{{ $case->creator()?->name }}</td>
+                                            <td>{{ $mapa_expert }}</td>
 
                                             <td>{{ $name }}</td>
                                             <td>{{ $device_name }}</td>
                                             <td style="width: 100px">{{ $case->getVariable('part_name') }}</td>
-                                            <td>{{ $mapa_expert }}</td>
+                                            <td>{{ $case->creator()?->name }}</td>
                                             <td>{{ $mapa_serial }}</td>
                                             @php
                                                 $w = '';
