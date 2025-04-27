@@ -35,8 +35,8 @@
                                         <th>شماره پرونده</th>
                                         <th>کارشناس</th>
                                         <th>نام</th>
-                                        <th>دستگاه</th>
                                         <th style="width: 100px">قطعه</th>
+                                        <th>دستگاه</th>
                                         <th>ایجاد کننده</th>
                                         <th>سریال مپا</th>
                                         <th>آخرین وضعیت</th>
@@ -72,8 +72,8 @@
                                             <td>{{ $mapa_expert }}</td>
 
                                             <td>{{ $name }}</td>
-                                            <td>{{ $device_name }}</td>
                                             <td style="width: 100px">{{ $case->getVariable('part_name') }}</td>
+                                            <td>{{ $device_name }}</td>
                                             <td>{{ $case->creator()?->name }}</td>
                                             <td>{{ $mapa_serial }}</td>
                                             @php
