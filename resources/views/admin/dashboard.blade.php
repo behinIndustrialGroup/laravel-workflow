@@ -111,7 +111,7 @@
                 </div>
             </div>
         @endauth
-        @if (auth()->user()->access('وضعیت کارهای منقضی شده'))
+        @if (auth()->user()->access('کارهای منقضی'))
             <div class="col-sm-3 ">
                 <!-- small box -->
                 <div class="small-box bg-info">
