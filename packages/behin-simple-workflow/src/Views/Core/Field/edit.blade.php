@@ -5,6 +5,10 @@
 @endsection
 
 @section('content')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+
     <h1>Edit Field</h1>
     <a href="{{ route('simpleWorkflow.fields.index') }}" class="btn btn-secondary mb-3">
         {{ trans('Back to list') }}
