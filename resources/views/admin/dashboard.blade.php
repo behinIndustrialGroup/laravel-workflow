@@ -111,12 +111,12 @@
                 </div>
             </div>
         @endauth
-        @if (auth()->user()->access('کارهای منقضی'))
+        @if (auth()->user()->access('وضعیت کارهای منقضی شده'))
             <div class="col-sm-3 ">
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ trans('وضعیت کارهای منقضی شده') }}</h3>
+                        <h3>{{ trans('کارهای منقضی') }}</h3>
 
                         <p>{{ trans('از این قسمت میتوانید وضعیت کارهای منقضی شده را مشاهده کنید') }}</p>
                     </div>
