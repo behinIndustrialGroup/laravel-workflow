@@ -114,7 +114,7 @@
         @if (auth()->user()->access('کارهای منقضی'))
             <div class="col-sm-3 ">
                 <!-- small box -->
-                <div class="small-box bg-info">
+                <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{ trans('وضعیت کارهای منقضی شده') }}</h3>
 
