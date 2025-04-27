@@ -87,7 +87,26 @@
             <div class="mb-3">
                 <label for="script" class="form-label">Script</label>
                 <span>نیازی به تگ script نیست</span>
-                <textarea name="script" id="script" class="form-control" rows="4" dir="ltr">{{ isset($attributes->script) && is_string($attributes?->script) ? $attributes?->script : '' }}</textarea>
+                <div id="script-editor" style="height: 500px; width: 100%;font-size: 16px;">{{ $attributes?->script ?? null }}</div>
+                <textarea name="script" id="script" class="d-none" dir="ltr">{{ isset($attributes->script) && is_string($attributes?->script) ? $attributes?->script : '' }}</textarea>
+                <script>
+                    const editor = ace.edit("script-editor");
+                    editor.setTheme("ace/theme/monokai"); // انتخاب تم
+                    editor.session.setMode("ace/mode/javascript"); // تنظیم زبان 
+                
+                
+                
+                    // غیرفعال کردن تحلیلگر پیش‌فرض Ace
+                    editor.getSession().setUseWorker(false);
+                
+                    // فعال‌سازی خط‌بندی خودکار
+                    editor.setOption("wrap", true);
+                
+                    // ذخیره محتوا به textarea مخفی
+                    editor.session.on('change', function() {
+                        $('#script').val(editor.getValue());
+                    });
+                </script>
             </div>
 
             <div class="mb-3">
