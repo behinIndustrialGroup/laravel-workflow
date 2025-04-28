@@ -70,9 +70,14 @@ class Cases extends Model
             $query->where('case_id', $this->id)->orWhereIn('case_id', $childCaseId);
         })->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
         
-        // if(count($rows) == 0){
-        //     return "<span style='color: #ffffff; background: #007a41 ; padding:2px 4px; border-radius:4px;'>پایان کار</span>";
-        // }
+        if ($rows->isEmpty()) {
+            return [(object) [
+                'task' => (object) [
+                    'styled_name' => "<span style='color: #ffffff; background: #007a41; padding:2px 4px; border-radius:4px;'>پایان کار</span>",
+                ],
+                'actor' => '',
+            ]];
+        }
         return $rows;
     }
 

@@ -68,6 +68,7 @@
                                             <td>{{ $mapa_serial }}</td>
                                             @php
                                                 $w = '';
+                                                // $w = json_encode($case->whereIs());
                                                 foreach ($case->whereIs() as $inbox) {
                                                     $w .= $inbox->task->styled_name ?? '';
                                                     $w .= '(' . getUserInfo($inbox->actor)?->name . ')';
