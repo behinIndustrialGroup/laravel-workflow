@@ -56,7 +56,10 @@
                                         <tr ondblclick="window.location.href='{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}'">
                                             {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $case->number }} <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a></td>
+                                            <td>{{ $case->number }} 
+                                                <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a>
+                                                {!! $case->history !!}
+                                            </td>
                                             <td>{{ $mapa_expert }}</td>
 
                                             <td>{{ $name }}</td>
