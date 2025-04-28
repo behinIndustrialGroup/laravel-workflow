@@ -202,7 +202,7 @@ class InboxController extends Controller
 
     public static function caseHistory($caseNumber){
         $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
-        $rows= Inbox::whereIn('case_id', $cases)->orderBy('updated_at')->get();
+        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->get();
         return view('SimpleWorkflowView::Core.Inbox.history', compact('rows'));
     }
 }
