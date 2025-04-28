@@ -69,9 +69,11 @@ class Cases extends Model
         $rows = Inbox::where(function($query) use($childCaseId){
             $query->where('case_id', $this->id)->orWhereIn('case_id', $childCaseId);
         })->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
+        
         // if(count($rows) == 0){
         //     return "<span style='color: #ffffff; background: #007a41 ; padding:2px 4px; border-radius:4px;'>پایان کار</span>";
         // }
+        return $rows;
     }
 
     public function previousTask(){
