@@ -35,7 +35,7 @@
                                     <td>{{ getUserInfo($row->actor)?->name }}</td>
                                     <td>{{ trans('fields.' . $row->status) }}</td>
                                     <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
-                                    <td dir="ltr">{{ toJalali($row->updated_at)->format('Y-m-d H:i') }}</td>
+                                    <td dir="ltr">{{ $row->updated_at != $row->created_at ? toJalali($row->updated_at)->format('Y-m-d H:i') : '' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
