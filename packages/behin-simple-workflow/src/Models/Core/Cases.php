@@ -64,7 +64,7 @@ class Cases extends Model
     }
 
     public function whereIs(){
-        $childCaseId = Cases::where('parent_id', $this->id)->get()->pluck('id')->toArray();
+        $childCaseId = Cases::where('number', $this->number)->get()->pluck('id')->toArray();
         return Inbox::where(function($query) use($childCaseId){
             $query->where('case_id', $this->id)->orWhereIn('case_id', $childCaseId);
         })->whereNotIn('status', ['done', 'doneByOther', 'canceled'])->get();
