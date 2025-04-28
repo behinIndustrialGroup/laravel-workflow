@@ -62,4 +62,8 @@ class CaseController extends Controller
         return Cases::all();
     }
 
+    public static function getAllByCaseNumber($caseNumber){
+        return Cases::where('number', $caseNumber)->get();
+    }
+
 }

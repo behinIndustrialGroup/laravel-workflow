@@ -4,6 +4,7 @@ namespace Behin\SimpleWorkflow\Models\Core;
 
 use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
+use Behin\SimpleWorkflow\Controllers\Core\InboxController;
 use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,5 +73,9 @@ class Cases extends Model
 
     public function previousTask(){
         return Inbox::where('case_id', $this->id)->whereIn('status', ['done'])->orderBy('created_at', 'desc')->first();
+    }
+
+    public function getHistoryAttribute(){
+         return "<a title='". trans('fields.History') ."' href='". route('simpleWorkflow.inbox.caseHistoryView', ['caseNumber' => $this->number]) ."'><i class='fa fa-history'></i></a>";
     }
 }
