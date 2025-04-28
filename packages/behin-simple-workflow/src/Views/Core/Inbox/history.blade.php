@@ -7,9 +7,10 @@
 @section('content')
     <div class="container">
         <div class="">
+            @include('SimpleWorkflowView::Core.Partial.back-btn')
             <div class="card table-responsive">
-                <div class="card-header">
-
+                <div class="card-header bg-info">
+                    تاریخچه انجام کار پرونده شماره {{ $rows[0]->case->number }}
                 </div>
                 <div class="card-body">
                     <table class="table table-stripped">
