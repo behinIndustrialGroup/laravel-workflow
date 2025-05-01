@@ -31,7 +31,7 @@
                                     <a href="{{ route('simpleWorkflowReport.mapa-center.show', [ 'mapa_center' => $case->id ]) }}"><i class="fa fa-external-link"></i></a>
                                 </td>
                                 <td>{{ $case->getVariable('device_name') }}</td>
-                                <td>{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
+                                <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                 <td><a href="{{ route('simpleWorkflowReport.mapa-center.show', [ 'mapa_center' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
                             </tr>
                         @endforeach
