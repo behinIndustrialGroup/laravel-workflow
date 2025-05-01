@@ -27,7 +27,7 @@ class MapaCenterController extends Controller
 {
     public function index()
     {
-        return redirect()->route('simpleWorkflowReport.summary-report.show', '5b673183-d0a5-44be-9451-2387fb010109');
+        return redirect()->route('simpleWorkflowReport.summary-report.show', 'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50');
     }
 
     public function show($mapa_center)
