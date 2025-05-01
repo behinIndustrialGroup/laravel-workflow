@@ -213,7 +213,7 @@
             });
             $('.timepicker').timepicker({
                 timeFormat: 'HH:mm', // فرمت 24 ساعته
-                interval: 5, // نمایش با فاصله 5 دقیقه‌ای
+                // interval: 5, // نمایش با فاصله 5 دقیقه‌ای
                 minTime: '00:00',
                 maxTime: '23:55',
                 defaultTime: new Date(),
