@@ -55,6 +55,7 @@
         href="{{ url('public/behin/behin-dist/plugins/mapp/css/mapp.min.css') . '?' . config('app.version') }}">
     <link rel="stylesheet"
         href="{{ url('public/behin/behin-dist/plugins/mapp/css/fa/style.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     @yield('style')
 
     <script src="{{ url('public/behin/behin-dist/plugins/jquery/jquery.min.js') . '?' . config('app.version') }}"></script>
@@ -78,7 +79,7 @@
     <script src="{{ url('public/behin/behin-js/ajax.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dataTable.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dropzone.js') . '?' . config('app.version') }}"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
 
     @yield('script_in_head')
@@ -150,17 +151,17 @@
                         const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
                             url: "{{ url('/pusher/beams-auth') }}"
                         });
-                        beamsClient.setUserId("{{ config('broadcasting.pusher.prefix_user') }}{{ Auth::id() }}",
+                        beamsClient.setUserId(
+                            "{{ config('broadcasting.pusher.prefix_user') }}{{ Auth::id() }}",
                             beamsTokenProvider)
                     })
-                }else{
+                } else {
                     console.log('User ID:', userId);
                 }
             })
             .catch(console.error);
     </script>
     <script>
-
         function checkNotificationPermission() {
             if (!('Notification' in window)) {
                 alert('این مرورگر از نوتیفیکیشن پشتیبانی نمی‌کند.');
@@ -209,6 +210,16 @@
                         locale: 'fa'
                     }
                 }
+            });
+            $('.timepicker').timepicker({
+                timeFormat: 'HH:mm', // فرمت 24 ساعته
+                interval: 5, // نمایش با فاصله 5 دقیقه‌ای
+                minTime: '00:00',
+                maxTime: '23:55',
+                defaultTime: new Date(),
+                dynamic: true,
+                dropdown: true,
+                scrollbar: true
             });
         }
     </script>
