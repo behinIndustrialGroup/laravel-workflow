@@ -131,7 +131,7 @@
         @if (auth()->user()->access('لیست دستگاه های مپا سنتر'))
             <div class="col-sm-3 ">
                 <!-- small box -->
-                <div class="small-box bg-success">
+                <div class="small-box bg-warning">
                     <div class="inner">
                         <h3>{{ trans('مپا سنتر') }}</h3>
 
