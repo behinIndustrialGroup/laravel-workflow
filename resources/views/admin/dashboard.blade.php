@@ -128,6 +128,23 @@
                 </div>
             </div>
         @endif
+        @if (auth()->user()->access('لیست دستگاه های مپا سنتر'))
+            <div class="col-sm-3 ">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ trans('مپا سنتر') }}</h3>
+
+                        <p>{{ trans('از این قسمت میتوانید لیست دستگاه های مپا سنتر را مشاهده کنید') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{ route('simpleWorkflowReport.mapa-center.index') }}"
+                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
+                </div>
+            </div>
+        @endif
     @endsection
 
     @section('script')
