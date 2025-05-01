@@ -21,6 +21,7 @@ use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
 use MyFormBuilder\Fields\SelectMultipleField;
 use MyFormBuilder\Fields\SignatureField;
+use MyFormBuilder\Fields\TimeField;
 
 class FormBuilder
 {
@@ -128,6 +129,15 @@ class FormBuilder
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new DateField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function time(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new TimeField($name, $attributes))->render();
         return $this;
     }
 

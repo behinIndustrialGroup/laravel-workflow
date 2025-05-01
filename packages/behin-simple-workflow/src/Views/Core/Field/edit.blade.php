@@ -38,6 +38,7 @@
                 <option value="number" @if ($field->type == 'number') selected @endif>{{ trans('Number') }}</option>
                 <option value="text" @if ($field->type == 'text') selected @endif>{{ trans('Text') }}</option>
                 <option value="date" @if ($field->type == 'date') selected @endif>{{ trans('Date') }}</option>
+                <option value="time" @if ($field->type == 'time') selected @endif>{{ trans('Time') }}</option>
                 <option value="select" @if ($field->type == 'select') selected @endif>{{ trans('Select') }}</option>
                 <option value="select-multiple" @if ($field->type == 'select-multiple') selected @endif>
                     {{ trans('Select Multiple') }}</option>
