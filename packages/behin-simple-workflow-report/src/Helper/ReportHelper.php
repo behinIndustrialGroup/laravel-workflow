@@ -33,6 +33,7 @@ class ReportHelper
                 DB::raw("MAX(CASE WHEN `key` = 'repair_cost' THEN `value` ELSE 0 END) AS repair_cost"),
                 DB::raw("MAX(CASE WHEN `key` = 'fix_cost' THEN `value` ELSE 0 END) AS fix_cost"),
                 DB::raw("MAX(CASE WHEN `key` = 'payment_amount' THEN `value` ELSE 0 END) AS payment_amount"),
+                DB::raw("MAX(CASE WHEN `key` = 'payment_date' THEN `value` END) AS payment_date"),
                 DB::raw("MAX(CASE WHEN `key` = 'visit_date' THEN `value` ELSE 0 END) AS visit_date"),
                 DB::raw("MAX(CASE WHEN `key` = 'fix_report' THEN UNIX_TIMESTAMP(wf_variables.updated_at) ELSE null END) AS fix_report_date"),
                 'users.name as mapa_expert_name',
