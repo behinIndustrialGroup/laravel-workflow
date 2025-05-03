@@ -15,15 +15,18 @@
     $todayShamsi = Jalalian::fromCarbon($today);
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
-
+    $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
+    $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")->addMonths(1)->subDays(1)->format('Y-m-d');
     $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
     $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
     $day = isset($_GET['day']) ? $_GET['day'] : '';
+    $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
+    $to = isset($_GET['to']) ? $_GET['to'] : (string)$to;
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی
-    $finTable = ReportHelper::getFilteredFinTable($year, $month, $day, $quser);
-
+    $finTable = ReportHelper::getFilteredFinTable($from, $to, $quser);
+// dd($finTable);
     // پردازش آمار کاربران
     $users = DB::table('users')
         ->get()
@@ -68,36 +71,14 @@
                         <div class="card-header bg-light">
                             <form action="{{ url()->current() }}" class="form-row align-items-end">
                                 <div class="form-group col-md-2">
-                                    <label for="year">سال</label>
-                                    <select name="year" id="year" class="form-control">
-                                        @for ($i = $thisYear; $i >= 1403; $i--)
-                                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
-                                                {{ $i }}</option>
-                                        @endfor
-                                    </select>
+                                    <label for="year">از</label>
+                                    <input type="text" name="from" value="{{ $from }}" class="form-control persian-date">
                                 </div>
-
                                 <div class="form-group col-md-2">
-                                    <label for="month">ماه</label>
-                                    <select name="month" id="month" class="form-control">
-                                        <option value="">{{ trans('fields.All') }}</option>
-                                        @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>
-                                                {{ $i }}</option>
-                                        @endfor
-                                    </select>
+                                    <label for="year">تا</label>
+                                    <input type="text" name="to" value="{{ $to }}" class="form-control persian-date">
                                 </div>
-
-                                <div class="form-group col-md-2">
-                                    <label for="day">روز</label>
-                                    <select name="day" id="day" class="form-control">
-                                        <option value="">--</option>
-                                        @for ($i = 1; $i <= 31; $i++)
-                                            <option value="{{ $i }}"
-                                                {{ request('day') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
+                                
 
                                 <div class="form-group col-md-2">
                                     <label for="quser">کاربر</label>
