@@ -38,11 +38,11 @@
                                         <tr ondblclick="window.location.href='{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}'">
                                             {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ getUserInfo($case->creator)->name ?? '' }}</td>
                                             <td>{{ $case->number }} 
                                                 <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a>
                                                 {!! $case->history !!}
                                             </td>
+                                            <td>{{ getUserInfo($case->creator)->name ?? '' }}</td>
                                             <td>{{ $case->getVariable('case_number') }}</td>
                                             <td>{{ $case->getVariable('remove_case_description') }}</td>
                                             <td>{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
