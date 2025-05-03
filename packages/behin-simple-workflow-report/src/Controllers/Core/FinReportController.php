@@ -30,7 +30,8 @@ class FinReportController extends Controller
         return view('SimpleWorkflowReportView::Core.Fin.index', compact('vars', 'statuses', 'repairmans'));
     }
 
-    public function totalCost(){
+    public function totalCost()
+    {
         return view('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost');
     }
 
@@ -59,22 +60,36 @@ class FinReportController extends Controller
         $user = $request->user;
         $year = $request->year;
         $month = $request->month;
+        $day = $request->day; // افزودن روز
+
         $rows = Financials::select('*');
-        if($user){
+
+        if ($user) {
             $rows = $rows->where('destination_account_name', $user);
         }
-        if($year and $month){
+
+        if ($year && $month) {
             $month = str_pad($month, 2, '0', STR_PAD_LEFT);
-            $startOfMonth = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->toCarbon()->startOfDay()->timestamp;
-            $endOfMonth = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->addMonths(1)->subDays(1)->toCarbon()->endOfDay()->timestamp;
-            $rows = $rows->where('fix_cost_date', '>=', $startOfMonth)->where('fix_cost_date', '<=', $endOfMonth);
-            
+
+            if ($day) {
+                // اگر روز خاصی هم انتخاب شده باشد
+                $day = str_pad($day, 2, '0', STR_PAD_LEFT);
+                $start = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->startOfDay()->timestamp;
+                $end = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->endOfDay()->timestamp;
+            } else {
+                // فقط سال و ماه
+                $start = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->toCarbon()->startOfDay()->timestamp;
+                $end = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->addMonths(1)->subDays(1)->toCarbon()->endOfDay()->timestamp;
+            }
+
+            $rows = $rows->whereBetween('fix_cost_date', [$start, $end]);
         }
-        $rows= [
+
+        $rows = [
             'rows' => $rows->get(),
             'destinations' => $rows->get()->groupBy('destination_account_name')
         ];
+
         return view('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments', compact('rows'));
     }
-
 }
