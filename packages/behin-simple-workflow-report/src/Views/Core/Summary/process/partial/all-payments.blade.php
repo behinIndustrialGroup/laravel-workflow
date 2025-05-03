@@ -33,45 +33,53 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">گزارش کل تعیین هزینه ها و دریافت هزینه ها</h3>
-            <form action="{{ url()->current() }}" class="form-inline">
-                <div class="form-group col-sm-3 ">
-                    <label for="year" class="mr-2">سال</label>
+            <form action="{{ url()->current() }}" class="form-row align-items-end">
+
+                <div class="form-group col-md-2">
+                    <label for="year">سال</label>
                     <select name="year" id="year" class="form-control">
                         @for ($i = $thisYear; $i >= 1403; $i--)
-                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
-                                {{ $i }}</option>
+                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
                         @endfor
                     </select>
                 </div>
-
-                <div class="form-group col-sm-3">
-                    <label for="month" class="mr-2">ماه</label>
+            
+                <div class="form-group col-md-2">
+                    <label for="month">ماه</label>
                     <select name="month" id="month" class="form-control">
                         <option value="">{{ trans('fields.All') }}</option>
                         @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>
-                                {{ $i }}</option>
+                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>{{ $i }}</option>
                         @endfor
                     </select>
                 </div>
-
-                <div class="form-group col-sm-3">
-                    <label for="user" class="mr-2">مقصد حساب</label>
-                    <div class="col-sm-9">
-                        <select name="user" id="user" class="select2">
-                            <option value="">{{ trans('fields.All') }}
-                            </option>
-                            @foreach ($rows['destinations'] as $key => $destination)
-                                <option value="{{ $key }}" {{ $key == $user ? 'selected' : '' }}>
-                                    {{ $key }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+            
+                <div class="form-group col-md-2">
+                    <label for="day">روز</label>
+                    <select name="day" id="day" class="form-control">
+                        <option value="">--</option>
+                        @for ($i = 1; $i <= 31; $i++)
+                            <option value="{{ $i }}" {{ request('day') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                        @endfor
+                    </select>
                 </div>
-
-                <input type="submit" class="btn btn-primary col-sm-3" value="فیلتر">
+            
+                <div class="form-group col-md-3">
+                    <label for="user">مقصد حساب</label>
+                    <select name="user" id="user" class="form-control select2">
+                        <option value="">{{ trans('fields.All') }}</option>
+                        @foreach ($rows['destinations'] as $key => $destination)
+                            <option value="{{ $key }}" {{ $key == $user ? 'selected' : '' }}>{{ $key }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            
+                <div class="form-group col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">فیلتر</button>
+                </div>
+            
             </form>
+            
         </div>
         <div class="card-body">
             <div class="table-responsive">
