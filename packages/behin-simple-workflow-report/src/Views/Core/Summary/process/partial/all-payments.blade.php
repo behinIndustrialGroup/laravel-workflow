@@ -82,7 +82,7 @@
                             <th>{{ trans('fields.Process') }}</th>
                             <th>{{ trans('fields.Case Number') }}</th>
                             <th>{{ trans('fields.Fix Cost Date') }}</th>
-                            <th>{{ trans('fields.Cost Amount') }}</th>
+                            <th class="d-none">{{ trans('fields.Cost Amount') }}</th>
                             <th>{{ trans('fields.Payment Amount') }}</th>
                             <th>{{ trans('fields.Destination Account Name') }}</th>
                             <th>{{ trans('fields.Destination Account Number') }}</th>
@@ -95,7 +95,7 @@
                                 <td>{{ $row->process()?->name ?? trans('fields.Unknown') }}</td>
                                 <td>{{ $row->case_number }}</td>
                                 <td>{{ toJalali((int)$row->fix_cost_date)->format('Y-m-d') }}</td>
-                                <td>{{ number_format($row->cost) }}</td>
+                                <td class="d-none">{{ number_format($row->cost) }}</td>
                                 <td>{{ number_format($row->payment) }}</td>
                                 <td>{{ $row->destination_account_name }}</td>
                                 <td>{{ $row->destination_account }}</td>
