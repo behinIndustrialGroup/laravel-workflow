@@ -59,7 +59,7 @@ class MapaCenterController extends Controller
         $mapa_center_fix_report->start = $start;
         $mapa_center_fix_report->end = $end;
         $mapa_center_fix_report->expert = Auth::id();
-        $mapa_center_fix_report->unit = $request->refer_to_unit;
+        // $mapa_center_fix_report->unit = $request->refer_to_unit;
         $mapa_center_fix_report->report = $request->fix_report;
 
         $mapa_center_fix_report->save();
