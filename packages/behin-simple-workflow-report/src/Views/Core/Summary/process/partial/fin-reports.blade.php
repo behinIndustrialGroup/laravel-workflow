@@ -7,39 +7,38 @@
 
 @section('content')
     <div class="row">
-        @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
-            <div class="col-sm-3 ">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner"  style="height: 150px">
-                        <h3>{{ trans('پرسنل') }}</h3>
-
-                        <p>{{ trans('عملکرد مالی پرسنل') }}</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
+        <div class="col-md-12">
+            <h3>{{ trans('fields.Start Process') }}</h3>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-group">
+                @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
                     <a href="{{ route('simpleWorkflowReport.fin.totalCost') }}"
-                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
-                </div>
-            </div>
-        @endif
-        @if (auth()->user()->access('گزارش کل تعیین هزینه ها و دریافت هزینه ها'))
-            <div class="col-sm-3 ">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner"  style="height: 150px">
-                        <h3>{{ trans('دریافتی ها') }}</h3>
+                        class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">پرسنل</h5>
+                            <small class="btn btn-sm btn-primary">مشاهده</small>
+                        </div>
+                        <p class="mb-1"></p>
+                        <small>عملکرد مالی پرسنل</small>
+                    </a>
+                @endif
+                @if (auth()->user()->access('گزارش کل تعیین هزینه ها و دریافت هزینه ها'))
 
-                        <p>{{ trans('گزارش کل تعیین هزینه ها و دریافت هزینه ها') }}</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
                     <a href="{{ route('simpleWorkflowReport.fin.allPayments') }}"
-                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
-                </div>
+                        class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">هزینه ها</h5>
+                            <small class="btn btn-sm btn-primary">مشاهده</small>
+                        </div>
+                        <p class="mb-1"></p>
+                        <small>گزارش کامل تعیین هزینه ها و دریافت هزینه ها</small>
+                    </a>
+                @endif
             </div>
-        @endif
+        </div>
     </div>
 @endsection
