@@ -17,9 +17,7 @@
     $thisMonth = $todayShamsi->getMonth();
     $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
     $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")->addMonths(1)->subDays(1)->format('Y-m-d');
-    $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
-    $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
-    $day = isset($_GET['day']) ? $_GET['day'] : '';
+    
     $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
     $to = isset($_GET['to']) ? $_GET['to'] : (string)$to;
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;

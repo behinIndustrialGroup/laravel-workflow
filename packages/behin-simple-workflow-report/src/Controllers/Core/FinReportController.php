@@ -58,9 +58,8 @@ class FinReportController extends Controller
     public static function allPayments(Request $request)
     {
         $user = $request->user;
-        $year = $request->year;
-        $month = $request->month;
-        $day = $request->day; // افزودن روز
+        $from = convertPersianToEnglish($request->from);
+        $to = convertPersianToEnglish($request->to);
 
         $rows = Financials::select('*');
 
@@ -68,22 +67,13 @@ class FinReportController extends Controller
             $rows = $rows->where('destination_account_name', $user);
         }
 
-        if ($year && $month) {
-            $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        if ($from && $to) {
+            $from = Jalalian::fromFormat('Y-m-d', $from)->toCarbon()->startOfDay()->timestamp;
+            $to = Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay()->timestamp;
 
-            if ($day) {
-                // اگر روز خاصی هم انتخاب شده باشد
-                $day = str_pad($day, 2, '0', STR_PAD_LEFT);
-                $start = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->startOfDay()->timestamp;
-                $end = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->endOfDay()->timestamp;
-            } else {
-                // فقط سال و ماه
-                $start = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->toCarbon()->startOfDay()->timestamp;
-                $end = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->addMonths(1)->subDays(1)->toCarbon()->endOfDay()->timestamp;
-            }
-
-            $rows = $rows->whereBetween('fix_cost_date', [$start, $end]);
+            $rows = $rows->whereBetween('fix_cost_date', [$from, $to]);
         }
+
 
         $rows = [
             'rows' => $rows->get(),

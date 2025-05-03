@@ -15,71 +15,63 @@
     $todayShamsi = Jalalian::fromCarbon($today);
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
+    $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
+    $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")
+        ->addMonths(1)
+        ->subDays(1)
+        ->format('Y-m-d');
 
-    $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
-    $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
+    $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
+    $to = isset($_GET['to']) ? $_GET['to'] : (string) $to;
     $user = isset($_GET['user']) ? $_GET['user'] : null;
     // dd(json_encode($rows['destinations']));
 @endphp
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
-            <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
-        </a>
-    </div>
-</div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">گزارش کل تعیین هزینه ها و دریافت هزینه ها</h3>
+            <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
+                <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
+            </a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header  text-center bg-info">
+            جستجو
+        </div>
+        <div class="card-body">
             <form action="{{ url()->current() }}" class="form-row align-items-end">
 
                 <div class="form-group col-md-2">
-                    <label for="year">سال</label>
-                    <select name="year" id="year" class="form-control">
-                        @for ($i = $thisYear; $i >= 1403; $i--)
-                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
-                    </select>
+                    <label for="year">از</label>
+                    <input type="text" name="from" value="{{ $from }}" class="form-control persian-date">
                 </div>
-            
                 <div class="form-group col-md-2">
-                    <label for="month">ماه</label>
-                    <select name="month" id="month" class="form-control">
-                        <option value="">{{ trans('fields.All') }}</option>
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ $i == $month ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
-                    </select>
+                    <label for="year">تا</label>
+                    <input type="text" name="to" value="{{ $to }}" class="form-control persian-date">
                 </div>
-            
-                <div class="form-group col-md-2">
-                    <label for="day">روز</label>
-                    <select name="day" id="day" class="form-control">
-                        <option value="">--</option>
-                        @for ($i = 1; $i <= 31; $i++)
-                            <option value="{{ $i }}" {{ request('day') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-            
+
                 <div class="form-group col-md-3">
                     <label for="user">مقصد حساب</label>
                     <select name="user" id="user" class="form-control select2">
                         <option value="">{{ trans('fields.All') }}</option>
                         @foreach ($rows['destinations'] as $key => $destination)
-                            <option value="{{ $key }}" {{ $key == $user ? 'selected' : '' }}>{{ $key }}</option>
+                            <option value="{{ $key }}" {{ $key == $user ? 'selected' : '' }}>{{ $key }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
-            
+
                 <div class="form-group col-md-3">
                     <button type="submit" class="btn btn-primary btn-block">فیلتر</button>
                 </div>
-            
+
             </form>
-            
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header  text-center bg-info">
+            <h3 class="card-title">گزارش کل تعیین هزینه ها و دریافت هزینه ها</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -108,18 +100,19 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $row->process()?->name ?? trans('fields.Unknown') }}
                                     @php
-                                        if($row->process()?->name == 'داخلی'){
+                                        if ($row->process()?->name == 'داخلی') {
                                             $numberOfInternalProcess++;
                                         }
-                                        if($row->process()?->name == 'خارجی'){
+                                        if ($row->process()?->name == 'خارجی') {
                                             $numberOfExternalProcess++;
                                         }
                                     @endphp
                                 </td>
                                 <td>{{ $row->case_number }}</td>
-                                <td>{{ $row->fix_cost_date ? toJalali((int)$row->fix_cost_date)->format('Y-m-d') : '' }}</td>
+                                <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
+                                </td>
                                 <td class="d-none">{{ number_format($row->cost) }}</td>
-                                <td>{{ $row->payment_date ? toJalali((int)$row->payment_date)->format('Y-m-d') : '' }}</td>
+                                <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : '' }}</td>
                                 <td>{{ number_format($row->payment) }}
                                     @php
                                         $totalPayment += $row->payment;
