@@ -181,7 +181,7 @@
                                         <th>{{ trans('fields.process') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.repair_date') }}</th>
-                                        <th>{{ trans('fields.repair_cost') }}</th>
+                                        <th>{{ trans('fields.Declared Cost') }}</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
                                     </tr>
                                 </thead>
