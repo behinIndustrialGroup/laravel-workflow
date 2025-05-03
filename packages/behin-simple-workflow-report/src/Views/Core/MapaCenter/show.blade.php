@@ -42,7 +42,6 @@
                             <th>#</th>
                             <th>شروع</th>
                             <th>پایان</th>
-                            <th>واحد</th>
                             <th>تکنسین</th>
                             <th>گزارش</th>
                         </tr>
@@ -53,7 +52,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td dir="ltr">{{ toJalali((int) $report->start)->format('Y-m-d H:i') }}</td>
                                 <td dir="ltr">{{ toJalali((int) $report->end)->format('Y-m-d H:i') }}</td>
-                                <td>{{ $report->unit }}</td>
                                 <td>{{ getUserInfo($report->expert)?->name }}</td>
                                 <td>{{ $report->report }}</td>
                             </tr>
