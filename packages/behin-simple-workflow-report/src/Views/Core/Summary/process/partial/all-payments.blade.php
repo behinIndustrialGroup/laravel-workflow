@@ -111,7 +111,7 @@
                                 <td>{{ $row->case_number }}</td>
                                 <td>{{ toJalali((int)$row->fix_cost_date)->format('Y-m-d') }}</td>
                                 <td class="d-none">{{ number_format($row->cost) }}</td>
-                                <td>{{ toJalali((int)$row->payment_date) }}</td>
+                                <td>{{ $row->payment_date ? toJalali((int)$row->payment_date)->format('Y-m-d') : '' }}</td>
                                 <td>{{ number_format($row->payment) }}
                                     @php
                                         $totalPayment += $row->payment;
