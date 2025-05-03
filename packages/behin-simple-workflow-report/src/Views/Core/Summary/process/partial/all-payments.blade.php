@@ -89,18 +89,49 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $numberOfInternalProcess = 0;
+                            $numberOfExternalProcess = 0;
+                            $totalPayment = 0;
+                        @endphp
                         @foreach ($rows['rows'] as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $row->process()?->name ?? trans('fields.Unknown') }}</td>
+                                <td>{{ $row->process()?->name ?? trans('fields.Unknown') }}
+                                    @php
+                                        if($row->process()?->name == 'داخلی'){
+                                            $numberOfInternalProcess++;
+                                        }
+                                        if($row->process()?->name == 'خارجی'){
+                                            $numberOfExternalProcess++;
+                                        }
+                                    @endphp
+                                </td>
                                 <td>{{ $row->case_number }}</td>
                                 <td>{{ toJalali((int)$row->fix_cost_date)->format('Y-m-d') }}</td>
                                 <td class="d-none">{{ number_format($row->cost) }}</td>
-                                <td>{{ number_format($row->payment) }}</td>
+                                <td>{{ number_format($row->payment) }}
+                                    @php
+                                        $totalPayment += $row->payment;
+                                    @endphp
+                                </td>
                                 <td>{{ $row->destination_account_name }}</td>
                                 <td>{{ $row->destination_account }}</td>
                             </tr>
                         @endforeach
+                        <tr class="bg-success">
+                            <td></td>
+                            <td>
+                                داخلی: {{ $numberOfInternalProcess }}<br>
+                                خارجی: {{ $numberOfExternalProcess }}
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td class="d-none"></td>
+                            <td>{{ number_format($totalPayment) }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
