@@ -183,6 +183,7 @@
                                         <th>{{ trans('fields.repair_date') }}</th>
                                         <th>{{ trans('fields.Declared Cost') }}</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
+                                        <th>{{ trans('fields.payment_date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -208,6 +209,7 @@
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{  number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
+                                                <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
                                                     $totalPaymentAmount += $row->payment_amount;
@@ -228,6 +230,7 @@
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
+                                                <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
                                                     $totalRepairCost += $row->fix_cost;
                                                     $totalPaymentAmount += $row->payment_amount;
@@ -246,6 +249,7 @@
                                         <td>مجموع</td>
                                         <td>{{ number_format($totalRepairCost) }}</td>
                                         <td>{{ number_format($totalPaymentAmount) }}</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
