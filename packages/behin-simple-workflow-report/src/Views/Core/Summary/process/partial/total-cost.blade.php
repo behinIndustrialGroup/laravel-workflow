@@ -18,10 +18,11 @@
 
     $year = isset($_GET['year']) ? $_GET['year'] : $thisYear;
     $month = isset($_GET['month']) ? $_GET['month'] : $thisMonth;
+    $day = isset($_GET['day']) ? $_GET['day'] : '';
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی
-    $finTable = ReportHelper::getFilteredFinTable($year, $month, $quser);
+    $finTable = ReportHelper::getFilteredFinTable($year, $month, $day, $quser);
 
     // پردازش آمار کاربران
     $users = DB::table('users')
@@ -49,10 +50,11 @@
                         </a>
                     </div>
                 </div>
-                
+
                 {{-- کل دریافتی ها --}}
-                <button class="btn btn-primary" onclick="window.location.href='{{ route('simpleWorkflowReport.fin.allPayments') }}'">
-                    
+                <button class="btn btn-primary"
+                    onclick="window.location.href='{{ route('simpleWorkflowReport.fin.allPayments') }}'">
+
                 </button>
                 {{-- @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments') --}}
 
@@ -64,9 +66,9 @@
                             عملکرد مالی پرسنل
                         </div>
                         <div class="card-header bg-light">
-                            <form action="{{ url()->current() }}" class="form-inline">
-                                <div class="form-group col-sm-3 ">
-                                    <label for="year" class="mr-2">سال</label>
+                            <form action="{{ url()->current() }}" class="form-row align-items-end">
+                                <div class="form-group col-md-2">
+                                    <label for="year">سال</label>
                                     <select name="year" id="year" class="form-control">
                                         @for ($i = $thisYear; $i >= 1403; $i--)
                                             <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
@@ -75,8 +77,8 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-sm-3">
-                                    <label for="month" class="mr-2">ماه</label>
+                                <div class="form-group col-md-2">
+                                    <label for="month">ماه</label>
                                     <select name="month" id="month" class="form-control">
                                         <option value="">{{ trans('fields.All') }}</option>
                                         @for ($i = 1; $i <= 12; $i++)
@@ -86,22 +88,32 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-sm-3">
-                                    <label for="quser" class="mr-2">کاربر</label>
-                                    <div class="col-sm-9">
-                                        <select name="quser" id="quser" class="select2">
-                                            <option value="">{{ trans('fields.All') }}
-                                            </option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}"
-                                                    {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-2">
+                                    <label for="day">روز</label>
+                                    <select name="day" id="day" class="form-control">
+                                        <option value="">--</option>
+                                        @for ($i = 1; $i <= 31; $i++)
+                                            <option value="{{ $i }}"
+                                                {{ request('day') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
                                 </div>
 
-                                <input type="submit" class="btn btn-primary col-sm-3" value="جستجو">
+                                <div class="form-group col-md-2">
+                                    <label for="quser">کاربر</label>
+                                    <select name="quser" id="quser" class="select2 form-control">
+                                        <option value="">{{ trans('fields.All') }}
+                                        </option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <button type="submit" class="btn btn-primary btn-block">فیلتر</button>
+                                </div>
                             </form>
                         </div>
 
@@ -207,7 +219,8 @@
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
-                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{  number_format($row->fix_cost) }}</td>
+                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
+                                                    {{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
@@ -228,7 +241,8 @@
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
-                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>{{ number_format($row->fix_cost) }}</td>
+                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
+                                                    {{ number_format($row->fix_cost) }}</td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php

@@ -7,11 +7,16 @@ use Morilog\Jalali\Jalalian;
 
 class ReportHelper
 {
-    public static function getFilteredFinTable($year = null, $month = null, $user = null)
+    public static function getFilteredFinTable($year = null, $month = null, $day = null, $user = null)
     {
-        if($month){
+        if ($month) {
             $month = str_pad($month, 2, '0', STR_PAD_LEFT);
         }
+
+        if ($day) {
+            $day = str_pad($day, 2, '0', STR_PAD_LEFT);
+        }
+
         $mapaSubquery = DB::table('wf_variables')
             ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))
             ->where('key', 'mapa_expert')
@@ -43,20 +48,21 @@ class ReportHelper
             ->whereNull('wf_cases.deleted_at')
             ->havingRaw('mapa_expert_id is not null');
 
-        if($user) {
-            $query->havingRaw('mapa_expert_id = ' . $user);
+        if ($user) {
+            $query->havingRaw('mapa_expert_id = ?', [$user]);
         }
 
-        if ($year && $month) {
-            // تاریخ شروع ماه شمسی
+        if ($year && $month && $day) {
+            $from = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->startOfDay()->timestamp;
+            $to = Jalalian::fromFormat('Y-m-d', "$year-$month-$day")->toCarbon()->endOfDay()->timestamp;
+
+            $query->havingRaw('fix_report_date BETWEEN ? AND ?', [$from, $to]);
+        } elseif ($year && $month) {
             $from = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->toCarbon()->startOfDay()->timestamp;
-            // تاریخ پایان ماه شمسی
             $to = Jalalian::fromFormat('Y-m-d', "$year-$month-01")->addMonths(1)->subDays(1)->toCarbon()->endOfDay()->timestamp;
 
             $query->havingRaw('fix_report_date BETWEEN ? AND ?', [$from, $to]);
-        }
-
-        if ($year && !$month) {
+        } elseif ($year && !$month) {
             $from = Jalalian::fromFormat('Y-m-d', "$year-01-01")->toCarbon()->startOfDay()->timestamp;
             $to = Jalalian::fromFormat('Y-m-d', "$year-12-29")->toCarbon()->endOfDay()->timestamp;
 
