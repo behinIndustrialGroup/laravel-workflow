@@ -141,6 +141,7 @@
                             <td>{{ number_format($totalPayment) }}</td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
