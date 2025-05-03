@@ -83,6 +83,7 @@
                             <th>{{ trans('fields.Case Number') }}</th>
                             <th>{{ trans('fields.Fix Cost Date') }}</th>
                             <th class="d-none">{{ trans('fields.Cost Amount') }}</th>
+                            <th>{{ trans('fields.Payment Date') }}</th>
                             <th>{{ trans('fields.Payment Amount') }}</th>
                             <th>{{ trans('fields.Destination Account Name') }}</th>
                             <th>{{ trans('fields.Destination Account Number') }}</th>
@@ -110,6 +111,7 @@
                                 <td>{{ $row->case_number }}</td>
                                 <td>{{ toJalali((int)$row->fix_cost_date)->format('Y-m-d') }}</td>
                                 <td class="d-none">{{ number_format($row->cost) }}</td>
+                                <td>{{ toJalali((int)$row->payment_date) }}</td>
                                 <td>{{ number_format($row->payment) }}
                                     @php
                                         $totalPayment += $row->payment;
