@@ -42,24 +42,39 @@
                             <th>#</th>
                             <th>شروع</th>
                             <th>پایان</th>
+                            <th>مدت زمان صرف شده(ساعت)</th>
                             <th>تکنسین</th>
                             <th>گزارش</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{ $totalDuration = 0 }}
                         @foreach ($reports as $report)
+                            @php
+                                $duration = round(((int) $report->end - (int) $report->start) / 3600, 2);
+                                $totalDuration .= $duration;
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td dir="ltr">{{ toJalali((int) $report->start)->format('Y-m-d H:i') }}</td>
                                 <td dir="ltr">{{ toJalali((int) $report->end)->format('Y-m-d H:i') }}</td>
+                                <td>{{ $duration }}</td>
                                 <td>{{ getUserInfo($report->expert)?->name }}</td>
                                 <td>{{ $report->report }}</td>
                             </tr>
                         @endforeach
+                        <tr class="bg-success">
+                            <td></td>
+                            <td></td>
+                            <td>مجموع</td>
+                            <td>{{ $totalDuration }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            
+
 
             <form action="{{ route('simpleWorkflowReport.mapa-center.update', $case->id) }}" method="POST">
                 @csrf
