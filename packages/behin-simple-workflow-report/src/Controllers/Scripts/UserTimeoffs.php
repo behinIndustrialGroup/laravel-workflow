@@ -39,11 +39,12 @@ class UserTimeoffs implements FromCollection, WithHeadings, WithStyles
                 toJalali((int)$item->start_timestamp)->format('Y-m-d H:i'),
                 toJalali((int)$item->end_timestamp)->format('Y-m-d H:i'),
                 $item->approved ? 'تایید شده' : 'تایید نشده',
+                $item->approved_by,
                 $item->description
             ];
         }
 
-        $ar[] = ['', '', '', 'مجموع', $duration, '', '', ''];
+        $ar[] = ['', '', '', 'مجموع', $duration, '', '', '', ''];
         return collect($ar);
     }
 
@@ -56,6 +57,7 @@ class UserTimeoffs implements FromCollection, WithHeadings, WithStyles
             'شروع',
             'پایان',
             'تایید',
+            'توسط',
             'توضیحات'
         ];
     }

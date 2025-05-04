@@ -59,6 +59,8 @@
                     </tbody>
                 </table>
             </div>
+            
+
             <form action="{{ route('simpleWorkflowReport.mapa-center.update', $case->id) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -68,6 +70,14 @@
                 ])
                 <input type="submit" value="ذخیره" class="btn btn-primary">
             </form>
+            @if (auth()->user()->access('ثبت پایان کار مپا سنتر'))
+                <div class="col-sm-12 text-center bg-info p-2">
+                    پایان کار
+                </div>
+                <div class="col-sm-4 mt-2">
+                    <button class="btn btn-info" onclick="">ثبت پایان تعمیرات</button>
+                </div>
+            @endif
         </div>
     @endsection
 

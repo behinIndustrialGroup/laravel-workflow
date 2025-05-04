@@ -22,6 +22,7 @@
                         <th> پایان</th>
                         <th>مدت مرخصی</th>
                         <th>تایید</th>
+                        <th>توسط</th>
                         <th>توضیحات</th>
                     </tr>
                 </thead>
@@ -34,8 +35,9 @@
                             <td>{{ $row->type }}</td>
                             <td dir="ltr">{{ toJalali((int)$row->start_timestamp)->format('Y-m-d H:i') }}</td>
                             <td dir="ltr">{{ toJalali((int)$row->end_timestamp)->format('Y-m-d H:i') }}</td>
-                            <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 3600  }}</td>
+                            <td>{{ round(((int)$row->end_timestamp - (int)$row->start_timestamp) / 3600, 2)  }}</td>
                             <td>{{ $row->approved ? 'تایید شده' : 'تایید نشده' }}</td>
+                            <td>{{ $row->approved_by }}</td>
                             <td>{{ $row->description }}</td>
                         </tr>
                     @endforeach
@@ -64,6 +66,7 @@
                         <th>تاریخ پایان</th>
                         <th>مدت مرخصی</th>
                         <th>تایید</th>
+                        <th>توسط</th>
                         <th>توضیحات</th>
                     </tr>
                 </thead>
@@ -78,6 +81,7 @@
                             <td>{{ toJalali((int)$row->end_timestamp)->format('Y-m-d') }}</td>
                             <td>{{ ((int)$row->end_timestamp - (int)$row->start_timestamp) / 86400 +1 }}</td>
                             <td>{{ $row->approved ? 'تایید شده' : 'تایید نشده' }}</td>
+                            <td>{{ $row->approved_by }}</td>
                             <td>{{ $row->description }}</td>
                         </tr>
                     @endforeach
