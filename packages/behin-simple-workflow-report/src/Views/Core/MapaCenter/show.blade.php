@@ -52,7 +52,7 @@
                         @foreach ($reports as $report)
                             @php
                                 $duration = round(((int) $report->end - (int) $report->start) / 3600, 2);
-                                $totalDuration .= $duration;
+                                $totalDuration += $duration;
                             @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
