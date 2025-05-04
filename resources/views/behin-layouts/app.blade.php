@@ -216,7 +216,6 @@
                 interval: 1, // نمایش با فاصله 5 دقیقه‌ای
                 minTime: '00:00',
                 maxTime: '23:55',
-                defaultTime: new Date(),
                 dynamic: true,
                 dropdown: true,
                 scrollbar: true
