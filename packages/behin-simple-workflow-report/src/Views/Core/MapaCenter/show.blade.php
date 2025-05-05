@@ -98,8 +98,8 @@
                         var fd = new FormData();
                         fd.append('caseId', '{{ $case->id }}')
                         runScript(scriptId, fd, function(response) {
-                            show_massage('ارسال شد برای تعیین هزینه')
-                            show_massage('چند لحظه منتظر بمانید')
+                            show_message('ارسال شد برای تعیین هزینه')
+                            show_message('چند لحظه منتظر بمانید')
 
                             console.log(response)
 
