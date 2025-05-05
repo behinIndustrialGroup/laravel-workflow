@@ -18,6 +18,7 @@
                             <th class="d-none">شناسه</th>
                             <th>شماره پرونده</th>
                             <th>دستگاه</th>
+                            <th>نام مشتری</th>
                             <th>تاریخ ایجاد</th>
                             <th>اقدام</th>
                         </tr>
@@ -31,6 +32,7 @@
                                     <a href="{{ route('simpleWorkflowReport.mapa-center.show', [ 'mapa_center' => $case->id ]) }}"><i class="fa fa-external-link"></i></a>
                                 </td>
                                 <td>{{ $case->getVariable('device_name') }}</td>
+                                <td>{{ $case->getVariable('customer_name') }}</td>
                                 <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                 <td><a href="{{ route('simpleWorkflowReport.mapa-center.show', [ 'mapa_center' => $case->id ]) }}"><button class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a></td>
                             </tr>
