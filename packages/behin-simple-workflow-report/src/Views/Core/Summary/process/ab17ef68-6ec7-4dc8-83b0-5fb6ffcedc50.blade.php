@@ -25,7 +25,7 @@
                     </thead>
                     <tbody>
                         @foreach ($process->cases as $case)
-                            @if ($case->getVariable('end_of_reapir') != 'yes')
+                            @if ($case->getVariable('end_of_repair') != 'yes')
                                 <tr
                                     ondblclick="window.location.href='{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}'">
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
@@ -36,7 +36,7 @@
                                                 class="fa fa-external-link"></i></a>
                                     </td>
                                     <td>{{ $case->getVariable('device_name') }}</td>
-                                    <td>{{ $case->getVariable('customer_name') }}</td>
+                                    <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                     <td><a
                                             href="{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}"><button
