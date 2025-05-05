@@ -62,7 +62,10 @@
                                         class="btn btn-sm btn-danger">{{ trans('fields.Delete') }}
                                         <i class="fa fa-trash"></i></a>
                                 @endif
-                                @if ($row->task->id == '7f62e4ce-a96e-419a-8972-358fd642f39b')
+                                @if (
+                                    $row->task->id == '7f62e4ce-a96e-419a-8972-358fd642f39b' or
+                                    $row->task->id == 'f0892bd7-0e78-4333-8732-103fa9bdfaf2'
+                                )
                                     <a href="{{ route('simpleWorkflow.inbox.delete', $row->id) }}"
                                         class="btn btn-sm btn-danger">{{ trans('fields.Delete') }}
                                         <i class="fa fa-trash"></i></a>
