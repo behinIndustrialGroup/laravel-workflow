@@ -90,8 +90,18 @@
                     پایان کار
                 </div>
                 <div class="col-sm-4 mt-2">
-                    <button class="btn btn-info" onclick="">ثبت پایان تعمیرات</button>
+                    <button class="btn btn-info" onclick="sendForFixPrice()">ثبت پایان تعمیرات</button>
                 </div>
+                <script>
+                    function sendForFixPrice(){
+                        var scriptId = "7ac4388d-c783-4ac2-8f9b-0bb01bee5818";
+                        var fd = new FormData();
+                        fd.append('caseId', '{{ $case->id }}')
+                        runScript(scriptId, fd, function(response){
+                            console.log(response)
+                        })
+                    }
+                </script>
             @endif
         </div>
     @endsection
