@@ -93,12 +93,20 @@
                     <button class="btn btn-info" onclick="sendForFixPrice()">ثبت پایان تعمیرات</button>
                 </div>
                 <script>
-                    function sendForFixPrice(){
+                    function sendForFixPrice() {
                         var scriptId = "7ac4388d-c783-4ac2-8f9b-0bb01bee5818";
                         var fd = new FormData();
                         fd.append('caseId', '{{ $case->id }}')
-                        runScript(scriptId, fd, function(response){
+                        runScript(scriptId, fd, function(response) {
+                            show_massage('ارسال شد برای تعیین هزینه')
+                            show_massage('چند لحظه منتظر بمانید')
+
                             console.log(response)
+
+                            // صبر کن 3 ثانیه بعد ریدایرکت کن
+                            setTimeout(function() {
+                                window.location.href = '{{ route('simpleWorkflowReport.mapa-center.index') }}';
+                            }, 3000);
                         })
                     }
                 </script>
