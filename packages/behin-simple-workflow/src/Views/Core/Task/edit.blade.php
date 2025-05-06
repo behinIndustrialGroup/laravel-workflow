@@ -90,8 +90,8 @@
                     <select name="parent_id" id="parent_id" class="form-control select2">
                         <option value="">{{ trans('None') }}</option>
                         @foreach ($task->process->tasks() as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>
-                                {{ $item->name }}</option>
+                            <option dir="ltr" value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>
+                                {{ $item->name }} ({{ $item->id }})</option>
                         @endforeach
                     </select>
                 </div>
