@@ -11,6 +11,7 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExpiredController;
+use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\MapaCenterController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
@@ -32,6 +33,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('summary-report', SummaryReportController::class);
     Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
+    Route::resource('external-internal', ExternalAndInternalReportController::class);
+    
     Route::name('fin.')->prefix('fin')->group(function(){
         Route::get('', [FinReportController::class, 'index'])->name('index');
         Route::get('total-cost', [FinReportController::class, 'totalCost'])->name('totalCost');

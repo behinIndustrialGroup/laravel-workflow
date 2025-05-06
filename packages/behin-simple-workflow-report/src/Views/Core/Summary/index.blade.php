@@ -38,6 +38,17 @@
                                             </tr>
                                         @endif
                                     @endforeach
+                                    @if (auth()->user()->access('امور جاری: گزارش فرایند های داخلی و خارجی'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>امور جاری</td>
+                                            <td class="d-none">گزارش کامل فرایند های داخلی و خارجی</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.external-internal.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
                                         <tr>
                                             <td class="d-none"></td>

@@ -72,6 +72,7 @@ class Cases extends Model
         
         if ($rows->isEmpty()) {
             return [(object) [
+                'archive' => 'yes',
                 'task' => (object) [
                     'styled_name' => "<span style='color: #ffffff; background: #007a41; padding:2px 4px; border-radius:4px;'>پایان کار</span>",
                 ],
