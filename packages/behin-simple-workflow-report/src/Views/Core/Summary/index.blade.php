@@ -1,7 +1,7 @@
 @extends('behin-layouts.app')
 
 @section('title')
-گزارش‌های گردش کار
+    گزارش‌های گردش کار
 @endsection
 
 
@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">گزارش‌های گردش کار</div>
-                    
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered">
@@ -25,18 +25,41 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($processes as $process)
-                                        @if(auth()->user()->access('خلاصه گزارش فرایند: '. $process->name))
+                                    @foreach ($processes as $process)
+                                        @if (auth()->user()->access('خلاصه گزارش فرایند: ' . $process->name))
                                             <tr>
                                                 <td class="d-none">{{ $process->id }}</td>
                                                 <td>{{ $process->name }}</td>
                                                 <td class="d-none">{{ $process->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('simpleWorkflowReport.summary-report.show', [ 'summary_report' => $process ]) }}" class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                                    <a href="{{ route('simpleWorkflowReport.summary-report.show', ['summary_report' => $process]) }}"
+                                                        class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                                 </td>
                                             </tr>
                                         @endif
                                     @endforeach
+                                    @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>پرسنل</td>
+                                            <td class="d-none">عملکرد مالی پرسنل</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.fin.totalCost') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (auth()->user()->access('گزارش کل تعیین هزینه ها و دریافت هزینه ها'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>هزینه ها</td>
+                                            <td class="d-none">گزارش کامل تعیین هزینه ها و دریافت هزینه ها</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.fin.allPayments') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
