@@ -78,7 +78,7 @@
                     <div class="inner">
                         <h3>{{ trans('ثبت مرخصی') }}</h3>
 
-                        <p>{{ trans('از این قسمت میتوانید مرخصی خود را ثبت کنید') }}</p>
+                        <p>{{ trans('مرخصی خود را ثبت کنید') }}</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
