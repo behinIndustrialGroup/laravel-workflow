@@ -98,7 +98,7 @@
                         @foreach ($rows['rows'] as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $row->process()?->name ?? trans('fields.Unknown') }}
+                                <td>{{ $row->process_name }}
                                     @php
                                         if ($row->process()?->name == 'داخلی') {
                                             $numberOfInternalProcess++;
@@ -122,20 +122,23 @@
                                 <td>{{ $row->destination_account }}</td>
                             </tr>
                         @endforeach
-                        <tr class="bg-success">
-                            <td></td>
-                            <td>
-                                داخلی: {{ $numberOfInternalProcess }}<br>
-                                خارجی: {{ $numberOfExternalProcess }}
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td class="d-none"></td>
-                            <td>{{ number_format($totalPayment) }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        <tfoot>
+                            <tr class="bg-success">
+                                <td></td>
+                                <td>
+                                    داخلی: {{ $numberOfInternalProcess }}<br>
+                                    خارجی: {{ $numberOfExternalProcess }}
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="d-none"></td>
+                                <td >مجموع</td>
+                                <td>{{ number_format($totalPayment) }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                        
                     </tbody>
                 </table>
             </div>
@@ -162,7 +165,7 @@
 
                 "pageLength": -1,
                 "order": [
-                    [3, "desc"]
+                    [5, "desc"]
                 ],
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
