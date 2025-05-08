@@ -23,7 +23,7 @@
                             <tr>
                                 <td>
                                     <a
-                                        href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><i
+                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"><i
                                             class="fa fa-external-link"></i></a>
                                     {{ $case->number }}
                                     

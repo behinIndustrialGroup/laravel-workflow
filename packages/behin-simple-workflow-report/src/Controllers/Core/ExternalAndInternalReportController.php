@@ -13,7 +13,10 @@ use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflow\Models\Entities\Devices;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
+use Behin\SimpleWorkflow\Models\Entities\Parts;
+use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -30,9 +33,11 @@ class ExternalAndInternalReportController extends Controller
             '4bb6287b-9ddc-4737-9573-72071654b9de'
         ])
         ->whereNull('parent_id')
+        ->whereNotNull('number')
         ->whereExists(function ($query) {
             $query->select(DB::raw(1))
                 ->from('wf_inbox')
+                ->whereNull('wf_inbox.deleted_at')
                 ->whereColumn('wf_inbox.case_id', 'wf_cases.id')
                 ->whereNotIn('status', ['done', 'doneByOther', 'canceled']);
         })
@@ -41,56 +46,25 @@ class ExternalAndInternalReportController extends Controller
         return view('SimpleWorkflowReportView::Core.ExternalInternal.index', compact('cases'));
     }
 
-    public function totalCost()
-    {
-        return view('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost');
-    }
-
-    public function totalPayment()
-    {
-        $vars = VariableController::getAll($fields = ['payment_amount'])->pluck('payment_amount');
-        $sum = 0;
-        $ar = [];
-        foreach ($vars as $var) {
-            $var = str_replace(',', '', $var);
-            $var = str_replace(' ', '', $var);
-            $var = str_replace('ریال', '', $var);
-            $var = str_replace('تومان', '', $var);
-            $var = str_replace('/', '', $var);
-            $var = str_replace('.', '', $var);
-            if (is_numeric($var)) {
-                $sum += $var;
-            }
-            $ar[] = $var;
-        }
-        return $sum;
-    }
-
-    public static function allPayments(Request $request)
-    {
-        $user = $request->user;
-        $from = convertPersianToEnglish($request->from);
-        $to = convertPersianToEnglish($request->to);
-
-        $rows = Financials::select('*');
-
-        if ($user) {
-            $rows = $rows->where('destination_account_name', $user);
-        }
-
-        if ($from && $to) {
-            $from = Jalalian::fromFormat('Y-m-d', $from)->toCarbon()->startOfDay()->timestamp;
-            $to = Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay()->timestamp;
-
-            $rows = $rows->whereBetween('fix_cost_date', [$from, $to]);
-        }
-
-
-        $rows = [
-            'rows' => $rows->get(),
-            'destinations' => $rows->get()->groupBy('destination_account_name')
+    public function show($caseNumber){
+        $mainCase = Cases::where('number', $caseNumber)->whereNull('parent_id')->first();
+        $customer = [
+            'name' => $mainCase->getVariable('customer_workshop_or_ceo_name'),
+            'mobile' => $mainCase->getVariable('customer_mobile'),
+            'city' => $mainCase->getVariable('customer_city'),
+            'address' => $mainCase->getVariable('customer_address'),
         ];
 
-        return view('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments', compact('rows'));
+        $devices = Devices::where('case_number', $caseNumber)->get();
+        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get();
+        $parts = Parts::where('case_number', $caseNumber)->get();
+        $financials = Financials::where('case_number', $caseNumber)->get();
+        $delivery = [
+            'delivery_date' => $mainCase->getVariable('delivery_date'),
+            'delivered_to' => $mainCase->getVariable('delivered_to'),
+            'delivery_description' => $mainCase->getVariable('delivery_description'),
+        ];
+        return view('SimpleWorkflowReportView::Core.ExternalInternal.show',
+        compact('customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery'));
     }
 }
