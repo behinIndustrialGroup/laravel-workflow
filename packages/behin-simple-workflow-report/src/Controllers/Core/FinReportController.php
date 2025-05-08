@@ -14,6 +14,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,18 @@ class FinReportController extends Controller
         $user = $request->user;
         $from = convertPersianToEnglish($request->from);
         $to = convertPersianToEnglish($request->to);
+        $today = Carbon::today();
+        $todayShamsi = Jalalian::fromCarbon($today);
+        $thisYear = $todayShamsi->getYear();
+        $thisMonth = $todayShamsi->getMonth();
+        $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
+        $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")
+            ->addMonths(1)
+            ->subDays(1)
+            ->format('Y-m-d');
+
+        $from = isset($request->from) ? convertPersianToEnglish($request->from) : "$thisYear-$thisMonth-01";
+        $to = isset($request->to) ? convertPersianToEnglish($request->to) : (string) $to;
 
         $rows = Financials::select('*');
 
@@ -71,7 +84,7 @@ class FinReportController extends Controller
             $from = Jalalian::fromFormat('Y-m-d', $from)->toCarbon()->startOfDay()->timestamp;
             $to = Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay()->timestamp;
 
-            $rows = $rows->whereBetween('fix_cost_date', [$from, $to]);
+            $rows = $rows->whereBetween('payment_date', [$from, $to]);
         }
 
 
