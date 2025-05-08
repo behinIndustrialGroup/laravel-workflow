@@ -240,6 +240,7 @@
                                         @endif
                                         </tr>
                                     @endforeach
+                                <tfoot>
                                     <tr class="bg-success">
                                         <td></td>
                                         <td>
@@ -252,6 +253,8 @@
                                         <td>{{ number_format($totalPaymentAmount) }}</td>
                                         <td></td>
                                     </tr>
+                                </tfoot>
+
                                 </tbody>
                             </table>
                         </div>
