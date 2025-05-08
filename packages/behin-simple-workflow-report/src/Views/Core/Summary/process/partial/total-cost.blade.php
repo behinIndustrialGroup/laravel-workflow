@@ -16,15 +16,18 @@
     $thisYear = $todayShamsi->getYear();
     $thisMonth = $todayShamsi->getMonth();
     $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
-    $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")->addMonths(1)->subDays(1)->format('Y-m-d');
-    
+    $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")
+        ->addMonths(1)
+        ->subDays(1)
+        ->format('Y-m-d');
+
     $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
-    $to = isset($_GET['to']) ? $_GET['to'] : (string)$to;
+    $to = isset($_GET['to']) ? $_GET['to'] : (string) $to;
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
 
     // دریافت جدول اصلی
     $finTable = ReportHelper::getFilteredFinTable($from, $to, $quser);
-// dd($finTable);
+    // dd($finTable);
     // پردازش آمار کاربران
     $users = DB::table('users')
         ->get()
@@ -70,13 +73,15 @@
                             <form action="{{ url()->current() }}" class="form-row align-items-end">
                                 <div class="form-group col-md-2">
                                     <label for="year">از</label>
-                                    <input type="text" name="from" value="{{ $from }}" class="form-control persian-date">
+                                    <input type="text" name="from" value="{{ $from }}"
+                                        class="form-control persian-date">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="year">تا</label>
-                                    <input type="text" name="to" value="{{ $to }}" class="form-control persian-date">
+                                    <input type="text" name="to" value="{{ $to }}"
+                                        class="form-control persian-date">
                                 </div>
-                                
+
 
                                 <div class="form-group col-md-2">
                                     <label for="quser">کاربر</label>
@@ -84,8 +89,8 @@
                                         <option value="">{{ trans('fields.All') }}
                                         </option>
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ $user->id == $quser ? 'selected' : '' }}>{{ $user->name }}
+                                            <option value="{{ $user->id }}" {{ $user->id == $quser ? 'selected' : '' }}>
+                                                {{ $user->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -185,9 +190,10 @@
                                         $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
-                                        <tr>
-                                            {{-- فرایند تعمیر در محل --}}
-                                            @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
+                                        {{-- فرایند تعمیر در محل --}}
+                                        @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
+                                            <tr>
+
                                                 <td>{{ $row->number }}
                                                     <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
                                                         target="_blank">
@@ -207,9 +213,11 @@
                                                     $totalPaymentAmount += $row->payment_amount;
                                                     $numberOfExternalProcess++;
                                                 @endphp
-                                            @endif
-                                            {{-- فرایند تعمیر در مدارپرداز --}}
-                                            @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
+                                            </tr>
+                                        @endif
+                                        {{-- فرایند تعمیر در مدارپرداز --}}
+                                        @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
+                                            <tr>
                                                 <td>{{ $row->number }}
                                                     <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
                                                         target="_blank">
@@ -229,7 +237,7 @@
                                                     $totalPaymentAmount += $row->payment_amount;
                                                     $numberOfInternalProcess++;
                                                 @endphp
-                                            @endif
+                                        @endif
                                         </tr>
                                     @endforeach
                                     <tr class="bg-success">

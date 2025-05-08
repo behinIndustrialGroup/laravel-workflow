@@ -171,12 +171,12 @@
                         @foreach ($financials as $fin)
                             <tr>
                                 <td>{{ $fin->process_name }}</td>
-                                <td>{{ $fin->cost }}</td>
-                                <td>{{ $fin->fix_cost_date }}</td>
+                                <td>{{ number_format($fin->cost) }}</td>
+                                <td>{{ $fin->fix_cost_date ? toJalali((int)$fin->fix_cost_date)->format('Y-m-d') : '' }}</td>
                                 <td>{{ $fin->destination_account }}</td>
                                 <td>{{ $fin->destination_account_name }}</td>
-                                <td>{{ $fin->payment }}</td>
-                                <td>{{ $fin->payment_date }}</td>
+                                <td>{{ number_format($fin->payment) }}</td>
+                                <td>{{ $fin->payment_date ? toJalali((int)$fin->payment_date)->format('Y-m-d'): '' }}</td>
                                 <td>{{ $fin->payment_after_completion }}</td>
                             </tr>
                         @endforeach
@@ -196,7 +196,7 @@
                             <th>{{ trans('fields.delivery_description') }}</th>
                         </tr>
                         <tr>
-                            <td>{{ $delivery['delivery_date'] }}</td>
+                            <td>{{  $delivery['delivery_date'] ? toJalali((int)$delivery['delivery_date'])->format('Y-m-d') : '' }}</td>
                             <td>{{ $delivery['delivered_to'] }}</td>
                             <td>{{ $delivery['delivery_description'] }}</td>
                         </tr>
