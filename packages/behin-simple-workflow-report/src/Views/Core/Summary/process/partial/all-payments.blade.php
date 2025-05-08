@@ -71,7 +71,7 @@
     </div>
     <div class="card">
         <div class="card-header  text-center bg-info">
-            <h3 class="card-title">گزارش کل تعیین هزینه ها و دریافت هزینه ها</h3>
+            <h3 class="card-title">گزارش کل دریافت هزینه ها</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
