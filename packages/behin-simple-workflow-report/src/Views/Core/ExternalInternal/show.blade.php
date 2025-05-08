@@ -37,16 +37,30 @@
             <div class="card-body">
                 <div class="row table-responsive" id="devices">
                     <table class="table">
+                        <thead>
+                            <tr>
+                                <th>نام دستگاه</th>
+                                <th>مدل دستگاه</th>
+                                <th>سیستم کنترل دستگاه</th>
+                                <th>مدل سیستم کنترل دستگاه</th>
+                                <th>سریال مپا</th>
+                                <th>سریال دستگاه</th>
+                                <th>نقشه الکتریکی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($devices as $device)
                             <tr>
-                                <td>نام دستگاه: {{ $device->name }}</td>
-                                <td>مدل دستگاه: {{ $device->model }}</td>
-                                <td>سیستم کنترل دستگاه: {{ $device->control_system }}</td>
-                                <td>مدل سیستم کنترل دستگاه: {{ $device->control_system_model }}</td>
-                                <td>سریال دستگاه: {{ $device->serial }}</td>
-                                <td>نقشه الکتریکی : {{ $device->has_electrical_map }}</td>
+                                <td>{{ $device->name }}</td>
+                                <td>{{ $device->model }}</td>
+                                <td>{{ $device->control_system }}</td>
+                                <td>{{ $device->control_system_model }}</td>
+                                <td>{{ $device->mapa_serial }}</td>
+                                <td>{{ $device->serial }}</td>
+                                <td>{{ $device->has_electrical_map }}</td>
                             </tr>
                         @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -65,8 +79,8 @@
                         </tr>
                         @foreach ($deviceRepairReports as $report)
                             <tr>
-                                <td>{{ $report->start_date }}  {{ $report->start_time }}</td>
-                                <td>{{ $report->end_date }}  {{ $report->end_time }}</td>
+                                <td dir="ltr">{{ convertPersianToEnglish($report->start_date) }}  {{ $report->start_time }}</td>
+                                <td dir="ltr">{{ convertPersianToEnglish($report->end_date) }}  {{ $report->end_time }}</td>
                                 <td>{{ $report->report }}</td>
                                 <td>{{ getUserInfo($report->mapa_expert_head)->name }}</td>
                                 <td>{{ getUserInfo($report->mapa_expert)->name }}</td>
