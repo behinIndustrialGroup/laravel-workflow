@@ -82,8 +82,8 @@
                                 <td dir="ltr">{{ convertPersianToEnglish($report->start_date) }}  {{ $report->start_time }}</td>
                                 <td dir="ltr">{{ convertPersianToEnglish($report->end_date) }}  {{ $report->end_time }}</td>
                                 <td>{{ $report->report }}</td>
-                                <td>{{ getUserInfo($report->mapa_expert_head)->name }}</td>
-                                <td>{{ getUserInfo($report->mapa_expert)->name }}</td>
+                                <td>{{ getUserInfo($report->mapa_expert_head)->name ?? $report->mapa_expert_head }}</td>
+                                <td>{{ getUserInfo($report->mapa_expert)->name ?? $report->mapa_expert}}</td>
                             </tr>
                         @endforeach
                     </table>
