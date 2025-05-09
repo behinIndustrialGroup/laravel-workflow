@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header bg-primary">گزارش تعمیرات</div>
+            <div class="card-header bg-primary">گزارش فرایند خارجی</div>
             <div class="card-body">
                 <div class="row table-responsive" id="repair-reports">
                     <table class="table">
@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-header bg-primary">قطعه ها</div>
+            <div class="card-header bg-primary">گزارش فرایند داخلی</div>
             <div class="card-body">
                 <div class="row table-responsive" id="parts">
                     <table class="table">
