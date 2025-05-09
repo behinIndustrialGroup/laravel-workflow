@@ -96,7 +96,7 @@
                 <div class="row table-responsive" id="parts">
                     <table class="table">
                         <tr>
-                            <th>شروع</th>
+                            <th>قطعه</th>
                             <th>سرپرست</th>
                             <th>تعمیرکار</th>
                             <th>سریال مپا</th>
@@ -137,6 +137,7 @@
                                 <td>{{ $part->see_the_problem }}</td>
                                 <td>{{ $part->final_result_and_test }}</td>
                                 <td>{{ $part->test_possibility }}</td>
+                                <td>{{ $part->final_result }}</td>
                                 <td>{{ $part->problem_seeing }}</td>
                                 <td>{{ $part->final_result }}</td>
                                 <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
