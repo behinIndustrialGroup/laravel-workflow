@@ -18,6 +18,20 @@
 
                 </pre> --}}
                 <div class="card">
+                    <div class="card-header bg-primary">پذیرش</div>
+                    <div class="card-body">
+                        <div class="row table-responsive" id="admision">
+                            <table class="table">
+                                <tr>
+                                    <td>شروع پذیرش:  {{ $mainCase->process->name }}</td>
+                                    <td>پذیرش کننده: {{ $mainCase->creator()->name }}</td>
+                                    <td>تاریخ پذیرش: <span dir="ltr">{{ toJalali($mainCase->created_at)->format('Y-m-d H:i') }}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="card-header bg-primary">مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
