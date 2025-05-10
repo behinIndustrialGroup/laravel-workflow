@@ -112,6 +112,7 @@
                             <th>{{ trans('fields.final_result_and_test') }}</th>
                             <th>{{ trans('fields.test_possibility') }}</th>
                             <th>{{ trans('fields.final_result') }}</th>
+                            <th>{{ trans('fields.problem_seeing') }}</th>
                             <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
                             <th>{{ trans('fields.test_in_another_place') }}</th>
                             <th>{{ trans('fields.job_rank') }}</th>
@@ -139,7 +140,6 @@
                                 <td>{{ $part->test_possibility }}</td>
                                 <td>{{ $part->final_result }}</td>
                                 <td>{{ $part->problem_seeing }}</td>
-                                <td>{{ $part->final_result }}</td>
                                 <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
                                 <td>{{ $part->test_in_another_place }}</td>
                                 <td>{{ $part->job_rank }}</td>
