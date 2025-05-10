@@ -65,7 +65,7 @@ class ExternalAndInternalReportController extends Controller
             'delivery_description' => $mainCase->getVariable('delivery_description'),
         ];
         return view('SimpleWorkflowReportView::Core.ExternalInternal.show',
-        compact('customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery'));
+        compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery'));
     }
 
     public function search(Request $request){
