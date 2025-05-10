@@ -130,7 +130,7 @@
                                 <td>{{ $part->refer_to_unit }}</td>
                                 <td>{{ $part->fix_report }}</td>
                                 <td>{{ $part->repair_is_approved }}</td>
-                                <td>{{ $part->initial_part_pic }}</td>
+                                <td><a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a></td>
                                 <td>{{ $part->dispatched_expert_needed }}</td>
                                 <td>{{ $part->dispatched_expert }}</td>
                                 <td>{{ $part->dispatched_expert_description }}</td>
