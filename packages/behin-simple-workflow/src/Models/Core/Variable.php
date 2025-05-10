@@ -21,5 +21,9 @@ class Variable extends Model
         'value'
     ];
 
+    public function case(){
+        return $this->belongsTo(Cases::class);
+    }
+
 }
 

@@ -67,4 +67,52 @@ class ExternalAndInternalReportController extends Controller
         return view('SimpleWorkflowReportView::Core.ExternalInternal.show',
         compact('customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery'));
     }
+
+    public function search(Request $request){
+        $cases = Variable::where('key', 'customer_workshop_or_ceo_name')->where('value', 'like', "%$request->q%")->get();
+        $caseNumbers = [];
+        foreach($cases as $case){
+            $caseNumbers[] = $case->case->number;
+        }
+        $cases = Cases::whereIn('number', $caseNumbers)
+        ->orWhere('number', 'like', '%' . $request->q . '%')
+        ->get();
+        $s = '';
+        foreach($cases as $case){
+            $a = "<a href='" . route('simpleWorkflowReport.external-internal.show', [ 'external_internal' => $case->number ]) . "'><i class='fa fa-external-link'></i></a>";
+            $s .= "<tr><td>
+                    $a
+                    $case->number
+                    $case->history
+            </td>";   
+            $s .= "<td>". $case->getVariable('customer_workshop_or_ceo_name') . "</td>";   
+            $s .= "<td>";
+            foreach ($case->whereIs() as $inbox) {
+                $s .= $inbox->task->styled_name ?? '';
+                $s .= '(' . getUserInfo($inbox->actor)?->name . ')';
+                $s .= '<br>';
+            } 
+            $s .= "</td><td dir='ltr'>". toJalali($case->created_at)->format('Y-m-d H:i') . "</td></tr>";   
+        }
+        return $s;
+    }
+
+    public function archive(){
+        $cases = Cases::whereIn('process_id', [
+            '35a5c023-5e85-409e-8ba4-a8c00291561c',
+            '4bb6287b-9ddc-4737-9573-72071654b9de'
+        ])
+        ->whereNull('parent_id')
+        ->whereNotNull('number')
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('wf_inbox')
+                ->whereNull('wf_inbox.deleted_at')
+                ->whereColumn('wf_inbox.case_id', 'wf_cases.id')
+                ->whereIn('status', ['done', 'doneByOther', 'canceled']);
+        })
+        ->groupBy('number')
+        ->get();
+        return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
+    }
 }
