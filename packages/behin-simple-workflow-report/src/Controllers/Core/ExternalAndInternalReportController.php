@@ -72,7 +72,9 @@ class ExternalAndInternalReportController extends Controller
         $cases = Variable::where('key', 'customer_workshop_or_ceo_name')->where('value', 'like', "%$request->q%")->get();
         $caseNumbers = [];
         foreach($cases as $case){
-            $caseNumbers[] = $case->case->number;
+            if($case->case->number){
+                $caseNumbers[] = $case->case->number;
+            }
         }
         $cases = Cases::whereIn('number', $caseNumbers)
         ->orWhere('number', 'like', '%' . $request->q . '%')
