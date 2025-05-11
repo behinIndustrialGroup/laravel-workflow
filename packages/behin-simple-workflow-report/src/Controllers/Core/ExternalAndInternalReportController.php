@@ -72,7 +72,7 @@ class ExternalAndInternalReportController extends Controller
         $cases = Variable::where('key', 'customer_workshop_or_ceo_name')->where('value', 'like', "%$request->q%")->get();
         $caseNumbers = [];
         foreach($cases as $case){
-            if($case->case->number){
+            if(isset($case->case->number)){
                 $caseNumbers[] = $case->case->number;
             }
         }
