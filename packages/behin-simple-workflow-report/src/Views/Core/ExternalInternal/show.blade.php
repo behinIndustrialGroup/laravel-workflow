@@ -96,6 +96,17 @@
                                     <th>گزارش</th>
                                     <th>سرپرست</th>
                                     <th>تعمیرکار</th>
+                                    <th>{{ trans('fields.need_next_visit') }}</th>
+                                    <th>{{ trans('fields.next_visit_description') }}</th>
+                                    <th>{{ trans('fields.part_left_from_customer_location') }}</th>
+                                    <th>{{ trans('fields.was_backups_taken') }}</th>
+                                    <th>{{ trans('fields.parameter_backup') }}</th>
+                                    <th>{{ trans('fields.pcparam_backup') }}</th>
+                                    <th>{{ trans('fields.sram_backup') }}</th>
+                                    <th>{{ trans('fields.sysfile_backup') }}</th>
+                                    <th>{{ trans('fields.prog_backup') }}</th>
+                                    <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
+                                    
                                 </tr>
                                 @foreach ($deviceRepairReports as $report)
                                     <tr>
@@ -107,6 +118,16 @@
                                         <td>{{ getUserInfo($report->mapa_expert_head)->name ?? $report->mapa_expert_head }}
                                         </td>
                                         <td>{{ getUserInfo($report->mapa_expert)->name ?? $report->mapa_expert }}</td>
+                                        <td>{{ $report->need_next_visit }}</td>
+                                        <td>{{ $report->next_visit_description }}</td>
+                                        <td>{{ $report->part_left_from_customer_location }}</td>
+                                        <td>{{ $report->was_backups_taken }}</td>
+                                        <td>{{ $report->parameter_backup }}</td>
+                                        <td>{{ $report->pcparam_backup }}</td>
+                                        <td>{{ $report->sram_backup }}</td>
+                                        <td>{{ $report->sysfile_backup }}</td>
+                                        <td>{{ $report->prog_backup }}</td>
+                                        <td>{{ $report->reason_of_not_taking_backup }}</td>
                                     </tr>
                                 @endforeach
                             </table>
