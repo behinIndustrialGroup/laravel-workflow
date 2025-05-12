@@ -83,6 +83,7 @@ class ExternalAndInternalReportController extends Controller
         }
         $cases = Cases::whereIn('number', $caseNumbers)
         ->orWhere('number', 'like', '%' . $request->q . '%')
+        ->groupBy('number')
         ->get();
         $s = '';
         foreach($cases as $case){
