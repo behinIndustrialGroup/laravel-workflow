@@ -40,8 +40,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>شروع</th>
-                            <th>پایان</th>
+                            <th>تاریخ</th>
+                            <th>ساعت شروع</th>
+                            <th>ساعت پایان</th>
                             <th>مدت زمان صرف شده(ساعت)</th>
                             <th>تکنسین</th>
                             <th>گزارش</th>
@@ -56,8 +57,9 @@
                             @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td dir="ltr">{{ toJalali((int) $report->start)->format('Y-m-d H:i') }}</td>
-                                <td dir="ltr">{{ toJalali((int) $report->end)->format('Y-m-d H:i') }}</td>
+                                <td dir="ltr">{{ toJalali((int) $report->start)->format('Y-m-d') }}</td>
+                                <td dir="ltr">{{ toJalali((int) $report->start)->format('H:i') }}</td>
+                                <td dir="ltr">{{ toJalali((int) $report->end)->format('H:i') }}</td>
                                 <td>{{ $duration }}</td>
                                 <td>{{ getUserInfo($report->expert)?->name }}</td>
                                 <td>{{ $report->report }}</td>
