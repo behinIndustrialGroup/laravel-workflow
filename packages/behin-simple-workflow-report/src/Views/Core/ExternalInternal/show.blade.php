@@ -18,10 +18,10 @@
 
                 </pre> --}}
                 <div class="card">
-                    <div class="card-header bg-primary">پذیرش</div>
+                    <div class="card-header bg-success">پذیرش</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="admision">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <td>شروع پذیرش:  {{ $mainCase->process->name }}</td>
                                     <td>پذیرش کننده: {{ $mainCase->creator()->name }}</td>
@@ -32,10 +32,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">مشتری</div>
+                    <div class="card-header bg-success">مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <td>نام مشتری: {{ $customer['name'] }}</td>
                                     <td>موبایل مشتری: {{ $customer['mobile'] }}</td>
@@ -53,10 +53,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">دستگاه</div>
+                    <div class="card-header {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="devices">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>نام دستگاه</th>
@@ -86,10 +86,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">گزارش فرایند خارجی</div>
+                    <div class="card-header {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>شروع</th>
                                     <th>پایان</th>
@@ -114,10 +114,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">گزارش فرایند داخلی</div>
+                    <div class="card-header {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>قطعه</th>
                                     <th>سرپرست</th>
@@ -177,11 +177,11 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">مالی</div>
+                    <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">مالی</div>
                     <div class="card-body">
                         {{-- مالی --}}
                         <div class="row table-responsive" id="financials">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>{{ trans('fields.process_name') }}</th>
                                     <th>{{ trans('fields.cost') }}</th>
@@ -211,11 +211,11 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-primary">تحویل</div>
+                    <div class="card-header {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل</div>
                     <div class="card-body">
                         {{-- تحویل --}}
                         <div class="row table-responsive" id="delivery">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>{{ trans('fields.delivery_date') }}</th>
                                     <th>{{ trans('fields.delivered_to') }}</th>
