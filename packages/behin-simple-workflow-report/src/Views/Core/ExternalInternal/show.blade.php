@@ -38,7 +38,10 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <td>نام مشتری: {{ $customer['name'] }}</td>
-                                    <td>موبایل مشتری: {{ $customer['mobile'] }}</td>
+                                    <td>@if(auth()->user()->access('امور جاری - شماره مشتری'))
+                                        موبایل مشتری: {{ $customer['mobile'] }}
+                                        @endif
+                                    </td>
                                     <td>شهر مشتری: {{ $customer['city'] }}</td>
                                     <td>آدرس مشتری: {{ $customer['address'] }}</td>
                                 </tr>
@@ -197,6 +200,7 @@
                         </div>
                     </div>
                 </div>
+                @if(auth()->user()->access('امور جاری - جزئیات مالی'))
                 <div class="card">
                     <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">مالی</div>
                     <div class="card-body">
@@ -231,6 +235,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="card">
                     <div class="card-header {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل</div>
                     <div class="card-body">
