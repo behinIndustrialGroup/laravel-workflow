@@ -68,6 +68,7 @@
                         <tr class="bg-success">
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>مجموع</td>
                             <td>{{ $totalDuration }}</td>
                             <td></td>
