@@ -30,7 +30,8 @@ class ExternalAndInternalReportController extends Controller
     {
         $cases = Cases::whereIn('process_id', [
             '35a5c023-5e85-409e-8ba4-a8c00291561c',
-            '4bb6287b-9ddc-4737-9573-72071654b9de'
+            '4bb6287b-9ddc-4737-9573-72071654b9de',
+            '1763ab09-1b90-4609-af45-ef5b68cf10d0'
         ])
         ->whereNull('parent_id')
         ->whereNotNull('number')
