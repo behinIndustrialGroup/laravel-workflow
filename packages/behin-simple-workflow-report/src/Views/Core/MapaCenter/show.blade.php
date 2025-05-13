@@ -46,6 +46,7 @@
                             <th>مدت زمان صرف شده(ساعت)</th>
                             <th>تکنسین</th>
                             <th>گزارش</th>
+                            <th>اقدام</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,6 +64,9 @@
                                 <td>{{ $duration }}</td>
                                 <td>{{ getUserInfo($report->expert)?->name }}</td>
                                 <td>{{ $report->report }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteReport('{{ $report->id }}')"><i class="fa fa-trash"></i></button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -73,6 +77,7 @@
                             <td></td>
                             <td>مجموع</td>
                             <td>{{ $totalDuration }}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -133,5 +138,17 @@
                     'order': [[1, 'desc']],
                 });
             });
+
+            function deleteReport(id) {
+                var scriptId = "05a8fc79-b957-441b-8de4-275d7893c827";
+                var fd = new FormData();
+                fd.append('reportId', id)
+                if(confirm("آیا از حذف این گزارش مطمئن هستید؟")){
+                    runScript(scriptId, fd, function(response) {
+                        alert(response)
+                        window.location.reload();
+                    })
+                }
+            }
         </script>
     @endsection
