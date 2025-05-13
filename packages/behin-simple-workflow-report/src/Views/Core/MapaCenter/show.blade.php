@@ -36,7 +36,7 @@
                 گزارشات تعمیر
             </div>
             <div class="col-sm-12  table-responsive">
-                <table class="table table-stripped">
+                <table class="table table-stripped" id="mapa-center-reports">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -78,6 +78,7 @@
                 </table>
             </div>
 
+            
 
             <form action="{{ route('simpleWorkflowReport.mapa-center.update', $case->id) }}" method="POST">
                 @csrf
@@ -120,5 +121,14 @@
     @section('script')
         <script>
             initial_view()
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#mapa-center-reports').DataTable({
+                    'language': {
+                        'url': 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                    }
+                });
+            });
         </script>
     @endsection
