@@ -171,8 +171,8 @@
                                 @foreach ($parts as $part)
                                     <tr>
                                         <td>{{ $part->name }}</td>
-                                        <td>{{ getUserInfo($part->mapa_expert_head)->name }}</td>
-                                        <td>{{ getUserInfo($part->mapa_expert)->name }}</td>
+                                        <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '' }}</td>
+                                        <td>{{ getUserInfo($part->mapa_expert)->name ?? '' }}</td>
                                         <td>{{ $part->mapa_serial }}</td>
                                         <td>{{ $part->refer_to_unit }}</td>
                                         <td>{{ $part->fix_report }}</td>
