@@ -65,6 +65,8 @@
                                 <td>{{ $report->report }}</td>
                             </tr>
                         @endforeach
+                    </tbody>
+                    <tfoot>
                         <tr class="bg-success">
                             <td></td>
                             <td></td>
@@ -74,7 +76,7 @@
                             <td></td>
                             <td></td>
                         </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
 
@@ -127,7 +129,8 @@
                 $('#mapa-center-reports').DataTable({
                     'language': {
                         'url': 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
-                    }
+                    },
+                    'order': [[1, 'desc']],
                 });
             });
         </script>
