@@ -100,7 +100,7 @@
                                     @if (auth()->user()->access('بایگانی: گزارش پرونده های بایگانی شده'))
                                         <tr>
                                             <td class="d-none"></td>
-                                            <td>امور جاری</td>
+                                            <td>بایگانی</td>
                                             <td class="d-none">گزارش کامل پرونده های بایگانی شده</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.external-internal.archive') }}"
