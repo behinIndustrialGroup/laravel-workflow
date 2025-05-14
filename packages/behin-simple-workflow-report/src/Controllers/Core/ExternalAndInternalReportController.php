@@ -101,19 +101,17 @@ class ExternalAndInternalReportController extends Controller
     public function archive(){
         $cases = Cases::whereIn('process_id', [
             '35a5c023-5e85-409e-8ba4-a8c00291561c',
-            '4bb6287b-9ddc-4737-9573-72071654b9de'
+            '4bb6287b-9ddc-4737-9573-72071654b9de',
+            '1763ab09-1b90-4609-af45-ef5b68cf10d0'
         ])
         ->whereNull('parent_id')
         ->whereNotNull('number')
-        ->whereExists(function ($query) {
-            $query->select(DB::raw(1))
-                ->from('wf_inbox')
-                ->whereNull('wf_inbox.deleted_at')
-                ->whereColumn('wf_inbox.case_id', 'wf_cases.id')
-                ->whereIn('status', ['done', 'doneByOther', 'canceled']);
-        })
         ->groupBy('number')
-        ->get();
+        ->get()
+        ->filter(function ($case) {
+            $whereIsResult = $case->whereIs();
+            return ($whereIsResult[0]?->archive == 'yes');
+        });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
     }
 }
