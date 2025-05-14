@@ -32,8 +32,7 @@
                                 <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
                                 <td>
                                     @foreach ($case->whereIs() as $inbox)
-                                        {!! $inbox->task->styled_name !!} <span
-                                            class="text-muted">({{ getUserInfo($inbox->actor)->name }})</span> <br>
+                                        {!! $inbox->task->styled_name !!} 
                                     @endforeach
                                 </td>
                                 <td>{{ getUserInfo($case->creator)->name }}</td>
