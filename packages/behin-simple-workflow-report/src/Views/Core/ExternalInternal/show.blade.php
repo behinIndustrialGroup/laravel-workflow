@@ -23,6 +23,7 @@
                         <div class="row table-responsive" id="admision">
                             <table class="table table-bordered">
                                 <tr>
+                                    <td>شماره پرونده: {{ $mainCase->number }}</td>
                                     <td>شروع پذیرش:  {{ $mainCase->process->name }}</td>
                                     <td>پذیرش کننده: {{ $mainCase->creator()->name }}</td>
                                     <td>تاریخ پذیرش: <span dir="ltr">{{ toJalali($mainCase->created_at)->format('Y-m-d H:i') }}</span></td>
