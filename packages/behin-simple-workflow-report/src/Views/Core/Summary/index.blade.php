@@ -19,8 +19,8 @@
                                     <label for="">هر چه میخواهد دل تنگت بجوی</label>
                                     <div class="input-group">
                                         <input type="text" name="q" id="" class="form-control" placeholder="شماره پرونده یا نام مشتری">
-                                        <div class="input-group-append" onclick="search()" style="cursor: pointer">
-                                            <div class="input-group-text">
+                                        <div class="input-group-append" onclick="search()" style="cursor: pointer;">
+                                            <div class="input-group-text" style="background: #25a5c8">
                                                 <span class="fa fa-search" ></span>
                                             </div>
                                         </div>
@@ -93,6 +93,17 @@
                                             <td class="d-none">گزارش کامل فرایند های داخلی و خارجی</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.external-internal.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (auth()->user()->access('بایگانی: گزارش پرونده های بایگانی شده'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>امور جاری</td>
+                                            <td class="d-none">گزارش کامل پرونده های بایگانی شده</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.external-internal.archive') }}"
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>

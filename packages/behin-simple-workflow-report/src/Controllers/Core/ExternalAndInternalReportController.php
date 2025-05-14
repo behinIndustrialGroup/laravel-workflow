@@ -35,13 +35,6 @@ class ExternalAndInternalReportController extends Controller
         ])
         ->whereNull('parent_id')
         ->whereNotNull('number')
-        // ->whereExists(function ($query) {
-        //     $query->select(DB::raw(1))
-        //         ->from('wf_inbox')
-        //         ->whereNull('wf_inbox.deleted_at')
-        //         ->whereColumn('wf_inbox.case_id', 'wf_cases.id')
-        //         ->whereNotIn('status', ['done', 'doneByOther', 'canceled']);
-        // })
         ->groupBy('number')
         ->get()
         ->filter(function ($case) {
