@@ -103,7 +103,7 @@
                                             <td>بایگانی</td>
                                             <td class="d-none">گزارش کامل پرونده های بایگانی شده</td>
                                             <td>
-                                                <a href="{{ route('simpleWorkflowReport.external-internal.archive') }}"
+                                                <a href="{{ route('simpleWorkflowReport.external-internal-archive') }}"
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>

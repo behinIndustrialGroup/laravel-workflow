@@ -35,7 +35,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('fin-report', FinReportController::class);
     Route::resource('external-internal', ExternalAndInternalReportController::class);
     Route::post('external-internal/search', [ExternalAndInternalReportController::class, 'search'])->name('external-internal.search');
-    Route::get('external-internal/archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal.archive');
+    Route::get('external-internal-archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal-archive');
     
     Route::name('fin.')->prefix('fin')->group(function(){
         Route::get('', [FinReportController::class, 'index'])->name('index');
