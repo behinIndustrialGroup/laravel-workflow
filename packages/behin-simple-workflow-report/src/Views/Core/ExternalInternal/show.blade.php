@@ -155,6 +155,8 @@
                                     <th>اعزام کارشناس</th>
                                     <th>کارشناس اعزام شده</th>
                                     <th>توضیحات اعزام کارشناس</th>
+                                    <th>تاریخ پایان کار</th>
+                                    <th>ساعت پایان کار</th>
                                     <th>مدت تعمیرات</th>
                                     <th>{{ trans('fields.see_the_problem') }}</th>
                                     <th>{{ trans('fields.final_result_and_test') }}</th>
@@ -182,6 +184,8 @@
                                         <td>{{ $part->dispatched_expert_needed }}</td>
                                         <td>{{ $part->dispatched_expert }}</td>
                                         <td>{{ $part->dispatched_expert_description }}</td>
+                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('Y-m-d') : '' }}</td>
+                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('H:i') : '' }}</td>
                                         <td>{{ $part->repair_duration }}</td>
                                         <td>{{ $part->see_the_problem }}</td>
                                         <td>{{ $part->final_result_and_test }}</td>
