@@ -6,7 +6,7 @@
 @section('content')
     <div class="container">
         <div class="card">
-            <div class="card-header"></div>
+            <div class="card-header bg-success">گزارش پرونده های بایگانی شده</div>
             <div class="card-body table-responsive">
                 <table class="table" id="cases">
                     <thead>
