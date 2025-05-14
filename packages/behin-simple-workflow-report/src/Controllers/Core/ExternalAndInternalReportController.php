@@ -10,6 +10,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
+use Behin\SimpleWorkflow\Models\Core\Inbox;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
@@ -33,18 +34,19 @@ class ExternalAndInternalReportController extends Controller
             '4bb6287b-9ddc-4737-9573-72071654b9de',
             '1763ab09-1b90-4609-af45-ef5b68cf10d0'
         ])
-        ->whereNull('parent_id')
-        ->whereNotNull('number')
-        ->groupBy('number')
-        ->get()
-        ->filter(function ($case) {
-            $whereIsResult = $case->whereIs();
-            return !($whereIsResult[0]?->archive == 'yes');
-        });
+            ->whereNull('parent_id')
+            ->whereNotNull('number')
+            ->groupBy('number')
+            ->get()
+            ->filter(function ($case) {
+                $whereIsResult = $case->whereIs();
+                return !($whereIsResult[0]?->archive == 'yes');
+            });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.index', compact('cases'));
     }
 
-    public function show($caseNumber){
+    public function show($caseNumber)
+    {
         $mainCase = Cases::where('number', $caseNumber)->whereNull('parent_id')->first();
         $customer = [
             'name' => $mainCase->getVariable('customer_workshop_or_ceo_name'),
@@ -62,56 +64,123 @@ class ExternalAndInternalReportController extends Controller
             'delivered_to' => $mainCase->getVariable('delivered_to'),
             'delivery_description' => $mainCase->getVariable('delivery_description'),
         ];
-        return view('SimpleWorkflowReportView::Core.ExternalInternal.show',
-        compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery'));
+        return view(
+            'SimpleWorkflowReportView::Core.ExternalInternal.show',
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery')
+        );
     }
 
-    public function search(Request $request){
-        $cases = Variable::where('key', 'customer_workshop_or_ceo_name')->where('value', 'like', "%$request->q%")->get();
-        $caseNumbers = [];
-        foreach($cases as $case){
-            if(isset($case->case->number)){
-                $caseNumbers[] = $case->case->number;
-            }
+    public function search(Request $request)
+    {
+        if (!$request->actor && !$request->customer && !$request->number) {
+            return [];
         }
-        $cases = Cases::whereIn('number', $caseNumbers)
-        ->orWhere('number', 'like', '%' . $request->q . '%')
-        ->groupBy('number')
-        ->get();
+        
+        $actorCaseNumbers = null;
+        $customerCaseNumbers = null;
+        $numberCaseNumbers = null;
+        
+        if ($request->actor) {
+            $actorCases = Variable::where('key', 'mapa_expert')
+                ->where('value', $request->actor)
+                ->get();
+        
+            $actorCaseNumbers = $actorCases
+                ->pluck('case.number')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+        }
+        
+        if ($request->customer) {
+            $customerCases = Variable::where('key', 'customer_workshop_or_ceo_name')
+                ->where('value', 'like', "%$request->customer%")
+                ->get();
+        
+            $customerCaseNumbers = $customerCases
+                ->pluck('case.number')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+        }
+        
+        if ($request->number) {
+            $numberCases = Cases::whereIn('process_id', [
+                    '35a5c023-5e85-409e-8ba4-a8c00291561c',
+                    '4bb6287b-9ddc-4737-9573-72071654b9de',
+                    '1763ab09-1b90-4609-af45-ef5b68cf10d0'
+                ])
+                ->where('number', 'like', "%$request->number%")
+                ->pluck('number')
+                ->unique()
+                ->toArray();
+        
+            $numberCaseNumbers = $numberCases;
+        }
+        
+        // گرفتن اشتراک همه لیست‌ها
+        $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers]);
+        
+        if (count($allLists) === 0) {
+            return [];
+        }
+        
+        // گرفتن اشتراک همه لیست‌ها با هم
+        $finalCaseNumbers = array_shift($allLists);
+        foreach ($allLists as $list) {
+            $finalCaseNumbers = array_intersect($finalCaseNumbers, $list);
+        }
+        
+        if (count($finalCaseNumbers) === 0) {
+            return []; // هیچ کیس مطابق با همه شرایط پیدا نشد
+        }
+        
+        $cases = Cases::whereIn('number', $finalCaseNumbers)
+            ->whereIn('process_id', [
+                '35a5c023-5e85-409e-8ba4-a8c00291561c',
+                '4bb6287b-9ddc-4737-9573-72071654b9de',
+                '1763ab09-1b90-4609-af45-ef5b68cf10d0'
+            ])
+            ->groupBy('number')
+            ->get();
+        
         $s = '';
-        foreach($cases as $case){
-            $a = "<a href='" . route('simpleWorkflowReport.external-internal.show', [ 'external_internal' => $case->number ]) . "'><i class='fa fa-external-link'></i></a>";
+        foreach ($cases as $case) {
+            $a = "<a href='" . route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) . "'><i class='fa fa-external-link'></i></a>";
             $s .= "<tr><td>
                     $a
                     $case->number
                     $case->history
-            </td>";   
-            $s .= "<td>". $case->getVariable('customer_workshop_or_ceo_name') . "</td>";   
+            </td>";
+            $s .= "<td>" . $case->getVariable('customer_workshop_or_ceo_name') . "</td>";
             $s .= "<td>";
             foreach ($case->whereIs() as $inbox) {
                 $s .= $inbox->task->styled_name ?? '';
                 $s .= '(' . getUserInfo($inbox->actor)?->name . ')';
                 $s .= '<br>';
-            } 
-            $s .= "</td><td dir='ltr'>". toJalali($case->created_at)->format('Y-m-d H:i') . "</td></tr>";   
+            }
+            $s .= "</td><td dir='ltr'>" . toJalali($case->created_at)->format('Y-m-d H:i') . "</td></tr>";
         }
         return $s;
     }
 
-    public function archive(){
+    public function archive()
+    {
         $cases = Cases::whereIn('process_id', [
             '35a5c023-5e85-409e-8ba4-a8c00291561c',
             '4bb6287b-9ddc-4737-9573-72071654b9de',
             '1763ab09-1b90-4609-af45-ef5b68cf10d0'
         ])
-        ->whereNull('parent_id')
-        ->whereNotNull('number')
-        ->groupBy('number')
-        ->get()
-        ->filter(function ($case) {
-            $whereIsResult = $case->whereIs();
-            return ($whereIsResult[0]?->archive == 'yes');
-        });
+            ->whereNull('parent_id')
+            ->whereNotNull('number')
+            ->groupBy('number')
+            ->get()
+            ->filter(function ($case) {
+                $whereIsResult = $case->whereIs();
+                return ($whereIsResult[0]?->archive == 'yes');
+            });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
     }
 }

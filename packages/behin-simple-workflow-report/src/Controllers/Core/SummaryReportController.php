@@ -13,13 +13,15 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class SummaryReportController extends Controller
 {
     public function index(): View
     {
         $processes = getProcesses();
-        return view('SimpleWorkflowReportView::Core.Summary.index', compact('processes'));
+        $users = User::all();
+        return view('SimpleWorkflowReportView::Core.Summary.index', compact('processes','users'));
     }
 
     public function show($process_id)
