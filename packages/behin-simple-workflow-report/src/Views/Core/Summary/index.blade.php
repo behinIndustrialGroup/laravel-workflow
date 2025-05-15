@@ -16,7 +16,7 @@
                         <div>
                             <label for="">هر چه میخواهد دل تنگت بجوی</label>
                             <form action="javascript:void(0)" method="POST" id="search-form" class="row">
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-sm-3">
                                     <div class="input-group">
                                         <select name="actor" id="" class="form-control" placeholder="کارشناس">
                                             <option value="">کارشناس</option>
@@ -26,16 +26,22 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-sm-3">
                                     <div class="input-group">
                                         <input type="text" name="customer" id="" class="form-control"
                                             placeholder="نام مشتری">
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-sm-3">
                                     <div class="input-group">
                                         <input type="text" name="number" id="" class="form-control"
                                             placeholder="شماره پرونده">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <div class="input-group">
+                                        <input type="text" name="mapa_serial" id="" class="form-control"
+                                            placeholder="سریال مپا">
                                         <div class="input-group-append" onclick="search()" style="cursor: pointer;">
                                             <div class="input-group-text" style="background: #25a5c8">
                                                 <span class="fa fa-search"></span>
@@ -66,6 +72,7 @@
                                         "{{ route('simpleWorkflowReport.external-internal.search') }}",
                                         fd,
                                         function(response) {
+                                            console.log(response)
                                             $('#search-result').removeClass('d-none')
 
                                             if (response.length == 0) {

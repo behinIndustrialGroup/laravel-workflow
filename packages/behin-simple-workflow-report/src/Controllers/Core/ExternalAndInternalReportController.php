@@ -72,13 +72,14 @@ class ExternalAndInternalReportController extends Controller
 
     public function search(Request $request)
     {
-        if (!$request->actor && !$request->customer && !$request->number) {
+        if (!$request->actor && !$request->customer && !$request->number && !$request->mapa_serial) {
             return [];
         }
         
         $actorCaseNumbers = null;
         $customerCaseNumbers = null;
         $numberCaseNumbers = null;
+        $mapaSerialCaseNumbers = null;
         
         if ($request->actor) {
             $actorCases = Variable::where('key', 'mapa_expert')
@@ -119,9 +120,22 @@ class ExternalAndInternalReportController extends Controller
         
             $numberCaseNumbers = $numberCases;
         }
+
+        if ($request->mapa_serial) {
+            $mapaSerialCases = Variable::where('key', 'mapa_serial')
+                ->where('value', 'like', "%$request->mapa_serial%")
+                ->get();
+
+            $mapaSerialCaseNumbers = $mapaSerialCases
+                ->pluck('case.number')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+        }
         
         // گرفتن اشتراک همه لیست‌ها
-        $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers]);
+        $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers, $mapaSerialCaseNumbers]);
         
         if (count($allLists) === 0) {
             return [];
