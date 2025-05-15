@@ -110,6 +110,7 @@
                                     <th>{{ trans('fields.sysfile_backup') }}</th>
                                     <th>{{ trans('fields.prog_backup') }}</th>
                                     <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
+                                    <th>{{ trans('fields.job_rank') }}</th>
                                     
                                 </tr>
                                 @foreach ($deviceRepairReports as $report)
@@ -132,6 +133,7 @@
                                         <td>{{ $report->sysfile_backup }}</td>
                                         <td>{{ $report->prog_backup }}</td>
                                         <td>{{ $report->reason_of_not_taking_backup }}</td>
+                                        <td>{{ $report->job_rank }}</td>
                                     </tr>
                                 @endforeach
                             </table>
