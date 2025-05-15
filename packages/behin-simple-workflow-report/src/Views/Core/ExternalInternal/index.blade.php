@@ -13,8 +13,8 @@
                         <tr>
                             <th>{{ trans('fields.Case Number') }}</th>
                             <th>{{ trans('fields.Customer') }}</th>
-                            <th>{{ trans('fields.Last Status') }}</th>
                             <th>{{ trans('fields.Creator') }}</th>
+                            <th>{{ trans('fields.Last Status') }}</th>
                             <th>{{ trans('fields.Created At') }}</th>
                         </tr>
                     </thead>
@@ -30,13 +30,13 @@
                                     {!! $case->history !!}
                                 </td>
                                 <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
+                                <td>{{ getUserInfo($case->creator)->name }}</td>
                                 <td>
                                     @foreach ($case->whereIs() as $inbox)
                                         {!! $inbox->task->styled_name !!} <span
                                             class="text-muted">({{ getUserInfo($inbox->actor)->name }})</span> <br>
                                     @endforeach
                                 </td>
-                                <td>{{ getUserInfo($case->creator)->name }}</td>
                                 <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                             </tr>
                         @endforeach
