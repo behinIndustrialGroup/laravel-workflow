@@ -172,6 +172,7 @@
                                     <th>{{ trans('fields.special_parts') }}</th>
                                     <th>{{ trans('fields.power') }}</th>
                                     <th>{{ trans('fields.has_attachment') }}</th>
+                                    <th>{{ trans('fields.attachment_image') }}</th>
                                 </tr>
                                 @foreach ($parts as $part)
                                     <tr>
@@ -201,6 +202,7 @@
                                         <td>{{ $part->special_parts }}</td>
                                         <td>{{ $part->power }}</td>
                                         <td>{{ $part->has_attachment }}</td>
+                                        <td><a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a></td>
                                     </tr>
                                 @endforeach
                             </table>
