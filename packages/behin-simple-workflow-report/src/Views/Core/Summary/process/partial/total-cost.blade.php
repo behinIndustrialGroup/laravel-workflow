@@ -202,7 +202,7 @@
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
                                                     {{ number_format($row->fix_cost) }}</td>
@@ -226,7 +226,7 @@
                                                 </td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali($row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
                                                     {{ number_format($row->fix_cost) }}</td>
