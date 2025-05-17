@@ -17,9 +17,7 @@ class TextField extends AbstractField
         }
         $s .= '</label>';
         $s .= '<input type="text" name="' . $this->name . '" ';
-        if(isset($this->attributes['datalist_from_database'])){
-            $s .= 'list="' . $this->name . '_list" ';
-        }
+        $s .= 'list="' . $this->name . '_list" ';
         foreach($this->attributes as $key => $value){
             if($key == 'required'){
                 if($value == 'on'){
