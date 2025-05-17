@@ -218,6 +218,7 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <th>{{ trans('fields.process_name') }}</th>
+                                    <th>{{ trans('fields.fix_cost_type') }}</th>
                                     <th>{{ trans('fields.cost') }}</th>
                                     <th>{{ trans('fields.fix_cost_date') }}</th>
                                     <th>{{ trans('fields.destination_account') }}</th>
@@ -229,6 +230,7 @@
                                 @foreach ($financials as $fin)
                                     <tr>
                                         <td>{{ $fin->process_name }}</td>
+                                        <td>{{ $fin->fix_cost_type }}</td>
                                         <td>{{ number_format($fin->cost) }}</td>
                                         <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
                                         </td>
