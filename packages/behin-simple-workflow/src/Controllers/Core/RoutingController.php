@@ -65,7 +65,7 @@ class RoutingController extends Controller
         }
         foreach ($requiredFields as $field) {
             $var = VariableController::getVariable($processId, $caseId, $field);
-            if (is_null($var?->value)) {
+            if (is_null($var?->value) || $var?->value == '') {
                 return
                     [
                         'status' => 400,
