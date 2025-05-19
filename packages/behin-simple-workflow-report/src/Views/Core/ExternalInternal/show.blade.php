@@ -183,7 +183,11 @@
                                         <td>{{ $part->refer_to_unit }}</td>
                                         <td>{{ $part->fix_report }}</td>
                                         <td>{{ $part->repair_is_approved }}</td>
-                                        <td><a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a></td>
+                                        <td>
+                                            @if($part->initial_part_pic)
+                                                <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
+                                            @endif
+                                        </td>
                                         <td>{{ $part->dispatched_expert_needed }}</td>
                                         <td>{{ $part->dispatched_expert }}</td>
                                         <td>{{ $part->dispatched_expert_description }}</td>
@@ -202,7 +206,11 @@
                                         <td>{{ $part->special_parts }}</td>
                                         <td>{{ $part->power }}</td>
                                         <td>{{ $part->has_attachment }}</td>
-                                        <td><a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a></td>
+                                        <td>
+                                            @if($part->attachment_image)
+                                                <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </table>
