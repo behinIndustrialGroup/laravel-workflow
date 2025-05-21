@@ -106,7 +106,8 @@
                         <i class="ion ion-bag"></i>
                     </div>
                     <a href="{{ route('simpleWorkflowReport.expired-tasks.index') }}"
-                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
+                        class="small-box-footer">{{ trans('مشاهده') }} <i
+                            class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
         @endif
@@ -123,7 +124,26 @@
                         <i class="ion ion-bag"></i>
                     </div>
                     <a href="{{ route('simpleWorkflowReport.mapa-center.index') }}"
-                        class="small-box-footer">{{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i></a>
+                        class="small-box-footer">{{ trans('مشاهده') }} <i
+                            class="fa fa-arrow-circle-left"></i></a>
+                </div>
+            </div>
+        @endif
+        @if (auth()->user()->access('طرف حسابها'))
+            <div class="col-sm-3 ">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ trans('طرف حسابها') }}</h3>
+
+                        <p>{{ trans('از این قسمت میتوانید لیست طرف حسابها را مشاهده کنید') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{ route('simpleWorkflowReport.counter-party.index') }}"
+                        class="small-box-footer">{{ trans('مشاهده') }} <i
+                            class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
         @endif

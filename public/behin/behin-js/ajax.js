@@ -160,7 +160,7 @@ function send_ajax_get_request_with_confirm(url, callback, message = "Are you su
 }
 
 function runScript(scriptId, data,callback){
-    url = "/workflow/scripts/" + scriptId + "/run";
+    url = "/laravel-workflow/workflow/scripts/" + scriptId + "/run";
     return send_ajax_formdata_request(
         url,
         data,
