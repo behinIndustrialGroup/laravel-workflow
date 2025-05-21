@@ -53,5 +53,11 @@ class CounterPartyController extends Controller
         );
     }
 
+    public function delete($id)
+    {
+        Counter_parties::destroy($id);
+        return redirect()->route('simpleWorkflowReport.counter-party.index');
+    }
+
     
 }
