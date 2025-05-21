@@ -30,8 +30,8 @@
                                 <td>{{ $counterParty->name }}</td>
                                 <td>{{ $counterParty->account_number }}</td>
                                 <td>
-                                    <a href="{{ route('simpleWorkflowReport.counter-party.show', $counterParty->id) }}"
-                                        class="btn btn-primary btn-sm">مشاهده</a>
+                                    {{-- <a href="{{ route('simpleWorkflowReport.counter-party.show', $counterParty->id) }}"
+                                        class="btn btn-primary btn-sm">مشاهده</a> --}}
                                 </td>
                             </tr>
                         @endforeach
