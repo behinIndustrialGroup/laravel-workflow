@@ -64,6 +64,13 @@ class Cases extends Model
         return User::find($this->creator);
     }
 
+    public function copyVariableFrom($parentCaseId){
+        $parentCase = Cases::find($parentCaseId);
+        foreach($parentCase->variables() as $variable){
+            VariableController::save($this->process_id, $this->id, $variable->key, $variable->value);
+        }
+    }
+
     public function whereIs(){
         $childCaseId = Cases::where('number', $this->number)->get()->pluck('id')->toArray();
         $rows = Inbox::where(function($query) use($childCaseId){

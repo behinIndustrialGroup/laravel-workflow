@@ -227,8 +227,8 @@
                                 <tr>
                                     <th>{{ trans('fields.process_name') }}</th>
                                     <th>{{ trans('fields.fix_cost_type') }}</th>
-                                    <th>{{ trans('fields.cost') }}</th>
                                     <th>{{ trans('fields.fix_cost_date') }}</th>
+                                    <th>{{ trans('fields.cost') }}</th>
                                     <th>{{ trans('fields.destination_account') }}</th>
                                     <th>{{ trans('fields.destination_account_name') }}</th>
                                     <th>{{ trans('fields.payment') }}</th>
@@ -239,12 +239,31 @@
                                     <tr>
                                         <td>{{ $fin->process_name }}</td>
                                         <td>{{ $fin->fix_cost_type }}</td>
-                                        <td>{{ number_format($fin->cost) }}</td>
-                                        <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
+                                        <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}</td>
+                                        <td>{{ number_format($fin->cost) }}
+                                            @if($fin->cost2)
+                                                <br>
+                                                {{ number_format($fin->cost2) }}
+                                            @endif
                                         </td>
-                                        <td>{{ $fin->destination_account }}</td>
-                                        <td>{{ $fin->destination_account_name }}</td>
-                                        <td>{{ number_format($fin->payment) }}</td>
+                                        <td>{{ $fin->destination_account }}
+                                            @if($fin->destination_account_2)
+                                                <br>
+                                                {{ $fin->destination_account_2 }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $fin->destination_account_name }}
+                                            @if($fin->destination_account_name_2)
+                                                <br>
+                                                {{ $fin->destination_account_name_2 }}
+                                            @endif
+                                        </td>
+                                        <td>{{ number_format($fin->payment) }}
+                                            @if($fin->payment2)
+                                                <br>
+                                                {{ number_format($fin->payment2) }}
+                                            @endif
+                                        </td>
                                         <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
                                         </td>
                                         <td>{{ $fin->payment_after_completion }}</td>

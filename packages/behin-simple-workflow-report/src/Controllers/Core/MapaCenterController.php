@@ -16,12 +16,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
-
+use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport2;
 use Maatwebsite\Excel\Facades\Excel;
 use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
-
+use Behin\SimpleWorkflow\Models\Entities\Parts;
 
 class MapaCenterController extends Controller
 {
@@ -34,7 +34,8 @@ class MapaCenterController extends Controller
     {
         $case = CaseController::getById($mapa_center);
         $reports = Mapa_center_fix_report::where('case_id', $mapa_center)->get();
-        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports'));
+        $parts = Parts::where('case_number', $case->number)->get();
+        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts'));
     }
 
     public function update(Request $request, $mapa_center)
@@ -63,6 +64,28 @@ class MapaCenterController extends Controller
         $mapa_center_fix_report->report = $request->fix_report;
 
         $mapa_center_fix_report->save();
+        return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('fields.Report saved successfully'));
+    }
+
+    public function excludeDevice(Request $request, $mapa_center)
+    {
+        $request->validate([
+            'part_name' => 'required|string'
+        ]);
+        $case = CaseController::getById($mapa_center);
+        $inbox = ProcessController::startFromScript(
+            "9f6b7b5c-155e-4698-8b05-26ebb061bb7d",
+            Auth::id(),
+            $case->number,
+            $case->id
+        );
+        $inbox->case_name = "خارج شده از مپاسنتر";
+        $inbox->save();
+        $newCase = $inbox->case;
+        $newCase->copyVariableFrom($mapa_center);
+        $newCase->saveVariable('part_name', $request->part_name);
+        $newCase->saveVariable('from_mapa_center', 'yes');
+        $newCase->saveVariable('initial_description', "این دستگاه توسط: " . Auth::user()->name . "از فرایند مپاسنتر برای تعمیرات داخلی ارسال شده است.");
         return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('fields.Report saved successfully'));
     }
 }
