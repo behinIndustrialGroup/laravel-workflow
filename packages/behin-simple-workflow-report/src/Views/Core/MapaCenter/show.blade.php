@@ -190,10 +190,11 @@
 
             <div class="card ">
                 <div class="card-header bg-info text-center">
-                    خارج کردن دستگاه
+                    خارج کردن قطعه از دستگاه
                 </div>
                 <div class="card-body">
-                    <button class="btn btn-sm btn-danger" onclick="excludeDevice()">خارج کردن دستگاه</button>
+                    <p>چنانچه قطعه ای از دستگاه خارج کردید با کلیک بر روی دکمه زیر نام قطعه را وارد کنید و ادامه مراحل در فرایند داخلی طی خواهد شد</p>
+                    <button class="btn btn-sm btn-danger" onclick="excludeDevice()">خارج کردن قطعه از دستگاه</button>   
                     <form class="m-2" action="{{ route('simpleWorkflowReport.mapa-center.exclude-device', $case->id) }}" method="POST" id="excludeDeviceForm" style="display: none;">
                         @csrf
                         <input type="text" name="part_name" class="form-control" placeholder="نام قطعه">
