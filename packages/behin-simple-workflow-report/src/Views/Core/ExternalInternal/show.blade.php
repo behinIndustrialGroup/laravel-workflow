@@ -245,11 +245,19 @@
                                                 <br>
                                                 {{ number_format($fin->cost2) }}
                                             @endif
+                                            @if($fin->cost3)
+                                                <br>
+                                                {{ number_format($fin->cost3) }}
+                                            @endif
                                         </td>
                                         <td>{{ $fin->destination_account }}
                                             @if($fin->destination_account_2)
                                                 <br>
                                                 {{ $fin->destination_account_2 }}
+                                            @endif
+                                            @if($fin->destination_account_3)
+                                                <br>
+                                                {{ $fin->destination_account_3 }}
                                             @endif
                                         </td>
                                         <td>{{ $fin->destination_account_name }}
@@ -257,12 +265,12 @@
                                                 <br>
                                                 {{ $fin->destination_account_name_2 }}
                                             @endif
+                                            @if($fin->destination_account_name_3)
+                                                <br>
+                                                {{ $fin->destination_account_name_3 }}
+                                            @endif
                                         </td>
                                         <td>{{ number_format($fin->payment) }}
-                                            @if($fin->payment2)
-                                                <br>
-                                                {{ number_format($fin->payment2) }}
-                                            @endif
                                         </td>
                                         <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
                                         </td>
