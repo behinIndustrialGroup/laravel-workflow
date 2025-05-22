@@ -121,6 +121,33 @@
                                 <td>{{ $row->destination_account_name }}</td>
                                 <td>{{ $row->destination_account }}</td>
                             </tr>
+                            @if($row->cost2){
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->process_name }}
+                                        @php
+                                            if ($row->process()?->name == 'داخلی') {
+                                                $numberOfInternalProcess++;
+                                            }
+                                            if ($row->process()?->name == 'خارجی') {
+                                                $numberOfExternalProcess++;
+                                            }
+                                        @endphp
+                                    </td>
+                                    <td>{{ $row->case_number }}</td>
+                                    <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
+                                    </td>
+                                    <td class="d-none">{{ number_format($row->cost2) }}</td>
+                                    <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : '' }}</td>
+                                    <td>{{ number_format($row->payment2) }}
+                                        @php
+                                            $totalPayment += $row->payment2;
+                                        @endphp
+                                    </td>
+                                    <td>{{ $row->destination_account_name_2 }}</td>
+                                    <td>{{ $row->destination_account_2 }}</td>
+                                </tr>
+                            }
                         @endforeach
                         <tfoot>
                             <tr class="bg-success">
