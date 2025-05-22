@@ -23,7 +23,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger">
                 @foreach ($errors->all() as $error)
                     {{ $error }}
@@ -41,7 +41,7 @@
                     'variables' => $variables,
                 ])
             </div>
-            
+
             <div class="card">
                 @include('SimpleWorkflowView::Core.Form.preview', [
                     'form' => $deviceForm,
@@ -49,7 +49,7 @@
                     'variables' => $variables,
                 ])
             </div>
-            
+
             <div class="card">
                 <div class="card-header bg-info text-center">
                     قطعات جدا شده
@@ -98,8 +98,9 @@
                                             <td>{{ $part->fix_report }}</td>
                                             <td>{{ $part->repair_is_approved }}</td>
                                             <td>
-                                                @if($part->initial_part_pic)
-                                                    <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
+                                                @if ($part->initial_part_pic)
+                                                    <a href="{{ url("public/$part->initial_part_pic") }}"
+                                                        download>دانلود</a>
                                                 @endif
                                             </td>
                                             <td>{{ $part->dispatched_expert_needed }}</td>
@@ -121,8 +122,9 @@
                                             <td>{{ $part->power }}</td>
                                             <td>{{ $part->has_attachment }}</td>
                                             <td>
-                                                @if($part->attachment_image)
-                                                    <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
+                                                @if ($part->attachment_image)
+                                                    <a href="{{ url("public/$part->attachment_image") }}"
+                                                        download>دانلود</a>
                                                 @endif
                                             </td>
                                         </tr>
@@ -167,7 +169,9 @@
                                     <td>{{ getUserInfo($report->expert)?->name }}</td>
                                     <td>{{ $report->report }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteReport('{{ $report->id }}')"><i class="fa fa-trash"></i></button>
+                                        <button class="btn btn-sm btn-danger"
+                                            onclick="deleteReport('{{ $report->id }}')"><i
+                                                class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -193,18 +197,20 @@
                     خارج کردن قطعه از دستگاه
                 </div>
                 <div class="card-body">
-                    <p>چنانچه قطعه ای از دستگاه خارج کردید با کلیک بر روی دکمه زیر نام قطعه را وارد کنید و ادامه مراحل در فرایند داخلی طی خواهد شد</p>
-                    <button class="btn btn-sm btn-danger" onclick="excludeDevice()">خارج کردن قطعه از دستگاه</button>   
-                    <form class="m-2" action="{{ route('simpleWorkflowReport.mapa-center.exclude-device', $case->id) }}" method="POST" id="excludeDeviceForm" style="display: none;">
+                    <p>چنانچه قطعه ای از دستگاه خارج کردید با کلیک بر روی دکمه زیر نام قطعه را وارد کنید و ادامه مراحل در
+                        فرایند داخلی طی خواهد شد</p>
+                    <button class="btn btn-sm btn-danger" onclick="excludeDevice()">خارج کردن قطعه از دستگاه</button>
+                    <form class="m-2" action="{{ route('simpleWorkflowReport.mapa-center.exclude-device', $case->id) }}"
+                        method="POST" id="excludeDeviceForm" style="display: none;">
                         @csrf
                         <input type="text" name="part_name" class="form-control" placeholder="نام قطعه">
                         <input type="submit" value="ثبت" class="btn btn-primary">
                     </form>
                     <script>
                         function excludeDevice() {
-                            if($('#excludeDeviceForm').is(':visible')){
+                            if ($('#excludeDeviceForm').is(':visible')) {
                                 $('#excludeDeviceForm').hide();
-                            }else{
+                            } else {
                                 $('#excludeDeviceForm').show();
                             }
                         }
@@ -212,9 +218,70 @@
                 </div>
             </div>
 
+            @if (auth()->user()->access('گزارش مالی مپا سنتر'))
+                <div class="card">
+                    <div class="card-header bg-info text-center">گزارش مالی</div>
+                    <div class="card-body row table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>{{ trans('fields.process_name') }}</th>
+                                <th>{{ trans('fields.fix_cost_type') }}</th>
+                                <th>{{ trans('fields.fix_cost_date') }}</th>
+                                <th>{{ trans('fields.cost') }}</th>
+                                <th>{{ trans('fields.destination_account') }}</th>
+                                <th>{{ trans('fields.destination_account_name') }}</th>
+                                <th>{{ trans('fields.payment') }}</th>
+                                <th>{{ trans('fields.payment_date') }}</th>
+                                <th>{{ trans('fields.payment_after_completion') }}</th>
+                            </tr>
+                            @foreach ($financials as $fin)
+                                <tr>
+                                    <td>{{ $fin->process_name }}</td>
+                                    <td>{{ $fin->fix_cost_type }}</td>
+                                    <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
+                                    </td>
+                                    <td>{{ number_format($fin->cost) }}
+                                        @if ($fin->cost2)
+                                            <br>
+                                            {{ number_format($fin->cost2) }}
+                                        @endif
+                                        @if ($fin->cost3)
+                                            <br>
+                                            {{ number_format($fin->cost3) }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $fin->destination_account }}
+                                        @if ($fin->destination_account_2)
+                                            <br>
+                                            {{ $fin->destination_account_2 }}
+                                        @endif
+                                        @if ($fin->destination_account_3)
+                                            <br>
+                                            {{ $fin->destination_account_3 }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $fin->destination_account_name }}
+                                        @if ($fin->destination_account_name_2)
+                                            <br>
+                                            {{ $fin->destination_account_name_2 }}
+                                        @endif
+                                        @if ($fin->destination_account_name_3)
+                                            <br>
+                                            {{ $fin->destination_account_name_3 }}
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($fin->payment) }}
+                                    </td>
+                                    <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
+                                    </td>
+                                    <td>{{ $fin->payment_after_completion }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            @endif
 
-
-            
             <div class="card">
                 <form action="{{ route('simpleWorkflowReport.mapa-center.update', $case->id) }}" method="POST">
                     @csrf
@@ -226,62 +293,85 @@
                     <input type="submit" value="ذخیره" class="btn btn-primary m-2">
                 </form>
             </div>
-            <div class="card">
-                @if (auth()->user()->access('ثبت پایان کار مپا سنتر'))
-                    <div class="col-sm-12 text-center bg-info p-2">
+            @if (auth()->user()->access('ثبت پایان کار مپا سنتر'))
+                <div class="card row">
+                    <div class="card-header bg-info">
                         پایان کار
                     </div>
-                    <div class="col-sm-4 mt-2">
-                        <button class="btn btn-info" onclick="sendForFixPrice()">ثبت پایان تعمیرات</button>
+                    <div class="card-body row">
+                        <div class="col-sm-4 mt-2">
+                            <button class="btn btn-warning" onclick="sendForOnAccountPayment()">ارسال برای دریافت هزینه علی
+                                الحساب</button>
+                        </div>
+                        <div class="col-sm-4 mt-2">
+                            <button class="btn btn-danger" onclick="sendForFixPrice()">ثبت پایان تعمیرات</button>
+                        </div>
                     </div>
                     <script>
                         function sendForFixPrice() {
-                            var scriptId = "7ac4388d-c783-4ac2-8f9b-0bb01bee5818";
-                            var fd = new FormData();
-                            fd.append('caseId', '{{ $case->id }}')
-                            runScript(scriptId, fd, function(response) {
-                                show_message('ارسال شد برای تعیین هزینه')
-                                show_message('چند لحظه منتظر بمانید')
-
-                                console.log(response)
-
-                                // صبر کن 3 ثانیه بعد ریدایرکت کن
-                                setTimeout(function() {
+                            if (confirm('آیا از ثبت پایان تعمیرات مطمئن هستید؟')) {
+                                var scriptId = "7ac4388d-c783-4ac2-8f9b-0bb01bee5818";
+                                var fd = new FormData();
+                                fd.append('caseId', '{{ $case->id }}')
+                                runScript(scriptId, fd, function(response) {
+                                    alert('خسته نباشید')
                                     window.location.href = '{{ route('simpleWorkflowReport.mapa-center.index') }}';
-                                }, 3000);
-                            })
+                                })
+                            }
+                        }
+
+                        function sendForOnAccountPayment() {
+                            if (confirm('آیا از ارسال برای دریافت هزینه علی الحساب مطمئن هستید؟')) {
+                                var scriptId = "3861c846-4735-443e-bbdf-aa502f44239a";
+                                var fd = new FormData();
+                                fd.append('caseId', '{{ $case->id }}')
+                                runScript(scriptId, fd, function(response) {
+                                    show_message('ارسال شد برای دریافت هزینه علی الحساب')
+                                    show_message('چند لحظه منتظر بمانید')
+
+                                    console.log(response)
+
+                                    // صبر کن 3 ثانیه بعد ریدایرکت کن
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 3000);
+                                })
+                            }
                         }
                     </script>
-                @endif
-            </div>
-            
+                </div>
+            @endif
         </div>
-    @endsection
 
-    @section('script')
-        <script>
-            initial_view()
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('#mapa-center-reports').DataTable({
-                    'language': {
-                        'url': 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
-                    },
-                    'order': [[1, 'desc']],
-                });
+    </div>
+@endsection
+
+@section('script')
+    <script>
+        initial_view()
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#mapa-center-reports').DataTable({
+                'language': {
+                    'url': 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
+                'order': [
+                    [1, 'desc']
+                ],
             });
+        });
 
-            function deleteReport(id) {
-                var scriptId = "05a8fc79-b957-441b-8de4-275d7893c827";
-                var fd = new FormData();
-                fd.append('reportId', id)
-                if(confirm("آیا از حذف این گزارش مطمئن هستید؟")){
-                    runScript(scriptId, fd, function(response) {
-                        alert(response)
-                        window.location.reload();
-                    })
-                }
+        function deleteReport(id) {
+            var scriptId = "05a8fc79-b957-441b-8de4-275d7893c827";
+            var fd = new FormData();
+            fd.append('reportId', id)
+            if (confirm("آیا از حذف این گزارش مطمئن هستید؟")) {
+                runScript(scriptId, fd, function(response) {
+                    alert(response)
+                    window.location.reload();
+                })
             }
-        </script>
-    @endsection
+        }
+    </script>
+@endsection

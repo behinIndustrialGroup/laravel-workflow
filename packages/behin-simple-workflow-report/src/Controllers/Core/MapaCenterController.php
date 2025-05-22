@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
+use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport2;
 use Maatwebsite\Excel\Facades\Excel;
@@ -35,7 +36,8 @@ class MapaCenterController extends Controller
         $case = CaseController::getById($mapa_center);
         $reports = Mapa_center_fix_report::where('case_id', $mapa_center)->get();
         $parts = Parts::where('case_number', $case->number)->get();
-        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts'));
+        $financials = Financials::where('case_number', $case->number)->get();
+        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials'));
     }
 
     public function update(Request $request, $mapa_center)
