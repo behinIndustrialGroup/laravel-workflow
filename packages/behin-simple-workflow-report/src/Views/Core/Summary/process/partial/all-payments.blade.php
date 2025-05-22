@@ -121,7 +121,7 @@
                                 <td>{{ $row->destination_account_name }}</td>
                                 <td>{{ $row->destination_account }}</td>
                             </tr>
-                            @if($row->cost2){
+                            @if($row->cost2)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->process_name }}
@@ -147,7 +147,7 @@
                                     <td>{{ $row->destination_account_name_2 }}</td>
                                     <td>{{ $row->destination_account_2 }}</td>
                                 </tr>
-                            }
+                            @endif
                         @endforeach
                         <tfoot>
                             <tr class="bg-success">
