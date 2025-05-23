@@ -181,6 +181,7 @@
                                 </td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td class="d-none"></td>
                                 <td >مجموع</td>
                                 <td>{{ number_format($totalPayment) }}</td>

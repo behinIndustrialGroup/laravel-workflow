@@ -200,6 +200,7 @@
                                                         <i class="fa fa-external-link"></i>
                                                     </a>
                                                 </td>
+                                                <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
@@ -233,6 +234,7 @@
                                                         <i class="fa fa-external-link"></i>
                                                     </a>
                                                 </td>
+                                                <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
@@ -265,6 +267,7 @@
                                             داخلی: {{ $numberOfInternalProcess }}<br>
                                             خارجی: {{ $numberOfExternalProcess }}
                                         </td>
+                                        <td></td>
                                         <td></td>
                                         <td>مجموع</td>
                                         <td>{{ number_format($totalRepairCost) }}</td>
