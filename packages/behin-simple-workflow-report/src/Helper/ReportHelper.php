@@ -31,6 +31,8 @@ class ReportHelper
                 DB::raw("MAX(CASE WHEN `key` = 'customer_workshop_or_ceo_name' THEN `value` ELSE '' END) AS customer"),
                 DB::raw("MAX(CASE WHEN `key` = 'repair_cost' THEN `value` ELSE 0 END) AS repair_cost"),
                 DB::raw("MAX(CASE WHEN `key` = 'fix_cost' THEN `value` ELSE 0 END) AS fix_cost"),
+                DB::raw("MAX(CASE WHEN `key` = 'fix_cost_2' THEN `value` ELSE 0 END) AS fix_cost_2"),
+                DB::raw("MAX(CASE WHEN `key` = 'fix_cost_3' THEN `value` ELSE 0 END) AS fix_cost_3"),
                 DB::raw("MAX(CASE WHEN `key` = 'payment_amount' THEN `value` ELSE 0 END) AS payment_amount"),
                 DB::raw("MAX(CASE WHEN `key` = 'payment_date' THEN `value` END) AS payment_date"),
                 DB::raw("MAX(CASE WHEN `key` = 'visit_date' THEN `value` ELSE 0 END) AS visit_date"),

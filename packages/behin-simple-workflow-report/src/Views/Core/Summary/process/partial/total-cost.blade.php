@@ -205,7 +205,16 @@
                                                 <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
-                                                    {{ number_format($row->fix_cost) }}</td>
+                                                    {{ number_format($row->fix_cost) }}
+                                                    @if ($row->fix_cost_2)
+                                                        <br>
+                                                        {{ number_format($row->fix_cost_2) }}
+                                                    @endif
+                                                    @if ($row->fix_cost_3)
+                                                        <br>
+                                                        {{ number_format($row->fix_cost_3) }}
+                                                    @endif
+                                                </td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
@@ -229,7 +238,16 @@
                                                 <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
-                                                    {{ number_format($row->fix_cost) }}</td>
+                                                    {{ number_format($row->fix_cost) }}
+                                                    @if ($row->fix_cost_2)
+                                                        <br>
+                                                        {{ number_format($row->fix_cost_2) }}
+                                                    @endif
+                                                    @if ($row->fix_cost_3)
+                                                        <br>
+                                                        {{ number_format($row->fix_cost_3) }}
+                                                    @endif
+                                                </td>
                                                 <td>{{ $row->payment_amount }}</td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
