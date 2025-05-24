@@ -44,6 +44,9 @@
 
 @section('content')
     <div class="container">
+        @php
+            $i = 1;
+        @endphp
         @foreach ($categprizedTask as $category => $tasks)
             <div class="card table-responsive">
                 <div class="card-header bg-info text-center">{{ $category }}</div>
@@ -56,7 +59,7 @@
                             {{ trans('fields.No expired tasks found') }}
                         </div>
                     @else
-                        <table class="table table-striped" id="_{{ $loop->iteration }}">
+                        <table class="table table-striped" id="_{{ $i }}">
                             <thead>
                                 <tr>
                                     <th>{{ trans('fields.Task Name') }}</th>
@@ -89,16 +92,20 @@
                     @endif
                 </div>
             </div>
+            @php
+                $i++;
+            @endphp
         @endforeach
     </div>
 @endsection
 
 @section('script')
     <script>
-        $('#_{{ $loop->iteration }}').DataTable({
-            "dom": 'Bfrtip',
-            "buttons": [{
-                "extend": 'excelHtml5',
+        @for ($n = 1; $n <= $i; $n++)
+            $('#_{{ $n }}').DataTable({
+                "dom": 'Bfrtip',
+                "buttons": [{
+                    "extend": 'excelHtml5',
                 "text": "خروجی اکسل",
                 // "title": "گزارش مجموع هزینه های دریافت شده به ازای کارشناس",
                 "className": "btn btn-success btn-sm",
@@ -114,6 +121,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
         });
+        @endfor
     </script>
 @endsection
 
