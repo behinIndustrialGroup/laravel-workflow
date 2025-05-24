@@ -7,15 +7,15 @@
 @php
     $categprizedTask = [
         'مالی اعلام هزینه' => [
-            '19a1be98-7b4a-4100-903d-e6612c4c4a6c', 
+            '19a1be98-7b4a-4100-903d-e6612c4c4a6c',
             '19f15a6f-1ec8-488c-adea-6c8419fe850a',
-            '062b5000-07c2-435c-bb45-621ed15cb42c'
+            '062b5000-07c2-435c-bb45-621ed15cb42c',
         ],
         'مالی دریافت هزینه' => [
-            'adee777f-da9d-4d54-bf00-020a27e0f861', 
-            'c008cd7d-ea9c-4b0b-917b-97e8ff651155', 
+            'adee777f-da9d-4d54-bf00-020a27e0f861',
+            'c008cd7d-ea9c-4b0b-917b-97e8ff651155',
             '9cfbbbf7-e53f-4706-b7c9-c69c0dd84cc4',
-            '1c63c629-b27b-4fe6-a993-a7a149926c55'
+            '1c63c629-b27b-4fe6-a993-a7a149926c55',
         ],
         '⁠پذیرش خارجی ( خانم یگانه و مردانلو ) پذیرشها و درخواستهای مجدد' => [
             'b9ab688a-7819-4d83-a53a-a396aa540232',
@@ -33,12 +33,12 @@
         ],
         'فنی  ( کارشناسان داخلی و خارجی)' => [
             'd213de29-832b-4de5-8ef1-03295835e5ae',
-            'f9cc1cf5-e3b0-4a46-91a5-2e7e59d29784'
+            'f9cc1cf5-e3b0-4a46-91a5-2e7e59d29784',
         ],
         '⁠پذیرش داخلی و تحویل داخلی ( خانم طالب زاده )' => [
             '9f6b7b5c-155e-4698-8b05-26ebb061bb7d',
-            '039a097e-2159-49df-b866-f7766aaf2cfc'
-        ]
+            '039a097e-2159-49df-b866-f7766aaf2cfc',
+        ],
     ];
 @endphp
 
@@ -73,7 +73,11 @@
                                     <tr>
                                         <td>{{ $task->task->name }}</td>
                                         <td>{{ $task->case_name }}</td>
-                                        <td>{{ $task->case->number }}</td>
+                                        <td>{{ $task->case->number }}
+                                            <a
+                                                href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $task->case->number]) }}"><i
+                                                    class="fa fa-external-link"></i></a>
+                                        </td>
                                         <td>{{ getUserInfo($task->actor)->name }}</td>
                                         <td>{{ $task->task->duration }}</td>
                                         <td dir="ltr">{{ toJalali($task->created_at) }}</td>
