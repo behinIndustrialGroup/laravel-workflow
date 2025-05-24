@@ -52,7 +52,7 @@
 
             <div class="card">
                 <div class="card-header bg-info text-center">
-                    قطعات جدا شده
+                    قطعات تعمیر شده
                 </div>
                 <div class="card-body">
                     @foreach ($parts as $part)
