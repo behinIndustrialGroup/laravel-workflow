@@ -195,15 +195,14 @@
                                             <tr>
 
                                                 <td>{{ $row->number }}
-                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
-                                                        target="_blank">
-                                                        <i class="fa fa-external-link"></i>
-                                                    </a>
+                                                    <a
+                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
+                                                            class="fa fa-external-link"></i></a>
                                                 </td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                <td>{{ $row->fix_report_date ? toJalali((int) $row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
                                                     {{ number_format($row->fix_cost) }}
@@ -229,15 +228,14 @@
                                         @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
                                             <tr>
                                                 <td>{{ $row->number }}
-                                                    <a href="{{ route('simpleWorkflowReport.summary-report.edit', $row->case_id) }}"
-                                                        target="_blank">
-                                                        <i class="fa fa-external-link"></i>
-                                                    </a>
+                                                    <a
+                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
+                                                            class="fa fa-external-link"></i></a>
                                                 </td>
                                                 <td>{{ $row->customer }}</td>
                                                 <td>{{ $row->process_name }}</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali((int)$row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                                <td>{{ $row->fix_report_date ? toJalali((int) $row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
                                                     {{ number_format($row->fix_cost) }}
