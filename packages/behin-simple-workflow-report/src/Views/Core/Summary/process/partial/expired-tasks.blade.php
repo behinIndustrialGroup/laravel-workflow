@@ -56,7 +56,7 @@
                             {{ trans('fields.No expired tasks found') }}
                         </div>
                     @else
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="_{{ $loop->iteration }}">
                             <thead>
                                 <tr>
                                     <th>{{ trans('fields.Task Name') }}</th>
@@ -92,3 +92,28 @@
         @endforeach
     </div>
 @endsection
+
+@section('script')
+    <script>
+        $('#_{{ $loop->iteration }}').DataTable({
+            "dom": 'Bfrtip',
+            "buttons": [{
+                "extend": 'excelHtml5',
+                "text": "خروجی اکسل",
+                // "title": "گزارش مجموع هزینه های دریافت شده به ازای کارشناس",
+                "className": "btn btn-success btn-sm",
+                "exportOptions": {
+                    "columns": ':visible',
+                    "footer": true
+                }
+            }, ],
+            "order": [
+                [0, "desc"]
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            },
+        });
+    </script>
+@endsection
+
