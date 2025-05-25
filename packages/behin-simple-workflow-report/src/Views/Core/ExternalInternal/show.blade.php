@@ -27,6 +27,7 @@
                                     <td>شروع پذیرش:  {{ $mainCase->process->name }}</td>
                                     <td>پذیرش کننده: {{ $mainCase->creator()->name }}</td>
                                     <td>تاریخ پذیرش: <span dir="ltr">{{ toJalali($mainCase->created_at)->format('Y-m-d H:i') }}</span></td>
+                                    {{-- <td>دریافت کننده: {{ getUserInfo($mainCase->getVariable('receiver'))?->name }} </td> --}}
                                 </tr>
                             </table>
                         </div>
@@ -228,7 +229,7 @@
                                     <th>{{ trans('fields.process_name') }}</th>
                                     <th>{{ trans('fields.fix_cost_type') }}</th>
                                     <th>{{ trans('fields.fix_cost_date') }}</th>
-                                    <th>{{ trans('fields.cost') }}</th>
+                                    <th>{{ trans('fields.fix_cost') }}</th>
                                     <th>{{ trans('fields.destination_account') }}</th>
                                     <th>{{ trans('fields.destination_account_name') }}</th>
                                     <th>{{ trans('fields.payment') }}</th>
