@@ -174,6 +174,7 @@
                                 <thead>
                                     <tr>
                                         <th>{{ trans('fields.case_number') }}</th>
+                                        <th>{{ trans('fields.customer') }}</th>
                                         <th>{{ trans('fields.process') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.repair_date') }}</th>
