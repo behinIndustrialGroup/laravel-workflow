@@ -220,7 +220,7 @@
                 </div>
                 @if(auth()->user()->access('امور جاری - جزئیات مالی'))
                 <div class="card">
-                    <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">مالی</div>
+                    <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش دریافتی مالی</div>
                     <div class="card-body">
                         {{-- مالی --}}
                         <div class="row table-responsive" id="financials">
@@ -229,10 +229,10 @@
                                     <th>{{ trans('fields.process_name') }}</th>
                                     <th>{{ trans('fields.fix_cost_type') }}</th>
                                     <th>{{ trans('fields.fix_cost_date') }}</th>
-                                    <th>{{ trans('fields.fix_cost') }}</th>
+                                    <th>هزینه اعلام شده</th>
                                     <th>{{ trans('fields.destination_account') }}</th>
                                     <th>{{ trans('fields.destination_account_name') }}</th>
-                                    <th>{{ trans('fields.payment') }}</th>
+                                    <th>هزینه دریافت شده</th>
                                     <th>{{ trans('fields.payment_date') }}</th>
                                     <th>{{ trans('fields.payment_after_completion') }}</th>
                                     <th>{{ trans('fields.description') }}</th>
