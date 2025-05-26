@@ -94,11 +94,12 @@
                         @php
                             $numberOfInternalProcess = 0;
                             $numberOfExternalProcess = 0;
+                            $rowNumber = 1;
                             $totalPayment = 0;
                         @endphp
                         @foreach ($rows['rows'] as $row)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $rowNumber++ }}</td>
                                 <td>{{ $row->process_name }}
                                     @php
                                         if ($row->process_name == 'داخلی') {
@@ -129,7 +130,7 @@
                             </tr>
                             @if($row->cost2)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $rowNumber++ }}</td>
                                     <td>{{ $row->process_name }}
                                         @php
                                             if ($row->process_name == 'داخلی') {
@@ -157,7 +158,7 @@
                             @endif
                             @if($row->cost3)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $rowNumber++ }}</td>
                                     <td>{{ $row->process_name }}
                                         @php
                                             if ($row->process_name == 'داخلی') {
