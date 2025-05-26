@@ -101,10 +101,10 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $row->process_name }}
                                     @php
-                                        if ($row->process()?->name == 'داخلی') {
+                                        if ($row->process_name == 'داخلی') {
                                             $numberOfInternalProcess += 1;
                                         }
-                                        if ($row->process()?->name == 'خارجی') {
+                                        if ($row->process_name == 'خارجی') {
                                             $numberOfExternalProcess += 1;
                                         }
                                     @endphp
@@ -132,10 +132,10 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->process_name }}
                                         @php
-                                            if ($row->process()?->name == 'داخلی') {
+                                            if ($row->process_name == 'داخلی') {
                                                 $numberOfInternalProcess += 1;
                                             }
-                                            if ($row->process()?->name == 'خارجی') {
+                                            if ($row->process_name == 'خارجی') {
                                                 $numberOfExternalProcess += 1;
                                             }
                                         @endphp
@@ -160,10 +160,10 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->process_name }}
                                         @php
-                                            if ($row->process()?->name == 'داخلی') {
+                                            if ($row->process_name == 'داخلی') {
                                                 $numberOfInternalProcess += 1;
                                             }
-                                            if ($row->process()?->name == 'خارجی') {
+                                            if ($row->process_name == 'خارجی') {
                                                 $numberOfExternalProcess += 1;
                                             }
                                         @endphp
