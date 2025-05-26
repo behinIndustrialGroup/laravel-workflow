@@ -102,10 +102,10 @@
                                 <td>{{ $row->process_name }}
                                     @php
                                         if ($row->process()?->name == 'داخلی') {
-                                            $numberOfInternalProcess++;
+                                            $numberOfInternalProcess += 1;
                                         }
                                         if ($row->process()?->name == 'خارجی') {
-                                            $numberOfExternalProcess++;
+                                            $numberOfExternalProcess += 1;
                                         }
                                     @endphp
                                 </td>
@@ -133,10 +133,10 @@
                                     <td>{{ $row->process_name }}
                                         @php
                                             if ($row->process()?->name == 'داخلی') {
-                                                $numberOfInternalProcess++;
+                                                $numberOfInternalProcess += 1;
                                             }
                                             if ($row->process()?->name == 'خارجی') {
-                                                $numberOfExternalProcess++;
+                                                $numberOfExternalProcess += 1;
                                             }
                                         @endphp
                                     </td>
@@ -161,10 +161,10 @@
                                     <td>{{ $row->process_name }}
                                         @php
                                             if ($row->process()?->name == 'داخلی') {
-                                                $numberOfInternalProcess++;
+                                                $numberOfInternalProcess += 1;
                                             }
                                             if ($row->process()?->name == 'خارجی') {
-                                                $numberOfExternalProcess++;
+                                                $numberOfExternalProcess += 1;
                                             }
                                         @endphp
                                     </td>
