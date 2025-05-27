@@ -139,9 +139,7 @@
                                         <td>{{ $report->customer_validation_code }}</td>
                                         <td>
                                             @if ($report->customer_signature)
-                                                <a href="{{ url('public/' . $report->customer_signature) }}" download>
-                                                    <img src="{{ url('public/' . $report->customer_signature) }}" alt="" width="50">
-                                                </a>
+                                                <a href="{{ $report->customer_signature }}" download>دانلود</a>
                                             @endif
                                         </td>
                                         <td>{{ $report->job_rank }}</td>
