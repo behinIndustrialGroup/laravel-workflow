@@ -111,6 +111,8 @@
                                     <th>{{ trans('fields.sysfile_backup') }}</th>
                                     <th>{{ trans('fields.prog_backup') }}</th>
                                     <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
+                                    <th>{{ trans('fields.customer_validation_code') }}</th>
+                                    <th>{{ trans('fields.customer_signature') }}</th>
                                     <th>{{ trans('fields.job_rank') }}</th>
                                     
                                 </tr>
@@ -134,6 +136,12 @@
                                         <td>{{ $report->sysfile_backup }}</td>
                                         <td>{{ $report->prog_backup }}</td>
                                         <td>{{ $report->reason_of_not_taking_backup }}</td>
+                                        <td>{{ $report->customer_validation_code }}</td>
+                                        <td>
+                                            @if ($report->customer_signature)
+                                                <a href="{{ url('public/' . $report->customer_signature) }}" download>دانلود</a>
+                                            @endif
+                                        </td>
                                         <td>{{ $report->job_rank }}</td>
                                     </tr>
                                 @endforeach
