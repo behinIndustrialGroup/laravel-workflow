@@ -53,6 +53,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::any('scripts/{id}/run', [ ScriptController::class, 'runFromView' ])->name('scripts.run');
 
     Route::resource('conditions', ConditionController::class);
+    Route::post('conditions/{id}/test', [ ConditionController::class, 'runConditionForTest' ])->name('conditions.test');
     Route::resource('task-actors', TaskActorController::class);
     Route::resource('fields', FieldController::class);
 
