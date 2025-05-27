@@ -101,9 +101,9 @@ class ConditionController extends Controller
         foreach($conditions as $condition){
             $value = mb_convert_encoding($condition->value, 'UTF-8');
             // print($value);
-            $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
+            $c = $variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
             Log::info($condition->fieldName . " " . $condition->operation . " " . $value . " " . $c);
-            // print($c);
+            print($c);
             // Log::info($Condition->name . ": " .$c);
             if(!$c){
                 // print($value);
