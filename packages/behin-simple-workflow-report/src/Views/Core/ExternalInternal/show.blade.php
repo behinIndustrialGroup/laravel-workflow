@@ -101,6 +101,7 @@
                                     <th>گزارش</th>
                                     <th>سرپرست</th>
                                     <th>تعمیرکار</th>
+                                    <th>همکاران</th>
                                     <th>{{ trans('fields.need_next_visit') }}</th>
                                     <th>{{ trans('fields.next_visit_description') }}</th>
                                     <th>{{ trans('fields.part_left_from_customer_location') }}</th>
