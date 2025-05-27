@@ -131,9 +131,11 @@
                                             @php
                                                 $companions = json_decode($report->mapa_expert_companions);
                                             @endphp
-                                            @foreach ($companions as $companion)
-                                                {{ getUserInfo($companion)->name ?? $companion }}<br>
-                                            @endforeach
+                                            @if (is_array($companions))
+                                                @foreach ($companions as $companion)
+                                                    {{ getUserInfo($companion)->name ?? $companion }}<br>
+                                                @endforeach
+                                            @endif
                                         </td>
                                         <td>{{ $report->need_next_visit }}</td>
                                         <td>{{ $report->next_visit_description }}</td>
