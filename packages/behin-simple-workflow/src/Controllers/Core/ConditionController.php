@@ -107,10 +107,10 @@ class ConditionController extends Controller
             // Log::info($Condition->name . ": " .$c);
             if(!$c){
                 // print($value);
-                return false;
+                return 'false';
             }
         }
-        return true;
+        return 'true';
     }
     
 }
