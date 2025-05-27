@@ -1,0 +1,15 @@
+{
+  "name": "shortner-url/shortener",
+  "autoload": {
+    "psr-4": {
+      "ShortenerUrl\\Shortener\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ShortenerUrl\\Shortener\\ShortenerServiceProvider"
+      ]
+    }
+  }
+}

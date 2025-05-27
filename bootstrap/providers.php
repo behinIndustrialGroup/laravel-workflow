@@ -20,4 +20,5 @@ return [
     MyFormBuilder\FormBuilderServiceProvider::class,
     TodoList\TodoListProvider::class,
     UserProfile\UserProfileProvider::class,
+    ShortenerUrl\Shortener\ShortenerServiceProvider::class,
 ];

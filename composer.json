@@ -45,7 +45,8 @@
             "Behin\\SimpleWorkflow\\": "packages/behin-simple-workflow/src/",
             "Behin\\SimpleWorkflowReport\\": "packages/behin-simple-workflow-report/src/",
             "MyFormBuilder\\": "packages/behin-form-builder/src/",
-            "Mkhodroo\\Cities\\": "packages/mkhodroo-cities/src/"
+            "Mkhodroo\\Cities\\": "packages/mkhodroo-cities/src/",
+            "ShortenerUrl\\Shortener\\": "packages/shortener-url/Shortener/src/"
 
         },
         "files": [
