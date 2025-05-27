@@ -126,6 +126,14 @@
                                         <td>{{ getUserInfo($report->mapa_expert_head)->name ?? $report->mapa_expert_head }}
                                         </td>
                                         <td>{{ getUserInfo($report->mapa_expert)->name ?? $report->mapa_expert }}</td>
+                                        <td>
+                                            @php
+                                                $companions = json_decode($report->mapa_expert_companions);
+                                            @endphp
+                                            @foreach ($companions as $companion)
+                                                {{ getUserInfo($companion)->name ?? $companion }}<br>
+                                            @endforeach
+                                        </td>
                                         <td>{{ $report->need_next_visit }}</td>
                                         <td>{{ $report->next_visit_description }}</td>
                                         <td>{{ $report->part_left_from_customer_location }}</td>
