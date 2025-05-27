@@ -32,6 +32,7 @@
         @endif
         <div class="card-header">
             <h3 class="card-title">مپا سنتر</h3>
+            شماره پرونده: {{ $case->number }}
         </div>
         <div class="card-body">
             <div class="card">
