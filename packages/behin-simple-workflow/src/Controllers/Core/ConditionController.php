@@ -88,8 +88,12 @@ class ConditionController extends Controller
         return true;
     }
 
-    public static function runConditionForTest($id, $caseId)
+    public static function runConditionForTest(Request $request,$id)
     {
+        $request->validate([
+            'caseId' => 'required',
+        ]);
+        $caseId = $request->caseId;
         $Condition = self::getById($id);
         $conditions = json_decode($Condition->content);
         $case = CaseController::getById($caseId);
