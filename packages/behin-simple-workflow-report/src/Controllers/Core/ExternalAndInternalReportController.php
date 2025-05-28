@@ -16,6 +16,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Devices;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
+use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
@@ -58,6 +59,8 @@ class ExternalAndInternalReportController extends Controller
         $devices = Devices::where('case_number', $caseNumber)->get();
         $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get();
         $parts = Parts::where('case_number', $caseNumber)->get();
+        $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
+
         $financials = Financials::where('case_number', $caseNumber)->get();
         $delivery = [
             'delivery_date' => $mainCase->getVariable('delivery_date'),
@@ -66,7 +69,7 @@ class ExternalAndInternalReportController extends Controller
         ];
         return view(
             'SimpleWorkflowReportView::Core.ExternalInternal.show',
-            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery')
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery', 'mapaCenterReports')
         );
     }
 

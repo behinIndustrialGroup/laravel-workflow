@@ -24,9 +24,11 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <td>شماره پرونده: {{ $mainCase->number }}</td>
-                                    <td>شروع پذیرش:  {{ $mainCase->process->name }}</td>
+                                    <td>شروع پذیرش: {{ $mainCase->process->name }}</td>
                                     <td>پذیرش کننده: {{ $mainCase->creator()->name }}</td>
-                                    <td>تاریخ پذیرش: <span dir="ltr">{{ toJalali($mainCase->created_at)->format('Y-m-d H:i') }}</span></td>
+                                    <td>تاریخ پذیرش: <span
+                                            dir="ltr">{{ toJalali($mainCase->created_at)->format('Y-m-d H:i') }}</span>
+                                    </td>
                                     {{-- <td>دریافت کننده: {{ getUserInfo($mainCase->getVariable('receiver'))?->name }} </td> --}}
                                 </tr>
                             </table>
@@ -40,17 +42,18 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <td>نام مشتری: {{ $customer['name'] }}</td>
-                                    <td>@if(auth()->user()->access('امور جاری - شماره مشتری'))
-                                        موبایل مشتری: {{ $customer['mobile'] }}
+                                    <td>
+                                        @if (auth()->user()->access('امور جاری - شماره مشتری'))
+                                            موبایل مشتری: {{ $customer['mobile'] }}
                                         @endif
                                     </td>
                                     <td>شهر مشتری: {{ $customer['city'] }}</td>
                                     <td>آدرس مشتری: {{ $customer['address'] }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4">توضیحات اولیه: 
-                                        {{ $mainCase->getVariable('customer_init_description')  }}<br>
-                                        {{ $mainCase->getVariable('initial_description')  }}
+                                    <td colspan="4">توضیحات اولیه:
+                                        {{ $mainCase->getVariable('customer_init_description') }}<br>
+                                        {{ $mainCase->getVariable('initial_description') }}
                                     </td>
                                 </tr>
                             </table>
@@ -91,7 +94,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند خارجی</div>
+                    <div class="card-header {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند
+                        خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
                             <table class="table table-bordered">
@@ -115,7 +119,7 @@
                                     <th>{{ trans('fields.customer_validation_code') }}</th>
                                     <th>{{ trans('fields.customer_signature') }}</th>
                                     <th>{{ trans('fields.job_rank') }}</th>
-                                    
+
                                 </tr>
                                 @foreach ($deviceRepairReports as $report)
                                     <tr>
@@ -204,7 +208,7 @@
                                         <td>{{ $part->fix_report }}</td>
                                         <td>{{ $part->repair_is_approved }}</td>
                                         <td>
-                                            @if($part->initial_part_pic)
+                                            @if ($part->initial_part_pic)
                                                 <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
                                             @endif
                                         </td>
@@ -227,7 +231,7 @@
                                         <td>{{ $part->power }}</td>
                                         <td>{{ $part->has_attachment }}</td>
                                         <td>
-                                            @if($part->attachment_image)
+                                            @if ($part->attachment_image)
                                                 <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
                                             @endif
                                         </td>
@@ -237,72 +241,132 @@
                         </div>
                     </div>
                 </div>
-                @if(auth()->user()->access('امور جاری - جزئیات مالی'))
-                <div class="card">
-                    <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش دریافتی مالی</div>
-                    <div class="card-body">
-                        {{-- مالی --}}
-                        <div class="row table-responsive" id="financials">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>{{ trans('fields.process_name') }}</th>
-                                    <th>{{ trans('fields.fix_cost_type') }}</th>
-                                    <th>{{ trans('fields.fix_cost_date') }}</th>
-                                    <th>هزینه اعلام شده</th>
-                                    <th>{{ trans('fields.destination_account') }}</th>
-                                    <th>{{ trans('fields.destination_account_name') }}</th>
-                                    <th>هزینه دریافت شده</th>
-                                    <th>{{ trans('fields.payment_date') }}</th>
-                                    <th>{{ trans('fields.payment_after_completion') }}</th>
-                                    <th>{{ trans('fields.description') }}</th>
-                                </tr>
-                                @foreach ($financials as $fin)
+                @if ($mainCase->process_id = 'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50')
+                    <div class="card">
+                        <div class="card-header bg-info text-center">
+                            گزارشات مپاسنتر
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-stripped" id="mapa-center-reports">
+                                <thead>
                                     <tr>
-                                        <td>{{ $fin->process_name }}</td>
-                                        <td>{{ $fin->fix_cost_type }}</td>
-                                        <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}</td>
-                                        <td>{{ number_format($fin->cost) }}
-                                            @if($fin->cost2)
-                                                <br>
-                                                {{ number_format($fin->cost2) }}
-                                            @endif
-                                            @if($fin->cost3)
-                                                <br>
-                                                {{ number_format($fin->cost3) }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $fin->destination_account }}
-                                            @if($fin->destination_account_2)
-                                                <br>
-                                                {{ $fin->destination_account_2 }}
-                                            @endif
-                                            @if($fin->destination_account_3)
-                                                <br>
-                                                {{ $fin->destination_account_3 }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $fin->destination_account_name }}
-                                            @if($fin->destination_account_name_2)
-                                                <br>
-                                                {{ $fin->destination_account_name_2 }}
-                                            @endif
-                                            @if($fin->destination_account_name_3)
-                                                <br>
-                                                {{ $fin->destination_account_name_3 }}
-                                            @endif
-                                        </td>
-                                        <td>{{ number_format($fin->payment) }}
-                                        </td>
-                                        <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
-                                        </td>
-                                        <td>{{ $fin->payment_after_completion }}</td>
-                                        <td>{{ $fin->description }}</td>
+                                        <th>#</th>
+                                        <th>تاریخ</th>
+                                        <th>ساعت شروع</th>
+                                        <th>ساعت پایان</th>
+                                        <th>مدت زمان صرف شده(ساعت)</th>
+                                        <th>تکنسین</th>
+                                        <th>گزارش</th>
+                                        <th>اقدام</th>
                                     </tr>
-                                @endforeach
+                                </thead>
+                                <tbody>
+                                    {{ $totalDuration = 0 }}
+                                    @foreach ($mapaCenterReports as $report)
+                                        @php
+                                            $duration = round(((int) $report->end - (int) $report->start) / 3600, 2);
+                                            $totalDuration += $duration;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td dir="ltr">{{ toJalali((int) $report->start)->format('Y-m-d') }}</td>
+                                            <td dir="ltr">{{ toJalali((int) $report->start)->format('H:i') }}</td>
+                                            <td dir="ltr">{{ toJalali((int) $report->end)->format('H:i') }}</td>
+                                            <td>{{ $duration }}</td>
+                                            <td>{{ getUserInfo($report->expert)?->name }}</td>
+                                            <td>{{ $report->report }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger"
+                                                    onclick="deleteReport('{{ $report->id }}')"><i
+                                                        class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-success">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>مجموع</td>
+                                        <td>{{ $totalDuration }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
-                </div>
+                @endif
+                @if (auth()->user()->access('امور جاری - جزئیات مالی'))
+                    <div class="card">
+                        <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش دریافتی مالی
+                        </div>
+                        <div class="card-body">
+                            {{-- مالی --}}
+                            <div class="row table-responsive" id="financials">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>{{ trans('fields.process_name') }}</th>
+                                        <th>{{ trans('fields.fix_cost_type') }}</th>
+                                        <th>{{ trans('fields.fix_cost_date') }}</th>
+                                        <th>هزینه اعلام شده</th>
+                                        <th>{{ trans('fields.destination_account') }}</th>
+                                        <th>{{ trans('fields.destination_account_name') }}</th>
+                                        <th>هزینه دریافت شده</th>
+                                        <th>{{ trans('fields.payment_date') }}</th>
+                                        <th>{{ trans('fields.payment_after_completion') }}</th>
+                                        <th>{{ trans('fields.description') }}</th>
+                                    </tr>
+                                    @foreach ($financials as $fin)
+                                        <tr>
+                                            <td>{{ $fin->process_name }}</td>
+                                            <td>{{ $fin->fix_cost_type }}</td>
+                                            <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
+                                            </td>
+                                            <td>{{ number_format($fin->cost) }}
+                                                @if ($fin->cost2)
+                                                    <br>
+                                                    {{ number_format($fin->cost2) }}
+                                                @endif
+                                                @if ($fin->cost3)
+                                                    <br>
+                                                    {{ number_format($fin->cost3) }}
+                                                @endif
+                                            </td>
+                                            <td>{{ $fin->destination_account }}
+                                                @if ($fin->destination_account_2)
+                                                    <br>
+                                                    {{ $fin->destination_account_2 }}
+                                                @endif
+                                                @if ($fin->destination_account_3)
+                                                    <br>
+                                                    {{ $fin->destination_account_3 }}
+                                                @endif
+                                            </td>
+                                            <td>{{ $fin->destination_account_name }}
+                                                @if ($fin->destination_account_name_2)
+                                                    <br>
+                                                    {{ $fin->destination_account_name_2 }}
+                                                @endif
+                                                @if ($fin->destination_account_name_3)
+                                                    <br>
+                                                    {{ $fin->destination_account_name_3 }}
+                                                @endif
+                                            </td>
+                                            <td>{{ number_format($fin->payment) }}
+                                            </td>
+                                            <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
+                                            </td>
+                                            <td>{{ $fin->payment_after_completion }}</td>
+                                            <td>{{ $fin->description }}</td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 @endif
                 <div class="card">
                     <div class="card-header {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل</div>
