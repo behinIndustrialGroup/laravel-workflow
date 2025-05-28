@@ -44,8 +44,8 @@ class Inbox extends Model
             $elapsedMinutes = $createdAt->diffInMinutes($now);
             $diff = $elapsedMinutes - $this->task->duration;
             if ($diff > 0) {
-                if($diff > 3600){
-                    $diff = round($diff / 3600, 2);
+                if($diff > 1440){
+                    $diff = round($diff / 1440, 2);
                     return "<span style='color: red;'>{$diff} d ". trans('fields.Expired') . "</span>"; // زمان گذشته
                 }
                 if($diff > 60){
@@ -55,8 +55,8 @@ class Inbox extends Model
                 return "<span style='color: red;'>{$diff} m ". trans('fields.Expired') . "</span>"; // زمان گذشته
             } else {
                 $diff = $this->task->duration - $elapsedMinutes;
-                if($diff > 3600){
-                    $diff = round($diff / 3600, 2);
+                if($diff > 1440){
+                    $diff = round($diff / 1440, 2);
                     return "<span style='color: green;'>{$diff} d ". trans('fields.Rest') . "</span>"; // هنوز در زمان
                 }
                 if($diff > 60){
