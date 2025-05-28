@@ -34,7 +34,7 @@ class MapaCenterController extends Controller
     public function show($mapa_center)
     {
         $case = CaseController::getById($mapa_center);
-        $reports = Mapa_center_fix_report::where('case_id', $mapa_center)->get();
+        $reports = Mapa_center_fix_report::where('case_number', $case->number)->get();
         $parts = Parts::where('case_number', $case->number)->get();
         $financials = Financials::where('case_number', $case->number)->get();
         return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials'));
