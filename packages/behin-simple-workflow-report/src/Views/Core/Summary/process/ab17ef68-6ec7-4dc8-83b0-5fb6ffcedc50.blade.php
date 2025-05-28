@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($process->cases as $case)
+                        @foreach ($process->cases->where('parent_id', null) as $case)
                             @if ($case->getVariable('end_of_repair') != 'yes')
                                 <tr
                                     ondblclick="window.location.href='{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}'">
