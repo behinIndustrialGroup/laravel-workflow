@@ -243,7 +243,7 @@
                 </div>
                 @if ($mainCase->process_id = 'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50')
                     <div class="card">
-                        <div class="card-header bg-info text-center">
+                        <div class="card-header bg-success text-center">
                             گزارشات مپاسنتر
                         </div>
                         <div class="card-body table-responsive">
