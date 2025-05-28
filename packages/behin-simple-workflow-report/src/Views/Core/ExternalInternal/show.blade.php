@@ -257,7 +257,6 @@
                                         <th>مدت زمان صرف شده(ساعت)</th>
                                         <th>تکنسین</th>
                                         <th>گزارش</th>
-                                        <th>اقدام</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -275,11 +274,6 @@
                                             <td>{{ $duration }}</td>
                                             <td>{{ getUserInfo($report->expert)?->name }}</td>
                                             <td>{{ $report->report }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-danger"
-                                                    onclick="deleteReport('{{ $report->id }}')"><i
-                                                        class="fa fa-trash"></i></button>
-                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -290,7 +284,6 @@
                                         <td></td>
                                         <td>مجموع</td>
                                         <td>{{ $totalDuration }}</td>
-                                        <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
