@@ -146,9 +146,16 @@ class InboxController extends Controller
             if (!isset($form->content)) {
                 return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('Form not found'));
             }
-            // if(!TaskActorController::userIsAssignToTask($task->id, Auth::id())){
-            //     return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('You are not assigned to this task'));
-            // }
+            if($task->assignment_type == 'public'){
+                return view('SimpleWorkflowView::Core.Inbox.public-show')->with([
+                    'inbox' => $inbox,
+                    'case' => $case,
+                    'task' => $task,
+                    'process' => $process,
+                    'variables' => $variables,
+                    'form' => $form
+                ]);
+            }
             return view('SimpleWorkflowView::Core.Inbox.show')->with([
                 'inbox' => $inbox,
                 'case' => $case,
@@ -204,6 +211,12 @@ class InboxController extends Controller
         $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
         $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->get();
         return view('SimpleWorkflowView::Core.Inbox.history', compact('rows'));
+    }
+
+    public static function caseHistoryList($caseNumber){
+        $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
+        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->get();
+        return $rows;
     }
 }
 

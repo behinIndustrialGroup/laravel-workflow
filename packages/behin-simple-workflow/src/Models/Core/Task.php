@@ -42,6 +42,7 @@ class Task extends Model
         'color',
         'background',
         'duration',
+        'order',
     ];
 
     public function getStyledNameAttribute()
@@ -62,7 +63,7 @@ class Task extends Model
     public function children()
     {
         // return $this->hasMany(Task::class, 'parent_id');
-        return Task::where('parent_id', $this->id)->whereNot('id', $this->id)->get();
+        return Task::where('parent_id', $this->id)->whereNot('id', $this->id)->orderBy('order', 'asc')->get();
     }
 
     public function errors()

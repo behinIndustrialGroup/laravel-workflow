@@ -96,4 +96,8 @@ class Cases extends Model
     public function getHistoryAttribute(){
          return "<a title='". trans('fields.History') ."' href='". route('simpleWorkflow.inbox.caseHistoryView', ['caseNumber' => $this->number]) ."'><i class='fa fa-history'></i></a>";
     }
+
+    public function getHistoryList(){
+        return InboxController::caseHistoryList($this->number);
+    }
 }

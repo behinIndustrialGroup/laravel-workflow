@@ -12,6 +12,11 @@
             {{ session('error') }}
         </div>
     @endif
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="mb-3">
         <a href="{{ route('simpleWorkflow.task.index', $task->process_id) }}" class="btn btn-secondary">
             {{ trans('Back to list') }}
@@ -117,6 +122,8 @@
                             {{ trans('Normal') }}</option>
                         <option value="dynamic" {{ $task->assignment_type == 'dynamic' ? 'selected' : '' }}>
                             {{ trans('Dynamic') }}</option>
+                        <option value="public" {{ $task->assignment_type == 'public' ? 'selected' : '' }}>
+                            {{ trans('Public') }}</option>
                     </select>
                 </div>
             </div>
@@ -161,6 +168,13 @@
                             $('input[name=background]').val(this.value);
                         });
                     </script>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="order" class="col-sm-2 col-form-label">{{ trans('Order') }}</label>
+                <div class="col-sm-10 row">
+                    <input type="text" name="order" class="form-control col-sm-12" dir="ltr"
+                        value="{{ $task->order }}">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
