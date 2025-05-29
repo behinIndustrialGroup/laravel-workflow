@@ -10,6 +10,7 @@
         <div class="row justify-content-center">
 
             <div class="col-md-12">
+                @if(auth()->user()->access('هرچه میخواهد دل تنگت بجوی'))
                 <div class="card">
                     <div class="card-header text-center bg-info">جستجو</div>
                     <div class="card-body">
@@ -95,6 +96,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="card">
                     <div class="card-header">گزارش‌های گردش کار</div>
 
