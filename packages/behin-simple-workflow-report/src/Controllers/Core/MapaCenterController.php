@@ -90,4 +90,9 @@ class MapaCenterController extends Controller
         $newCase->saveVariable('initial_description', "این دستگاه توسط: " . Auth::user()->name . "از فرایند مپاسنتر برای تعمیرات داخلی ارسال شده است.");
         return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('fields.Report saved successfully'));
     }
+
+    public function archive(){
+        $process= ProcessController::getById("ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50");
+        return view('SimpleWorkflowReportView::Core.MapaCenter.archive', compact('process'));
+    }
 }

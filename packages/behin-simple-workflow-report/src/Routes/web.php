@@ -22,9 +22,6 @@ use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
-use BehinProcessMaker\Models\PMVariable;
-use BehinProcessMaker\Models\PmVars;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -68,5 +65,6 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::resource('mapa-center', MapaCenterController::class);
     Route::post('mapa-center/exclude-device/{mapa_center}', [MapaCenterController::class, 'excludeDevice'])->name('mapa-center.exclude-device');
+    Route::get('mapa-center/archive', [MapaCenterController::class, 'archive'])->name('mapa-center.archive');
 
 });
