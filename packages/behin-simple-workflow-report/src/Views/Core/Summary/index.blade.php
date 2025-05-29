@@ -145,6 +145,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('مپا سنتر: پرونده های پایان یافته'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>مپاسنتر: پرونده های پایان یافته</td>
+                                            <td class="d-none">گزارش کامل پرونده های پایان یافته مپاسنتر</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.mapa-center-archive') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
                                         <tr>
                                             <td class="d-none"></td>
