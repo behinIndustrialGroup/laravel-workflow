@@ -27,19 +27,19 @@
                         @foreach ($process->cases->where('parent_id', null) as $case)
                             @if ($case->getVariable('end_of_repair') == 'yes')
                                 <tr
-                                    ondblclick="window.location.href='{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}'">
+                                    ondblclick="window.location.href='{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}'">
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
                                     <td class="d-none">{{ $case->id }}</td>
                                     <td>{{ $case->number }}
                                         <a
-                                            href="{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}"><i
+                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"><i
                                                 class="fa fa-external-link"></i></a>
                                     </td>
                                     <td>{{ $case->getVariable('device_name') }}</td>
                                     <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                     <td><a
-                                            href="{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}"><button
+                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"><button
                                                 class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
                                     </td>
                                 </tr>
