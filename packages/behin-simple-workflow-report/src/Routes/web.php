@@ -65,6 +65,6 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::resource('mapa-center', MapaCenterController::class);
     Route::post('mapa-center/exclude-device/{mapa_center}', [MapaCenterController::class, 'excludeDevice'])->name('mapa-center.exclude-device');
-    Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center.archive');
+    Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
 
 });
