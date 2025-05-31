@@ -226,7 +226,9 @@
                                             </tr>
                                         @endif
                                         {{-- فرایند تعمیر در مدارپرداز --}}
-                                        @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or $row->process_id == 'ee209b0a-251c-438e-ab14-2018335eba6d')
+                                        @if (
+                                            $row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or
+                                                $row->process_id == 'ee209b0a-251c-438e-ab14-2018335eba6d')
                                             <tr>
                                                 <td>{{ $row->number }}
                                                     <a
@@ -234,26 +236,62 @@
                                                             class="fa fa-external-link"></i></a>
                                                 </td>
                                                 <td>{{ $row->customer }}</td>
-                                                <td>{{ $row->process_name }}</td>
+                                                <td>داخلی</td>
                                                 <td>{{ $row->mapa_expert_name }}</td>
                                                 <td>{{ $row->fix_report_date ? toJalali((int) $row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
-                                                    {{ number_format($row->fix_cost) }}
-                                                    @if ($row->fix_cost_2)
-                                                        <br>
-                                                        {{ number_format($row->fix_cost_2) }}
+                                                    @if ($row->financial_cost)
+                                                        {{ number_format($row->financial_cost) }}
+                                                        @php
+                                                            $totalRepairCost += $row->financial_cost;
+                                                        @endphp
+                                                    @else
+                                                        {{ $row->fix_cost ? number_format($row->fix_cost) : '' }}
+                                                        @php
+                                                            $totalRepairCost += $row->fix_cost;
+                                                        @endphp
+                                                        @php
+                                                            $totalRepairCost += $row->fix_cost;
+                                                        @endphp
                                                     @endif
-                                                    @if ($row->fix_cost_3)
+                                                    @if ($row->financial_cost2)
                                                         <br>
-                                                        {{ number_format($row->fix_cost_3) }}
+                                                        {{ number_format($row->financial_cost2) }}
+                                                        @php
+                                                            $totalRepairCost += $row->financial_cost2;
+                                                        @endphp
+                                                    @else
+                                                        {{ $row->fix_cost_2 ? number_format($row->fix_cost_2) : '' }}
+                                                        @php
+                                                            $totalRepairCost += $row->fix_cost_2;
+                                                        @endphp
+                                                    @endif
+                                                    @if ($row->financial_cost3)
+                                                        <br>
+                                                        {{ number_format($row->financial_cost3) }}
+                                                        @php
+                                                            $totalRepairCost += $row->financial_cost3;
+                                                        @endphp
+                                                    @else
+                                                        {{ $row->fix_cost_3 ? number_format($row->fix_cost_3) : '' }}
+                                                        @php
+                                                            $totalRepairCost += $row->fix_cost_3;
+                                                        @endphp
                                                     @endif
                                                 </td>
-                                                <td>{{ $row->payment_amount }}</td>
+                                                <td>
+                                                    @if ($row->financial_payment)
+                                                        {{ number_format($row->financial_payment) }}
+                                                        @php
+                                                            $totalPaymentAmount += $row->financial_payment;
+                                                        @endphp
+                                                    @else
+                                                        {{ number_format($row->payment_amount) }}
+                                                    @endif
+                                                </td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
                                                 @php
-                                                    $totalRepairCost += $row->fix_cost;
-                                                    $totalPaymentAmount += $row->payment_amount;
                                                     $numberOfInternalProcess++;
                                                 @endphp
                                         @endif
