@@ -226,7 +226,7 @@
                                             </tr>
                                         @endif
                                         {{-- فرایند تعمیر در مدارپرداز --}}
-                                        @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de')
+                                        @if ($row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or $row->process_id == 'ee209b0a-251c-438e-ab14-2018335eba6d')
                                             <tr>
                                                 <td>{{ $row->number }}
                                                     <a
