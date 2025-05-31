@@ -11,6 +11,7 @@ class ReportHelper
     {
         $from = convertPersianToEnglish($from);
         $to = convertPersianToEnglish($to);
+
         $mapaSubquery = DB::table('wf_variables')
             ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))
             ->where('key', 'mapa_expert')
@@ -23,6 +24,7 @@ class ReportHelper
             })
             ->leftJoin('users', 'mapa.mapa_expert_id', '=', 'users.id')
             ->leftJoin('wf_process', 'wf_cases.process_id', '=', 'wf_process.id')
+            ->leftJoin('wf_entity_financials', 'wf_cases.number', '=', 'wf_entity_financials.case_number')
             ->select(
                 'wf_variables.case_id',
                 'wf_cases.number',
@@ -38,11 +40,17 @@ class ReportHelper
                 DB::raw("MAX(CASE WHEN `key` = 'visit_date' THEN `value` ELSE 0 END) AS visit_date"),
                 DB::raw("MAX(CASE WHEN `key` = 'fix_report' THEN UNIX_TIMESTAMP(wf_variables.updated_at) ELSE null END) AS fix_report_date"),
                 'users.name as mapa_expert_name',
-                'users.id as mapa_expert_id'
+                'users.id as mapa_expert_id',
+                'wf_entity_financials.cost as financial_cost',
+                'wf_entity_financials.cost2 as financial_cost2',
+                'wf_entity_financials.cost3 as financial_cost3',
+                'wf_entity_financials.payment as financial_payment',
             )
             ->groupBy('wf_variables.case_id')
             ->whereNull('wf_cases.deleted_at')
             ->havingRaw('mapa_expert_id is not null');
+
+        
 
         if ($user) {
             $query->havingRaw('mapa_expert_id = ?', [$user]);
