@@ -13,6 +13,7 @@
                     <thead>
                         <tr>
                             <th>شماره پرونده</th>
+                            <th>نام مشتری</th>
                             <th>مبلغ</th>
                             <th>تاریخ</th>
                             <th>توضیحات</th>
@@ -27,6 +28,7 @@
                                             class="fa fa-external-link"></i></a>
                                     {{ $cheque->case_number }}
                                 </td>
+                                <td>{{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                                 <td>{{ number_format($cheque->cost) }}</td>
                                 <td>{{ toJalali((int)$cheque->cheque_due_date)->format('Y-m-d') }}</td>
                                 <td>{{ $cheque->description }}</td>
