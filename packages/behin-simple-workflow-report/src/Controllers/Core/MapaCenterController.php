@@ -77,7 +77,7 @@ class MapaCenterController extends Controller
         $case = CaseController::getById($mapa_center);
         $inbox = ProcessController::startFromScript(
             "9f6b7b5c-155e-4698-8b05-26ebb061bb7d",
-            Auth::id(),
+            42,
             $case->number,
             $case->id
         );
@@ -88,7 +88,7 @@ class MapaCenterController extends Controller
         $newCase->saveVariable('part_name', $request->part_name);
         $newCase->saveVariable('from_mapa_center', 'yes');
         $newCase->saveVariable('initial_description', "این دستگاه توسط: " . Auth::user()->name . "از فرایند مپاسنتر برای تعمیرات داخلی ارسال شده است.");
-        return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('fields.Report saved successfully'));
+        return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('دستگاه برای پذیرش داخلی (خانم طالب زاده) جهت انجام مراحل بعدی ارسال شد'));
     }
 
     public function archive(){
