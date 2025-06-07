@@ -51,7 +51,7 @@ class Task extends Model
         $background = $this->background ?? 'transparent'; // بک‌گراند پیش‌فرض
         $name = e($this->name); // جلوگیری از مشکلات امنیتی XSS
 
-        return "<span style='color: {$color}; background: {$background}; padding:2px 4px; border-radius:4px;'>{$name}</span>";
+        return "<span class='badge' style='color: {$color}; background: {$background}; padding:2px 4px; border-radius:4px;'>{$name}</span>";
     }
 
     public function process()
