@@ -1,6 +1,6 @@
 <?php
 
-namespace Behin\SimpleWorkflow\Models\Core;
+namespace Behin\SimpleWorkflowReport\Models\Core;
 
 use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 
-class Cases extends Model
+class RepairCases extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -99,6 +99,11 @@ class Cases extends Model
 
     public function getHistoryList(){
         return InboxController::caseHistoryList($this->number);
+    }
+
+    
+    public function getDetailsAttribute(){
+        return "<a href=". route('simpleWorkflowReport.external-internal.show', ['external_internal' => $this->number]) ."><i class='fa fa-external-link'></i></a>";
     }
 
 }

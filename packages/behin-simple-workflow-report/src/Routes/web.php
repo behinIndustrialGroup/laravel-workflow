@@ -10,6 +10,7 @@ use Behin\SimpleWorkflow\Controllers\Core\TaskActorController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflowReport\Controllers\Core\ChequeReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExpiredController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
@@ -66,5 +67,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('mapa-center', MapaCenterController::class);
     Route::post('mapa-center/exclude-device/{mapa_center}', [MapaCenterController::class, 'excludeDevice'])->name('mapa-center.exclude-device');
     Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
+
+    Route::resource('cheque-report', ChequeReportController::class);
+
 
 });

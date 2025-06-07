@@ -180,6 +180,18 @@
                                             </td>
                                         </tr>
                                     @endif
+
+                                    @if (auth()->user()->access('گزارش چک ها'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>چک ها</td>
+                                            <td class="d-none">گزارش کامل چک ها و تاریخ سررسید آنها</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.cheque-report.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
