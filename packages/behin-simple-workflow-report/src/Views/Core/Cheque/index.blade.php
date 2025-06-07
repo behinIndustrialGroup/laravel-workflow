@@ -22,7 +22,7 @@
                         @foreach ($cheques as $cheque)
                             <tr>
                                 <td>{{ $cheque->case_number }}
-                                    {!! $cheque->case->details !!}
+                                    {!! $cheque->case()->details !!}
                                 </td>
                                 <td>{{ number_format($cheque->cost) }}</td>
                                 <td>{{ toJalali((int)$cheque->cheque_due_date)->format('Y-m-d') }}</td>
