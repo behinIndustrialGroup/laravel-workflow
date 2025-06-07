@@ -101,4 +101,12 @@ class Cases extends Model
         return InboxController::caseHistoryList($this->number);
     }
 
+    public function children(){
+        return Cases::where('parent_id', $this->id)->get();
+    }
+
+    public function parent(){
+        return Cases::find($this->parent_id);
+    }
+
 }
