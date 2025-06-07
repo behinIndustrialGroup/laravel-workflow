@@ -242,12 +242,12 @@
                                                 </td>
                                                 <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
                                                     @if ($row->financial_cost)
-                                                        {{ number_format($row->financial_cost) }}
+                                                        {{ number_format((int)$row->financial_cost) }}
                                                         @php
-                                                            $totalRepairCost += $row->financial_cost;
+                                                            $totalRepairCost += (int)$row->financial_cost;
                                                         @endphp
                                                     @else
-                                                        {{ $row->fix_cost ? number_format($row->fix_cost) : '' }}
+                                                        {{ $row->fix_cost ? number_format((int)$row->fix_cost) : '' }}
                                                         @php
                                                             $totalRepairCost += $row->fix_cost;
                                                         @endphp
@@ -282,12 +282,12 @@
                                                 </td>
                                                 <td>
                                                     @if ($row->financial_payment)
-                                                        {{ number_format($row->financial_payment) }}
+                                                        {{ number_format((int)$row->financial_payment) }}
                                                         @php
-                                                            $totalPaymentAmount += $row->financial_payment;
+                                                            $totalPaymentAmount += (int)$row->financial_payment;
                                                         @endphp
                                                     @else
-                                                        {{ number_format($row->payment_amount) }}
+                                                        {{ number_format((int)$row->payment_amount) }}
                                                     @endif
                                                 </td>
                                                 <td>{{ $row->payment_date ?? '' }}</td>
