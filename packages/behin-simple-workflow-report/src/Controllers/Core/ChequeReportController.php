@@ -24,72 +24,36 @@ class ChequeReportController extends Controller
 {
     public function index(Request $request)
     {
-        $cheques = Financials::whereNotNull('case_number')->whereIn('fix_cost_type', [ 'تسویه کامل - چک', 'علی الحساب - چک' ])->get();
+        $cheques = Financials::whereNotNull('case_number')
+            ->whereIn('fix_cost_type', ['تسویه کامل - چک', 'علی الحساب - چک'])
+            ->where('is_passed', null)
+            ->get();
         return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques'));
     }
 
-    public function totalCost()
+    public function update(Request $request, $id)
     {
-        return view('SimpleWorkflowReportView::Core.Summary.process.partial.total-cost');
-    }
+        $cheque = Financials::findOrFail($id);
 
-    public function totalPayment()
-    {
-        $vars = VariableController::getAll($fields = ['payment_amount'])->pluck('payment_amount');
-        $sum = 0;
-        $ar = [];
-        foreach ($vars as $var) {
-            $var = str_replace(',', '', $var);
-            $var = str_replace(' ', '', $var);
-            $var = str_replace('ریال', '', $var);
-            $var = str_replace('تومان', '', $var);
-            $var = str_replace('/', '', $var);
-            $var = str_replace('.', '', $var);
-            if (is_numeric($var)) {
-                $sum += $var;
-            }
-            $ar[] = $var;
-        }
-        return $sum;
-    }
-
-    public static function allPayments(Request $request)
-    {
-        $user = $request->user;
-        $from = convertPersianToEnglish($request->from);
-        $to = convertPersianToEnglish($request->to);
-        $today = Carbon::today();
-        $todayShamsi = Jalalian::fromCarbon($today);
-        $thisYear = $todayShamsi->getYear();
-        $thisMonth = $todayShamsi->getMonth();
-        $thisMonth = str_pad($thisMonth, 2, '0', STR_PAD_LEFT);
-        $to = Jalalian::fromFormat('Y-m-d', "$thisYear-$thisMonth-01")
-            ->addMonths(1)
-            ->subDays(1)
-            ->format('Y-m-d');
-
-        $from = isset($request->from) ? convertPersianToEnglish($request->from) : "$thisYear-$thisMonth-01";
-        $to = isset($request->to) ? convertPersianToEnglish($request->to) : (string) $to;
-
-        $rows = Financials::select('*');
-
-        if ($user) {
-            $rows = $rows->where('destination_account_name', $user);
+        // اگر کاربر خواسته چک را پاس کند، ولی شماره چک ثبت نشده باشد، ارور بده
+        if ($request->has('is_passed') && empty($cheque->cheque_number)) {
+            return redirect()->back()->with('error', 'لطفاً ابتدا شماره چک را وارد کنید.');
         }
 
-        if ($from && $to) {
-            $from = Jalalian::fromFormat('Y-m-d', $from)->toCarbon()->startOfDay()->timestamp;
-            $to = Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay()->timestamp;
-
-            $rows = $rows->whereBetween('payment_date', [$from, $to]);
+        if ($request->has('cheque_number')) {
+            $cheque->cheque_number = $request->input('cheque_number');
         }
 
+        if ($request->has('cheque_receiver')) {
+            $cheque->cheque_receiver = $request->input('cheque_receiver');
+        }
 
-        $rows = [
-            'rows' => $rows->get(),
-            'destinations' => $rows->get()->groupBy('destination_account_name')
-        ];
+        if ($request->has('is_passed')) {
+            $cheque->is_passed = true;
+        }
 
-        return view('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments', compact('rows'));
+        $cheque->save();
+
+        return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
     }
 }
