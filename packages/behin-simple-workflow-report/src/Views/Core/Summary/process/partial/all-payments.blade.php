@@ -118,11 +118,11 @@
                                 <td>{{ $row->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                                 <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
                                 </td>
-                                <td class="d-none">{{ number_format($row->cost) }}</td>
+                                <td class="d-none">{{ number_format((int)$row->cost) }}</td>
                                 <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : '' }}</td>
-                                <td>{{ number_format($row->payment) }}
+                                <td>{{ number_format((int)$row->payment) }}
                                     @php
-                                        $totalPayment += $row->payment;
+                                        $totalPayment += (int)$row->payment;
                                     @endphp
                                 </td>
                                 <td>{{ $row->destination_account_name }}</td>
@@ -149,9 +149,9 @@
                                     <td>{{ $row->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
                                     </td>
-                                    <td class="d-none">{{ number_format($row->cost2) }}</td>
+                                    <td class="d-none">{{ number_format((int)$row->cost2) }}</td>
                                     <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : '' }}</td>
-                                    <td>{{ number_format($row->payment) }}</td>
+                                    <td>{{ number_format((int)$row->payment) }}</td>
                                     <td>{{ $row->destination_account_name_2 }}</td>
                                     <td>{{ $row->destination_account_2 }}</td>
                                 </tr>
@@ -177,9 +177,9 @@
                                     <td>{{ $row->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
                                     </td>
-                                    <td class="d-none">{{ number_format($row->cost3) }}</td>
+                                    <td class="d-none">{{ number_format((int)$row->cost3) }}</td>
                                     <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : '' }}</td>
-                                    <td>{{ number_format($row->payment) }}</td>
+                                    <td>{{ number_format((int)$row->payment) }}</td>
                                     <td>{{ $row->destination_account_name_3 }}</td>
                                     <td>{{ $row->destination_account_3 }}</td>
                                 </tr>
