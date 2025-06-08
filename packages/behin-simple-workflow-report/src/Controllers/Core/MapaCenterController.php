@@ -121,4 +121,10 @@ class MapaCenterController extends Controller
         $installPart->save();
         return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('قطعه روی دستگاه نصب شد'));
     }
+
+    public function deleteInstallPart($id){
+        $installPart = Mapa_center_install_parts::find($id);
+        $installPart->delete();
+        return redirect()->back()->with('success', trans('قطعه روی دستگاه حذف شد'));
+    }
 }

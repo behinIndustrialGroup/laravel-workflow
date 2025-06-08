@@ -262,6 +262,7 @@
                                 <th>نام قطعه</th>
                                 <th>مقدار</th>
                                 <th>تاریخ ثبت</th>
+                                <th>حذف</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -270,10 +271,19 @@
                                     <td>{{ $part->name }}</td>
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
+                                    <td>
+                                        @if(auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
+                                            <a href="{{ route('simpleWorkflowReport.mapa-center.delete-install-part', $part->id) }}"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('آیا از حذف قطعه {{ $part->name }} مطمئن هستید؟')">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">قطعه‌ای ثبت نشده است.</td>
+                                    <td colspan="4" class="text-center">قطعه‌ای ثبت نشده است.</td>
                                 </tr>
                             @endforelse
                         </tbody>

@@ -68,6 +68,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::put('mapa-center/update-case-info/{mapa_center}', [MapaCenterController::class, 'updateCaseInfo'])->name('mapa-center.update-case-info');
     Route::post('mapa-center/exclude-device/{mapa_center}', [MapaCenterController::class, 'excludeDevice'])->name('mapa-center.exclude-device');
     Route::post('mapa-center/install-part/{mapa_center}', [MapaCenterController::class, 'installPart'])->name('mapa-center.install-part');
+    Route::get('mapa-center/delete-install-part/{id}', [MapaCenterController::class, 'deleteInstallPart'])->name('mapa-center.delete-install-part');
     Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
 
     Route::resource('cheque-report', ChequeReportController::class);
