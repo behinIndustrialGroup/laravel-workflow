@@ -318,14 +318,14 @@
                                             <td>{{ $fin->fix_cost_type }}</td>
                                             <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
                                             </td>
-                                            <td>{{ number_format($fin->cost) }}
+                                            <td>{{ number_format((int)$fin->cost) }}
                                                 @if ($fin->cost2)
                                                     <br>
-                                                    {{ number_format($fin->cost2) }}
+                                                    {{ number_format((int)$fin->cost2) }}
                                                 @endif
                                                 @if ($fin->cost3)
                                                     <br>
-                                                    {{ number_format($fin->cost3) }}
+                                                    {{ number_format((int)$fin->cost3) }}
                                                 @endif
                                             </td>
                                             <td>{{ $fin->destination_account }}
