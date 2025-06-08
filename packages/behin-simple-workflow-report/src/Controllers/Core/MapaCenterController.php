@@ -42,6 +42,15 @@ class MapaCenterController extends Controller
         return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials', 'installParts'));
     }
 
+    public function updateCaseInfo(Request $request, $mapa_center){
+        $data = $request->except('_token', '_method');
+        $case = CaseController::getById($mapa_center);
+        foreach($data as $key => $value){
+            $case->saveVariable($key, $value);
+        }
+        return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('fields.Case info updated successfully'));
+    }
+
     public function update(Request $request, $mapa_center)
     {
         $case = CaseController::getById($mapa_center);

@@ -36,19 +36,35 @@
         </div>
         <div class="card-body">
             <div class="card">
-                @include('SimpleWorkflowView::Core.Form.preview', [
-                    'form' => $customerForm,
-                    'case' => $case,
-                    'variables' => $variables,
-                ])
+                <form action="{{ route('simpleWorkflowReport.mapa-center.update-case-info', $case->id) }}" method="POST"
+                    onsubmit="return confirm('آیا از اینکه اطلاعات را ویرایش میکنید مطمئن هستید؟')">
+                    @csrf
+                    @method('PUT')
+                    @include('SimpleWorkflowView::Core.Form.preview', [
+                        'form' => $customerForm,
+                        'case' => $case,
+                        'variables' => $variables,
+                    ])
+                    @if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری'))
+                        <input type="submit" value="ویرایش" class="btn btn-primary m-2">
+                    @endif
+                </form>
             </div>
 
             <div class="card">
-                @include('SimpleWorkflowView::Core.Form.preview', [
-                    'form' => $deviceForm,
-                    'case' => $case,
-                    'variables' => $variables,
-                ])
+                <form action="{{ route('simpleWorkflowReport.mapa-center.update-case-info', $case->id) }}" method="POST"
+                    onsubmit="return confirm('آیا از اینکه اطلاعات را ویرایش میکنید مطمئن هستید؟')">
+                    @csrf
+                    @method('PUT')
+                    @include('SimpleWorkflowView::Core.Form.preview', [
+                        'form' => $deviceForm,
+                        'case' => $case,
+                        'variables' => $variables,
+                    ])
+                    @if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات دستگاه'))
+                        <input type="submit" value="ویرایش" class="btn btn-primary m-2">
+                    @endif
+                </form>
             </div>
 
             <div class="card">
