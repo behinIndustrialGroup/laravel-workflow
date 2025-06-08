@@ -56,84 +56,80 @@
                     قطعات تعمیر شده
                 </div>
                 <div class="card-body">
-                    @foreach ($parts as $part)
-                        <div class="col-sm-12">
-                            <div class="row table-responsive">
-                                <table class="table table-bordered">
+                    <div class="col-sm-12">
+                        <div class="row table-responsive">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>قطعه</th>
+                                    <th>سرپرست</th>
+                                    <th>تعمیرکار</th>
+                                    <th>سریال مپا</th>
+                                    <th>واحد</th>
+                                    <th>گزارش</th>
+                                    <th>تایید تعمیرات</th>
+                                    <th>تصویر</th>
+                                    <th>اعزام کارشناس</th>
+                                    <th>کارشناس اعزام شده</th>
+                                    <th>توضیحات اعزام کارشناس</th>
+                                    <th>تاریخ پایان کار</th>
+                                    <th>ساعت پایان کار</th>
+                                    <th>مدت تعمیرات</th>
+                                    <th>{{ trans('fields.see_the_problem') }}</th>
+                                    <th>{{ trans('fields.final_result_and_test') }}</th>
+                                    <th>{{ trans('fields.test_possibility') }}</th>
+                                    <th>{{ trans('fields.final_result') }}</th>
+                                    <th>{{ trans('fields.problem_seeing') }}</th>
+                                    <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
+                                    <th>{{ trans('fields.test_in_another_place') }}</th>
+                                    <th>{{ trans('fields.job_rank') }}</th>
+                                    <th>{{ trans('fields.other_parts') }}</th>
+                                    <th>{{ trans('fields.special_parts') }}</th>
+                                    <th>{{ trans('fields.power') }}</th>
+                                    <th>{{ trans('fields.has_attachment') }}</th>
+                                    <th>{{ trans('fields.attachment_image') }}</th>
+                                </tr>
+                                @foreach ($parts as $part)
                                     <tr>
-                                        <th>قطعه</th>
-                                        <th>سرپرست</th>
-                                        <th>تعمیرکار</th>
-                                        <th>سریال مپا</th>
-                                        <th>واحد</th>
-                                        <th>گزارش</th>
-                                        <th>تایید تعمیرات</th>
-                                        <th>تصویر</th>
-                                        <th>اعزام کارشناس</th>
-                                        <th>کارشناس اعزام شده</th>
-                                        <th>توضیحات اعزام کارشناس</th>
-                                        <th>تاریخ پایان کار</th>
-                                        <th>ساعت پایان کار</th>
-                                        <th>مدت تعمیرات</th>
-                                        <th>{{ trans('fields.see_the_problem') }}</th>
-                                        <th>{{ trans('fields.final_result_and_test') }}</th>
-                                        <th>{{ trans('fields.test_possibility') }}</th>
-                                        <th>{{ trans('fields.final_result') }}</th>
-                                        <th>{{ trans('fields.problem_seeing') }}</th>
-                                        <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
-                                        <th>{{ trans('fields.test_in_another_place') }}</th>
-                                        <th>{{ trans('fields.job_rank') }}</th>
-                                        <th>{{ trans('fields.other_parts') }}</th>
-                                        <th>{{ trans('fields.special_parts') }}</th>
-                                        <th>{{ trans('fields.power') }}</th>
-                                        <th>{{ trans('fields.has_attachment') }}</th>
-                                        <th>{{ trans('fields.attachment_image') }}</th>
+                                        <td>{{ $part->name }}</td>
+                                        <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '' }}</td>
+                                        <td>{{ getUserInfo($part->mapa_expert)->name ?? '' }}</td>
+                                        <td>{{ $part->mapa_serial }}</td>
+                                        <td>{{ $part->refer_to_unit }}</td>
+                                        <td>{{ $part->fix_report }}</td>
+                                        <td>{{ $part->repair_is_approved }}</td>
+                                        <td>
+                                            @if ($part->initial_part_pic)
+                                                <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
+                                            @endif
+                                        </td>
+                                        <td>{{ $part->dispatched_expert_needed }}</td>
+                                        <td>{{ $part->dispatched_expert }}</td>
+                                        <td>{{ $part->dispatched_expert_description }}</td>
+                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('Y-m-d') : '' }}</td>
+                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('H:i') : '' }}</td>
+                                        <td>{{ $part->repair_duration }}</td>
+                                        <td>{{ $part->see_the_problem }}</td>
+                                        <td>{{ $part->final_result_and_test }}</td>
+                                        <td>{{ $part->test_possibility }}</td>
+                                        <td>{{ $part->final_result }}</td>
+                                        <td>{{ $part->problem_seeing }}</td>
+                                        <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
+                                        <td>{{ $part->test_in_another_place }}</td>
+                                        <td>{{ $part->job_rank }}</td>
+                                        <td>{{ $part->other_parts }}</td>
+                                        <td>{{ $part->special_parts }}</td>
+                                        <td>{{ $part->power }}</td>
+                                        <td>{{ $part->has_attachment }}</td>
+                                        <td>
+                                            @if ($part->attachment_image)
+                                                <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
+                                            @endif
+                                        </td>
                                     </tr>
-                                    @foreach ($parts as $part)
-                                        <tr>
-                                            <td>{{ $part->name }}</td>
-                                            <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '' }}</td>
-                                            <td>{{ getUserInfo($part->mapa_expert)->name ?? '' }}</td>
-                                            <td>{{ $part->mapa_serial }}</td>
-                                            <td>{{ $part->refer_to_unit }}</td>
-                                            <td>{{ $part->fix_report }}</td>
-                                            <td>{{ $part->repair_is_approved }}</td>
-                                            <td>
-                                                @if ($part->initial_part_pic)
-                                                    <a href="{{ url("public/$part->initial_part_pic") }}"
-                                                        download>دانلود</a>
-                                                @endif
-                                            </td>
-                                            <td>{{ $part->dispatched_expert_needed }}</td>
-                                            <td>{{ $part->dispatched_expert }}</td>
-                                            <td>{{ $part->dispatched_expert_description }}</td>
-                                            <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('Y-m-d') : '' }}</td>
-                                            <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('H:i') : '' }}</td>
-                                            <td>{{ $part->repair_duration }}</td>
-                                            <td>{{ $part->see_the_problem }}</td>
-                                            <td>{{ $part->final_result_and_test }}</td>
-                                            <td>{{ $part->test_possibility }}</td>
-                                            <td>{{ $part->final_result }}</td>
-                                            <td>{{ $part->problem_seeing }}</td>
-                                            <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
-                                            <td>{{ $part->test_in_another_place }}</td>
-                                            <td>{{ $part->job_rank }}</td>
-                                            <td>{{ $part->other_parts }}</td>
-                                            <td>{{ $part->special_parts }}</td>
-                                            <td>{{ $part->power }}</td>
-                                            <td>{{ $part->has_attachment }}</td>
-                                            <td>
-                                                @if ($part->attachment_image)
-                                                    <a href="{{ url("public/$part->attachment_image") }}"
-                                                        download>دانلود</a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            </div>
+                                @endforeach
+                            </table>
                         </div>
-                    @endforeach
+                    </div>
                 </div>
             </div>
             <div class="card">
@@ -218,6 +214,58 @@
                     </script>
                 </div>
             </div>
+
+            <!-- باکس افزودن قطعه -->
+            <div class="card mb-4">
+                <div class="card-header">نصب قطعه روی دستگاه</div>
+                <div class="card-body">
+                    <form action="{{ route('simpleWorkflowReport.mapa-center.install-part', $case->id) }}" method="POST">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <input type="text" name="part_name" class="form-control" placeholder="نام قطعه" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="part_value" class="form-control" placeholder="مقدار" required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">ذخیره</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- جدول قطعات نصب‌شده -->
+            <div class="card">
+                <div class="card-header">لیست قطعات نصب‌شده</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>نام قطعه</th>
+                                <th>مقدار</th>
+                                <th>تاریخ ثبت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($installParts as $part)
+                                <tr>
+                                    <td>{{ $part->name }}</td>
+                                    <td>{{ $part->value }}</td>
+                                    <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center">قطعه‌ای ثبت نشده است.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
 
             @if (auth()->user()->access('گزارش مالی مپا سنتر'))
                 <div class="card">

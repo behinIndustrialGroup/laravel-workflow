@@ -22,6 +22,7 @@ use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport2;
 use Maatwebsite\Excel\Facades\Excel;
 use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
+use Behin\SimpleWorkflow\Models\Entities\Mapa_center_install_parts;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
 
 class MapaCenterController extends Controller
@@ -37,7 +38,8 @@ class MapaCenterController extends Controller
         $reports = Mapa_center_fix_report::where('case_number', $case->number)->get();
         $parts = Parts::where('case_number', $case->number)->get();
         $financials = Financials::where('case_number', $case->number)->get();
-        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials'));
+        $installParts = Mapa_center_install_parts::where('case_number', $case->number)->get();
+        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials', 'installParts'));
     }
 
     public function update(Request $request, $mapa_center)
@@ -94,5 +96,20 @@ class MapaCenterController extends Controller
     public function archive(){
         $process= ProcessController::getById("ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50");
         return view('SimpleWorkflowReportView::Core.MapaCenter.archive', compact('process'));
+    }
+
+    public function installPart(Request $request, $mapa_center){
+        $request->validate([
+            'part_name' => 'required|string',
+            'part_value' => 'required|string',
+        ]);
+        $case = CaseController::getById($mapa_center);
+        $installPart = new Mapa_center_install_parts();
+        $installPart->case_id = $mapa_center;
+        $installPart->case_number = $case->number;
+        $installPart->name = $request->part_name;
+        $installPart->value = $request->part_value;
+        $installPart->save();
+        return redirect()->route('simpleWorkflowReport.mapa-center.show', $mapa_center)->with('success', trans('قطعه روی دستگاه نصب شد'));
     }
 }
