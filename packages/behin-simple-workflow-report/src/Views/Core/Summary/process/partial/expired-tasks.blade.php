@@ -11,7 +11,7 @@
             '19f15a6f-1ec8-488c-adea-6c8419fe850a',
             '062b5000-07c2-435c-bb45-621ed15cb42c',
         ],
-        'مالی دریافت هزینه' => [
+        'مالی دریافت هزینه(لیست بدهکاران)' => [
             'adee777f-da9d-4d54-bf00-020a27e0f861',
             'c008cd7d-ea9c-4b0b-917b-97e8ff651155',
             '9cfbbbf7-e53f-4706-b7c9-c69c0dd84cc4',
@@ -48,50 +48,52 @@
             $i = 1;
         @endphp
         @foreach ($categprizedTask as $category => $tasks)
-            <div class="card table-responsive">
-                <div class="card-header bg-info text-center">{{ $category }}</div>
-                <div class="card-body">
-                    @php
-                        $filteredTasks = $expiredTasks->whereIn('task_id', $tasks);
-                    @endphp
-                    @if (count($filteredTasks) == 0)
-                        <div class="alert alert-light">
-                            {{ trans('fields.No expired tasks found') }}
-                        </div>
-                    @else
-                        <table class="table table-striped" id="_{{ $i }}">
-                            <thead>
-                                <tr>
-                                    <th>{{ trans('fields.Task Name') }}</th>
-                                    <th>{{ trans('fields.Case Name') }}</th>
-                                    <th>{{ trans('fields.Case Number') }}</th>
-                                    <th>{{ trans('fields.Actor') }}</th>
-                                    <th>{{ trans('fields.Duration') }}</th>
-                                    <th>{{ trans('fields.Created At') }}</th>
-                                    <th>{{ trans('fields.Deadline') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($filteredTasks as $task)
+            @if (auth()->user()->access('گزارش کارهای منقضی: ' . $category))
+                <div class="card table-responsive">
+                    <div class="card-header bg-info text-center">{{ $category }}</div>
+                    <div class="card-body">
+                        @php
+                            $filteredTasks = $expiredTasks->whereIn('task_id', $tasks);
+                        @endphp
+                        @if (count($filteredTasks) == 0)
+                            <div class="alert alert-light">
+                                {{ trans('fields.No expired tasks found') }}
+                            </div>
+                        @else
+                            <table class="table table-striped" id="_{{ $i }}">
+                                <thead>
                                     <tr>
-                                        <td>{{ $task->task->name }}</td>
-                                        <td>{{ $task->case_name }}</td>
-                                        <td>{{ $task->case->number }}
-                                            <a
-                                                href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $task->case->number]) }}"><i
-                                                    class="fa fa-external-link"></i></a>
-                                        </td>
-                                        <td>{{ getUserInfo($task->actor)->name }}</td>
-                                        <td>{{ $task->task->duration }}</td>
-                                        <td dir="ltr">{{ toJalali($task->created_at) }}</td>
-                                        <td>{!! $task->time_status !!}</td>
+                                        <th>{{ trans('fields.Task Name') }}</th>
+                                        <th>{{ trans('fields.Case Name') }}</th>
+                                        <th>{{ trans('fields.Case Number') }}</th>
+                                        <th>{{ trans('fields.Actor') }}</th>
+                                        <th>{{ trans('fields.Duration') }}</th>
+                                        <th>{{ trans('fields.Created At') }}</th>
+                                        <th>{{ trans('fields.Deadline') }}</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
+                                </thead>
+                                <tbody>
+                                    @foreach ($filteredTasks as $task)
+                                        <tr>
+                                            <td>{{ $task->task->name }}</td>
+                                            <td>{{ $task->case_name }}</td>
+                                            <td>{{ $task->case->number }}
+                                                <a
+                                                    href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $task->case->number]) }}"><i
+                                                        class="fa fa-external-link"></i></a>
+                                            </td>
+                                            <td>{{ getUserInfo($task->actor)->name }}</td>
+                                            <td>{{ $task->task->duration }}</td>
+                                            <td dir="ltr">{{ toJalali($task->created_at) }}</td>
+                                            <td>{!! $task->time_status !!}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @endif
             @php
                 $i++;
             @endphp
@@ -106,22 +108,21 @@
                 "dom": 'Bfrtip',
                 "buttons": [{
                     "extend": 'excelHtml5',
-                "text": "خروجی اکسل",
-                // "title": "گزارش مجموع هزینه های دریافت شده به ازای کارشناس",
-                "className": "btn btn-success btn-sm",
-                "exportOptions": {
-                    "columns": ':visible',
-                    "footer": true
-                }
-            }, ],
-            "order": [
-                [0, "desc"]
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            },
-        });
+                    "text": "خروجی اکسل",
+                    // "title": "گزارش مجموع هزینه های دریافت شده به ازای کارشناس",
+                    "className": "btn btn-success btn-sm",
+                    "exportOptions": {
+                        "columns": ':visible',
+                        "footer": true
+                    }
+                }, ],
+                "order": [
+                    [0, "desc"]
+                ],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                },
+            });
         @endfor
     </script>
 @endsection
-
