@@ -217,7 +217,7 @@
 
             <!-- باکس افزودن قطعه -->
             <div class="card mb-4">
-                <div class="card-header">نصب قطعه روی دستگاه</div>
+                <div class="card-header bg-warning text-center">نصب قطعه روی دستگاه</div>
                 <div class="card-body">
                     <form action="{{ route('simpleWorkflowReport.mapa-center.install-part', $case->id) }}" method="POST">
                         @csrf
@@ -238,7 +238,7 @@
 
             <!-- جدول قطعات نصب‌شده -->
             <div class="card">
-                <div class="card-header">لیست قطعات نصب‌شده</div>
+                <div class="card-header bg-warning text-center">لیست قطعات نصب‌شده</div>
                 <div class="card-body">
                     <table class="table table-bordered table-striped">
                         <thead>
