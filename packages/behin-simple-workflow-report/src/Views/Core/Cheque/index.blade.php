@@ -25,6 +25,7 @@
                         <th>نام مشتری</th>
                         <th>مبلغ</th>
                         <th>تاریخ</th>
+                        <th>مقصد حساب</th>
                         <th>شماره چک</th>
                         <th>گیرنده چک</th>
                         <th>توضیحات</th>
@@ -45,6 +46,7 @@
                             <td>{{ number_format($cheque->cost) }}</td>
                             <td>{{ toJalali((int) $cheque->cheque_due_date)->format('Y-m-d') }}</td>
 
+                            <td>{{ $cheque->destination_account_name }}</td>
                             {{-- شماره چک --}}
                             <td>
                                 @if ($cheque->cheque_number)
