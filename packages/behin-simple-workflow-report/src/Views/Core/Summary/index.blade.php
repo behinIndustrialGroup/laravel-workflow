@@ -192,6 +192,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش حساب دفتری'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>حساب دفتری</td>
+                                            <td class="d-none">گزارش کامل حساب دفتری</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.on-credit-report.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

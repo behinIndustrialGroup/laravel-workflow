@@ -21,6 +21,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
+use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
 
     Route::resource('cheque-report', ChequeReportController::class);
+    Route::resource('on-credit-report', OnCreditReportController::class);
 
 
 });
