@@ -15,7 +15,7 @@
     @endif
     <div class="table-responsive">
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="cheque-list">
             <thead>
                 <tr>
                     <th>شماره پرونده</th>
@@ -98,3 +98,17 @@
         </table>
     </div>
 @endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#cheque-list').DataTable({
+                "pageLength": 25,
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                }
+            });
+        });
+    </script>
+@endsection
+

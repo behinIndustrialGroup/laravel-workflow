@@ -7,10 +7,12 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
 use BehinInit\App\Http\Middleware\Access;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -177,21 +179,25 @@ Route::get('test2', function(){
 });
 
 Route::get('test3', function(){
-    $timeoffs = Timeoffs::whereIn('request_month', ['01', '02'])->whereNot('uniqueId', 'به صورت دستی')->get();
-    $processId = "211ed341-c06c-41cb-881c-d33e8d4cd905";
-    foreach($timeoffs as $t){
-        $uniqueId = $t->uniqueId;
-        $var = Variable::where('key', 'timeoff_uniqueId')->where('value', $uniqueId)->first();
-        if($var){
-            $caseId = $var->case_id;
-            $case = CaseController::getById($caseId);
-            if($case){
-                $description = $case->getVariable('user_department_manager_description');
-                $t->description = $description;
-                $t->save();
+    $cases = Cases::whereNotNull('parent_id')->get();
+    $result = [];
+    foreach($cases as $case){
+        $parentCase = Cases::find($case->parent_id);
+        if(in_array($parentCase?->process_id, [
+            '4bb6287b-9ddc-4737-9573-72071654b9de',
+            '35a5c023-5e85-409e-8ba4-a8c00291561c'
+        ]) and in_array($case?->process_id, [
+            '4bb6287b-9ddc-4737-9573-72071654b9de',
+            '35a5c023-5e85-409e-8ba4-a8c00291561c'
+        ]) and $case->number > 3070){
+            $fins = Financials::where('case_number', $case->number)->count();
+            if($fins){
+                $result[] =  $case->number;
             }
         }
     }
+    $result = Arr::sort($result);
+    return $result;
 });
 
 
