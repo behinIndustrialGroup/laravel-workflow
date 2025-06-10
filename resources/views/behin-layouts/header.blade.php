@@ -52,6 +52,11 @@ use App\CustomClasses\Access;
             </div>
         </li> --}}
         <li class="mr-2">
+            <button type="button" class="btn btn-sm btn-warning" onclick="window.location.reload()">
+                <i class="fa fa-refresh"></i> {{ __('Refresh') }}
+            </button>
+        </li>
+        <li class="mr-2">
             <a href="{{ url('admin') }}" class="btn btn-sm btn-warning">
                 <i class="fa fa-home"></i>
             </a>

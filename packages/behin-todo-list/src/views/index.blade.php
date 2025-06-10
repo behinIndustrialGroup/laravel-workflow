@@ -87,9 +87,7 @@
                 </div>
             </div>
         </form>
-        <button type="button" class="btn btn-warning m-1" onclick="refresh_table()">
-            <i class="fa fa-refresh"></i> {{ __('Refresh') }}
-        </button>
+        
         <button type="button" class="btn btn-primary m-1" onclick="all_task()">{{ __('all tasks') }}</button>
         <button type="button" class="btn btn-info m-1" onclick="today_task()">{{ __('today tasks') }}</button>
         <button type="button" class="btn btn-danger m-1" onclick="expired_task()">{{ __('expired tasks') }}</button>
