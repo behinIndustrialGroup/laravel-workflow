@@ -215,8 +215,8 @@
                                         <td>{{ $part->dispatched_expert_needed }}</td>
                                         <td>{{ $part->dispatched_expert }}</td>
                                         <td>{{ $part->dispatched_expert_description }}</td>
-                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('Y-m-d') : '' }}</td>
-                                        <td>{{ $part->doneAt ? toJalali($part->doneAt)->format('H:i') : '' }}</td>
+                                        <td>{{ $part->doneAt ? toJalali((int)$part->doneAt)->format('Y-m-d') : '' }}</td>
+                                        <td>{{ $part->doneAt ? toJalali((int)$part->doneAt)->format('H:i') : '' }}</td>
                                         <td>{{ $part->repair_duration }}</td>
                                         <td>{{ $part->see_the_problem }}</td>
                                         <td>{{ $part->final_result_and_test }}</td>
