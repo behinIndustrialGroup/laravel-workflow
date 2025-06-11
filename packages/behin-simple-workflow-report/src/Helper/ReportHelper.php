@@ -2,6 +2,10 @@
 
 namespace Behin\SimpleWorkflowReport\Helper;
 
+use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflow\Models\Entities\Financials;
+use Behin\SimpleWorkflow\Models\Entities\Parts;
+use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
@@ -11,6 +15,39 @@ class ReportHelper
     {
         $from = convertPersianToEnglish($from);
         $to = convertPersianToEnglish($to);
+        $from = Jalalian::fromFormat('Y-m-d', $from)->toCarbon()->startOfDay()->timestamp;
+        $to = Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay()->timestamp;
+        $inFins = Financials::rightJoin('wf_entity_parts', 'wf_entity_parts.case_number', '=', 'wf_entity_financials.case_number')
+        ->whereBetween('wf_entity_financials.fix_cost_date', [$from, $to]);
+        if ($user) {
+            $inFins = $inFins->where(function ($query) use ($user) {
+                $query->where('wf_entity_parts.mapa_expert', $user);
+            });
+        }
+        $inFins = $inFins->select('wf_entity_financials.*', 'wf_entity_parts.mapa_expert as in_mapa_expert')
+        ->groupBy('wf_entity_financials.case_number')
+        ->get();
+
+        $outFins = Financials::rightJoin('wf_entity_repair_reports', 'wf_entity_repair_reports.case_number', '=', 'wf_entity_financials.case_number')
+        ->whereBetween('wf_entity_financials.fix_cost_date', [$from, $to]);
+        if ($user) {
+            $outFins = $outFins->where(function ($query) use ($user) {
+                $query->where('wf_entity_repair_reports.mapa_expert', $user);
+            });
+        }
+        $outFins = $outFins->select('wf_entity_financials.*', 'wf_entity_repair_reports.mapa_expert as out_mapa_expert')
+        ->groupBy('wf_entity_financials.case_number')
+        ->get();
+        $fins = $inFins->merge($outFins);
+        foreach ($fins as $fin) {
+            $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum('cost');
+            $fin->total_payment = Financials::where('case_number', $fin->case_number)->get()?->sum('payment');
+            $fin->in_mapa_experts = Parts::where('case_number', $fin->case_number)->get()->pluck('mapa_expert')->toArray();
+            $fin->out_mapa_experts = Repair_reports::where('case_number', $fin->case_number)->get()->pluck('mapa_expert')->toArray();
+            $fin->customer = Variable::where('case_id', $fin->case_id)->where('key', 'customer_workshop_or_ceo_name')->value('value');
+        }
+        return $fins;
+
 
         $mapaSubquery = DB::table('wf_variables')
             ->select('case_id', DB::raw('MAX(value) as mapa_expert_id'))

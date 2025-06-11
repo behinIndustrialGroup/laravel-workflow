@@ -177,7 +177,7 @@
                                         <th>{{ trans('fields.customer') }}</th>
                                         <th>{{ trans('fields.process') }}</th>
                                         <th>{{ trans('fields.mapa_expert') }}</th>
-                                        <th>{{ trans('fields.repair_date') }}</th>
+                                        <th>{{ trans('fields.fix_cost_date') }}</th>
                                         <th>{{ trans('fields.Declared Cost') }}</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
                                         <th>{{ trans('fields.payment_date') }}</th>
@@ -191,110 +191,35 @@
                                         $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
-                                        {{-- فرایند تعمیر در محل --}}
-                                        @if ($row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c')
-                                            <tr>
+                                        <tr>
 
-                                                <td>{{ $row->number }}
-                                                    <a
-                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
-                                                            class="fa fa-external-link"></i></a>
-                                                </td>
-                                                <td>{{ $row->customer }}</td>
-                                                <td>{{ $row->process_name }}</td>
-                                                <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali((int) $row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
-                                                </td>
-                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
-                                                    {{ number_format($row->fix_cost) }}
-                                                    @if ($row->fix_cost_2)
-                                                        <br>
-                                                        {{ number_format($row->fix_cost_2) }}
-                                                    @endif
-                                                    @if ($row->fix_cost_3)
-                                                        <br>
-                                                        {{ number_format($row->fix_cost_3) }}
-                                                    @endif
-                                                </td>
-                                                <td>{{ $row->payment_amount }}</td>
-                                                <td>{{ $row->payment_date ?? '' }}</td>
-                                                @php
-                                                    $totalRepairCost += $row->fix_cost;
-                                                    $totalPaymentAmount += $row->payment_amount;
-                                                    $numberOfExternalProcess++;
-                                                @endphp
-                                            </tr>
-                                        @endif
-                                        {{-- فرایند تعمیر در مدارپرداز --}}
-                                        @if (
-                                            $row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or
-                                                $row->process_id == 'ee209b0a-251c-438e-ab14-2018335eba6d')
-                                            <tr>
-                                                <td>{{ $row->number }}
-                                                    <a
-                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
-                                                            class="fa fa-external-link"></i></a>
-                                                </td>
-                                                <td>{{ $row->customer }}</td>
-                                                <td>داخلی</td>
-                                                <td>{{ $row->mapa_expert_name }}</td>
-                                                <td>{{ $row->fix_report_date ? toJalali((int) $row->fix_report_date)->format('Y-m-d') : trans('fields.not_available') }}
-                                                </td>
-                                                <td {{ is_numeric($row->fix_cost) ? 'bg-danger' : '' }}>
-                                                    @if ($row->financial_cost)
-                                                        {{ number_format((int)$row->financial_cost) }}
-                                                        @php
-                                                            $totalRepairCost += (int)$row->financial_cost;
-                                                        @endphp
-                                                    @else
-                                                        {{ $row->fix_cost ? number_format((int)$row->fix_cost) : '' }}
-                                                        @php
-                                                            $totalRepairCost += $row->fix_cost;
-                                                        @endphp
-                                                        @php
-                                                            $totalRepairCost += $row->fix_cost;
-                                                        @endphp
-                                                    @endif
-                                                    @if ($row->financial_cost2)
-                                                        <br>
-                                                        {{ number_format($row->financial_cost2) }}
-                                                        @php
-                                                            $totalRepairCost += $row->financial_cost2;
-                                                        @endphp
-                                                    @else
-                                                        {{ $row->fix_cost_2 ? number_format($row->fix_cost_2) : '' }}
-                                                        @php
-                                                            $totalRepairCost += $row->fix_cost_2;
-                                                        @endphp
-                                                    @endif
-                                                    @if ($row->financial_cost3)
-                                                        <br>
-                                                        {{ number_format($row->financial_cost3) }}
-                                                        @php
-                                                            $totalRepairCost += $row->financial_cost3;
-                                                        @endphp
-                                                    @else
-                                                        {{ $row->fix_cost_3 ? number_format($row->fix_cost_3) : '' }}
-                                                        @php
-                                                            $totalRepairCost += $row->fix_cost_3;
-                                                        @endphp
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($row->financial_payment)
-                                                        {{ number_format((int)$row->financial_payment) }}
-                                                        @php
-                                                            $totalPaymentAmount += (int)$row->financial_payment;
-                                                        @endphp
-                                                    @else
-                                                        {{ number_format((int)$row->payment_amount) }}
-                                                    @endif
-                                                </td>
-                                                <td>{{ $row->payment_date ?? '' }}</td>
-                                                @php
-                                                    $numberOfInternalProcess++;
-                                                @endphp
-                                        @endif
+                                            <td>{{ $row->case_number }}
+                                                <a
+                                                    href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->case_number]) }}"><i
+                                                        class="fa fa-external-link"></i></a>
+                                            </td>
+                                            <td>{{ $row->customer ?? '' }}</td>
+                                            <td>{{ $row->process_name ?? '' }}</td>
+                                            <td>
+                                                @foreach ($row->in_mapa_experts as $in_mapa_expert)
+                                                {{ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert }}<br>
+                                                @endforeach
+                                                @foreach ($row->out_mapa_experts as $out_mapa_expert)
+                                                    {{ getUserInfo($out_mapa_expert)?->name ? getUserInfo($out_mapa_expert)->name : $out_mapa_expert }}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                            </td>
+                                            <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
+                                                {{ number_format($row->total_cost) }}
+                                            </td>
+                                            <td>{{ $row->total_payment ? number_format($row->total_payment) : '' }}</td>
+                                            <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                            @php
+                                                $totalRepairCost += $row->total_cost;
+                                                $totalPaymentAmount += $row->total_payment;
+                                                $numberOfExternalProcess++;
+                                            @endphp
                                         </tr>
                                     @endforeach
                                 <tfoot>
