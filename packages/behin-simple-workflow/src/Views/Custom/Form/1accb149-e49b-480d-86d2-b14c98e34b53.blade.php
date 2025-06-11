@@ -75,7 +75,7 @@
     </div>
     <div class="card-body">
 
-        <div class="row">
+        <div class="row table-responsive">
             <table class="table table-bordered">
                 @foreach ($case->getHistoryList() as $row)
                     @if (in_array($row->task->id, [
@@ -97,7 +97,7 @@
                         <tr class="@if($row->status == 'done') text-success @endif">
                             <td>{{ $loop->iteration }}</td>
                             <td>
-                                {{ $row->task->name }}
+                                {{ $row->task->name }} @if($row->status == 'new') <span class="badge badge-warning">در حال انجام</span> @endif
                             </td>
                             <td dir="ltr">
                                 {{ toJalali($row->created_at)->format('Y-m-d H:i') }}
