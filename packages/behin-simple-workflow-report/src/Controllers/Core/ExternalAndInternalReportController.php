@@ -91,7 +91,7 @@ class ExternalAndInternalReportController extends Controller
                 'done_at' => $mainCase->getVariable('done_at'),
                 'attachment_image' => $mainCase->getVariable('attachment_image'),
             ]);
-            $parts->refresh();
+            // $parts->refresh();
         }
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
