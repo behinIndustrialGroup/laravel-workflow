@@ -59,6 +59,40 @@ class ExternalAndInternalReportController extends Controller
         $devices = Devices::where('case_number', $caseNumber)->get();
         $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get();
         $parts = Parts::where('case_number', $caseNumber)->get();
+        if(count($parts) == 0 and $mainCase->getVariable('part_name')){
+            Parts::create([
+                'case_id' => $mainCase->id,
+                'case_number' => $mainCase->number,
+                'name' => $mainCase->getVariable('part_name'),
+                'serial' => $mainCase->getVariable('part_serial'),
+                'mapa_expert_head' => $mainCase->getVariable('mapa_expert_head_for_internal_process'),
+                'mapa_expert' => $mainCase->getVariable('mapa_expert'),
+                'refer_to_unit' => $mainCase->getVariable('refer_to_unit'),
+                'repair_duration' => $mainCase->getVariable('repair_duration'),
+                'see_the_problem' => $mainCase->getVariable('see_the_problem'),
+                'fix_report' => $mainCase->getVariable('fix_report'),
+                'final_result_and_test' => $mainCase->getVariable('final_result_and_test'),
+                'test_possibility' => $mainCase->getVariable('test_possibility'),
+                'problem_seeing' => $mainCase->getVariable('problem_seeing'),
+                'final_result' => $mainCase->getVariable('final_result'),
+                'sending_for_test_and_troubleshoot' => $mainCase->getVariable('sending_for_test_and_troubleshoot'),
+                'test_in_another_place' => $mainCase->getVariable('test_in_another_place'),
+                'job_rank' => $mainCase->getVariable('job_rank'),
+                'other_parts' => $mainCase->getVariable('other_parts'),
+                'special_parts' => $mainCase->getVariable('special_parts'),
+                'power' => $mainCase->getVariable('power'),
+                'repair_is_approved' => $mainCase->getVariable('repair_is_approved'),
+                'mapa_serial' => $mainCase->getVariable('mapa_serial'),
+                'initial_part_pic' => $mainCase->getVariable('initial_device_piv'),
+                'has_attachment' => $mainCase->getVariable('has_attachment'),
+                'dispatched_expert_needed' => $mainCase->getVariable('dispatched_expert_needed'),
+                'dispatched_expert' => $mainCase->getVariable('dispatched_expert'),
+                'mapa_expert_companions' => $mainCase->getVariable('mapa_expert_companions'),
+                'done_at' => $mainCase->getVariable('done_at'),
+                'attachment_image' => $mainCase->getVariable('attachment_image'),
+            ]);
+            $parts->refresh();
+        }
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
         $financials = Financials::where('case_number', $caseNumber)->get();
