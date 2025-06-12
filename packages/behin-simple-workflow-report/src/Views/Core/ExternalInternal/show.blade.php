@@ -179,6 +179,7 @@
                                         <th>سریال</th>
                                         <th>واحد</th>
                                         <th>سرپرست</th>
+                                        <th>کارشناسان مپا</th>
                                         <th>تایید تعمیرات</th>
                                         <th>تصویر</th>
                                         <th>اعزام کارشناس</th>
@@ -191,9 +192,6 @@
                                         <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
                                         <th>{{ trans('fields.test_in_another_place') }}</th>
                                         <th>{{ trans('fields.job_rank') }}</th>
-                                        <th>{{ trans('fields.other_parts') }}</th>
-                                        <th>{{ trans('fields.special_parts') }}</th>
-                                        <th>{{ trans('fields.power') }}</th>
                                         <th>{{ trans('fields.has_attachment') }}</th>
                                         <th>{{ trans('fields.attachment_image') }}</th>
                                     </tr>
@@ -205,6 +203,11 @@
                                             <td>{{ $part->mapa_serial }}</td>
                                             <td>{{ $part->refer_to_unit }}</td>
                                             <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '-' }}</td>
+                                            <td>
+                                                @foreach($part->experts() as $expert)
+                                                    {{ getUserInfo($expert)->name ?? $expert }}<br>
+                                                @endforeach
+                                            </td>
                                             <td>{{ $part->repair_is_approved }}</td>
                                             <td>
                                                 @if ($part->initial_part_pic)
@@ -222,9 +225,7 @@
                                             <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
                                             <td>{{ $part->test_in_another_place }}</td>
                                             <td>{{ $part->job_rank }}</td>
-                                            <td>{{ $part->other_parts }}</td>
-                                            <td>{{ $part->special_parts }}</td>
-                                            <td>{{ $part->power }}</td>
+                                            
                                             <td>{{ $part->has_attachment }}</td>
                                             <td>
                                                 @if ($part->attachment_image)
@@ -252,6 +253,9 @@
                                                 <th>{{ trans('fields.repair_duration') }}</th>
                                                 <th colspan="6">{{ trans('fields.fix_report') }}</th>
                                                 <th>{{ trans('fields.see_the_problem') }}</th>
+                                                <th>{{ trans('fields.other_parts') }}</th>
+                                                <th>{{ trans('fields.special_parts') }}</th>
+                                                <th>{{ trans('fields.power') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -265,6 +269,9 @@
                                                         <td>{{ $report->repair_duration }}</td>
                                                         <td colspan="6">{{ $report->fix_report }}</td>
                                                         <td>{{ $report->see_the_problem }}</td>
+                                                        <td>{{ $report->other_parts }}</td>
+                                                        <td>{{ $report->special_parts }}</td>
+                                                        <td>{{ $report->power }}</td>
                                                     </tr>
                                                 @endforeach
                                             @endforeach
