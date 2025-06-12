@@ -4,98 +4,144 @@
     گزارش‌های گردش کار
 @endsection
 
-
+@section('style')
+    <style>
+        .has-value {
+            border: 2px solid #28a745 !important;
+            /* سبز برای مثال */
+            background-color: #e8f5e9;
+            /* سبز روشن پس‌زمینه */
+        }
+    </style>
+@endsection
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
 
             <div class="col-md-12">
-                @if(auth()->user()->access('هرچه میخواهد دل تنگت بجوی'))
-                <div class="card">
-                    <div class="card-header text-center bg-info">جستجو</div>
-                    <div class="card-body">
-                        <div>
-                            <label for="">هر چه میخواهد دل تنگت بجوی</label>
-                            <form action="javascript:void(0)" method="POST" id="search-form" class="row">
-                                <div class="form-group col-sm-3">
-                                    <div class="input-group">
-                                        <select name="actor" id="" class="form-control" placeholder="کارشناس">
-                                            <option value="">کارشناس</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-3">
-                                    <div class="input-group">
-                                        <input type="text" name="customer" id="" class="form-control"
-                                            placeholder="نام مشتری">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-3">
-                                    <div class="input-group">
-                                        <input type="text" name="number" id="" class="form-control"
-                                            placeholder="شماره پرونده">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-3">
-                                    <div class="input-group">
-                                        <input type="text" name="mapa_serial" id="" class="form-control"
-                                            placeholder="سریال مپا">
-                                        <div class="input-group-append" onclick="search()" style="cursor: pointer;">
-                                            <div class="input-group-text" style="background: #25a5c8">
-                                                <span class="fa fa-search"></span>
-                                            </div>
+                @if (auth()->user()->access('هرچه میخواهد دل تنگت بجوی'))
+                    <div class="card">
+                        <div class="card-header text-center bg-info">جستجو</div>
+                        <div class="card-body">
+                            <div>
+                                <label for="">هر چه میخواهد دل تنگت بجوی</label>
+                                <form action="javascript:void(0)" method="POST" id="search-form" class="row">
+                                    <div class="form-group col-sm-3">
+                                        <div class="input-group">
+                                            <select name="actor" id="" class="form-control"
+                                                placeholder="کارشناس">
+                                                <option value="">کارشناس</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-12 table-responsive d-none" id="search-result">
-                                    <table class="table table-bordered" id="search-result-table">
-                                        <thead>
-                                            <tr>
-                                                <th>شماره پرونده</th>
-                                                <th>نام مشتری</th>
-                                                <th>آخرین وضعیت</th>
-                                                <th>تاریخ ایجاد</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <div class="form-group col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" name="customer" id="" class="form-control"
+                                                placeholder="نام مشتری">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" name="number" id="" class="form-control"
+                                                placeholder="شماره پرونده">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" name="device_name" id="" class="form-control"
+                                                placeholder="نام دستگاه">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" name="mapa_serial" id="" class="form-control"
+                                                placeholder="سریال مپا">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3"></div>
+                                    <div class="form-group col-sm-3"></div>
+                                    <div class="form-group col-sm-3">
+                                        <button class="btn btn-info" onclick="search()" style="width: 100%">
+                                            جستجو
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-12 table-responsive d-none" id="search-result">
+                                        <table class="table table-bordered" id="search-result-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>شماره پرونده</th>
+                                                    <th>نام مشتری</th>
+                                                    <th style='width: 70px'>نام دستگاه</th>
+                                                    <th>آخرین وضعیت</th>
+                                                    <th>تاریخ ایجاد</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </form>
-                            <script>
-                                function search() {
-                                    var fd = new FormData($('#search-form')[0])
-                                    send_ajax_formdata_request(
-                                        "{{ route('simpleWorkflowReport.external-internal.search') }}",
-                                        fd,
-                                        function(response) {
-                                            console.log(response)
-                                            $('#search-result').removeClass('d-none')
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
+                                <script>
+                                    $('#search-form').on('submit', function(e) {
+                                        e.preventDefault(); // جلوگیری از رفتار پیش‌فرض ارسال فرم
+                                        search(); // اجرای تابع جستجو
+                                    });
 
-                                            if (response.length == 0) {
-                                                $('#search-result').addClass('d-none')
+                                    function search() {
+                                        var fd = new FormData($('#search-form')[0])
+                                        send_ajax_formdata_request(
+                                            "{{ route('simpleWorkflowReport.external-internal.search') }}",
+                                            fd,
+                                            function(response) {
+                                                console.log(response)
+                                                $('#search-result').removeClass('d-none')
+
+                                                if (response.length == 0) {
+                                                    $('#search-result').addClass('d-none')
+                                                }
+                                                $('#search-result-table').DataTable().destroy()
+                                                $('#search-result tbody').html(response)
+                                                $('#search-result-table').DataTable({
+                                                    "order": [
+                                                        [3, "desc"]
+                                                    ],
+                                                    "language": {
+                                                        "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                                                    },
+                                                })
                                             }
-                                            $('#search-result-table').DataTable().destroy()
-                                            $('#search-result tbody').html(response)
-                                            $('#search-result-table').DataTable({
-                                                "order": [
-                                                    [3, "desc"]
-                                                ],
-                                                "language": {
-                                                    "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-                                                },
-                                            })
+                                        )
+                                    }
+                                </script>
+                                <script>
+                                    $(document).ready(function() {
+                                        // تمام فیلدهای ورودی و سلکت‌ها را بررسی کن
+                                        $('#search-form input, #search-form select').each(function() {
+                                            toggleHasValueClass($(this)); // در ابتدا بررسی کن
+
+                                            // در زمان تغییر یا تایپ، بررسی مجدد کن
+                                            $(this).on('input change', function() {
+                                                toggleHasValueClass($(this));
+                                            });
+                                        });
+
+                                        function toggleHasValueClass($el) {
+                                            if ($el.val()) {
+                                                $el.addClass('has-value');
+                                            } else {
+                                                $el.removeClass('has-value');
+                                            }
                                         }
-                                    )
-                                }
-                            </script>
+                                    });
+                                </script>
+
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endif
                 <div class="card">
                     <div class="card-header">گزارش‌های گردش کار</div>

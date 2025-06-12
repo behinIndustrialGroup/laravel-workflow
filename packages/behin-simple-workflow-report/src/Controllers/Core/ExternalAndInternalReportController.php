@@ -109,7 +109,7 @@ class ExternalAndInternalReportController extends Controller
 
     public function search(Request $request)
     {
-        if (!$request->actor && !$request->customer && !$request->number && !$request->mapa_serial) {
+        if (!$request->actor && !$request->customer && !$request->number && !$request->mapa_serial && !$request->device_name) {
             return [];
         }
         
@@ -117,6 +117,7 @@ class ExternalAndInternalReportController extends Controller
         $customerCaseNumbers = null;
         $numberCaseNumbers = null;
         $mapaSerialCaseNumbers = null;
+        $deviceCaseNumbers = null;
         
         if ($request->actor) {
             $actorCases = Variable::where('key', 'mapa_expert')
@@ -171,9 +172,14 @@ class ExternalAndInternalReportController extends Controller
                 ->values()
                 ->toArray();
         }
+
+        if($request->device_name){
+            $deviceCases = Devices::where('name', 'like', "%$request->device_name%")->get();
+            $deviceCaseNumbers = $deviceCases->pluck('case_number')->unique()->toArray();
+        }
         
         // گرفتن اشتراک همه لیست‌ها
-        $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers, $mapaSerialCaseNumbers]);
+        $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers, $mapaSerialCaseNumbers, $deviceCaseNumbers]);
         
         if (count($allLists) === 0) {
             return [];
@@ -208,6 +214,7 @@ class ExternalAndInternalReportController extends Controller
                     $case->history
             </td>";
             $s .= "<td>" . $case->getVariable('customer_workshop_or_ceo_name') . "</td>";
+            $s .= "<td>" . $case->getVariable('device_name') . "</td>";
             $s .= "<td>";
             foreach ($case->whereIs() as $inbox) {
                 $s .= $inbox->task->styled_name ?? '';
