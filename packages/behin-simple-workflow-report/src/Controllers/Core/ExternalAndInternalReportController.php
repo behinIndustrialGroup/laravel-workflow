@@ -17,6 +17,7 @@ use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Devices;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
+use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
@@ -91,8 +92,23 @@ class ExternalAndInternalReportController extends Controller
                 'done_at' => $mainCase->getVariable('done_at'),
                 'attachment_image' => $mainCase->getVariable('attachment_image'),
             ]);
-            // $parts->refresh();
+            $parts = Parts::where('case_number', $caseNumber)->get();
         }
+        $partReports = Part_reports::where('case_number', $caseNumber)->count();
+        if($partReports == 0 and $parts->count() > 0 and $parts->first()->fix_report){
+            foreach ($parts as $part) {
+                Part_reports::create([
+                    'case_number' => $caseNumber,
+                    'case_id' => $mainCase->id,
+                    'fix_report' => $part->fix_report,
+                    'done_at' => $part->done_at,
+                    'repair_duration' => $part->repair_duration,
+                    'see_the_problem' => $part->see_the_problem,
+                ]);
+            }
+        }
+
+        $parts = Parts::where('case_number', $caseNumber)->get();
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
         $financials = Financials::where('case_number', $caseNumber)->get();
