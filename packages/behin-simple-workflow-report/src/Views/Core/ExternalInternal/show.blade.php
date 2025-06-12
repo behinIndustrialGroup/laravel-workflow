@@ -205,7 +205,7 @@
                                             <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '-' }}</td>
                                             <td>
                                                 @foreach($part->experts() as $expert)
-                                                    {{ getUserInfo($expert)->name ?? $expert }}<br>
+                                                    {{ getUserInfo($expert->registered_by)->name ?? $expert->registered_by }} ({{ $expert->total_duration }})<br>
                                                 @endforeach
                                             </td>
                                             <td>{{ $part->repair_is_approved }}</td>
