@@ -3,6 +3,56 @@
 @section('title')
 @endsection
 
+@section('style')
+<style>
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .report-table th, .report-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .report-table th {
+        background-color: #f3f4f6;
+        text-align: center;
+    }
+
+    .part-header {
+        background-color: #e5e7eb;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .report-rows {
+        display: none;
+        background-color: #f9fafb;
+    }
+
+    .report-rows.show {
+        display: table-row-group;
+    }
+
+    .action-btn {
+        background-color: #2563eb;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background-color: #1d4ed8;
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="card">
@@ -168,76 +218,97 @@
                     <div class="card-header {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>قطعه</th>
-                                    <th>سرپرست</th>
-                                    <th>تعمیرکار</th>
-                                    <th>سریال مپا</th>
-                                    <th>واحد</th>
-                                    <th>گزارش</th>
-                                    <th>تایید تعمیرات</th>
-                                    <th>تصویر</th>
-                                    <th>اعزام کارشناس</th>
-                                    <th>کارشناس اعزام شده</th>
-                                    <th>توضیحات اعزام کارشناس</th>
-                                    <th>تاریخ پایان کار</th>
-                                    <th>ساعت پایان کار</th>
-                                    <th>مدت تعمیرات</th>
-                                    <th>{{ trans('fields.see_the_problem') }}</th>
-                                    <th>{{ trans('fields.final_result_and_test') }}</th>
-                                    <th>{{ trans('fields.test_possibility') }}</th>
-                                    <th>{{ trans('fields.final_result') }}</th>
-                                    <th>{{ trans('fields.problem_seeing') }}</th>
-                                    <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
-                                    <th>{{ trans('fields.test_in_another_place') }}</th>
-                                    <th>{{ trans('fields.job_rank') }}</th>
-                                    <th>{{ trans('fields.other_parts') }}</th>
-                                    <th>{{ trans('fields.special_parts') }}</th>
-                                    <th>{{ trans('fields.power') }}</th>
-                                    <th>{{ trans('fields.has_attachment') }}</th>
-                                    <th>{{ trans('fields.attachment_image') }}</th>
-                                </tr>
-                                @foreach ($parts as $part)
+                            
+                            
+                            <table class="report-table">
+                                <thead>
                                     <tr>
-                                        <td>{{ $part->name }}</td>
-                                        <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '' }}</td>
-                                        <td>{{ getUserInfo($part->mapa_expert)->name ?? '' }}</td>
-                                        <td>{{ $part->mapa_serial }}</td>
-                                        <td>{{ $part->refer_to_unit }}</td>
-                                        <td>{{ $part->fix_report }}</td>
-                                        <td>{{ $part->repair_is_approved }}</td>
-                                        <td>
-                                            @if ($part->initial_part_pic)
-                                                <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
-                                            @endif
-                                        </td>
-                                        <td>{{ $part->dispatched_expert_needed }}</td>
-                                        <td>{{ $part->dispatched_expert }}</td>
-                                        <td>{{ $part->dispatched_expert_description }}</td>
-                                        <td>{{ $part->done_at ? toJalali((int)$part->done_at)->format('Y-m-d') : '' }}</td>
-                                        <td>{{ $part->done_at ? toJalali((int)$part->done_at)->format('H:i') : '' }}</td>
-                                        <td>{{ $part->repair_duration }}</td>
-                                        <td>{{ $part->see_the_problem }}</td>
-                                        <td>{{ $part->final_result_and_test }}</td>
-                                        <td>{{ $part->test_possibility }}</td>
-                                        <td>{{ $part->final_result }}</td>
-                                        <td>{{ $part->problem_seeing }}</td>
-                                        <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
-                                        <td>{{ $part->test_in_another_place }}</td>
-                                        <td>{{ $part->job_rank }}</td>
-                                        <td>{{ $part->other_parts }}</td>
-                                        <td>{{ $part->special_parts }}</td>
-                                        <td>{{ $part->power }}</td>
-                                        <td>{{ $part->has_attachment }}</td>
-                                        <td>
-                                            @if ($part->attachment_image)
-                                                <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
-                                            @endif
-                                        </td>
+                                        <th>قطعه</th>
+                                        <th>سریال</th>
+                                        <th>واحد</th>
+                                        <th>سرپرست</th>
+                                        <th>تایید تعمیرات</th>
+                                        <th>تصویر</th>
+                                        <th>اعزام کارشناس</th>
+                                        <th>کارشناس اعزام شده</th>
+                                        <th>توضیحات اعزام کارشناس</th>
+                                        <th>{{ trans('fields.final_result_and_test') }}</th>
+                                        <th>{{ trans('fields.test_possibility') }}</th>
+                                        <th>{{ trans('fields.final_result') }}</th>
+                                        <th>{{ trans('fields.problem_seeing') }}</th>
+                                        <th>{{ trans('fields.sending_for_test_and_troubleshoot') }}</th>
+                                        <th>{{ trans('fields.test_in_another_place') }}</th>
+                                        <th>{{ trans('fields.job_rank') }}</th>
+                                        <th>{{ trans('fields.other_parts') }}</th>
+                                        <th>{{ trans('fields.special_parts') }}</th>
+                                        <th>{{ trans('fields.power') }}</th>
+                                        <th>{{ trans('fields.has_attachment') }}</th>
+                                        <th>{{ trans('fields.attachment_image') }}</th>
+                                        <th>عملیات</th>
                                     </tr>
-                                @endforeach
+                                </thead>
+                                <tbody>
+                                    @foreach($parts as $part)
+                                        <tr class="part-header" onclick="toggleReports({{ $part->id }})">
+                                            <td>{{ $part->name }}</td>
+                                            <td>{{ $part->mapa_serial }}</td>
+                                            <td>{{ $part->refer_to_unit }}</td>
+                                            <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '-' }}</td>
+                                            <td>{{ $part->repair_is_approved }}</td>
+                                            <td>
+                                                @if ($part->initial_part_pic)
+                                                    <a href="{{ url("public/$part->initial_part_pic") }}" download>دانلود</a>
+                                                @endif
+                                            </td>
+                                            <td>{{ $part->dispatched_expert_needed }}</td>
+                                            <td>{{ $part->dispatched_expert }}</td>
+                                            <td>{{ $part->dispatched_expert_description }}</td>
+                                            <td>{{ $part->final_result_and_test }}</td>
+                                            <td>{{ $part->test_possibility }}</td>
+                                            <td>{{ $part->final_result }}</td>
+                                            <td>{{ $part->problem_seeing }}</td>
+                                            <td>{{ $part->sending_for_test_and_troubleshoot }}</td>
+                                            <td>{{ $part->test_in_another_place }}</td>
+                                            <td>{{ $part->job_rank }}</td>
+                                            <td>{{ $part->other_parts }}</td>
+                                            <td>{{ $part->special_parts }}</td>
+                                            <td>{{ $part->power }}</td>
+                                            <td>{{ $part->has_attachment }}</td>
+                                            <td>
+                                                @if ($part->attachment_image)
+                                                    <a href="{{ url("public/$part->attachment_image") }}" download>دانلود</a>
+                                                @endif
+                                            </td>
+                                            <td><button class="action-btn">نمایش گزارش‌ها</button></td>
+                                        </tr>
+                            
+                                        <tbody id="reports-{{ $part->id }}" class="report-rows">
+                                            <tr>
+                                                <th>{{ trans('fields.done_at') }}</th>
+                                                <th>{{ trans('fields.repair_duration') }}</th>
+                                                <th colspan="6">{{ trans('fields.fix_report') }}</th>
+                                                <th>{{ trans('fields.see_the_problem') }}</th>
+                                            </tr>
+                                            @foreach($part->reports() as $report)
+                                                <tr>
+                                                    <td>{{ $report->done_at ? toJalali((int)$report->done_at)->format('Y-m-d') : '' }}</td>
+                                                    <td>{{ $report->repair_duration }}</td>
+                                                    <td colspan="6">{{ $report->fix_report }}</td>
+                                                    <td>{{ $report->see_the_problem }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    @endforeach
+                                </tbody>
                             </table>
+                            
+                            <script>
+                                function toggleReports(partId) {
+                                    const section = document.getElementById('reports-' + partId);
+                                    section.classList.toggle('show');
+                                }
+                            </script>
+                            
                         </div>
                     </div>
                 </div>
