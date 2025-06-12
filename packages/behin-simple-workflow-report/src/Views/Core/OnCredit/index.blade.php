@@ -41,7 +41,7 @@
                             </td>
                             <td>{{ $onCredit->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                             <td>{{ number_format($onCredit->cost) }}</td>
-                            <td>{{ toJalali((int) $onCredit->cheque_due_date)->format('Y-m-d') }}</td>
+                            <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
 
 
 
