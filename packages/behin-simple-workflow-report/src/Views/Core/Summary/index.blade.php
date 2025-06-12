@@ -204,11 +204,11 @@
                                             </td>
                                         </tr>
                                     @endif
-                                    @if (auth()->user()->access('منو >>گزارشات کارتابل>>مالی'))
+                                    @if (auth()->user()->access('گزارش درآمد تقریبی'))
                                         <tr>
                                             <td class="d-none"></td>
-                                            <td>پرسنل</td>
-                                            <td class="d-none">عملکرد مالی پرسنل</td>
+                                            <td>گزارش درآمد تقریبی</td>
+                                            <td class="d-none">گزارش درآمد تقریبی</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.fin.totalCost') }}"
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
