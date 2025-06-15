@@ -47,7 +47,7 @@ class ExternalAndInternalReportController extends Controller
         return view('SimpleWorkflowReportView::Core.ExternalInternal.index', compact('cases'));
     }
 
-    public function show($caseNumber)
+    public static function show($caseNumber)
     {
         $mainCase = Cases::where('number', $caseNumber)->whereNull('parent_id')->first();
         $customer = [
@@ -95,18 +95,20 @@ class ExternalAndInternalReportController extends Controller
             $parts = Parts::where('case_number', $caseNumber)->get();
         }
         $partReports = Part_reports::where('case_number', $caseNumber)->count();
-        if($partReports == 0 and $parts->count() > 0 and $parts->first()->id){
+        if($partReports == 0 and $parts->count() > 0){
             foreach ($parts as $part) {
-                Part_reports::create([
-                    'part_id' => $part->id,
-                    'case_number' => $caseNumber,
-                    'case_id' => $mainCase->id,
-                    'fix_report' => $part->fix_report,
-                    'done_at' => $part->done_at,
-                    'repair_duration' => $part->repair_duration,
-                    'see_the_problem' => $part->see_the_problem,
-                    'registered_by' => $part->mapa_expert
-                ]);
+                if($part->fix_report and $part->mapa_expert){
+                    Part_reports::create([
+                        'part_id' => $part->id,
+                        'case_number' => $caseNumber,
+                        'case_id' => $mainCase->id,
+                        'fix_report' => $part->fix_report,
+                        'done_at' => $part->done_at ?? '',
+                        'repair_duration' => $part->repair_duration,
+                        'see_the_problem' => $part->see_the_problem,
+                        'registered_by' => $part->mapa_expert
+                    ]);
+                }
             }
         }
         $parts = Parts::where('case_number', $caseNumber)->get();

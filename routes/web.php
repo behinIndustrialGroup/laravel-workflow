@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
+use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportController;
 use BehinInit\App\Http\Middleware\Access;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -179,25 +180,27 @@ Route::get('test2', function(){
 });
 
 Route::get('test3', function(){
-    $cases = Cases::whereNotNull('parent_id')->get();
-    $result = [];
+    $cases = Cases::whereIn('process_id', [
+        '35a5c023-5e85-409e-8ba4-a8c00291561c',
+        '4bb6287b-9ddc-4737-9573-72071654b9de',
+        '1763ab09-1b90-4609-af45-ef5b68cf10d0',
+    ])
+        ->whereNull('parent_id')
+        ->whereNotNull('number')
+        ->groupBy('number')
+        ->get()
+        ->filter(function ($case) {
+            $whereIsResult = $case->whereIs();
+            return !($whereIsResult[0]?->archive == 'yes');
+        });
+
     foreach($cases as $case){
-        $parentCase = Cases::find($case->parent_id);
-        if(in_array($parentCase?->process_id, [
-            '4bb6287b-9ddc-4737-9573-72071654b9de',
-            '35a5c023-5e85-409e-8ba4-a8c00291561c'
-        ]) and in_array($case?->process_id, [
-            '4bb6287b-9ddc-4737-9573-72071654b9de',
-            '35a5c023-5e85-409e-8ba4-a8c00291561c'
-        ]) and $case->number > 3070){
-            $fins = Financials::where('case_number', $case->number)->count();
-            if($fins){
-                $result[] =  $case->number;
-            }
+        try{
+            ExternalAndInternalReportController::show($case->number);
+        }catch(Exception $e){
+            echo $case->number . ' ### ' . $e->getMessage() . '<br>';
         }
     }
-    $result = Arr::sort($result);
-    return $result;
 });
 
 
