@@ -107,7 +107,7 @@ class ExternalAndInternalReportController extends Controller
                 ]);
             }
         }
-
+        $partReports = Part_reports::where('case_number', $caseNumber)->get();
         $parts = Parts::where('case_number', $caseNumber)->get();
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
