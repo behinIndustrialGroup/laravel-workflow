@@ -135,7 +135,7 @@
         <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> --}}
     <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.min.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-dist/plugins/toastr/toastr.min.js') . '?' . config('app.version') }}"></script>
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    {{-- <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
     <script>
         const beamsClient = new PusherPushNotifications.Client({
@@ -186,7 +186,7 @@
                 });
             }
         }
-    </script>
+    </script> --}}
     <script>
         function logout() {
             beamsClient.stop().catch(console.error);
