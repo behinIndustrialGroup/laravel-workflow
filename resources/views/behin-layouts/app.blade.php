@@ -189,7 +189,7 @@
     </script> --}}
     <script>
         function logout() {
-            beamsClient.stop().catch(console.error);
+            // beamsClient.stop().catch(console.error);
             window.location = "{{ route('logout') }}"
         }
     </script>
