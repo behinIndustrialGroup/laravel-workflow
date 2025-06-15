@@ -95,7 +95,7 @@ class ExternalAndInternalReportController extends Controller
             $parts = Parts::where('case_number', $caseNumber)->get();
         }
         $partReports = Part_reports::where('case_number', $caseNumber)->count();
-        if($partReports == 0 and $parts->count() > 0 and $parts->first()->fix_report){
+        if($partReports == 0 and $parts->count() > 0 and $parts->first()->id){
             foreach ($parts as $part) {
                 Part_reports::create([
                     'part_id' => $part->id,
