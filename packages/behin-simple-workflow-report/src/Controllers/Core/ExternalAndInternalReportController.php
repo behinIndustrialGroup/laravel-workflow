@@ -98,16 +98,17 @@ class ExternalAndInternalReportController extends Controller
         if($partReports == 0 and $parts->count() > 0 and $parts->first()->fix_report){
             foreach ($parts as $part) {
                 Part_reports::create([
+                    'part_id' => $part->id,
                     'case_number' => $caseNumber,
                     'case_id' => $mainCase->id,
                     'fix_report' => $part->fix_report,
                     'done_at' => $part->done_at,
                     'repair_duration' => $part->repair_duration,
                     'see_the_problem' => $part->see_the_problem,
+                    'registered_by' => $part->mapa_expert
                 ]);
             }
         }
-        $partReports = Part_reports::where('case_number', $caseNumber)->get();
         $parts = Parts::where('case_number', $caseNumber)->get();
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
