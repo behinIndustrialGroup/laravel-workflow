@@ -4,16 +4,12 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Behin\SimpleWorkflow\Models\Core\Process;
-use Behin\SimpleWorkflow\Models\Core\Cases;
- class Part_reports extends Model 
+ class Devices extends Model 
 { 
-    use SoftDeletes; 
     public $incrementing = false; 
     protected $keyType = 'string'; 
-    public $table = 'wf_entity_part_reports'; 
-    protected $fillable = ['case_id', 'case_number', 'fix_report', 'done_at', 'repair_duration', 'see_the_problem', 'registered_by', 'part_id', 'other_parts', 'special_parts', 'power', 'inbox_id', ]; 
+    public $table = 'wf_entity_devices'; 
+    protected $fillable = ['case_id', 'case_number', 'name', 'model', 'control_system', 'control_system_model', 'serial', 'has_electrical_map', 'mapa_serial', 'mapa_expert_head', 'repair_is_approved', 'dispatched_expert_needed', 'dispatched_expert', 'mapa_expert_companions', ]; 
 protected static function boot()
         {
             parent::boot();
@@ -22,10 +18,4 @@ protected static function boot()
                 $model->id = $model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
             });
         }
-function case(){
-    return Cases::find($this->case_id);
 }
-
-function part(){
-    return Parts::find($this->part_id);
-}}
