@@ -255,7 +255,7 @@ class RoutingController extends Controller
                 if ($task->assignment_type == 'public') {
                     $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
                     foreach ($taskActors as $actor) {
-                        $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
+                        $inbox = InboxController::create($task->id, $caseId, $actor, 'done');
                     }
                 }
             }
