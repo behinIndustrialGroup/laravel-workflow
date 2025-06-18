@@ -27,7 +27,7 @@ class StartInternalRepairForEachPart extends Controller
     public function execute()
     {
         $case = $this->case;
-        $parts = Parts::where('case_number', $case->number)->whereNull('repair_is_approved')->get();
+        $parts = Parts::where('case_id', $case->id)->whereNull('repair_is_approved')->get();
         if(count($parts) == 0){
             return "هیچ قطعه ای ثبت نشده است. دقت کنید که حتما پس از وارد کردن اطلاعات قطعه دکمه ثبت قطعه را بزنید";
         }
@@ -63,28 +63,7 @@ class StartInternalRepairForEachPart extends Controller
             $newCase->name = $caseName;
             $newCase->copyVariableFrom($case->id);
             $newCase->saveVariable('mapa_expert_definer', $mapaExpertHead);
-            $newCase->saveVariable('customer_workshop_or_ceo_name', $case->getVariable('customer_workshop_or_ceo_name'));
-            $newCase->saveVariable('customer_id', $case->getVariable('customer_id'));
-            $newCase->saveVariable('device_id', $case->getVariable('device_id'));
-            $newCase->saveVariable('initial_device_piv', $case->getVariable('initial_device_piv'));
             $newCase->saveVariable('part_id', $part->id);
-            
-            //ذخیره اطلاعات دستگاه در فرایند جدید
-            $newCase->saveVariable('part_name', $part->name);
-            $newCase->saveVariable('mapa_serial', $part->mapa_serial);
-            $newCase->saveVariable('initial_part_pic', $part->initial_part_pic);
-            $newCase->saveVariable('refer_to_unit', $part->refer_to_unit);
-            $newCase->saveVariable('has_attachment', $part->has_attachment);
-            $newCase->saveVariable('attachment_image', $part->attachment_image);
-            $newCase->saveVariable('mapa_expert_head', $part->mapa_expert_head);
-            $newCase->saveVariable('device_name', $case->getVariable('device_name'));
-            $newCase->saveVariable('device_model', $case->getVariable('device_model'));
-            $newCase->saveVariable('device_control_system', $case->getVariable('device_control_system'));
-            $newCase->saveVariable('device_control_model', $case->getVariable('device_control_model'));
-            
-            $newCase->saveVariable('has_electrical_map', $case->getVariable('has_electrical_map'));
-            $newCase->saveVariable('initial_device_piv', $case->getVariable('initial_device_piv'));
-            $newCase->saveVariable('mapa_expert_head_for_internal_process', $case->getVariable('mapa_expert_head_for_internal_process'));
             
         }
         

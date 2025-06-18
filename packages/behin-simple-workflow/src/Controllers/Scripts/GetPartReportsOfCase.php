@@ -22,7 +22,7 @@ class GetPartReportsOfCase extends Controller
         if($request->caseId and $request->caseId != 'undefined'){
             $caseId = $request->caseId;
             $case = CaseController::getById($caseId);
-            return $partReports = Part_reports::where('case_number', $case->number)->get()->each(function($row){
+            return $partReports = Part_reports::where('case_id', $case->id)->get()->each(function($row){
                 $row->part = $row->part();
                 $row->part->mapa_expert_head = $row->part()->mapaExpertHead();
                 $row->part->mapa_expert = $row->part()->mapaExpert();

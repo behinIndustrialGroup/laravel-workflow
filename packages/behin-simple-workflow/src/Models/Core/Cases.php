@@ -64,10 +64,16 @@ class Cases extends Model
         return User::find($this->creator);
     }
 
-    public function copyVariableFrom($parentCaseId){
+    public function copyVariableFrom($parentCaseId, $prefix = '', $variables = null){
         $parentCase = Cases::find($parentCaseId);
         foreach($parentCase->variables() as $variable){
-            VariableController::save($this->process_id, $this->id, $variable->key, $variable->value);
+            if(!$variables){
+                VariableController::save($this->process_id, $this->id, $prefix . $variable->key, $variable->value);
+            }else{
+                if(in_array($variable->key, $variables)){
+                    VariableController::save($this->process_id, $this->id, $prefix. $variable->key, $variable->value);
+                }
+            }
         }
     }
 
