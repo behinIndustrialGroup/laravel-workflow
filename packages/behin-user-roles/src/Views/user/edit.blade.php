@@ -47,6 +47,18 @@
                         </div>
                     </div>
                     <div class="col-6">
+                        <div class="form-group">
+                            <label for="email">ورود با آیپی</label>
+                            <select name="login_with_ip" id="" class="form-control col-sm-3 mb-3">
+                                <option value="1" {{ $user->login_with_ip ? 'selected' : '' }}>فعال</option>
+                                <option value="0" {{ $user->login_with_ip ? '' : 'selected' }}>غیرفعال</option>
+                            </select>
+                            <input type="text" class="form-control" id="valid_ip" name="valid_ip" value="{{ $user->valid_ip }}" placeholder="1.1.1.1" dir="ltr">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6">
                         <button type="submit" class="btn btn-primary">{{ __('fields.Update') }}</button>
                     </div>
                 </form>

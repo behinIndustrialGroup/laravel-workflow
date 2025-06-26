@@ -50,7 +50,9 @@ class UserController extends Controller
         User::where('id', $id)->update([
             'number' => $r->number,
             'name' => $r->name,
-            'email' => $r->email
+            'email' => $r->email,
+            'login_with_ip' => $r->login_with_ip,
+            'valid_ip' => $r->valid_ip
         ]);
         return redirect()->back()->with('success', 'User updated successfully');
     }
