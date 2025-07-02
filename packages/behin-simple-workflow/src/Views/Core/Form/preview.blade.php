@@ -209,7 +209,21 @@
             </div>
         @else
             @isset($childForm)
-                @include('SimpleWorkflowView::Core.Form.preview', ['form' => $childForm, 'mode' => $readOnly])
+                @if (View::exists('SimpleWorkflowView::Custom.Form.' . $childForm->id))
+                    @include('SimpleWorkflowView::Custom.Form.' . $childForm->id, [
+                        'form' => $form,
+                        'task' => $task,
+                        'case' => $case,
+                        'inbox' => $inbox,
+                        'variables' => $variables,
+                        'process' => $process,
+                    ])
+                @else
+                    @include('SimpleWorkflowView::Core.Form.preview', [
+                        'form' => $childForm,
+                        'mode' => $readOnly,
+                    ])
+                @endif
             @endisset
         @endisset
     @endforeach
