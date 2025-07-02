@@ -13,6 +13,13 @@
             {{ session('error') }}
         </div>
     @endif
+    <div class="card">
+        <div class="card-header">
+            <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
+                <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
+            </a>
+        </div>
+    </div>
     <div class="card table-responsive">
         <div class="card-header bg-secondary text-center">
             <h3 class="card-title">گزارش چک ها</h3>
