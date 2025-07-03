@@ -13,6 +13,13 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header">
+            <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
+                <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
+            </a>
+        </div>
+    </div>
+    <div class="card">
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -45,7 +52,7 @@
                         'case' => $case,
                         'variables' => $variables,
                     ])
-                    @if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری'))
+                    @if (auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری'))
                         <input type="submit" value="ویرایش" class="btn btn-primary m-2">
                     @endif
                 </form>
@@ -61,7 +68,7 @@
                         'case' => $case,
                         'variables' => $variables,
                     ])
-                    @if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات دستگاه'))
+                    @if (auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات دستگاه'))
                         <input type="submit" value="ویرایش" class="btn btn-primary m-2">
                     @endif
                 </form>
@@ -272,7 +279,7 @@
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     <td>
-                                        @if(auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
+                                        @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
                                             <a href="{{ route('simpleWorkflowReport.mapa-center.delete-install-part', $part->id) }}"
                                                 class="btn btn-danger btn-sm"
                                                 onclick="return confirm('آیا از حذف قطعه {{ $part->name }} مطمئن هستید؟')">
@@ -375,7 +382,8 @@
                     </div>
                     <div class="card-body row">
                         <div class="col-sm-4 mt-2">
-                            <button class="btn btn-warning" onclick="sendForOnAccountPayment()">ارسال برای دریافت هزینه علی
+                            <button class="btn btn-warning" onclick="sendForOnAccountPayment()">ارسال برای دریافت هزینه
+                                علی
                                 الحساب</button>
                         </div>
                         <div class="col-sm-4 mt-2">
