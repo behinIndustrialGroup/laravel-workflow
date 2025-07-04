@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('task_id');
             $table->uuid('case_id');
-            $table->foreignId('actor')->constrained('users');
+            $table->foreignId('actor')->constrained('users')->nullable();
             $table->enum('status', ['new', 'opened', 'inProgress', 'done', 'canceled', 'draft', 'doneByOther'])->default('new');
             $table->timestamps();
             $table->softDeletes();

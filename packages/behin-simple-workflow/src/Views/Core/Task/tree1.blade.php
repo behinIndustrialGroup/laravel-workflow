@@ -9,6 +9,9 @@
         if ($child->type == 'condition') {
             $taskClass = 'task-condition';
         }
+        if ($child->type == 'end') {
+            $taskClass = 'task-end';
+        }
 
     @endphp
     {{ $task->id }} --> {{ $child->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"

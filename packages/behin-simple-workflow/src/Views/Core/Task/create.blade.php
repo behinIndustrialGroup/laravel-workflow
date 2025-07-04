@@ -16,17 +16,23 @@
             font-family: Vazir !important;
             color: white !important;
         }
-    
+
         .task-script rect {
             fill: #28a745 !important; /* سبز برای تسک‌های نوع اسکریپت */
             stroke: #1e7e34 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-    
+
         .task-condition rect {
             fill: #ffc107 !important; /* زرد برای سایر تسک‌ها */
             stroke: #d39e00 !important;
+            font-family: Vazir !important;
+            color: white !important;
+        }
+        .task-end  rect{
+            fill: #f10808 !important; /* زرد برای سایر تسک‌ها */
+            stroke: #d30000 !important;
             font-family: Vazir !important;
             color: white !important;
         }
@@ -36,17 +42,23 @@
             font-family: Vazir !important;
             color: white !important;
         }
-    
+
         .task-script  {
             fill: #28a745 !important; /* سبز برای تسک‌های نوع اسکریپت */
             stroke: #1e7e34 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-    
+
         .task-condition  {
             fill: #ffc107 !important; /* زرد برای سایر تسک‌ها */
             stroke: #d39e00 !important;
+            font-family: Vazir !important;
+            color: white !important;
+        }
+        .task-end  {
+            fill: #f10808 !important; /* زرد برای سایر تسک‌ها */
+            stroke: #d30000 !important;
             font-family: Vazir !important;
             color: white !important;
         }
@@ -67,7 +79,8 @@
                             $taskClass = 'task-script';
                         if($task->type == 'condition')
                             $taskClass = 'task-condition';
-    
+                        if($task->type == 'end')
+                            $taskClass = 'task-end';
                     @endphp
                     {{ $task->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"
                         href='{{ route('simpleWorkflow.task.edit', $task->id) }}'>{{ $task->name }}</a>"]:::{{ $taskClass }}
@@ -83,9 +96,9 @@
                 @endforeach
             </div>
         </div>
-        
-        
-        
+
+
+
 
 
 
@@ -106,6 +119,7 @@
                         <option value="form">{{ trans('Form') }}</option>
                         <option value="condition">{{ trans('Condition') }}</option>
                         <option value="script">{{ trans('Script') }}</option>
+                        <option value="end">{{ trans('End') }}</option>
                     </select>
                 </div>
             </div>

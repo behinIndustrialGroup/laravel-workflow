@@ -330,6 +330,10 @@ class RoutingController extends Controller
                     return 'break';
                 }
             }
+            if ($task->type == 'end') {
+                $inbox = InboxController::create($task->id, $caseId, null, 'done');
+                return 'break';
+            }
         } catch (Exception $th) {
             // BotController::sendMessage(681208098, $th->getMessage());
             return response()->json(['status' => 400, 'msg' => $th->getMessage()]);

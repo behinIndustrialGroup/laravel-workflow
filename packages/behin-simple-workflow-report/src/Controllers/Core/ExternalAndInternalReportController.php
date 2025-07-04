@@ -131,18 +131,18 @@ class ExternalAndInternalReportController extends Controller
         if (!$request->actor && !$request->customer && !$request->number && !$request->mapa_serial && !$request->device_name) {
             return [];
         }
-        
+
         $actorCaseNumbers = null;
         $customerCaseNumbers = null;
         $numberCaseNumbers = null;
         $mapaSerialCaseNumbers = null;
         $deviceCaseNumbers = null;
-        
+
         if ($request->actor) {
             $actorCases = Variable::where('key', 'mapa_expert')
                 ->where('value', $request->actor)
                 ->get();
-        
+
             $actorCaseNumbers = $actorCases
                 ->pluck('case.number')
                 ->filter()
@@ -150,12 +150,12 @@ class ExternalAndInternalReportController extends Controller
                 ->values()
                 ->toArray();
         }
-        
+
         if ($request->customer) {
             $customerCases = Variable::where('key', 'customer_workshop_or_ceo_name')
                 ->where('value', 'like', "%$request->customer%")
                 ->get();
-        
+
             $customerCaseNumbers = $customerCases
                 ->pluck('case.number')
                 ->filter()
@@ -163,7 +163,7 @@ class ExternalAndInternalReportController extends Controller
                 ->values()
                 ->toArray();
         }
-        
+
         if ($request->number) {
             $numberCases = Cases::whereIn('process_id', [
                     '35a5c023-5e85-409e-8ba4-a8c00291561c',
@@ -175,7 +175,7 @@ class ExternalAndInternalReportController extends Controller
                 ->pluck('number')
                 ->unique()
                 ->toArray();
-        
+
             $numberCaseNumbers = $numberCases;
         }
 
@@ -196,24 +196,24 @@ class ExternalAndInternalReportController extends Controller
             $deviceCases = Devices::where('name', 'like', "%$request->device_name%")->get();
             $deviceCaseNumbers = $deviceCases->pluck('case_number')->unique()->toArray();
         }
-        
+
         // گرفتن اشتراک همه لیست‌ها
         $allLists = array_filter([$actorCaseNumbers, $customerCaseNumbers, $numberCaseNumbers, $mapaSerialCaseNumbers, $deviceCaseNumbers]);
-        
+
         if (count($allLists) === 0) {
             return [];
         }
-        
+
         // گرفتن اشتراک همه لیست‌ها با هم
         $finalCaseNumbers = array_shift($allLists);
         foreach ($allLists as $list) {
             $finalCaseNumbers = array_intersect($finalCaseNumbers, $list);
         }
-        
+
         if (count($finalCaseNumbers) === 0) {
             return []; // هیچ کیس مطابق با همه شرایط پیدا نشد
         }
-        
+
         $cases = Cases::whereIn('number', $finalCaseNumbers)
             ->whereIn('process_id', [
                 '35a5c023-5e85-409e-8ba4-a8c00291561c',
@@ -223,7 +223,7 @@ class ExternalAndInternalReportController extends Controller
             ])
             ->groupBy('number')
             ->get();
-        
+
         $s = '';
         foreach ($cases as $case) {
             $a = "<a href='" . route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) . "'><i class='fa fa-external-link'></i></a>";
@@ -259,7 +259,7 @@ class ExternalAndInternalReportController extends Controller
             ->get()
             ->filter(function ($case) {
                 $whereIsResult = $case->whereIs();
-                return ($whereIsResult[0]?->archive == 'yes');
+                return ($whereIsResult->first()?->task->type == 'end');
             });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
     }

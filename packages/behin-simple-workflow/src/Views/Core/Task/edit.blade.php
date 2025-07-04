@@ -4,6 +4,19 @@
     $forms = getProcessForms();
     $scripts = getProcessScripts();
     $conditions = getProcessConditions();
+    $bgColor = '';
+    if($task->type == 'form'){
+        $bgColor = 'primary';
+    }
+    if($task->type == 'script'){
+        $bgColor = 'success';
+    }
+    if($task->type == 'condition'){
+        $bgColor = 'warning';
+    }
+    if($task->type == 'end'){
+        $bgColor = 'danger';
+    }
 @endphp
 
 @section('content')
@@ -28,7 +41,7 @@
         <div class="panel-heading p-2 bg-light">
             <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
             <span
-                class="badge bg-{{ $task->type == 'form' ? 'primary' : ($task->type == 'script' ? 'success' : 'warning') }}">
+                class="badge bg-{{ $bgColor }}">
                 {{ ucfirst($task->type) }}
             </span>
             <div class="row mb-3">

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('process_id');
             $table->string('name')->nullable();
-            $table->enum('type', ['form', 'condition', 'script'])->default('form');
+            $table->enum('type', ['form', 'condition', 'script','end'])->default('form');
             $table->uuid('executive_element_id')->nullable();
             $table->enum('assignment_type', ['normal', 'dynamic'])->nullable();
             $table->uuid('parent_id')->nullable();
