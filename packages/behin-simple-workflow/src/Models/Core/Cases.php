@@ -93,13 +93,13 @@ class Cases extends Model
             if($this->process_id == 'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50'){
                 InboxController::create('43f016cf-0cdf-487d-8d1d-df1f1ca2d543', $this->id, null, 'new');
             }
-            return [(object) [
-                'archive' => 'yes',
-                'task' => (object) [
-                    'styled_name' => "<span style='color: #ffffff; background: #007a41; padding:2px 4px; border-radius:4px;'>پایان کار</span>",
-                ],
-                'actor' => '',
-            ]];
+            // return [(object) [
+            //     'archive' => 'yes',
+            //     'task' => (object) [
+            //         'styled_name' => "<span style='color: #ffffff; background: #007a41; padding:2px 4px; border-radius:4px;'>پایان کار</span>",
+            //     ],
+            //     'actor' => '',
+            // ]];
         }
         return $rows;
     }
