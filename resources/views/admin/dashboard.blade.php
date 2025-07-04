@@ -1,5 +1,8 @@
 @extends('behin-layouts.app')
 
+@php
+    $disableBackBtn = true;
+@endphp
 
 @section('content')
     <div class="row">

@@ -32,7 +32,6 @@
         <div class="row justify-content-center">
 
             <div class="col-md-12">
-                @include('SimpleWorkflowView::Core.Partial.back-btn')
 
                 @if (auth()->user()->access('خلاصه گزارش فرایند: مرخصی > گزارش ماهانه مرخصی کاربران'))
                     <div class="card">

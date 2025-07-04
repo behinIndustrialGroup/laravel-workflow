@@ -14,7 +14,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 <div class="card">
                     @include('SimpleWorkflowView::Core.Inbox.show-header', [ 'case' => $case ])
                     <div class="card-body">

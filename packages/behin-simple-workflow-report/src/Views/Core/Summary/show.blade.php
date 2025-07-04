@@ -14,10 +14,9 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
-                    
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="draft-list">
@@ -56,7 +55,7 @@
                                         <tr ondblclick="window.location.href='{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}'">
                                             {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td class="d-none">{{ $case->id }}</td>
-                                            <td>{{ $case->number }} 
+                                            <td>{{ $case->number }}
                                                 <a href="{{ route('simpleWorkflowReport.summary-report.edit', [ 'summary_report' => $case->id ]) }}"><i class="fa fa-external-link"></i></a>
                                                 {!! $case->history !!}
                                             </td>

@@ -5,13 +5,6 @@
 @endsection
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
-            <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
-        </a>
-    </div>
-</div>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">مپا سنتر</h3>

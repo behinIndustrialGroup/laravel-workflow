@@ -21,7 +21,6 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @include('SimpleWorkflowView::Core.Partial.back-btn')
                 <div class="card">
                     <div class="card-header">لیست پرونده های فرآیند {{ $process->name }}</div>
 
@@ -64,7 +63,7 @@
                                                 $case->variables()->where('key', 'mapa_serial')->first()?->value ?? '';
                                         @endphp
                                         <tr ondblclick="window.location.href='{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}'">
-                                            
+
                                             <td class="d-none">{{ $case->id }}</td>
                                             <td>{{ $case->number }} <a
                                                     href="{{ route('simpleWorkflowReport.summary-report.edit', ['summary_report' => $case->id]) }}"><i
