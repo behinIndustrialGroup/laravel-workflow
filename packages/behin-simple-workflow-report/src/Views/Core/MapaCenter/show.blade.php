@@ -5,7 +5,11 @@
 @endsection
 
 @php
-    $customerForm = getFormInformation('d6a98160-91aa-4f17-9bb3-f9284b2882b2');
+    if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری')){
+        $customerForm = getFormInformation('d6a98160-91aa-4f17-9bb3-f9284b2882b2');
+    }else{
+        $customerForm = getFormInformation('ac67f40d-4aa1-417a-9284-6a5c2f571ea1');
+    }
     $deviceForm = getFormInformation('670fb05c-a794-4677-be5d-80b6c9b13da9');
     $fixForm = getFormInformation('14a68757-f609-44e1-82e9-4dc5ac35d60e');
     $variables = $case->variables();
