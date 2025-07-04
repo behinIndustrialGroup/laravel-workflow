@@ -259,7 +259,7 @@ class ExternalAndInternalReportController extends Controller
             ->get()
             ->filter(function ($case) {
                 $whereIsResult = $case->whereIs();
-                return ($whereIsResult[0]?->task->type == 'end');
+                return ($whereIsResult->first()->task->type == 'end');
             });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
     }
