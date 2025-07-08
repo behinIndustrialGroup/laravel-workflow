@@ -15,6 +15,7 @@
             <select name="type" id="" class="form-control">
                 <option value="string">string</option>
                 <option value="number">number</option>
+                <option value="formmatted-digit">formatted-digit</option>
                 <option value="text">text</option>
                 <option value="date">date</option>
                 <option value="time">time</option>
@@ -30,6 +31,8 @@
                 <option value="div">div</option>
                 <option value="button">button</option>
                 <option value="help">help</option>
+                <option value="hidden">hidden</option>
+                <option value="view-model">view-model</option>
             </select>
         </div>
         <div class="col-sm-4">

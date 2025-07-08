@@ -4,6 +4,7 @@ namespace Behin\SimpleWorkflow\Controllers\Core;
 
 use App\Http\Controllers\Controller;
 use Behin\SimpleWorkflow\Models\Core\Fields;
+use Behin\SimpleWorkflow\Models\Core\ViewModel;
 use Illuminate\Http\Request;
 
 class FieldController extends Controller
@@ -46,7 +47,8 @@ class FieldController extends Controller
 
     public function edit(Fields $field)
     {
-        return view('SimpleWorkflowView::Core.Field.edit', compact('field'));
+        $viewModels = ViewModel::all();
+        return view('SimpleWorkflowView::Core.Field.edit', compact('field', 'viewModels'));
     }
 
     public function update(Request $request, Fields $field)
@@ -58,7 +60,8 @@ class FieldController extends Controller
             'options' => $request->options ? $request->options : null,
             'style' => $request->style,
             'script' => $request->script,
-            'datalist_from_database' => $request->datalist_from_database
+            'datalist_from_database' => $request->datalist_from_database,
+            'view_model_id' => $request->view_model_id
         ];
         if ($request->columns !== null) {
             $attributes['columns'] = $request->columns;

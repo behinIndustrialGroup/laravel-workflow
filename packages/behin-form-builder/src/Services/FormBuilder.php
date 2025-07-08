@@ -15,13 +15,16 @@ use MyFormBuilder\Fields\FileField;
 use MyFormBuilder\Fields\CheckboxField;
 use MyFormBuilder\Fields\DivField;
 use MyFormBuilder\Fields\EntityField;
+use MyFormBuilder\Fields\FormattedDigitField;
 use MyFormBuilder\Fields\HelpField;
+use MyFormBuilder\Fields\HiddenField;
 use MyFormBuilder\Fields\LocationField;
 use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
 use MyFormBuilder\Fields\SelectMultipleField;
 use MyFormBuilder\Fields\SignatureField;
 use MyFormBuilder\Fields\TimeField;
+use MyFormBuilder\Fields\ViewModelField;
 
 class FormBuilder
 {
@@ -70,6 +73,15 @@ class FormBuilder
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new ButtonField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function hidden(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new HiddenField($name, $attributes))->render();
         return $this;
     }
 
@@ -211,6 +223,21 @@ class FormBuilder
         $attributes['options'] = $options;
         $field = $this->fieldFactory->create('select', $name, $attributes);
         $this->fields[] = new SelectField($name, $field);
+        return $this;
+    }
+
+    public function viewModel($name, $attributes = [])
+    {
+        $attributes = $attributes ?? [];
+        return (new ViewModelField($name, $attributes))->render();
+    }
+
+    public function formattedDigit(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new FormattedDigitField($name, $attributes))->render();
         return $this;
     }
 

@@ -23,6 +23,10 @@
                             <span class="ms-2">{{ $entity->namespace }}</span>
                         </div>
                         <div class="mb-2">
+                            <span class="text-muted">Uses:</span>
+                            <span class="ms-2">use {{ $entity->namespace }}\{{ $entity->model_name }};</span>
+                        </div>
+                        <div class="mb-2">
                             <span class="text-muted">DB Table Name:</span>
                             <span class="ms-2">{{ $entity->db_table_name }}</span>
                         </div>
@@ -63,9 +67,10 @@
             <textarea name="class_contents" id="class_contents" class="form-control"
                 style="display: none;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->class_contents }}</textarea>
             <button class="btn btn-primary">{{ trans('fields.Submit') }}</button>
+            <a class="btn btn-danger" style="float: left" href="{{ route('simpleWorkflow.entities.createTable', $entity->id) }}"
+                >{{ trans('fields.Create Table') }}</a>
         </form>
-        <a class="btn btn-danger" href="{{ route('simpleWorkflow.entities.createTable', $entity->id) }}"
-            target="_blank">{{ trans('fields.Create Table') }}</a>
+        
     </div>
 @endsection
 

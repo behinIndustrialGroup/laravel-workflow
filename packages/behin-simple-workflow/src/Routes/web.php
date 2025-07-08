@@ -12,6 +12,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ScriptController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskActorController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskController;
 use Behin\SimpleWorkflow\Controllers\Core\TaskJumpController;
+use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])->group(function(){
@@ -46,6 +47,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('create', [ FormController::class, 'createForm' ])->name('create');
         Route::post('copy', [ FormController::class, 'copy' ])->name('copy');
         Route::post('delete', [ FormController::class, 'delete' ])->name('delete');
+        Route::post('open/{form_id}', [ FormController::class, 'open' ])->name('open');
+        Route::post('open-create-new/{form_id}', [ FormController::class, 'openCreateNew' ])->name('open');
     });
 
     Route::resource('scripts', ScriptController::class);
@@ -63,7 +66,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         // Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
         Route::get('cases', [ InboxController::class, 'showCases' ])->name('cases.list');
         Route::get('cases/{caseId}/inboxes', [ InboxController::class, 'showInboxes' ])->name('cases.inboxes');
-        
+
         Route::get('edit/{inboxId}', [ InboxController::class, 'edit' ])->name('edit');
         Route::put('update/{inboxId}', [ InboxController::class, 'update' ])->name('update');
         Route::get('delete/{inboxId}', [ InboxController::class, 'delete' ])->name('delete');
@@ -84,6 +87,13 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
 
     Route::resource('task-jump', TaskJumpController::class);
     Route::get('task-jump/{task_id}/{inbox_id}/{case_id}/{process_id}', [TaskJumpController::class, 'show'])->name('task-jump.show');
+
+    Route::resource('view-model', ViewModelController::class);
+    Route::get('view-model/{view_model}/copy', [ViewModelController::class, 'copy'])->name('view-model.copy');
+    Route::post('get-view-model-rows', [ViewModelController::class, 'getRows'])->name('view-model.get-rows');
+    Route::post('update-view-model-record', [ViewModelController::class, 'updateRecord'])->name('view-model.update-record');
+    Route::post('delete-view-model-record', [ViewModelController::class, 'deleteRecord'])->name('view-model.delete-record');
+
 
 });
 

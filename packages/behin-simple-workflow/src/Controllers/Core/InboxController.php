@@ -20,7 +20,7 @@ use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 
 class InboxController extends Controller
 {
-    public static function getById($id): Inbox
+    public static function getById($id)
     {
         return Inbox::find($id);
     }
@@ -141,7 +141,7 @@ class InboxController extends Controller
         $process = ProcessController::getById($task->process_id);
         $form = FormController::getById($task->executive_element_id);
         $variables = VariableController::getVariablesByCaseId($case->id, $process->id);
-        
+
         if ($task->type == 'form') {
             if (!isset($form->content)) {
                 return redirect()->route('simpleWorkflow.inbox.index')->with('error', trans('Form not found'));

@@ -3,8 +3,11 @@
 namespace Behin\SimpleWorkflow\Controllers\Core;
 
 use App\Http\Controllers\Controller;
+use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Form;
+use Behin\SimpleWorkflow\Models\Core\Inbox;
 use Behin\SimpleWorkflow\Models\Core\Process;
+use Behin\SimpleWorkflow\Models\Core\ViewModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -31,7 +34,7 @@ class FormController extends Controller
                 $ar = array_merge($ar, $childAr);
             }
         }
-        return $ar;         
+        return $ar;
     }
 
     public static function requiredFields($id){
@@ -44,10 +47,10 @@ class FormController extends Controller
                 if($field->readOnly != 'on'){
                     $formId = $field->fieldName;
                     $childAr = self::requiredFields($formId);
-                    $ar = array_merge($ar, $childAr); 
+                    $ar = array_merge($ar, $childAr);
                 }
             }
-            if($field->required == 'on'){
+            if($field->required == 'on' and $field->readOnly != 'on'){
                 $ar[] = $field->fieldName;
             }
         }
@@ -187,5 +190,40 @@ class FormController extends Controller
         return response()->json([
             'msg' => trans('Form deleted successfully')
         ]);
+    }
+
+    public function open(Request $request, $form_id){
+        $form = FormController::getById($form_id);
+        $viewModel = ViewModel::find($request->viewModel_id);
+        if($viewModel->api_key != $request->api_key){
+            return response("", 403);
+        }
+        $model = ViewModelController::getModelById($viewModel->id);
+        $row = $model::find($request->row_id);
+
+        if(!isset($request->case_id)){
+            $case = Cases::first();
+        }else{
+            $case = CaseController::getById($request->case_id);
+        }
+        $inbox = InboxController::getById($request->inbox_id);
+        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel', 'row'));
+    }
+
+    public function openCreateNew(Request $request, $form_id){
+        $form = FormController::getById($form_id);
+        $viewModel = ViewModel::find($request->viewModel_id);
+        if($viewModel->api_key != $request->api_key){
+            return response("", 403);
+        }
+        $model = ViewModelController::getModelById($viewModel->id);
+
+        if(!isset($request->case_id)){
+            $case = Cases::first();
+        }else{
+            $case = CaseController::getById($request->case_id);
+        }
+        $inbox = InboxController::getById($request->inbox_id);
+        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel'));
     }
 }

@@ -134,3 +134,10 @@ if (!function_exists('convertPersianToEnglish')) {
 }
 
 
+if (!function_exists('convertPersianDateToTimestamp')) {
+    function convertPersianDateToTimestamp($string) {
+        $date = convertPersianToEnglish($string);
+        return Jalalian::fromFormat('Y-m-d', "$date")->toCarbon()->timestamp;
+    }
+}
+

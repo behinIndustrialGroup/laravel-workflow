@@ -41,11 +41,14 @@ class EntityController extends Controller
 
     public function update(Request $request, Entity $entity)
     {
+        if (!$request->uses) {
+            $uses = "use Behin\SimpleWorkflow\Controllers\Core\VariableController; use Illuminate\Database\Eloquent\Factories\HasFactory; use Illuminate\Database\Eloquent\Model; use Illuminate\Support\Str; use Illuminate\Database\Eloquent\SoftDeletes;";
+        }
         $entity->update([
             'name' => $request->name,
             'description' => $request->description,
             'columns' => $request->columns,
-            'uses' => $request->uses,
+            'uses' => $request->uses ?? $uses,
             'class_contents' => $request->class_contents,
         ]);
 
@@ -91,7 +94,7 @@ class EntityController extends Controller
                     $name = $column['name'];
                     $type = $column['type'];
                     $nullable = $column['nullable'] == 'yes' ? true : false;
-                    // $table->$type($name)->nullable($nullable)->change();
+
                     if (Schema::hasColumn($entity->db_table_name, $name)) {
                         $table->$type($name)->nullable($nullable)->change();
                         echo "Column $name updated successfully. <br>";
@@ -99,7 +102,29 @@ class EntityController extends Controller
                         $table->$type($name)->nullable($nullable);
                     }
                 }
+
+                // ستون created_by
+                if (Schema::hasColumn($entity->db_table_name, 'created_by')) {
+                    $table->string('created_by')->nullable(false)->change();
+                } else {
+                    $table->string('created_by')->nullable(false);
+                }
+
+                // ستون updated_by
+                if (Schema::hasColumn($entity->db_table_name, 'updated_by')) {
+                    $table->string('updated_by')->nullable(false)->change();
+                } else {
+                    $table->string('updated_by')->nullable(false);
+                }
+
+                // ستون contributers
+                if (Schema::hasColumn($entity->db_table_name, 'contributers')) {
+                    $table->string('contributers')->nullable(false)->change();
+                } else {
+                    $table->string('contributers')->nullable(false);
+                }
             });
+
             echo "Table $entity->name updated successfully.";
         } else {
             Schema::create($entity->db_table_name, function ($table) use ($ar) {
@@ -110,6 +135,9 @@ class EntityController extends Controller
                     $nullable = $column['nullable'] == 'yes' ? true : false;
                     $table->$type($name)->nullable($nullable);
                 }
+                $table->string('created_by')->nullable(false);
+                $table->string('updated_by')->nullable(false);
+                $table->string('contributers')->nullable(false);
                 $table->timestamps();
                 $table->softDeletes();
             });
@@ -139,6 +167,7 @@ class EntityController extends Controller
         foreach ($ar as $column) {
             $entityFileContent .= "'" . str_replace('\r', '', $column['name']) . "', ";
         }
+        $entityFileContent .= " 'created_by', 'updated_by', 'contributers', ";
         $entityFileContent .= "]; \n";
 
         $entityFileContent .= "protected static function boot()
@@ -153,5 +182,6 @@ class EntityController extends Controller
         $entityFileContent .= "}";
         file_put_contents($entityFile, $entityFileContent);
         echo "Entity class " . ucfirst($entity->name) . " created successfully.";
+        return redirect()->back();
     }
 }
