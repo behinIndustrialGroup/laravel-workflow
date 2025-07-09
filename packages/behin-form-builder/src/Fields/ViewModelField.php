@@ -20,14 +20,14 @@ class ViewModelField extends AbstractField
         $columns = explode(',', $viewModel->default_fields);
         $max_number_of_rows = $viewModel->max_number_of_rows;
 
-        $s .= "<div class='table-responsive card p-1'>";
+        $s .= "<div class='table-responsive card p-1' style='{$style}'>";
 
         // ✅ اضافه کردن دکمه رفرش بالا
         $s .= "<div class='d-flex align-items-center mb-2'>";
         $s .= "<button type='button' class='btn btn-sm ' onclick='get_view_model_rows(\"$viewModel->id\", \"$viewModel->api_key\")'>";
         $s .= "<i class='fa fa-refresh'></i> ";
         $s .= "</button>";
-        $s .= "<h5 class='mb-0'>" . e($viewModel->name ?? 'جدول') . "</h5>";
+        $s .= "<h5 class='mb-0'>" . trans('fields.' . $viewModel->name) . "</h5>";
 
         $s .= "</div>";
 
