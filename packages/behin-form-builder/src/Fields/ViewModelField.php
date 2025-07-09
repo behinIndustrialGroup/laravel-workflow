@@ -20,7 +20,7 @@ class ViewModelField extends AbstractField
         $columns = explode(',', $viewModel->default_fields);
         $max_number_of_rows = $viewModel->max_number_of_rows;
 
-        $s .= "<div class='table-responsive card p-1' style='{$style}'>";
+        $s .= "<div class='table-responsive card p-1' style='" . $style . "'>";
 
         // ✅ اضافه کردن دکمه رفرش بالا
         $s .= "<div class='d-flex align-items-center mb-2'>";
