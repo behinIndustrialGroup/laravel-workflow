@@ -75,7 +75,9 @@
 
     <script src="{{ url('public/behin/behin-dist/plugins/mapp/js/mapp.env.js') . '?' . config('app.version') }}"></script>
 
-
+    <script>
+        window.appUrl = "{{ env('APP_URL') }}";
+    </script>
     <script src="{{ url('public/behin/behin-js/ajax.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dataTable.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('public/behin/behin-js/dropzone.js') . '?' . config('app.version') }}"></script>
