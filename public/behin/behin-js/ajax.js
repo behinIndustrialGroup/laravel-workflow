@@ -286,5 +286,6 @@ function delete_view_model_row(viewModel_id, row_id, api_key){
     fd.append('inbox_id', $('#inboxId').val() ?? '');
     send_ajax_formdata_request_with_confirm(url, fd, function(response){
         show_message(response)
+        get_view_model_rows(viewModel_id, api_key)
     })
 }
