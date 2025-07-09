@@ -232,6 +232,12 @@
                 dropdown: true,
                 scrollbar: true
             });
+            AutoNumeric.multiple('.formatted-digit', {
+                digitGroupSeparator: ',',
+                decimalCharacter: '.',
+                decimalPlaces: 0,
+                unformatOnSubmit: true
+            });
         }
     </script>
 
