@@ -194,6 +194,7 @@
         'class' => $fieldClass,
         'id' => $fieldId,
         'view_model_id' => $fieldAttributes?->view_model_id,
+        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
     ]) !!}
 @endif
 
