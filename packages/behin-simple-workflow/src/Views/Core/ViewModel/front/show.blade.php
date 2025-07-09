@@ -82,6 +82,7 @@
     </div>
 </div>
 <script>
+    initial_view()
     function updateViewModelRecord(){
         var fd = new FormData($('#modal-form')[0]);
         var url = "{{ route('simpleWorkflow.view-model.update-record') }}"
