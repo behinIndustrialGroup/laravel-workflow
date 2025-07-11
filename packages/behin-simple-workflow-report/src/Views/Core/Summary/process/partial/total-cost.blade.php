@@ -211,10 +211,10 @@
                                             @php
                                                 $totalRepairCost += $row->total_cost;
                                                 $totalPaymentAmount += $row->total_payment;
-                                                if($row->process_id = "4bb6287b-9ddc-4737-9573-72071654b9de" or $row->process_name = "داخلی"){
+                                                if($row->process_id = "4bb6287b-9ddc-4737-9573-72071654b9de"){
                                                     $numberOfInternalProcess++;
                                                 }
-                                                if($row->process_id = "35a5c023-5e85-409e-8ba4-a8c00291561c" or $row->process_name = "خارجی"){
+                                                if($row->process_id = "35a5c023-5e85-409e-8ba4-a8c00291561c"){
                                                     $numberOfExternalProcess++;
                                                 }
                                             @endphp
