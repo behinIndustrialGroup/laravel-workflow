@@ -266,7 +266,7 @@
             <!-- جدول قطعات نصب‌شده -->
             <div class="card">
                 <div class="card-header bg-warning text-center">لیست قطعات نصب‌شده</div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
