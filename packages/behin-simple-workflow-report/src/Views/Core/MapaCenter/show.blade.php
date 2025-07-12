@@ -5,6 +5,10 @@
 @endsection
 
 @php
+    $disableBackBtn = true;
+@endphp
+
+@php
     if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری')){
         $customerForm = getFormInformation('d6a98160-91aa-4f17-9bb3-f9284b2882b2');
     }else{
