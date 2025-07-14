@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <a href="{{ route('simpleWorkflowReport.counter-party.create') }}" class="btn btn-primary btn-sm">ایجاد
-                    </a>
+                </a>
             </div>
         </div>
         <div class="card">
@@ -30,8 +30,13 @@
                                 <td>{{ $counterParty->name }}</td>
                                 <td>{{ $counterParty->account_number }}</td>
                                 <td>
-                                    <a href="{{ route('simpleWorkflowReport.counter-party.delete', $counterParty->id) }}"
-                                        class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    // در blade
+                                    <form action="{{ route('counter-party.destroy', $counterParty->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"><i
+                                                class="fa fa-trash"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
