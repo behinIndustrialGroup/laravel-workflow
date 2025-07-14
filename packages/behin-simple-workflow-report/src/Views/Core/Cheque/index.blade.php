@@ -2,6 +2,10 @@
 
 @section('title', 'گزارش چک ها')
 
+@php
+    $disableBackBtn = true;
+@endphp
+
 @section('content')
     @if (session()->has('success'))
         <div class="alert alert-success">
