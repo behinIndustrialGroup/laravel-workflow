@@ -30,7 +30,6 @@
                                 <td>{{ $counterParty->name }}</td>
                                 <td>{{ $counterParty->account_number }}</td>
                                 <td>
-                                    // در blade
                                     <form action="{{ route('simpleWorkflowReport.counter-party.destroy', $counterParty->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
