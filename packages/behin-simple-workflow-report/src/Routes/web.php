@@ -22,6 +22,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::resource('cheque-report', ChequeReportController::class);
     Route::resource('on-credit-report', OnCreditReportController::class);
+    Route::resource('personel-activity', PersonelActivityController::class);
+    Route::get('personel-activity/{user_id}/show-dones', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
 
 
 });

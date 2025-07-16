@@ -249,6 +249,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش اقدامات پرسنل'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>اقدامات پرسنل</td>
+                                            <td class="d-none">گزارش کامل</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.personel-activity.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
