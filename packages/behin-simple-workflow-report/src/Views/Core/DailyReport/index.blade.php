@@ -57,7 +57,9 @@
                                     <td>
                                         <i class="fa fa-external-link text-primary" onclick="showExternal(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)"></i>
                                         {{ $user->external }}</td>
-                                    <td>{{ $user->mapa_center }}</td>
+                                    <td>
+                                        <i class="fa fa-external-link text-primary" onclick="showMapaCenter(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)"></i>
+                                        {{ $user->mapa_center }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -81,6 +83,14 @@
 
         function showExternal(userId, from = '', to = ''){
             url = "{{ route('simpleWorkflowReport.daily-report.show-external', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
+
+        function showMapaCenter(userId, from = '', to = ''){
+            url = "{{ route('simpleWorkflowReport.daily-report.show-mapa-center', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
             url = url.replace('from', from)
             url = url.replace('to', to)

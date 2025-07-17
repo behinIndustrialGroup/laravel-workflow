@@ -57,12 +57,7 @@ class DailyReportController extends Controller
             $external = Repair_reports::where('mapa_expert', $row->id);
 
             $mapa_center = Mapa_center_fix_report::where('expert', $row->id);
-            $doneQuery = Inbox::where('actor', $row->id)
-                ->where('status', 'done')
-                ->whereHas('task.process', function ($query) use ($allowedProcessIds) {
-                    $query->whereIn('id', $allowedProcessIds);
-                })
-                ->with('case');
+
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
                 $external = $external->whereDate('updated_at', '>=', $from);
@@ -124,5 +119,27 @@ class DailyReportController extends Controller
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external', compact('items'));
+    }
+
+    public function showMapaCenter($user_id, $from = null, $to = null)
+    {
+        $allowedProcessIds = $this->allowedProcessIds;
+        $from = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
+        $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
+        $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
+
+        $query = Mapa_center_fix_report::where('expert', $user_id);
+        if ($from) {
+            $query->whereDate('updated_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->whereDate('updated_at', '<=', $to);
+        }
+        $items = $query
+            ->get();
+
+        return view('SimpleWorkflowReportView::Core.DailyReport.show-mapa-center', compact('items'));
     }
 }
