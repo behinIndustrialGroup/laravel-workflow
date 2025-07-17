@@ -260,6 +260,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش روزانه'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش روزانه پرسنل</td>
+                                            <td class="d-none">گزارش کامل</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.daily-report.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
