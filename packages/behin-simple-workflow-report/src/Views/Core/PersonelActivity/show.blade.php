@@ -15,7 +15,7 @@
             @foreach ($items as $item)
                 <tr>
                     <td>{{ $item->case->number ?? '' }}</td>
-                    <td>{{ $item->case_name }}</td>
+                    <td>{{ $item->case->getVariable('customer_workshop_or_ceo_name') ?? ''}}</td>
                     <td>{{ toJalali($item->created_at) }}</td>
                     <td>{{ toJalali($item->updated_at) }}</td>
                     <td>{{ $item->task->process->name ?? '' }}</td>
