@@ -1,6 +1,6 @@
 <div class="table-responsive">
 
-    <table class="table">   
+    <table class="table">
         <thead>
             <tr>
                 <th>شماره پرونده</th>
