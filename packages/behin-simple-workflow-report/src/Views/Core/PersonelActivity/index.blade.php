@@ -25,8 +25,8 @@
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->inbox }}</td>
-                                    <td onclick="showDones(`{{ $user->id }}`)">
-                                        {{ $user->done }}
+                                    <td>
+                                        <button class='btn btn-sm btn-info' onclick="showDones(`{{ $user->id }}`)">{{ $user->done }}</button>
                                     </td>
                                 </tr>
                             @endforeach
