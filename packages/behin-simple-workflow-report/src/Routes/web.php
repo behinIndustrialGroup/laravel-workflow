@@ -21,6 +21,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
+use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
@@ -77,6 +78,11 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('on-credit-report', OnCreditReportController::class);
     Route::resource('personel-activity', PersonelActivityController::class);
     Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
+
+    Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index');
+    Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal');
+    Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external');
+
 
 
 });

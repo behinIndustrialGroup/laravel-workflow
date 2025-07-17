@@ -5,9 +5,10 @@
             <tr>
                 <td>#</td>
                 <th>شماره پرونده</th>
-                <th>عنوان پرونده</th>
-                <th>ایجاد</th>
-                <th>انجام</th>
+                <th>مشتری</th>
+                {{-- <th>دستگاه</th> --}}
+                <th>تاریخ ثبت</th>
+                <th>گزارش</th>
             </tr>
         </thead>
         <tbody>
@@ -23,9 +24,10 @@
                             {{ $item->case_number ?? '' }}
                         @endif
                     </td>
-                    <td>{{ $item->case ? $item->case->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
-                    <td>{{ toJalali($item->created_at) }}</td>
-                    <td>{{ toJalali($item->updated_at) }}</td>
+                    <td>{{ $item->case() ? $item->case()->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
+                    {{-- <td>{{ $item->device() ? $item->device()->name : '' }}</td> --}}
+                    <td>{{ $item->start_date . ' ' . $item->start_time . ' - ' . $item->end_time }}</td>
+                    <td>{{ $item->report }}</td>
                 </tr>
             @endforeach
         </tbody>
