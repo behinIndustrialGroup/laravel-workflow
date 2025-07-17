@@ -37,7 +37,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('external-internal', ExternalAndInternalReportController::class);
     Route::post('external-internal/search', [ExternalAndInternalReportController::class, 'search'])->name('external-internal.search');
     Route::get('external-internal-archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal-archive');
-    
+
     Route::resource('counter-party', CounterPartyController::class);
 
     Route::name('fin.')->prefix('fin')->group(function(){
@@ -64,7 +64,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
             Route::get('export', [ProcessController::class, 'export'])->name('export');
         });
     });
-    
+
 
     Route::resource('mapa-center', MapaCenterController::class);
     Route::put('mapa-center/update-case-info/{mapa_center}', [MapaCenterController::class, 'updateCaseInfo'])->name('mapa-center.update-case-info');
@@ -76,7 +76,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('cheque-report', ChequeReportController::class);
     Route::resource('on-credit-report', OnCreditReportController::class);
     Route::resource('personel-activity', PersonelActivityController::class);
-    Route::get('personel-activity/{user_id}/show-dones', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
+    Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
 
 
 });

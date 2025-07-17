@@ -3,6 +3,7 @@
     <table class="table">
         <thead>
             <tr>
+                <td>#</td>
                 <th>شماره پرونده</th>
                 <th>عنوان پرونده</th>
                 <th>ایجاد</th>
@@ -14,8 +15,17 @@
         <tbody>
             @foreach ($items as $item)
                 <tr>
-                    <td>{{ $item->case->number ?? '' }}</td>
-                    <td>{{ $item->case->getVariable('customer_workshop_or_ceo_name') ?? ''}}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>
+                        @if ($item->case?->number)
+                            <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $item->case?->number]) }}"
+                                class="text-decoration-none me-1">
+                                <i class="fa fa-external-link text-primary"></i>
+                            </a>
+                            {{ $item->case->number ?? '' }}
+                        @endif
+                    </td>
+                    <td>{{ $item->case ? $item->case->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
                     <td>{{ toJalali($item->created_at) }}</td>
                     <td>{{ toJalali($item->updated_at) }}</td>
                     <td>{{ $item->task->process->name ?? '' }}</td>
