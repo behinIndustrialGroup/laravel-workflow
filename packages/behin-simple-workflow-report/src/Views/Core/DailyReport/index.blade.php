@@ -66,7 +66,7 @@
                                     <td>
                                         @if ($user->internal > 0)
                                             <i class="fa fa-external-link text-primary"
-                                                onclick="showInternal(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)">
+                                                onclick="showInternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
                                             </i>
                                             {{ $user->internal }}
                                         @endif
@@ -74,7 +74,7 @@
                                     <td>
                                         @if ($user->external > 0)
                                             <i class="fa fa-external-link text-primary"
-                                                onclick="showExternal(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)">
+                                                onclick="showExternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
                                             </i>
                                             {{ $user->external }}
                                         @endif
@@ -82,7 +82,7 @@
                                     <td>
                                         @if ($user->mapa_center > 0)
                                             <i class="fa fa-external-link text-primary"
-                                                onclick="showMapaCenter(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)">
+                                                onclick="showMapaCenter(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
                                             </i>
                                             {{ $user->mapa_center }}
                                         @endif
