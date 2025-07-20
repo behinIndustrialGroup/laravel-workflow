@@ -26,7 +26,7 @@
                     </td>
                     <td>{{ $item->case() ? $item->case()->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
                     {{-- <td>{{ $item->device() ? $item->device()->name : '' }}</td> --}}
-                    <td>{{ toJalali((int)$item->updated_at)->format('Y-m-d H:i') }}</td>
+                    <td>{{ toJalali($item->updated_at)->format('Y-m-d H:i') }}</td>
                     <td>{{ $item->report }}</td>
                 </tr>
             @endforeach
