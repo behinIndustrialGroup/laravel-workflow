@@ -59,11 +59,11 @@ class DailyReportController extends Controller
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
-            $internal = Part_reports::where('registered_by', $row->id);
+            $internal = Part_reports::where('registered_by', $row->id)->groupBy('case_number');
 
-            $external = Repair_reports::where('mapa_expert', $row->id);
+            $external = Repair_reports::where('mapa_expert', $row->id)->groupBy('case_number');
 
-            $mapa_center = Mapa_center_fix_report::where('expert', $row->id);
+            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)->groupBy('case_number');
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
@@ -92,7 +92,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Part_reports::where('registered_by', $user_id);
+        $query = Part_reports::where('registered_by', $user_id)->groupBy('case_number');
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -114,7 +114,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Repair_reports::where('mapa_expert', $user_id);
+        $query = Repair_reports::where('mapa_expert', $user_id)->groupBy('case_number');
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -136,7 +136,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Mapa_center_fix_report::where('expert', $user_id);
+        $query = Mapa_center_fix_report::where('expert', $user_id)->groupBy('case_number');
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
