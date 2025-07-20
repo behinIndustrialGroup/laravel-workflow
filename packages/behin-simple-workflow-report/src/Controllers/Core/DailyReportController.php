@@ -59,11 +59,11 @@ class DailyReportController extends Controller
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
-            $internal = Part_reports::where('registered_by', $row->id)->select('case_number')->groupBy('case_number');
+            $internal = Part_reports::where('registered_by', $row->id)>distinct('case_number');
 
-            $external = Repair_reports::where('mapa_expert', $row->id)->select('case_number')->groupBy('case_number');
+            $external = Repair_reports::where('mapa_expert', $row->id)>distinct('case_number');
 
-            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)->select('case_number')->groupBy('case_number');
+            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)>distinct('case_number');
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
@@ -76,9 +76,9 @@ class DailyReportController extends Controller
                 $external = $external->whereDate('updated_at', '<=', $to);
                 $mapa_center = $mapa_center->whereDate('updated_at', '<=', $to);
             }
-            $row->internal = $internal->count();
-            $row->external = $external->count();
-            $row->mapa_center = $mapa_center->count();
+            $row->internal = $internal->count('case_number');
+            $row->external = $external->count('case_number');
+            $row->mapa_center = $mapa_center->count('case_number');
         });
 
         return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users'));
