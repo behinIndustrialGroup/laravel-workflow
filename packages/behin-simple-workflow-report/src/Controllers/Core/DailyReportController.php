@@ -59,11 +59,11 @@ class DailyReportController extends Controller
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
-            $internal = Part_reports::where('registered_by', $row->id)->groupBy('case_number');
+            $internal = Part_reports::where('registered_by', $row->id)->select('case_number')->groupBy('case_number');
 
-            $external = Repair_reports::where('mapa_expert', $row->id)->groupBy('case_number');
+            $external = Repair_reports::where('mapa_expert', $row->id)->select('case_number')->groupBy('case_number');
 
-            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)->groupBy('case_number');
+            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)->select('case_number')->groupBy('case_number');
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
