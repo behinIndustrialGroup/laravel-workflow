@@ -9,15 +9,18 @@ use BehinUserRoles\Controllers\GetRoleController;
 use BehinUserRoles\Models\User;
 use BehinUserRoles\Controllers\DepartmentController;
 use BehinUserRoles\Models\UserDepartment;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public static function getAll() {
+    public static function getAll()
+    {
         return User::get();
     }
     public function index($id)
     {
-        if($id == 'all'):
+        if ($id == 'all'):
             $users = User::get();
             return view('URPackageView::user.all')->with(['users' => $users]);
         else:
@@ -36,7 +39,8 @@ class UserController extends Controller
         return view('URPackageView::user.create')->with(['roles' => $roles]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -46,7 +50,8 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User created successfully');
     }
 
-    public function update(Request $r, $id) {
+    public function update(Request $r, $id)
+    {
         User::where('id', $id)->update([
             'number' => $r->number,
             'name' => $r->name,
@@ -60,31 +65,34 @@ class UserController extends Controller
 
     public function ChangePass(Request $request, $id)
     {
-        User::where('id', $id)->update([ 'password' => Hash::make($request->pass) ]);
+        User::where('id', $id)->update(['password' => Hash::make($request->pass)]);
         return redirect()->back()->with('success', 'Password changed successfully');
     }
 
-    function changePMUsername(Request $r, $id) {
+    function changePMUsername(Request $r, $id)
+    {
         User::where('id', $id)->update(['pm_username' => $r->pm_username]);
         return redirect()->back();
     }
 
     public function ChangeIp(Request $r, $user_id)
     {
-        User::where('id',$user_id)->update([ 'valid_ip' => $r->valid_ip ]);
+        User::where('id', $user_id)->update(['valid_ip' => $r->valid_ip]);
         return redirect()->back();
     }
 
-    public function changeShowInReport(Request $r, $id){
-        if(isset($r->showInReport))
+    public function changeShowInReport(Request $r, $id)
+    {
+        if (isset($r->showInReport))
             $showInReport = true;
         else
             $showInReport = false;
-        User:: where('id', $id)->update([ 'showInReport' => $showInReport ]);
+        User::where('id', $id)->update(['showInReport' => $showInReport]);
         return redirect()->back();
     }
 
-    public function addToDepartment(Request $r, $id){
+    public function addToDepartment(Request $r, $id)
+    {
         $user = User::find($id);
         $department_id = $r->department_id;
         UserDepartment::updateOrCreate([
@@ -94,7 +102,8 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User added to department successfully');
     }
 
-    public function removeFromDepartment(Request $r, $id){
+    public function removeFromDepartment(Request $r, $id)
+    {
         $user = User::find($id);
         $departmentId = $r->departmentId;
         UserDepartment::where([
@@ -104,4 +113,17 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User removed from department successfully');
     }
 
+    public function invalidateSessions($id)
+    {
+        $user = User::findOrFail($id);
+
+        // 1. حذف همه سشن‌های کاربر
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+
+        // 2. بی‌اعتبار کردن remember_token
+        $user->remember_token = Str::random(60);
+        $user->save();
+
+        return back()->with('success', 'کاربر از همه دستگاه‌ها و نشست‌ها خارج شد.');
+    }
 }

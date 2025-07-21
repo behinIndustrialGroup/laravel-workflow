@@ -34,6 +34,8 @@ Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(functio
     Route::post('/{id}/changeShowInReport', [UserController::class, 'changeShowInReport']);
     Route::post('/{id}/addToDepartment', [UserController::class, 'addToDepartment'])->name('user.addToDepartment');
     Route::delete('/{id}/removeFromDepartment', [UserController::class, 'removeFromDepartment'])->name('user.removeFromDepartment');
+    Route::post('/{id}/invalidate-sessions', [UserController::class, 'invalidateSessions'])->name('user.invalidateSessions');
+
 });
 
 Route::resource('users', UserController::class)->middleware(['web', 'auth',Access::class]);
