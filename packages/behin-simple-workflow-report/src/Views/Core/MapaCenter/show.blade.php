@@ -5,7 +5,12 @@
 @endsection
 
 @php
+use Behin\SimpleWorkflowView\ViewModel\ViewModel;
     $disableBackBtn = true;
+    $installPartViewModelId = "218c2926-67c3-4344-a54d-5f718eba3882	";
+    $installPartViewModel = ViewModel::find($installPartViewModelId);
+    $installPartViewModelUpdateForm = $installPartViewModel->update_form;
+    $installPartViewModelApikey = $installPartViewModel->api_key;
 @endphp
 
 @php
@@ -287,6 +292,10 @@
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     <td>
+                                        @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
+                                        <button class="btn btn-primary"
+                                        onclick="open_view_model_form(`{{ $installPartViewModelUpdateForm }}`, `{{ $installPartViewModelId }}`, `{{ $part->id }}`, `{{ $installPartViewModelApikey }}`)">ویرایش</button>
+                                        @endif
                                         @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
                                             <a href="{{ route('simpleWorkflowReport.mapa-center.delete-install-part', $part->id) }}"
                                                 class="btn btn-danger btn-sm"
