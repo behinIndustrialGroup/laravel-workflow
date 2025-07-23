@@ -304,7 +304,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                     <td>
                                         @if (auth()->user()->access('مپاسنتر: امکان ویرایش قطعات نصب شده'))
                                             <i class="btn btn-sm btn-primary fa fa-edit"
-                                                onclick="open_view_model_form(`{{ $installPartViewModelUpdateForm }}`, `{{ $installPartViewModelId }}`, `{{ $part->id }}`, `{{ $installPartViewModelApikey }}`)">ویرایش</i>
+                                                onclick="open_view_model_form(`{{ $installPartViewModelUpdateForm }}`, `{{ $installPartViewModelId }}`, `{{ $part->id }}`, `{{ $installPartViewModelApikey }}`)"></i>
                                         @endif
                                         @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
                                             <a href="{{ route('simpleWorkflowReport.mapa-center.delete-install-part', $part->id) }}"
