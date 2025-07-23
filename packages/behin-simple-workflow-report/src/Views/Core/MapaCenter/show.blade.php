@@ -282,6 +282,11 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                 <th>نام قطعه</th>
                                 <th>مقدار</th>
                                 <th>تاریخ ثبت</th>
+                                @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                                    <th>شماره فاکتور</th>
+                                    <th>تاریخ فاکتور</th>
+                                    <th>مبلغ</th>
+                                @endif
                                 <th>حذف</th>
                             </tr>
                         </thead>
@@ -291,10 +296,14 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                     <td>{{ $part->name }}</td>
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
-                                    <td>
-                                        @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
-                                        <button class="btn btn-primary"
-                                        onclick="open_view_model_form(`{{ $installPartViewModelUpdateForm }}`, `{{ $installPartViewModelId }}`, `{{ $part->id }}`, `{{ $installPartViewModelApikey }}`)">ویرایش</button>
+                                    @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                                        <td>{{ $part->invoice_number }}</td>
+                                        <td>{{ $part->invoice_date }}</td>
+                                        <td>{{ $part->amount }}</td>
+                                    @endif
+                                    @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
+                                        <i class="btn btn-sm btn-primary fa fa-edit"
+                                        onclick="open_view_model_form(`{{ $installPartViewModelUpdateForm }}`, `{{ $installPartViewModelId }}`, `{{ $part->id }}`, `{{ $installPartViewModelApikey }}`)">ویرایش</i>
                                         @endif
                                         @if (auth()->user()->access('مپاسنتر: امکان حذف قطعات نصب شده'))
                                             <a href="{{ route('simpleWorkflowReport.mapa-center.delete-install-part', $part->id) }}"
