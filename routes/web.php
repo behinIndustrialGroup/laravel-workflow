@@ -75,7 +75,7 @@ Route::get('queue-work', function () {
         } catch (Exception $e) {
             // در صورت خطا، job را به جدول failed_jobs منتقل کنید
             DB::table('failed_jobs')->insert([
-                'connection' => $job->connection,
+                'connection' => $job->connection ?? 'database',
                 'queue' => $job->queue,
                 'payload' => $job->payload,
                 'exception' => (string) $e,

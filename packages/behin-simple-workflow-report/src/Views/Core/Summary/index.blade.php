@@ -271,6 +271,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش لیست طلبکاران'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش لیست طلبکاران</td>
+                                            <td class="d-none">گزارش کامل لیست طلبکاران</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.creditor.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
