@@ -5,6 +5,7 @@
 
 @php
     $disableBackBtn = true;
+    use Behin\SimpleWorkflow\Models\Entities\Financials;
 @endphp
 
 @section('content')
@@ -51,7 +52,7 @@
                                 {{ $inbox->case->number }}
                             </td>
                             <td>{{ $inbox->case->getVariable('customer_workshop_or_ceo_name') }}</td>
-                            <td>{{ number_format($inbox->cost) }}</td>
+                            <td>{{ number_format(Financials::where('case_number', $inbox->case->number)->sum('cost')) }}</td>
                             <td>{{ toJalali((int) $inbox->fix_cost_date)->format('Y-m-d') }}</td>
                             <td>{{ $inbox->case_name }}</td>
                         </tr>
