@@ -249,6 +249,18 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش بدهکاران'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>بدهکاران</td>
+                                            <td class="d-none">گزارش کامل بدهکاران</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.on-credit-report.showAll') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+
                                     @if (auth()->user()->access('گزارش اقدامات پرسنل'))
                                         <tr>
                                             <td class="d-none"></td>
@@ -282,6 +294,7 @@
                                             </td>
                                         </tr>
                                     @endif
+
                                 </tbody>
                             </table>
                         </div>

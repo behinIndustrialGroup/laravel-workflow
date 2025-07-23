@@ -77,6 +77,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::resource('cheque-report', ChequeReportController::class);
     Route::resource('on-credit-report', OnCreditReportController::class);
+    Route::get('on-credit-report-show-all', [OnCreditReportController::class, 'showAll'])->name('on-credit-report.showAll');
     Route::resource('personel-activity', PersonelActivityController::class);
     Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
 
