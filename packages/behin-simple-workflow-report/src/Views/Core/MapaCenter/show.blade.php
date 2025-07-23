@@ -7,7 +7,7 @@
 @php
 use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
     $disableBackBtn = true;
-    $installPartViewModelId = "218c2926-67c3-4344-a54d-5f718eba3882	";
+    $installPartViewModelId = "218c2926-67c3-4344-a54d-5f718eba3882";
     $installPartViewModel = ViewModelController::getById($installPartViewModelId);
     $installPartViewModelUpdateForm = $installPartViewModel->update_form;
     $installPartViewModelApikey = $installPartViewModel->api_key;
