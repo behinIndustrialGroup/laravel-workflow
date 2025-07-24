@@ -294,6 +294,9 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                         <tbody>
                             @php
                                 $colspan = 4;
+                                if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده')) {
+                                    $colspan = 7;
+                                }
                                 $totalAmount = 0;
                             @endphp
                             @forelse ($installParts as $part)
@@ -303,7 +306,6 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
                                         @php
-                                            $colspan = 7;
                                             $totalAmount += (int)str_replace(',', '', $part->amount);
                                         @endphp
                                         <td>{{ $part->supply_source }}</td>
