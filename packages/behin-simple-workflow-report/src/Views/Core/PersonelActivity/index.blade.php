@@ -1,6 +1,14 @@
 @extends('behin-layouts.app')
 
 @section('title', 'گزارش اقدامات پرسنل')
+@php
+    use Morilog\Jalali\Jalalian;
+
+    $todayJalali = Jalalian::now()->format('Y-m-d');
+    $fromDate = request('from_date') ?? $todayJalali;
+    $toDate = request('to_date') ?? $todayJalali;
+@endphp
+
 
 @section('content')
     <div class="container">
@@ -10,11 +18,11 @@
                     <div class="row align-items-end">
                         <div class="col-md-3">
                             <label for="from_date">از تاریخ</label>
-                            <input type="text" id="from_date" name="from_date" class="form-control persian-date" value="{{ request('from_date') }}" placeholder="مثلاً 1403/01/01">
+                            <input type="text" id="from_date" name="from_date" class="form-control persian-date" value="{{ $fromDate }}" placeholder="">
                         </div>
                         <div class="col-md-3">
                             <label for="to_date">تا تاریخ</label>
-                            <input type="text" id="to_date" name="to_date" class="form-control persian-date" value="{{ request('to_date') }}" placeholder="مثلاً 1403/12/29">
+                            <input type="text" id="to_date" name="to_date" class="form-control persian-date" value="{{ $toDate }}" placeholder="">
                         </div>
                         <div class="col-md-3">
                             <label for="user_id">پرسنل</label>
@@ -52,7 +60,7 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->inbox }}</td>
                                     <td>
-                                        <i class="fa fa-external-link text-primary" onclick="showDones(`{{ $user->id }}`, `{{ request('from_date') }}`, `{{ request('to_date') }}`)"></i>
+                                        <i class="fa fa-external-link text-primary" onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
                                         {{ $user->done }}
                                     </td>
                                 </tr>

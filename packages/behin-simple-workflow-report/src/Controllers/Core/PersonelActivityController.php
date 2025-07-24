@@ -37,11 +37,17 @@ class PersonelActivityController extends Controller
     public function index(Request $request)
     {
         $allowedProcessIds = $this->allowedProcessIds;
-        // تاریخ‌ها را به میلادی تبدیل کن اگر شمسی هستند (اینجا فرض می‌کنیم شمسی هستند)
-        $from = convertPersianToEnglish($request->from_date);
-        $to = convertPersianToEnglish($request->to_date);
-        $from = $request->from_date ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
-        $to = $request->to_date ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
+        // تاریخ امروز شمسی به فرمت Y-m-d
+        $defaultFrom = Jalalian::now()->format('Y-m-d');
+        $defaultTo = Jalalian::now()->format('Y-m-d');
+
+        // اگر کاربر مقدار وارد نکرده باشه، تاریخ امروز در نظر گرفته میشه
+        $from_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
+        $to_input = convertPersianToEnglish($request->to_date ?? $defaultTo);
+
+        // تبدیل تاریخ شمسی به میلادی
+        $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon();
+        $to = Jalalian::fromFormat('Y-m-d', $to_input)->toCarbon()->endOfDay();
 
         $query = User::query();
         if ($request->filled('user_id')) {
