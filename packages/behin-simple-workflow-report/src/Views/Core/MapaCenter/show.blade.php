@@ -292,12 +292,20 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $colspan = 4;
+                                $totalAmount = 0;
+                            @endphp
                             @forelse ($installParts as $part)
                                 <tr>
                                     <td>{{ $part->name }}</td>
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                                        @php
+                                            $colspan = 7;
+                                            $totalAmount += (int)str_replace(',', '', $part->amount);
+                                        @endphp
                                         <td>{{ $part->supply_source }}</td>
                                         <td>{{ $part->invoice_number }}</td>
                                         <td>{{ $part->invoice_date }}</td>
@@ -319,10 +327,19 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">قطعه‌ای ثبت نشده است.</td>
+                                    <td colspan="{{ $colspan }}" class="text-center">قطعه‌ای ثبت نشده است.</td>
                                 </tr>
                             @endforelse
                         </tbody>
+                        @if(auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                        <tfoot>
+                            <tr>
+                                <td colspan="{{ $colspan - 2 }}" class="text-center">مجموع</td>
+                                <td>{{ number_format($totalAmount) }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                        @endif
                     </table>
                 </div>
             </div>
