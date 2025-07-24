@@ -283,6 +283,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                 <th>مقدار</th>
                                 <th>تاریخ ثبت</th>
                                 @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                                    <th>منبع تامین</th>
                                     <th>شماره فاکتور</th>
                                     <th>تاریخ فاکتور</th>
                                     <th>مبلغ</th>
@@ -297,6 +298,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                     <td>{{ $part->value }}</td>
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                                        <td>{{ $part->supply_source }}</td>
                                         <td>{{ $part->invoice_number }}</td>
                                         <td>{{ $part->invoice_date }}</td>
                                         <td>{{ $part->amount }}</td>
