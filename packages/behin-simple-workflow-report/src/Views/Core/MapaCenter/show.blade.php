@@ -295,7 +295,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                             @php
                                 $colspan = 4;
                                 if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده')) {
-                                    $colspan = 7;
+                                    $colspan = 8;
                                 }
                                 $totalAmount = 0;
                             @endphp
