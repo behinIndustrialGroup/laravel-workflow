@@ -44,6 +44,7 @@
                         <th>شماره فاکتور</th>
                         <th>تاریخ فاکتور</th>
                         <th>تسویه</th>
+                        <th>نحوه تسویه</th>
                         <th>تاریخ پرداخت</th>
                         <th>اقدامات</th>
                     </tr>
@@ -57,6 +58,7 @@
                             <td>{{ $creditor->invoice_number }}</td>
                             <td>{{ $creditor->invoice_date }}</td>
                             <td>{{ $creditor->is_settled }}</td>
+                            <td>{{ $creditor->settlement_type }}</td>
                             <td>{{ $creditor->settlement_date }}</td>
                             <td>
                                 <button class="btn btn-primary"
