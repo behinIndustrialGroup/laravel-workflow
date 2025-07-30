@@ -93,65 +93,6 @@
                                 </div>
                             </form>
                         </div>
-
-                        {{-- <div class="card-body table-responsive">
-                            <table class="table" id="mapa-expert">
-                                <thead>
-                                    <tr>
-                                        <td>{{ trans('fields.user_number') }}</td>
-                                        <td>{{ trans('fields.user_name') }}</td>
-                                        <td>{{ trans('fields.total_income') }}</td>
-                                        <td>{{ trans('fields.repairs_done') }}</td>
-                                        <td>{{ trans('fields.repairs_pending') }}</td>
-                                        <td>{{ trans('fields.Action') }}</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $totalIncome = 0;
-                                    @endphp
-                                    @foreach ($users as $user)
-                                        @if ($quser)
-                                            @if ($quser == $user->id)
-                                                <tr>
-                                                    <td>{{ $user->number }}</td>
-                                                    <td>{{ $user->name }}</td>
-                                                    <td>{{ number_format($user->total_income) }}</td>
-                                                    <td>{{ $user->repairs_done }}</td>
-                                                    <td>{{ $user->repairs_pending }}</td>
-                                                    <td></td>
-                                                </tr>
-                                                @php
-                                                    $totalIncome += $user->total_income;
-                                                @endphp
-                                            @endif
-                                        @else
-                                            <tr>
-                                                <td>{{ $user->number }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ number_format($user->total_income) }}</td>
-                                                <td>{{ $user->repairs_done }}</td>
-                                                <td>{{ $user->repairs_pending }}</td>
-                                                <td>
-                                                    <a href="{{ url()->current() . "?month=$month&year=$year&quser=$user->id" }}" class="btn btn-sm btn-info">{{ trans('fields.Show More') }}</a>
-                                                </td>
-                                            </tr>
-                                            @php
-                                                $totalIncome += $user->total_income;
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                    <tr class="bg-success">
-                                        <td>1000</td>
-                                        <td>مجموع</td>
-                                        <td>{{ number_format($totalIncome) }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> --}}
                     </div>
 
                 </div>
@@ -172,6 +113,7 @@
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.fix_cost_date') }}</th>
                                         <th>{{ trans('fields.Declared Cost') }}</th>
+                                        <th>تفکیک هزینه ها</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
                                         <th>{{ trans('fields.payment_date') }}</th>
                                     </tr>
@@ -180,6 +122,7 @@
                                     @php
                                         $totalRepairCost = 0;
                                         $totalPaymentAmount = 0;
+                                        $totalCaseCosts = 0;
                                         $numberOfInternalProcess = 0;
                                         $numberOfExternalProcess = 0;
                                     @endphp
@@ -206,6 +149,14 @@
                                             <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
                                                 {{ number_format($row->total_cost) }}
                                             </td>
+                                            <td>
+                                                @foreach ($row->case_costs as $case_cost)
+                                                    @php
+                                                        $totalCaseCosts += (int)(str_replace(',', '', $case_cost->amount));
+                                                    @endphp
+                                                    {{ $case_cost->counterparty()?->name }} ({{ $case_cost->amount }})
+                                                @endforeach
+                                            </td>
                                             <td>{{ $row->total_payment ? number_format($row->total_payment) : '' }}</td>
                                             <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
                                             @php
@@ -231,6 +182,7 @@
                                         <td></td>
                                         <td>مجموع</td>
                                         <td>{{ number_format($totalRepairCost) }}</td>
+                                        <td>{{ number_format($totalCaseCosts) }}</td>
                                         <td>{{ number_format($totalPaymentAmount) }}</td>
                                         <td></td>
                                     </tr>
