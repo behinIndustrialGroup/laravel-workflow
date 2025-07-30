@@ -249,6 +249,13 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                         }
                     </script>
                 </div>
+                <div class="card-body">
+                    <table class="table">
+                        @foreach ($internalCases as $case)
+                            <td>{{ $case->whereIs() }}</td>
+                        @endforeach
+                    </table>
+                </div>
             </div>
 
             <!-- باکس افزودن قطعه -->
