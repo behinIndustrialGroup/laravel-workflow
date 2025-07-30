@@ -207,8 +207,8 @@
                                     @if (auth()->user()->access('گزارش درآمد تقریبی'))
                                         <tr>
                                             <td class="d-none"></td>
-                                            <td>گزارش درآمد تقریبی پرسنل</td>
-                                            <td class="d-none">گزارش درآمد تقریبی</td>
+                                            <td>گزارش درآمد پرسنل</td>
+                                            <td class="d-none">گزارش درآمد </td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.fin.totalCost') }}"
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
