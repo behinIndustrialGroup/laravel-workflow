@@ -150,12 +150,19 @@
                                                 {{ number_format($row->total_cost) }}
                                             </td>
                                             <td>
+                                                @php
+                                                    $totalCaseCost = 0
+                                                @endphp
                                                 @foreach ($row->case_costs as $case_cost)
                                                     @php
+                                                        $totalCaseCost += (int)(str_replace(',', '', $case_cost->amount));
                                                         $totalCaseCosts += (int)(str_replace(',', '', $case_cost->amount));
                                                     @endphp
-                                                    {{ $case_cost->counterparty()?->name }} ({{ $case_cost->amount }})
+                                                    {{ $case_cost->counterparty()?->name }} ({{ $case_cost->amount }})<br>
                                                 @endforeach
+                                                @if ($totalCaseCost)
+                                                    مجموع ({{ number_format($totalCaseCost) }})
+                                                @endif
                                             </td>
                                             <td>{{ $row->total_payment ? number_format($row->total_payment) : '' }}</td>
                                             <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
