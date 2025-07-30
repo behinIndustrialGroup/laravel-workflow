@@ -249,7 +249,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                         }
                     </script>
                 </div>
-                <div class="card-body">
+                {{-- <div class="card-body">
                     <table class="table">
                         @foreach ($internalCases as $case)
                         <tr>
@@ -257,7 +257,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                         </tr>
                         @endforeach
                     </table>
-                </div>
+                </div> --}}
             </div>
 
             <!-- باکس افزودن قطعه -->
