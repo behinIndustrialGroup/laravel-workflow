@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
+use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TimeoffExport2;
@@ -37,9 +38,12 @@ class MapaCenterController extends Controller
         $case = CaseController::getById($mapa_center);
         $reports = Mapa_center_fix_report::where('case_number', $case->number)->get();
         $parts = Parts::where('case_number', $case->number)->get();
+        $internalCases = Cases::whereIn('process_id', [
+            '4bb6287b-9ddc-4737-9573-72071654b9de'
+        ])->get();
         $financials = Financials::where('case_number', $case->number)->get();
         $installParts = Mapa_center_install_parts::where('case_number', $case->number)->get();
-        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'financials', 'installParts'));
+        return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'internalCases', 'financials', 'installParts'));
     }
 
     public function updateCaseInfo(Request $request, $mapa_center){
@@ -92,7 +96,7 @@ class MapaCenterController extends Controller
             $case->number,
             $case->id
         );
-        $inbox->case_name = "خارج شده از مپاسنتر";
+        $inbox->case_name = "خارج شده از مپاسنتر | " . $case->getVariable('customer_workshop_or_ceo_name');
         $inbox->save();
         $newCase = $inbox->case;
         $newCase->copyVariableFrom($mapa_center);
