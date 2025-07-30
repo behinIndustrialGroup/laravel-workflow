@@ -252,7 +252,9 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                 <div class="card-body">
                     <table class="table">
                         @foreach ($internalCases as $case)
+                        <tr>
                             <td>{{ $case->getVariable('part_name') }}</td>
+                        </tr>
                         @endforeach
                     </table>
                 </div>
