@@ -96,7 +96,7 @@ class MapaCenterController extends Controller
             $case->number,
             $case->id
         );
-        $inbox->case_name = "خارج شده از مپاسنتر | " . $case->getVariable('customer_workshop_or_ceo_name');
+        $inbox->case_name = "خارج شده از مپاسنتر توسط " . Auth::user()->name . " | " . $case->getVariable('customer_workshop_or_ceo_name');
         $inbox->save();
         $newCase = $inbox->case;
         $newCase->copyVariableFrom($mapa_center);
