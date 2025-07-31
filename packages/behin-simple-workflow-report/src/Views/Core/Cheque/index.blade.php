@@ -45,7 +45,7 @@
                 </thead>
                 <tbody>
                     @foreach ($cheques as $cheque)
-                        <tr>
+                        <tr @if($cheque->is_passed) style="background-color: #d4edda;" @endif>
                             <td>
                                 <a
                                     href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
@@ -97,7 +97,7 @@
                             {{-- دکمه پاس شد --}}
                             <td>
                                 @if ($cheque->is_passed)
-                                    <span class="badge bg-success">پاس شد</span>
+                                    {{-- <span class="badge bg-success">پاس شد</span> --}}
                                 @else
                                     <form method="POST"
                                         action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"

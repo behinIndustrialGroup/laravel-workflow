@@ -26,7 +26,7 @@ class ChequeReportController extends Controller
     {
         $cheques = Financials::whereNotNull('case_number')
             ->whereIn('fix_cost_type', ['تسویه کامل - چک', 'علی الحساب - چک'])
-            ->where('is_passed', null)
+            // ->where('is_passed', null)
             ->get();
         return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques'));
     }
