@@ -59,11 +59,11 @@ class DailyReportController extends Controller
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
-            $internal = Part_reports::get();
+            $internal = Part_reports::query();
 
-            $external = Repair_reports::get();
+            $external = Repair_reports::query();
 
-            $mapa_center = Mapa_center_fix_report::get();
+            $mapa_center = Mapa_center_fix_report::query();
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
@@ -93,7 +93,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Part_reports::get();
+        $query = Part_reports::query();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -115,7 +115,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Repair_reports::get();
+        $query = Repair_reports::query();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -137,7 +137,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Mapa_center_fix_report::get();
+        $query = Mapa_center_fix_report::query();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
