@@ -47,7 +47,7 @@ class DailyReportController extends Controller
 
         // اگر کاربر مقدار وارد نکرده باشه، تاریخ امروز در نظر گرفته میشه
         $from_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
-        $to_input = convertPersianToEnglish($request->to_date ?? $defaultFrom);
+        $to_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
 
         // تبدیل تاریخ شمسی به میلادی
         $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon();
