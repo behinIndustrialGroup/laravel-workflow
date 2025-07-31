@@ -17,14 +17,9 @@
                 <form method="GET" action="{{ route('simpleWorkflowReport.daily-report.index') }}">
                     <div class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label for="from_date" class="form-label fw-bold">از تاریخ</label>
+                            <label for="from_date" class="form-label fw-bold">تاریخ</label>
                             <input type="text" id="from_date" name="from_date" class="form-control persian-date rounded-pill shadow-sm"
                                 value="{{ $fromDate }}" placeholder="مثلاً 1403/04/01">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="to_date" class="form-label fw-bold">تا تاریخ</label>
-                            <input type="text" id="to_date" name="to_date" class="form-control persian-date rounded-pill shadow-sm"
-                                value="{{ $toDate }}" placeholder="مثلاً 1403/04/10">
                         </div>
                         <div class="col-md-3">
                             <label for="user_id" class="form-label fw-bold">پرسنل</label>
