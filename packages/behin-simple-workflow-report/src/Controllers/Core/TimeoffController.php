@@ -4,6 +4,7 @@ namespace Behin\SimpleWorkflowReport\Controllers\Core;
 
 use App\Http\Controllers\Controller;
 use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
+use BehinUserRoles\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,7 @@ class TimeoffController extends Controller
         $thisYear = $todayShamsi->getYear();
         $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
         $startOfThisJalaliYear = Jalalian::fromFormat('Y-m-d', $thisYear . '-01-01')->toCarbon()->timestamp;
-        $users = DB::table('users')->whereNotIn('id', [1, 43]);
+        $users = User::whereNotIn('id', [1, 43]);
         if ($userId) {
             $users = $users->where('id', $userId)->orderBy('number')->get();
         } else {
