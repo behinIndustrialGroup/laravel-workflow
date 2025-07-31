@@ -134,9 +134,20 @@
                 </div>
             </form>
         </div>
+        <div class="card p-2">
+            <div class="card-body row">
+                <form action="{{ route('user.invalidateSessions', $user->id) }}" class="col-sm-6" method="POST" onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید کاربر را از همه دستگاه‌ها خارج کنید؟');">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">خروج از همه دستگاه‌ها</button>
+                </form>
+                <form action="{{ route('user.destroy', $user->id) }}" class="col-sm-6" method="POST" onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید کاربر را حذف کنید؟');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" style="float: left">حذف کاربر</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <form action="{{ route('user.invalidateSessions', $user->id) }}" method="POST" onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید کاربر را از همه دستگاه‌ها خارج کنید؟');">
-        @csrf
-        <button type="submit" class="btn btn-danger">خروج از همه دستگاه‌ها</button>
-    </form>
+    
+    
 @endsection

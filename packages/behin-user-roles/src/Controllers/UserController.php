@@ -126,4 +126,9 @@ class UserController extends Controller
 
         return back()->with('success', 'کاربر از همه دستگاه‌ها و نشست‌ها خارج شد.');
     }
+
+    public function destroy(User $user){
+        $user->delete();
+        return redirect()->route('user.all')->with('success', 'User deleted successfully');
+    }
 }
