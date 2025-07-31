@@ -59,11 +59,11 @@ class DailyReportController extends Controller
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
-            $internal = Part_reports::where('registered_by', $row->id)->distinct('case_number');
+            $internal = Part_reports::get();
 
-            $external = Repair_reports::where('mapa_expert', $row->id)->distinct('case_number');
+            $external = Repair_reports::get();
 
-            $mapa_center = Mapa_center_fix_report::where('expert', $row->id)->distinct('case_number');
+            $mapa_center = Mapa_center_fix_report::get();
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
@@ -76,9 +76,9 @@ class DailyReportController extends Controller
                 $external = $external->whereDate('updated_at', '<=', $to);
                 $mapa_center = $mapa_center->whereDate('updated_at', '<=', $to);
             }
-            $row->internal = $internal->count('case_number');
-            $row->external = $external->count('case_number');
-            $row->mapa_center = $mapa_center->count('case_number');
+            $row->internal = $internal->where('registered_by', $row->id)->distinct('case_number')->count('case_number');
+            $row->external = $external->where('mapa_expert', $row->id)->distinct('case_number')->count('case_number');
+            $row->mapa_center = $mapa_center->where('expert', $row->id)->distinct('case_number')->count('case_number');
         });
 
         return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users'));
@@ -93,7 +93,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Part_reports::where('registered_by', $user_id)->groupBy('case_number');
+        $query = Part_reports::get();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -101,7 +101,7 @@ class DailyReportController extends Controller
         if ($to) {
             $query->whereDate('updated_at', '<=', $to);
         }
-        $items = $query
+        $items = $query->where('registered_by', $user_id)->groupBy('case_number')
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show', compact('items'));
@@ -115,7 +115,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Repair_reports::where('mapa_expert', $user_id)->groupBy('case_number');
+        $query = Repair_reports::get();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -123,7 +123,7 @@ class DailyReportController extends Controller
         if ($to) {
             $query->whereDate('updated_at', '<=', $to);
         }
-        $items = $query
+        $items = $query->where('mapa_expert', $user_id)->groupBy('case_number')
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external', compact('items'));
@@ -137,7 +137,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Mapa_center_fix_report::where('expert', $user_id)->groupBy('case_number');
+        $query = Mapa_center_fix_report::get();
         if ($from) {
             $query->whereDate('updated_at', '>=', $from);
         }
@@ -145,7 +145,7 @@ class DailyReportController extends Controller
         if ($to) {
             $query->whereDate('updated_at', '<=', $to);
         }
-        $items = $query
+        $items = $query->where('expert', $user_id)->groupBy('case_number')
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-mapa-center', compact('items'));
