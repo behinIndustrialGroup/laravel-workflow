@@ -170,9 +170,9 @@
                                                         {{ $case_cost->counterparty()->name }}
                                                         ({{ $case_cost->amount }})<br>
                                                     @endforeach
-                                                    @if ($totalCaseCost)
+                                                    {{-- @if ($totalCaseCost)
                                                         مجموع ({{ number_format($totalCaseCost) }})
-                                                    @endif
+                                                    @endif --}}
                                                 @else
                                                     @php
                                                         $totalCaseCosts += (int) str_replace(',', '', $row->total_cost);
