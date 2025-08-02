@@ -149,11 +149,11 @@
                                             <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
                                                 {{-- اگر کاربر فیلتر شده بود جزئیات تفکیک هزینه ها را در این ستون نمایش بده --}}
                                                 @if ($quser)
-                                                    @if (count($row->case_costs))
+                                                    @if (count($row->all_case_costs))
                                                         @php
                                                             $totalCaseCost = 0;
                                                         @endphp
-                                                        @foreach ($row->case_costs as $case_cost)
+                                                        @foreach ($row->all_case_costs as $case_cost)
                                                             @php
                                                                 $totalCaseCost += (int) str_replace(
                                                                     ',',

@@ -50,6 +50,7 @@ class ReportHelper
             $fin->customer = Variable::where('case_id', $fin->case_id)->where('key', 'customer_workshop_or_ceo_name')->value('value');
             if($user){
                 $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->whereIn('couterparty', $counterParties)->get();
+                $fin->all_case_costs = Case_costs::where('case_number', $fin->case_number)->get();
             }else{
                 $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->get();
             }
