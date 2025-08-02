@@ -150,7 +150,7 @@
                                                 {{ number_format($row->total_cost) }}
                                             </td>
                                             <td>
-                                                @if ($row->case_costs)
+                                                @if (count($row->case_costs))
                                                     @php
                                                         $totalCaseCost = 0;
                                                     @endphp
