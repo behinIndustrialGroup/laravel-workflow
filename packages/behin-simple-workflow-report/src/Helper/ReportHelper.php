@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Case_costs;
+use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 
 class ReportHelper
 {
@@ -21,6 +22,7 @@ class ReportHelper
         $inFins = Financials::rightJoin('wf_entity_parts', 'wf_entity_parts.case_number', '=', 'wf_entity_financials.case_number')
         ->whereBetween('wf_entity_financials.fix_cost_date', [$from, $to]);
         if ($user) {
+            $counterParties = Counter_parties::where('user_id', $user)->pluck('id');
             $inFins = $inFins->where(function ($query) use ($user) {
                 $query->where('wf_entity_parts.mapa_expert', $user);
             });
@@ -46,7 +48,11 @@ class ReportHelper
             $fin->in_mapa_experts = Parts::where('case_number', $fin->case_number)->groupBy('mapa_expert')->pluck('mapa_expert')->toArray();
             $fin->out_mapa_experts = Repair_reports::where('case_number', $fin->case_number)->groupBy('mapa_expert')->pluck('mapa_expert')->toArray();
             $fin->customer = Variable::where('case_id', $fin->case_id)->where('key', 'customer_workshop_or_ceo_name')->value('value');
-            $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->get();
+            if($user){
+                $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->whereIn('couterparty', $counterParties)->get();
+            }else{
+                $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->get();
+            }
         }
         return $fins;
 
