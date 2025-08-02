@@ -147,7 +147,44 @@
                                             <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : trans('fields.not_available') }}
                                             </td>
                                             <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
-                                                {{ number_format($row->total_cost) }}
+                                                @if ($quser)
+                                                    @if (count($row->case_costs))
+                                                        @php
+                                                            $totalCaseCost = 0;
+                                                        @endphp
+                                                        @foreach ($row->case_costs as $case_cost)
+                                                            @php
+                                                                $totalCaseCost += (int) str_replace(
+                                                                    ',',
+                                                                    '',
+                                                                    $case_cost->amount,
+                                                                );
+                                                                $totalCaseCosts += (int) str_replace(
+                                                                    ',',
+                                                                    '',
+                                                                    $case_cost->amount,
+                                                                );
+                                                            @endphp
+                                                            {{ $case_cost->counterparty()->name }}
+                                                            ({{ $case_cost->amount }})
+                                                            <br>
+                                                        @endforeach
+                                                        {{-- @if ($totalCaseCost)
+                                                    مجموع ({{ number_format($totalCaseCost) }})
+                                                @endif --}}
+                                                    @else
+                                                        @php
+                                                            $totalCaseCosts += (int) str_replace(
+                                                                ',',
+                                                                '',
+                                                                $row->total_cost,
+                                                            );
+                                                        @endphp
+                                                        {{ number_format($row->total_cost) }}
+                                                    @endif
+                                                @else
+                                                    {{ number_format($row->total_cost) }}
+                                                @endif
                                             </td>
                                             <td>
                                                 @if (count($row->case_costs))
@@ -168,7 +205,8 @@
                                                             );
                                                         @endphp
                                                         {{ $case_cost->counterparty()->name }}
-                                                        ({{ $case_cost->amount }})<br>
+                                                        ({{ $case_cost->amount }})
+                                                        <br>
                                                     @endforeach
                                                     {{-- @if ($totalCaseCost)
                                                         مجموع ({{ number_format($totalCaseCost) }})
