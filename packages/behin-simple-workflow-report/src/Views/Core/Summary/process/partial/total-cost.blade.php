@@ -147,6 +147,7 @@
                                             <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : trans('fields.not_available') }}
                                             </td>
                                             <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
+                                                {{-- اگر کاربر فیلتر شده بود جزئیات تفکیک هزینه ها را در این ستون نمایش بده --}}
                                                 @if ($quser)
                                                     @if (count($row->case_costs))
                                                         @php
@@ -169,9 +170,9 @@
                                                             ({{ $case_cost->amount }})
                                                             <br>
                                                         @endforeach
-                                                        {{-- @if ($totalCaseCost)
-                                                    مجموع ({{ number_format($totalCaseCost) }})
-                                                @endif --}}
+                                                        @if ($totalCaseCost)
+                                                            مجموع ({{ number_format($totalCaseCost) }})
+                                                        @endif
                                                     @else
                                                         @php
                                                             $totalCaseCosts += (int) str_replace(
@@ -187,6 +188,7 @@
                                                 @endif
                                             </td>
                                             <td>
+                                                {{-- اگر تفکیک هزینه ها وجود داشت نمایش بده اگر نه همان تعیین هزینه را نمایش بده --}}
                                                 @if (count($row->case_costs))
                                                     @php
                                                         $totalCaseCost = 0;
@@ -204,9 +206,14 @@
                                                                 $case_cost->amount,
                                                             );
                                                         @endphp
-                                                        {{ $case_cost->counterparty()->name }}
-                                                        ({{ $case_cost->amount }})
-                                                        <br>
+                                                        {{-- اگر کاربر فیلتر شده بود دیگر اسم کاربر را در تفکیک هزینه ها نمایش نده --}}
+                                                        @if ($quser)
+                                                            {{ $case_cost->amount }}
+                                                        @else
+                                                            {{ $case_cost->counterparty()->name }}
+                                                            ({{ $case_cost->amount }})
+                                                            <br>
+                                                        @endif
                                                     @endforeach
                                                     {{-- @if ($totalCaseCost)
                                                         مجموع ({{ number_format($totalCaseCost) }})
