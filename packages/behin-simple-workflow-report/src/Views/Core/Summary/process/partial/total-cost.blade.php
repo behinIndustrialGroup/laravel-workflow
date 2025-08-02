@@ -138,7 +138,7 @@
                                             <td>{{ $row->process_name ?? '' }}</td>
                                             <td>
                                                 @foreach ($row->in_mapa_experts as $in_mapa_expert)
-                                                {{ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert }}<br>
+                                                    {{ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert }}<br>
                                                 @endforeach
                                                 @foreach ($row->out_mapa_experts as $out_mapa_expert)
                                                     {{ getUserInfo($out_mapa_expert)?->name ? getUserInfo($out_mapa_expert)->name : $out_mapa_expert }}<br>
@@ -150,29 +150,52 @@
                                                 {{ number_format($row->total_cost) }}
                                             </td>
                                             <td>
-                                                @php
-                                                    $totalCaseCost = 0
-                                                @endphp
-                                                @foreach ($row->case_costs as $case_cost)
+                                                @if ($row->case_costs)
                                                     @php
-                                                        $totalCaseCost += (int)(str_replace(',', '', $case_cost->amount));
-                                                        $totalCaseCosts += (int)(str_replace(',', '', $case_cost->amount));
+                                                        $totalCaseCost = 0;
                                                     @endphp
-                                                    {{ $case_cost->counterparty()->name }} ({{ $case_cost->amount }})<br>
-                                                @endforeach
-                                                @if ($totalCaseCost)
-                                                    مجموع ({{ number_format($totalCaseCost) }})
+                                                    @foreach ($row->case_costs as $case_cost)
+                                                        @php
+                                                            $totalCaseCost += (int) str_replace(
+                                                                ',',
+                                                                '',
+                                                                $case_cost->amount,
+                                                            );
+                                                            $totalCaseCosts += (int) str_replace(
+                                                                ',',
+                                                                '',
+                                                                $case_cost->amount,
+                                                            );
+                                                        @endphp
+                                                        {{ $case_cost->counterparty()->name }}
+                                                        ({{ $case_cost->amount }})<br>
+                                                    @endforeach
+                                                    @if ($totalCaseCost)
+                                                        مجموع ({{ number_format($totalCaseCost) }})
+                                                    @endif
+                                                @else
+                                                    @php
+                                                        $totalCaseCosts += (int) str_replace(',', '', $row->total_cost);
+                                                    @endphp
+                                                    {{ number_format($row->total_cost) }}
                                                 @endif
                                             </td>
                                             <td>{{ $row->total_payment ? number_format($row->total_payment) : '' }}</td>
-                                            <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}</td>
+                                            <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                            </td>
                                             @php
                                                 $totalRepairCost += $row->total_cost;
                                                 $totalPaymentAmount += $row->total_payment;
-                                                if($row->process_id == "4bb6287b-9ddc-4737-9573-72071654b9de" or $row->process_name == "داخلی"){
+                                                if (
+                                                    $row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or
+                                                    $row->process_name == 'داخلی'
+                                                ) {
                                                     $numberOfInternalProcess++;
                                                 }
-                                                if($row->process_id == "35a5c023-5e85-409e-8ba4-a8c00291561c" or $row->process_name == "خارجی"){
+                                                if (
+                                                    $row->process_id == '35a5c023-5e85-409e-8ba4-a8c00291561c' or
+                                                    $row->process_name == 'خارجی'
+                                                ) {
                                                     $numberOfExternalProcess++;
                                                 }
                                             @endphp
