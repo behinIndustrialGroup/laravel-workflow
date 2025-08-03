@@ -27,7 +27,7 @@ class OnCreditReportController extends Controller
     {
         $onCredits = Financials::whereNotNull('case_number')
             ->whereIn('fix_cost_type', ['حساب دفتری'])
-            ->whereNull('is_passed')
+            // ->whereNull('is_passed')
             ->get();
         return view('SimpleWorkflowReportView::Core.OnCredit.index', compact('onCredits'));
     }

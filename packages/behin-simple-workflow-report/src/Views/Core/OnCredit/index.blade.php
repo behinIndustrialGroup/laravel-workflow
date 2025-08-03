@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                     @foreach ($onCredits as $onCredit)
-                        <tr>
+                        <tr @if($onCredit->is_passed) style="background-color: #d4edda;" @endif>
                             <td>
                                 <a
                                     href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $onCredit->case_number]) }}">
@@ -62,7 +62,7 @@
                             {{-- دکمه پاس شد --}}
                             <td>
                                 @if ($onCredit->is_passed)
-                                    <span class="badge bg-success">تسویه شد</span>
+                                    {{-- <span class="badge bg-success">تسویه شد</span> --}}
                                 @else
                                     <form method="POST"
                                         action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
