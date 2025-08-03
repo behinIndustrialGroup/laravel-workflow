@@ -125,13 +125,7 @@ class PersonelActivityController extends Controller
         $newQuery = Inbox::where('actor', $user_id)
             ->where('status', 'new')
             ->with('case');
-        if ($from) {
-            $newQuery->whereDate('updated_at', '>=', $from);
-        }
-
-        if ($to) {
-            $newQuery->whereDate('updated_at', '<=', $to);
-        }
+        
         $items = $newQuery
             ->get()
             ->unique(function ($item) {
