@@ -160,7 +160,7 @@
                                                                     '',
                                                                     $case_cost->amount,
                                                                 );
-                                                                $totalCaseCosts += (int) str_replace(
+                                                                $totalRepairCost += (int) str_replace(
                                                                     ',',
                                                                     '',
                                                                     $case_cost->amount,
@@ -175,7 +175,7 @@
                                                         @endif
                                                     @else
                                                         @php
-                                                            $totalCaseCosts += (int) str_replace(
+                                                            $totalRepairCost += (int) str_replace(
                                                                 ',',
                                                                 '',
                                                                 $row->total_cost,
@@ -184,6 +184,13 @@
                                                         {{ number_format($row->total_cost) }}
                                                     @endif
                                                 @else
+                                                    @php
+                                                        $totalRepairCost += (int) str_replace(
+                                                            ',',
+                                                            '',
+                                                            $row->total_cost,
+                                                        );
+                                                    @endphp
                                                     {{ number_format($row->total_cost) }}
                                                 @endif
                                             </td>
