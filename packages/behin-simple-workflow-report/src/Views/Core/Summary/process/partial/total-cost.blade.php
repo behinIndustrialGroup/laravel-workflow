@@ -113,7 +113,7 @@
                                         <th>{{ trans('fields.mapa_expert') }}</th>
                                         <th>{{ trans('fields.fix_cost_date') }}</th>
                                         <th>{{ trans('fields.Declared Cost') }}</th>
-                                        <th>تفکیک هزینه ها</th>
+                                        <th style="background-color: #d4edda;">تفکیک هزینه ها</th>
                                         <th>{{ trans('fields.payment_amount') }}</th>
                                         <th>{{ trans('fields.payment_date') }}</th>
                                     </tr>
@@ -194,7 +194,7 @@
                                                     {{ number_format($row->total_cost) }}
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td style="background-color: #d4edda;">
                                                 {{-- اگر تفکیک هزینه ها وجود داشت نمایش بده اگر نه همان تعیین هزینه را نمایش بده --}}
                                                 @if (count($row->case_costs))
                                                     @php
