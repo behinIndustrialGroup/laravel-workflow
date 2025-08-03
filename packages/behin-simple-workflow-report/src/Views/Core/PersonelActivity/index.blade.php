@@ -58,7 +58,9 @@
                                 <tr>
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
-                                    <td>{{ $user->inbox }}</td>
+                                    <td>
+                                        <i class="fa fa-external-link text-primary" onclick="showInboxes(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
+                                        {{ $user->inbox }}</td>
                                     <td>
                                         <i class="fa fa-external-link text-primary" onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
                                         {{ $user->done }}
@@ -76,6 +78,14 @@
 @section('script')
     <script>
         initial_view()
+        function showInboxes(userId, from = '', to = ''){
+            url = "{{ route('simpleWorkflowReport.personel-activity.showInboxes', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
+
         function showDones(userId, from = '', to = ''){
             url = "{{ route('simpleWorkflowReport.personel-activity.showDones', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)

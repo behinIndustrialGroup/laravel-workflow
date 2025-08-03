@@ -113,4 +113,31 @@ class PersonelActivityController extends Controller
 
         return view('SimpleWorkflowReportView::Core.PersonelActivity.show', compact('items'));
     }
+
+    public function showInboxes($user_id, $from = null, $to = null)
+    {
+        $allowedProcessIds = $this->allowedProcessIds;
+        $from = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
+        $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
+        $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
+
+        $newQuery = Inbox::where('actor', $user_id)
+            ->where('status', 'new')
+            ->with('case');
+        if ($from) {
+            $newQuery->whereDate('updated_at', '>=', $from);
+        }
+
+        if ($to) {
+            $newQuery->whereDate('updated_at', '<=', $to);
+        }
+        $items = $newQuery
+            ->get()
+            ->unique(function ($item) {
+                return $item->case?->number;
+            });
+
+        return view('SimpleWorkflowReportView::Core.PersonelActivity.show', compact('items'));
+    }
 }
