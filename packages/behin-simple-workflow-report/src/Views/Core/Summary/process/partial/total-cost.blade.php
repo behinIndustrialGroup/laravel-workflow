@@ -236,7 +236,7 @@
                                             <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}
                                             </td>
                                             @php
-                                                $totalRepairCost += $row->total_cost;
+                                                // $totalRepairCost += $row->total_cost;
                                                 $totalPaymentAmount += $row->total_payment;
                                                 if (
                                                     $row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or
