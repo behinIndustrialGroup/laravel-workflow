@@ -128,8 +128,8 @@ class PersonelActivityController extends Controller
         
         $items = $newQuery
             ->get()
-            ->unique(function ($item) {
-                return $item->case?->number;
+            ->each(function ($item) {
+                $item->case_number = $item->case?->number;
             });
 
         return view('SimpleWorkflowReportView::Core.PersonelActivity.show', compact('items'));
