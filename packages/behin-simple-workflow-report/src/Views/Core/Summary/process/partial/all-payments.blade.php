@@ -178,26 +178,26 @@
                                 </tr>
                             @endif
                         @endforeach
-                        <tfoot>
-                            <tr class="bg-success">
-                                <td></td>
-                                <td>
-                                    داخلی: {{ $numberOfInternalProcess }}<br>
-                                    خارجی: {{ $numberOfExternalProcess }}
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="d-none"></td>
-                                <td >مجموع</td>
-                                <td>{{ number_format($totalPayment) }}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
 
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th colspan="2"></th>
+                            <th colspan="2" style="text-align:right">جمع این صفحه:</th>
+                            <th id="total-payment"></th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </tfoot>
                 </table>
+            </div>
+            <div class="card-footer bg-secondary">
+                <div class="row">
+                    <div class="col-md-6">
+                        مجموع کل: {{ number_format($totalPayment) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -227,6 +227,32 @@
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
                 },
+                footerCallback: function(row, data, start, end, display) {
+                    var api = this.api();
+
+                    // تابع تبدیل به عدد
+                    var intVal = function(i) {
+                        if (typeof i === 'string') {
+                            return parseInt(i.replace(/,/g, '')) || 0;
+                        }
+                        return typeof i === 'number' ? i : 0;
+                    };
+
+                    // مجموع فقط در صفحه فعلی (و فیلترشده)
+                    var pageTotal = api
+                        .column(7, {
+                            page: 'current'
+                        }) // ستون مبلغ
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // نمایش در فوتر
+                    $(api.column(6).footer()).html(
+                        pageTotal.toLocaleString('fa-IR') + ' ریال'
+                    );
+                }
             });
             $('#mapa-expert').DataTable({
                 "dom": 'Bfrtip',
