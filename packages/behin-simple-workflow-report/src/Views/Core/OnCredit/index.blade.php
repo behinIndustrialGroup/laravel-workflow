@@ -88,6 +88,13 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" style="text-align:right">جمع این صفحه:</th>
+                        <th id="page-total"></th>
+                        <th colspan="3"></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <div class="card-footer">
@@ -101,12 +108,41 @@
 @endsection
 
 @section('script')
+@section('script')
     <script>
-        $('#on-credit-list').DataTable({
-            "pageLength": 25,
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            }
+        $(document).ready(function() {
+            $('#on-credit-list').DataTable({
+                pageLength: 25,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                },
+                footerCallback: function(row, data, start, end, display) {
+                    var api = this.api();
+
+                    // تابع تبدیل به عدد
+                    var intVal = function(i) {
+                        if (typeof i === 'string') {
+                            return parseInt(i.replace(/,/g, '')) || 0;
+                        }
+                        return typeof i === 'number' ? i : 0;
+                    };
+
+                    // مجموع فقط در صفحه فعلی (و فیلترشده)
+                    var pageTotal = api
+                        .column(2, {
+                            page: 'current'
+                        }) // ستون مبلغ
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // نمایش در فوتر
+                    $(api.column(2).footer()).html(
+                        pageTotal.toLocaleString('fa-IR') + ' ریال'
+                    );
+                }
+            });
         });
     </script>
 @endsection
