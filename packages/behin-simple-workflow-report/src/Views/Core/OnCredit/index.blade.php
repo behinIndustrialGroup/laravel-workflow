@@ -97,7 +97,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="card-footer">
+        <div class="card-footer bg-secondary">
             <div class="row">
                 <div class="col-md-6">
                     مجموع کل تسویه نشده ها: {{ number_format($totalCost) }}
