@@ -42,6 +42,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalCost = 0;
+                    @endphp
                     @foreach ($onCredits as $onCredit)
                         <tr @if($onCredit->is_passed) style="background-color: #d4edda;" @endif>
                             <td>
@@ -52,7 +55,12 @@
                                 {{ $onCredit->case_number }}
                             </td>
                             <td>{{ $onCredit->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
-                            <td>{{ number_format($onCredit->cost) }}</td>
+                            <td>
+                                @php
+                                    $totalCost += (int) str_replace(',', '',$onCredit->cost);
+                                @endphp
+                                {{ number_format($onCredit->cost) }}
+                            </td>
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
 
 
@@ -77,6 +85,16 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr class="bg-success">
+                        <td></td>
+                        <td>مجموع</td>
+                        <td>{{ number_format($totalCost) }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
