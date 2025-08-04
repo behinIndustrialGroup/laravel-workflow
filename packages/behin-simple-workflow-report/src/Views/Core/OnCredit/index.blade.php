@@ -46,7 +46,7 @@
                         $totalCost = 0;
                     @endphp
                     @foreach ($onCredits as $onCredit)
-                        <tr @if($onCredit->is_passed) style="background-color: #d4edda;" @endif>
+                        <tr @if ($onCredit->is_passed) style="background-color: #d4edda;" @endif>
                             <td>
                                 <a
                                     href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $onCredit->case_number]) }}">
@@ -57,7 +57,10 @@
                             <td>{{ $onCredit->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                             <td>
                                 @php
-                                    $totalCost += (int) str_replace(',', '',$onCredit->cost);
+                                    $cost = (int) str_replace(',', '', $onCredit->cost);
+                                    if (!$onCredit->is_passed) {
+                                        $totalCost += $cost;
+                                    }
                                 @endphp
                                 {{ number_format($onCredit->cost) }}
                             </td>
@@ -85,17 +88,14 @@
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr class="bg-success">
-                        <td></td>
-                        <td>مجموع</td>
-                        <td>{{ number_format($totalCost) }}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
             </table>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-md-6">
+                    مجموع کل تسویه نشده ها: {{ number_format($totalCost) }}
+                </div>
+            </div>
         </div>
     </div>
 @endsection
