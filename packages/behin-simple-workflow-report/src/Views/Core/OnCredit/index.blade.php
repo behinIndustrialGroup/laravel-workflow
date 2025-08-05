@@ -111,38 +111,40 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $('#on-credit-list').DataTable({
-                pageLength: 25,
-                language: {
-                    url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-                },
-                footerCallback: function(row, data, start, end, display) {
-                    var api = this.api();
+    $('#on-credit-list').DataTable({
+        pageLength: 25,
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+        },
+        footerCallback: function(row, data, start, end, display) {
+            var api = this.api();
 
-                    // تابع تبدیل به عدد
-                    var intVal = function(i) {
-                        if (typeof i === 'string') {
-                            return parseInt(i.replace(/,/g, '')) || 0;
-                        }
-                        return typeof i === 'number' ? i : 0;
-                    };
+            var intVal = function(i) {
+                if (typeof i === 'string') {
+                    return parseInt(i.replace(/,/g, '')) || 0;
+                }
+                return typeof i === 'number' ? i : 0;
+            };
 
-                    // مجموع فقط در صفحه فعلی (و فیلترشده)
-                    var pageTotal = api
-                        .column(2, {
-                            page: 'current'
-                        }) // ستون مبلغ
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+            var pageTotal = 0;
 
-                    // نمایش در فوتر
-                    $(api.column(2).footer()).html(
-                        pageTotal.toLocaleString('fa-IR') + ' ریال'
-                    );
+            display.forEach(function(rowIdx) {
+                var amount = api.cell(rowIdx, 2).data(); // مبلغ
+                var tasvie = api.cell(rowIdx, -1).nodes().to$().text().trim(); // ستون تسویه
+
+                // اگر تسویه نشده (فرض بر این است که فرم دارد => طول متن بیشتر از 0)
+                if (tasvie.length > 0) {
+                    pageTotal += intVal(amount);
                 }
             });
-        });
+
+            // نمایش در فوتر
+            $(api.column(2).footer()).html(
+                pageTotal.toLocaleString('fa-IR') + ' ریال'
+            );
+        }
+    });
+});
+
     </script>
 @endsection
