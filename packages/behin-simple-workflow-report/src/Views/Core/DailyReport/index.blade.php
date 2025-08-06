@@ -25,7 +25,7 @@
                             <label for="user_id" class="form-label fw-bold">پرسنل</label>
                             <select name="user_id" id="user_id" class="form-control select2 rounded-pill shadow-sm">
                                 <option value="">همه پرسنل</option>
-                                @foreach (\App\Models\User::all() as $user)
+                                @foreach ($users as $user)
                                     <option value="{{ $user->id }}"
                                         {{ request('user_id') == $user->id ? 'selected' : '' }}>
                                         {{ $user->name }}
