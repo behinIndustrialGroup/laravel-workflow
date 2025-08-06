@@ -39,6 +39,8 @@
                                     <td>
                                         <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
                                             class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>
+                                        <a href="{{ route('simpleWorkflow.inbox.changeStatus', $row->id) }}"
+                                            class="btn btn-sm btn-warning">{{ trans('fields.Change Status') }}</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -133,6 +133,16 @@ class InboxController extends Controller
         ]);
     }
 
+    public function changeStatus($id)
+    {
+        $inbox = self::getById($id);
+        $inbox->status = $inbox->status == 'done' ? 'new' : 'done';
+        $inbox->save();
+        return redirect()->back()->with([
+            'success' => trans('fields.Inbox updated successfully')
+        ]);
+    }
+
     public static function view($inboxId)
     {
         $inbox = InboxController::getById($inboxId);
