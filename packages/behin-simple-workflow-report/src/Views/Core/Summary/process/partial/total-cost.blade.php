@@ -30,6 +30,7 @@
     // dd($finTable);
     // پردازش آمار کاربران
     $users = DB::table('users')
+        ->whereNull('deleted_at')
         ->get()
         ->each(function ($user) use ($finTable) {
             $userItems = $finTable->where('mapa_expert_id', $user->id);
