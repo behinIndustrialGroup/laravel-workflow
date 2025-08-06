@@ -3,7 +3,6 @@
 namespace Behin\SimpleWorkflowReport\Controllers\Core;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\CaseController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\InboxController;
@@ -17,6 +16,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
+use BehinUserRoles\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
