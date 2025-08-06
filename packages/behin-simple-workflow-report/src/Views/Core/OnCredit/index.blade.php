@@ -111,40 +111,41 @@
 @section('script')
     <script>
         $(document).ready(function() {
-    $('#on-credit-list').DataTable({
-        pageLength: 25,
-        language: {
-            url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-        },
-        footerCallback: function(row, data, start, end, display) {
-            var api = this.api();
+            $('#on-credit-list').DataTable({
+                pageLength: 25,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+                },
+                footerCallback: function(row, data, start, end, display) {
+                    var api = this.api();
 
-            var intVal = function(i) {
-                if (typeof i === 'string') {
-                    return parseInt(i.replace(/,/g, '')) || 0;
-                }
-                return typeof i === 'number' ? i : 0;
-            };
+                    var intVal = function(i) {
+                        if (typeof i === 'string') {
+                            return parseInt(i.replace(/,/g, '')) || 0;
+                        }
+                        return typeof i === 'number' ? i : 0;
+                    };
 
-            var pageTotal = 0;
+                    var pageTotal = 0;
 
-            display.forEach(function(rowIdx) {
-                var amount = api.cell(rowIdx, 2).data(); // مبلغ
-                var tasvie = api.cell(rowIdx, -1).nodes().to$().text().trim(); // ستون تسویه
+                    api.rows({
+                        page: 'current'
+                    }).every(function(rowIdx, tableLoop, rowLoop) {
+                        var amount = this.data()[2]; // ستون مبلغ
+                        var tasvie = $(this.node()).find('td:last').text()
+                    .trim(); // ستون تسویه از DOM
 
-                // اگر تسویه نشده (فرض بر این است که فرم دارد => طول متن بیشتر از 0)
-                if (tasvie.length > 0) {
-                    pageTotal += intVal(amount);
+                        if (tasvie.length > 0) {
+                            pageTotal += intVal(amount);
+                        }
+                    });
+
+                    // نمایش در فوتر
+                    $(api.column(2).footer()).html(
+                        pageTotal.toLocaleString('fa-IR') + ' ریال'
+                    );
                 }
             });
-
-            // نمایش در فوتر
-            $(api.column(2).footer()).html(
-                pageTotal.toLocaleString('fa-IR') + ' ریال'
-            );
-        }
-    });
-});
-
+        });
     </script>
 @endsection
