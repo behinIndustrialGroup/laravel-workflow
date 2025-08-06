@@ -36,6 +36,10 @@
                                     <td>{{ trans('fields.' . $row->status) }}</td>
                                     <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
                                     <td dir="ltr">{{ $row->updated_at != $row->created_at ? toJalali($row->updated_at)->format('Y-m-d H:i') : '' }}</td>
+                                    <td>
+                                        <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
+                                            class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
