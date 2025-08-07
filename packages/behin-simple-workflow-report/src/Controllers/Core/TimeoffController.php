@@ -87,13 +87,18 @@ class TimeoffController extends Controller
         return $items;
     }
 
-    public static function todayItems()
+    /**
+     * @param null $from timestamps
+     * @param null $to timestamps
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function todayItems($from = null, $to = null)
     {
         $todayShamsi = Jalalian::now();
         $thisYear = $todayShamsi->getYear();
         $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
-        $startOfToday = Carbon::today()->timestamp;
-        $endOfToday = Carbon::today()->endOfDay()->timestamp;
+        $startOfToday = $from ? $from : Carbon::today()->timestamp;
+        $endOfToday = $to ? $to : Carbon::today()->endOfDay()->timestamp;
         $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')
         ->where('start_timestamp', '>=', $startOfToday)
         ->where('end_timestamp', '<=', $endOfToday)
