@@ -131,5 +131,13 @@
             url = url.replace('to', to)
             open_admin_modal(url);
         }
+
+        function showExternalAsAssistant(userId, from = '', to = '') {
+            url = "{{ route('simpleWorkflowReport.daily-report.show-external-as-assistant', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
     </script>
 @endsection

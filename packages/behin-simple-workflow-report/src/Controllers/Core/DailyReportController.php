@@ -62,20 +62,21 @@ class DailyReportController extends Controller
             $internal = Part_reports::query();
 
             $external = Repair_reports::query();
+            $externalAsAssistant = Repair_reports::query();
 
             $mapa_center = Mapa_center_fix_report::query();
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
                 $external = $external->whereDate('created_at', '>=', $from);
-                $externalAsAssistant = $external->whereDate('created_at', '>=', $from);
+                $externalAsAssistant = $externalAsAssistant->whereDate('created_at', '>=', $from);
                 $mapa_center = $mapa_center->whereDate('updated_at', '>=', $from);
             }
 
             if ($to) {
                 $internal = $internal->whereDate('updated_at', '<=', $to);
                 $external = $external->whereDate('created_at', '<=', $to);
-                $externalAsAssistant = $external->whereDate('created_at', '<=', $to);
+                $externalAsAssistant = $externalAsAssistant->whereDate('created_at', '<=', $to);
                 $mapa_center = $mapa_center->whereDate('updated_at', '<=', $to);
             }
             $row->internal = $internal->where('registered_by', $row->id)->distinct('case_number')->count('case_number');
@@ -154,5 +155,27 @@ class DailyReportController extends Controller
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-mapa-center', compact('items'));
+    }
+
+    public function showExternalAsAssistant($user_id, $from = null, $to = null)
+    {
+        $allowedProcessIds = $this->allowedProcessIds;
+        $from = $from ? convertPersianToEnglish($from) : null;
+        $to = $from ? convertPersianToEnglish($from) : null;
+        $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
+        $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
+
+        $query = Repair_reports::query();
+        if ($from) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+        $items = $query->where('mapa_expert_companions', 'LIKE', '%"' . $user_id . '"%')->groupBy('case_number')
+            ->get();
+
+        return view('SimpleWorkflowReportView::Core.DailyReport.show-external-as-assistant', compact('items'));
     }
 }
