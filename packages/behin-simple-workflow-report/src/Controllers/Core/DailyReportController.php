@@ -81,7 +81,9 @@ class DailyReportController extends Controller
             $row->mapa_center = $mapa_center->where('expert', $row->id)->distinct('case_number')->count('case_number');
         });
 
-        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users'));
+        $timeoffItems = TimeoffController::items(null);
+
+        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users', 'timeoffItems'));
     }
 
     public function showInternal($user_id, $from = null, $to = null)

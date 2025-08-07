@@ -55,7 +55,9 @@
 
                         <tbody>
                             @foreach ($users as $user)
-                                <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0) style="background-color: #e6f4ea;" @endif>
+                                <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0) style="background-color: #e6f4ea;" @endif
+                                    @if($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #ffbb3d;" @endif
+                                    >
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>
