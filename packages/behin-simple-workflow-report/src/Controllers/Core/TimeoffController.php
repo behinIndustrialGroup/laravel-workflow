@@ -86,4 +86,18 @@ class TimeoffController extends Controller
         }
         return $items;
     }
+
+    public static function todayItems()
+    {
+        $todayShamsi = Jalalian::now();
+        $thisYear = $todayShamsi->getYear();
+        $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
+        $startOfToday = Carbon::today()->timestamp;
+        $endOfToday = Carbon::today()->endOfDay()->timestamp;
+        $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')
+        ->where('start_timestamp', '>=', $startOfToday)
+        ->where('end_timestamp', '<=', $endOfToday)
+        ->where('approved', 1)->orderBy('start_timestamp', 'desc')->get();
+        return $items;
+    }
 }
