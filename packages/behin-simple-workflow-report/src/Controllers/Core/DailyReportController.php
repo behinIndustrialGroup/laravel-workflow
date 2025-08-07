@@ -67,13 +67,13 @@ class DailyReportController extends Controller
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
-                $external = $external->whereDate('updated_at', '>=', $from);
+                $external = $external->whereDate('created_at', '>=', $from);
                 $mapa_center = $mapa_center->whereDate('updated_at', '>=', $from);
             }
 
             if ($to) {
                 $internal = $internal->whereDate('updated_at', '<=', $to);
-                $external = $external->whereDate('updated_at', '<=', $to);
+                $external = $external->whereDate('created_at', '<=', $to);
                 $mapa_center = $mapa_center->whereDate('updated_at', '<=', $to);
             }
             $row->internal = $internal->where('registered_by', $row->id)->distinct('case_number')->count('case_number');
@@ -117,11 +117,11 @@ class DailyReportController extends Controller
 
         $query = Repair_reports::query();
         if ($from) {
-            $query->whereDate('updated_at', '>=', $from);
+            $query->whereDate('created_at', '>=', $from);
         }
 
         if ($to) {
-            $query->whereDate('updated_at', '<=', $to);
+            $query->whereDate('created_at', '<=', $to);
         }
         $items = $query->where('mapa_expert', $user_id)->groupBy('case_number')
             ->get();
