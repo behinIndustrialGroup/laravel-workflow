@@ -7,6 +7,7 @@
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
     $toDate = request('to_date') ?? $todayJalali;
+    // dd($timeoffItems);
 @endphp
 
 
@@ -57,7 +58,7 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
-                                    @if($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #ffbb3d;" @endif
+                                    @if($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif
                                     >
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
