@@ -47,9 +47,10 @@
                             <tr>
                                 <th>شماره</th>
                                 <th>نام</th>
+                                <th>مپاسنتر</th>
                                 <th>داخلی</th>
                                 <th>خارجی</th>
-                                <th>مپاسنتر</th>
+                                <th>همکار</th>
                             </tr>
                         </thead>
 
@@ -60,6 +61,14 @@
                                     >
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
+                                    <td>
+                                        @if ($user->mapa_center > 0)
+                                            <i class="fa fa-external-link text-primary"
+                                                onclick="showMapaCenter(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                            </i>
+                                            {{ $user->mapa_center }}
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($user->internal > 0)
                                             <i class="fa fa-external-link text-primary"
@@ -77,11 +86,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($user->mapa_center > 0)
+                                        @if ($user->externalAsAssistant > 0)
                                             <i class="fa fa-external-link text-primary"
-                                                onclick="showMapaCenter(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                onclick="showExternalAsAssistant(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
                                             </i>
-                                            {{ $user->mapa_center }}
+                                            {{ $user->externalAsAssistant }}
                                         @endif
                                     </td>
                                 </tr>
