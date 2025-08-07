@@ -7,7 +7,6 @@
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
     $toDate = request('to_date') ?? $todayJalali;
-    dd($timeoffItems);
 @endphp
 
 
