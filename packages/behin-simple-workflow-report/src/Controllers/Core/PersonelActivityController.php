@@ -34,8 +34,8 @@ class PersonelActivityController extends Controller
             'ee209b0a-251c-438e-ab14-2018335eba6d'
         ];
     }
-    public static function filterItems($request){
-        $allowedProcessIds = self::$allowedProcessIds;
+    public function filterItems($request){
+        $allowedProcessIds = $this->allowedProcessIds;
         // تاریخ امروز شمسی به فرمت Y-m-d
         $defaultFrom = Jalalian::now()->format('Y-m-d');
 
@@ -83,7 +83,7 @@ class PersonelActivityController extends Controller
 
     public function index(Request $request)
     {
-        $users = self::filterItems($request);
+        $users = $this->filterItems($request);
         return view('SimpleWorkflowReportView::Core.PersonelActivity.index', compact('users'));
     }
 
