@@ -34,22 +34,22 @@ class PersonelActivityController extends Controller
             'ee209b0a-251c-438e-ab14-2018335eba6d'
         ];
     }
-    public function filterItems($request){
+    public function filterItems($from_date, $to_date, $user_id){
         $allowedProcessIds = $this->allowedProcessIds;
         // تاریخ امروز شمسی به فرمت Y-m-d
         $defaultFrom = Jalalian::now()->format('Y-m-d');
 
         // اگر کاربر مقدار وارد نکرده باشه، تاریخ امروز در نظر گرفته میشه
-        $from_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
-        $to_input = convertPersianToEnglish($request->to_date ?? $from_input);
+        $from_input = convertPersianToEnglish($from_date ?? $defaultFrom);
+        $to_input = convertPersianToEnglish($to_date ?? $from_input);
 
         // تبدیل تاریخ شمسی به میلادی
         $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon();
         $to = Jalalian::fromFormat('Y-m-d', $to_input)->toCarbon()->endOfDay();
 
         $query = User::query();
-        if ($request->filled('user_id')) {
-            $query->where('id', $request->user_id);
+        if ($user_id) {
+            $query->where('id', $user_id);
         }
 
         $users = $query->get()->each(function ($row) use ($allowedProcessIds, $from, $to) {
@@ -83,7 +83,7 @@ class PersonelActivityController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->filterItems($request);
+        $users = $this->filterItems($request->from_date, $request->to_date, $request->user_id);
         return view('SimpleWorkflowReportView::Core.PersonelActivity.index', compact('users'));
     }
 

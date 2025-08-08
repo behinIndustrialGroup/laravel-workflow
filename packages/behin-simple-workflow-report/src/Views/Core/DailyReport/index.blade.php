@@ -3,11 +3,15 @@
 @section('title', 'گزارشات روزانه')
 @php
     use Morilog\Jalali\Jalalian;
+    use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
+    use BehinUserRoles\Models\User;
 
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
     $toDate = request('to_date') ?? $todayJalali;
-    // dd($timeoffItems);
+    $recieptionists = User::whereIn('role_id', [4, 6, 11, 13, 17])->pluck('id')->toArray();
+    $items = new PersonelActivityController();
+    $items = $items->filterItems($fromDate, $toDate, request('user_id'));
 @endphp
 
 
@@ -19,8 +23,9 @@
                     <div class="row g-3 align-items-end">
                         <div class="col-md-3">
                             <label for="from_date" class="form-label fw-bold">تاریخ</label>
-                            <input type="text" id="from_date" name="from_date" class="form-control persian-date rounded-pill shadow-sm"
-                                value="{{ $fromDate }}" placeholder="مثلاً 1403/04/01">
+                            <input type="text" id="from_date" name="from_date"
+                                class="form-control persian-date rounded-pill shadow-sm" value="{{ $fromDate }}"
+                                placeholder="مثلاً 1403/04/01">
                         </div>
                         <div class="col-md-3">
                             <label for="user_id" class="form-label fw-bold">پرسنل</label>
@@ -58,8 +63,7 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
-                                    @if($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif
-                                    >
+                                    @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>
@@ -102,6 +106,42 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="col-sm-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>شماره</th>
+                                <th>نام</th>
+                                <th>در دست اقدام</th>
+                                <th>انجام داده</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($items as $user)
+                                @if (in_array($user->id, $recieptionists))
+                                    <tr>
+                                        <td>{{ $user->number }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            <i class="fa fa-external-link text-primary"
+                                                onclick="showInboxes(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
+                                            {{ $user->inbox }}
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-external-link text-primary"
+                                                onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
+                                            {{ $user->done }}
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -135,6 +175,21 @@
 
         function showExternalAsAssistant(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.daily-report.show-external-as-assistant', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
+        function showInboxes(userId, from = '', to = ''){
+            url = "{{ route('simpleWorkflowReport.personel-activity.showInboxes', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
+
+        function showDones(userId, from = '', to = ''){
+            url = "{{ route('simpleWorkflowReport.personel-activity.showDones', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
             url = url.replace('from', from)
             url = url.replace('to', to)
