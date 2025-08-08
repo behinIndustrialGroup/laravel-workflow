@@ -34,16 +34,14 @@ class PersonelActivityController extends Controller
             'ee209b0a-251c-438e-ab14-2018335eba6d'
         ];
     }
-    public function index(Request $request)
-    {
-        $allowedProcessIds = $this->allowedProcessIds;
+    public static function filterItems($request){
+        $allowedProcessIds = self::$allowedProcessIds;
         // تاریخ امروز شمسی به فرمت Y-m-d
         $defaultFrom = Jalalian::now()->format('Y-m-d');
-        $defaultTo = Jalalian::now()->format('Y-m-d');
 
         // اگر کاربر مقدار وارد نکرده باشه، تاریخ امروز در نظر گرفته میشه
         $from_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
-        $to_input = convertPersianToEnglish($request->to_date ?? $defaultTo);
+        $to_input = convertPersianToEnglish($request->to_date ?? $from_input);
 
         // تبدیل تاریخ شمسی به میلادی
         $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon();
@@ -80,7 +78,12 @@ class PersonelActivityController extends Controller
                 ->count(); // مستقیماً شمارش بدون ذخیره مجموعه
 
         });
+        return $users;
+    }
 
+    public function index(Request $request)
+    {
+        $users = self::filterItems($request);
         return view('SimpleWorkflowReportView::Core.PersonelActivity.index', compact('users'));
     }
 
