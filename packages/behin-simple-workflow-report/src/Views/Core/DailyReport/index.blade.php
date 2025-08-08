@@ -109,7 +109,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="col-sm-12 table-responsive">
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>شماره</th>
