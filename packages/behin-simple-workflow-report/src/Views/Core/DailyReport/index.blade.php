@@ -121,7 +121,8 @@
                         <tbody>
                             @foreach ($items as $user)
                                 @if (in_array($user->id, $recieptionists))
-                                    <tr>
+                                    <tr @if($user->done > 0) style="background-color: #e6f4ea;" @endif
+                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>
