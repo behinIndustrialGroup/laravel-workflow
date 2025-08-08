@@ -101,7 +101,7 @@ class TimeoffController extends Controller
         $endOfToday = $today ? $today->endOfDay()->timestamp : Carbon::today()->endOfDay()->timestamp;
         $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')
         ->where('start_timestamp', '<=', $startOfToday)
-        ->where('end_timestamp', '>=', $endOfToday)
+        ->where('end_timestamp', '>=', $startOfToday)
         ->where('approved', 1)->orderBy('start_timestamp', 'desc')->get();
         return $items;
     }
