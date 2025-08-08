@@ -15,12 +15,12 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        @if ($item->case_number)
+                        @if ($item->case->number)
                             <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $item->case_number]) }}"
                                 class="text-decoration-none me-1">
                                 <i class="fa fa-external-link text-primary"></i>
                             </a>
-                            {{ $item->case_number ?? '' }}
+                            {{ $item->case->number ?? '' }}
                         @endif
                     </td>
                     <td>{{ $item->case ? $item->case->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
