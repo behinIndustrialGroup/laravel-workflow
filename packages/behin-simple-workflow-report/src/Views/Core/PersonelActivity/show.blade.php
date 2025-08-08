@@ -24,8 +24,8 @@
                         @endif
                     </td>
                     <td>{{ $item->case ? $item->case->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
-                    <td>{{ toJalali($item->created_at) }}</td>
-                    <td>{{ toJalali($item->updated_at) }}</td>
+                    <td dir="ltr">{{ toJalali($item->created_at)->format('Y-m-d H:i') }}</td>
+                    <td dir="ltr">{{ toJalali($item->updated_at)->format('Y-m-d H:i') }}</td>
                 </tr>
             @endforeach
         </tbody>
