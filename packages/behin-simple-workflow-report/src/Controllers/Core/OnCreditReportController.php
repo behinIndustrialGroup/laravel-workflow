@@ -38,7 +38,14 @@ class OnCreditReportController extends Controller
 
         if ($request->has('settlement_date')) {
             $onCredit->settlement_date = $request->settlement_date;
-            $onCredit->settlement_date_timestamp = $request->settlement_date_timestamp;
+            $onCredit->settlement_date_timestamp = convertPersianDateToTimestamp($request->settlement_date);
+        }
+        if ($request->has('invoice_number')) {
+            $onCredit->invoice_number = $request->invoice_number;
+        }
+        if ($request->has('invoice_date')) {
+            $onCredit->invoice_date = $request->invoice_date;
+            $onCredit->invoice_date_timestamp = convertPersianDateToTimestamp($request->invoice_date);
         }
         if ($request->has('is_passed')) {
             $onCredit->is_passed = true;
