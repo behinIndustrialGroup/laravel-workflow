@@ -71,15 +71,14 @@
                             <td>
                                 <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
                                     method="POST"
-                                    onkeypress="return event.charCode != 13;">
+                                    onfocusout="return event.charCode != 13;">
                                     @csrf
                                     @method('PATCH')
-                                    <input type="text" id="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
-                                    <input type="hidden" id="settlement_date_timestamp" name="settlement_date_timestamp" value="{{ $onCredit->settlement_date_timestamp }}">
+                                    <input type="text" id="settlement_date" class="form-control settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
                                     <script>
                                         $(document).ready(function() {
-                                            $('#settlement_date').persianDatepicker({
-                                                'altField': '#settlement_date_timestamp'
+                                            $('.settlement_date').persianDatepicker({
+                                                'format': 'YYYY-MM-DD',
                                             });
                                         });
                                     </script>
