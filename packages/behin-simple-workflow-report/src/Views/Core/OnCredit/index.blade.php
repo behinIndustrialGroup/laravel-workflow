@@ -70,8 +70,7 @@
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
                             <td>
                                 <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
-                                    method="POST"
-                                    onblur="return submitForm(this)">
+                                    method="POST">
                                     @csrf
                                     @method('PATCH')
                                     <input type="text" id="settlement_date" class="form-control settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
