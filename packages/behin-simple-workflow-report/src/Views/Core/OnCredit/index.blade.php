@@ -73,14 +73,11 @@
                                     method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <input type="text" id="settlement_date" class="form-control settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
+                                    <input type="text" id="settlement_date" class="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
                                     <script>
                                         $(document).ready(function() {
                                             $('.settlement_date').persianDatepicker({
                                                 'format': 'YYYY-MM-DD',
-                                                'onBlur': function() {
-                                                    submitForm(this.form);
-                                                }
                                             });
                                         });
                                     </script>
@@ -128,10 +125,6 @@
 @section('script')
 @section('script')
     <script>
-        function submitForm(form) {
-            form.submit();
-            return false;
-        }
         $(document).ready(function() {
             $('#on-credit-list').DataTable({
                 pageLength: 25,
