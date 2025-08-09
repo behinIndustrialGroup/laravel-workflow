@@ -9,7 +9,9 @@
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
     $toDate = request('to_date') ?? $todayJalali;
-    $recieptionists = User::whereIn('role_id', [4, 6, 11, 13, 17])->pluck('id')->toArray();
+    $recieptionists = User::whereIn('role_id', [4, 6, 11, 13, 17])
+        ->pluck('id')
+        ->toArray();
     $items = new PersonelActivityController();
     $items = $items->filterItems($fromDate, $toDate, request('user_id'));
 @endphp
@@ -57,50 +59,71 @@
                                 <th>داخلی</th>
                                 <th>خارجی</th>
                                 <th>همکار</th>
+                                <th>اداری</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach ($users as $user)
-                                <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
-                                    @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
-                                    <td>{{ $user->number }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>
-                                        @if ($user->mapa_center > 0)
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showMapaCenter(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
-                                            </i>
-                                            {{ $user->mapa_center }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($user->internal > 0)
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showInternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
-                                            </i>
-                                            {{ $user->internal }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($user->external > 0)
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showExternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
-                                            </i>
-                                            {{ $user->external }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($user->externalAsAssistant > 0)
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showExternalAsAssistant(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
-                                            </i>
-                                            {{ $user->externalAsAssistant }}
-                                        @endif
-                                    </td>
-                                </tr>
+                                @if (!in_array($user->id, $recieptionists))
+                                    <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
+                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
+                                        <td>{{ $user->number }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            @if ($user->mapa_center > 0)
+                                                <i class="fa fa-external-link text-primary"
+                                                    onclick="showMapaCenter(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                </i>
+                                                {{ $user->mapa_center }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($user->internal > 0)
+                                                <i class="fa fa-external-link text-primary"
+                                                    onclick="showInternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                </i>
+                                                {{ $user->internal }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($user->external > 0)
+                                                <i class="fa fa-external-link text-primary"
+                                                    onclick="showExternal(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                </i>
+                                                {{ $user->external }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($user->externalAsAssistant > 0)
+                                                <i class="fa fa-external-link text-primary"
+                                                    onclick="showExternalAsAssistant(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                </i>
+                                                {{ $user->externalAsAssistant }}
+                                            @endif
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                @endif
                             @endforeach
-
+                            @foreach ($items as $user)
+                                @if (in_array($user->id, $recieptionists))
+                                    <tr @if ($user->done > 0) style="background-color: #e6f4ea;" @endif
+                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
+                                        <td>{{ $user->number }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <i class="fa fa-external-link text-primary"
+                                                onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
+                                            {{ $user->done }}
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -121,7 +144,7 @@
                         <tbody>
                             @foreach ($items as $user)
                                 @if (in_array($user->id, $recieptionists))
-                                    <tr @if($user->done > 0) style="background-color: #e6f4ea;" @endif
+                                    <tr @if ($user->done > 0) style="background-color: #e6f4ea;" @endif
                                         @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
@@ -181,7 +204,8 @@
             url = url.replace('to', to)
             open_admin_modal(url);
         }
-        function showInboxes(userId, from = '', to = ''){
+
+        function showInboxes(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.personel-activity.showInboxes', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
             url = url.replace('from', from)
@@ -189,7 +213,7 @@
             open_admin_modal(url);
         }
 
-        function showDones(userId, from = '', to = ''){
+        function showDones(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.personel-activity.showDones', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
             url = url.replace('from', from)
