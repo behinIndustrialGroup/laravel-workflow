@@ -71,7 +71,7 @@
                             <td>
                                 <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
                                     method="POST"
-                                    onfocusout="return event.charCode != 13;">
+                                    onblur="return submitForm(this)">
                                     @csrf
                                     @method('PATCH')
                                     <input type="text" id="settlement_date" class="form-control settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
@@ -126,6 +126,10 @@
 @section('script')
 @section('script')
     <script>
+        function submitForm(form) {
+            form.submit();
+            return false;
+        }
         $(document).ready(function() {
             $('#on-credit-list').DataTable({
                 pageLength: 25,
