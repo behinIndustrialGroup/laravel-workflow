@@ -36,7 +36,10 @@
                         <th>شماره پرونده</th>
                         <th>نام مشتری</th>
                         <th>مبلغ</th>
-                        <th>تاریخ</th>
+                        <th>تاریخ اعلام صورت حساب</th>
+                        <th>تاریخ تسویه</th>
+                        <th>تسویه مطابق شماره فاکتور</th>
+                        <th>تاریخ فاکتور</th>
                         <th>توضیحات</th>
                         <th>تسویه شد</th>
                     </tr>
@@ -65,9 +68,23 @@
                                 {{ number_format($onCredit->cost) }}
                             </td>
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
-
-
-
+                            <td>
+                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
+                                    method="POST"
+                                    onkeypress="return event.charCode != 13;">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="text" id="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
+                                    <input type="hidden" id="settlement_date_timestamp" name="settlement_date_timestamp" value="{{ $onCredit->settlement_date_timestamp }}">
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('#settlement_date').persianDatepicker({
+                                                'altField': '#settlement_date_timestamp'
+                                            });
+                                        });
+                                    </script>
+                                </form>
+                            </td>
                             <td>{{ $onCredit->description }}</td>
 
                             {{-- دکمه پاس شد --}}

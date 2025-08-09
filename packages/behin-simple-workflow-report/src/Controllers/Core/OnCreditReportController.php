@@ -36,7 +36,10 @@ class OnCreditReportController extends Controller
     {
         $onCredit = Financials::findOrFail($id);
 
-
+        if ($request->has('settlement_date')) {
+            $onCredit->settlement_date = $request->settlement_date;
+            $onCredit->settlement_date_timestamp = $request->settlement_date_timestamp;
+        }
         if ($request->has('is_passed')) {
             $onCredit->is_passed = true;
         }
