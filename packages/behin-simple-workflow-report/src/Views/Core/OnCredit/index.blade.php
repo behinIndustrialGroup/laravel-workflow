@@ -76,6 +76,20 @@
                                     <input type="text" id="settlement_date" class="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
                                 </form>
                             </td>
+                            <td>
+                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="text" id="invoice_number" name="invoice_number" value="{{ $onCredit->invoice_number }}">
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="text" id="invoice_date" name="invoice_date" class="invoice_date" value="{{ $onCredit->invoice_date }}">
+                                </form>
+                            </td>
                             <td>{{ $onCredit->description }}</td>
 
                             {{-- دکمه پاس شد --}}
@@ -118,6 +132,14 @@
 @section('script')
 @section('script')
     <script>
+        $('.settlement_date').datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'fa'
+        });
+        $('.invoice_date').datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'fa'
+        });
         $(document).ready(function() {
             $('#on-credit-list').DataTable({
                 pageLength: 25,
