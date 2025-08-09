@@ -73,21 +73,17 @@
                                     method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <input type="text" id="settlement_date" class="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
-                                </form>
+                                    <input type="text" id="settlement_date" class="settlement_date"
+                                        name="settlement_date" value="{{ $onCredit->settlement_date }}">
                             </td>
                             <td>
-                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="text" id="invoice_number" name="invoice_number" value="{{ $onCredit->invoice_number }}">
-                                </form>
+                                <input type="text" id="invoice_number" name="invoice_number"
+                                    value="{{ $onCredit->invoice_number }}">
                             </td>
                             <td>
-                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="text" id="invoice_date" name="invoice_date" class="invoice_date" value="{{ $onCredit->invoice_date }}">
+                                <input type="text" id="invoice_date" name="invoice_date" class="invoice_date"
+                                    value="{{ $onCredit->invoice_date }}">
+                                <button type="submit" class="btn btn-sm btn-primary">ذخیره</button>
                                 </form>
                             </td>
                             <td>{{ $onCredit->description }}</td>
@@ -133,29 +129,29 @@
 @section('script')
     <script>
         $('.settlement_date').persianDatepicker({
-                viewMode: 'day',
-                initialValue: false,
-                format: 'YYYY-MM-DD',
-                initialValueType: 'persian',
-                calendar: {
-                    persian: {
-                        leapYearMode: 'astronomical',
-                        locale: 'fa'
-                    }
+            viewMode: 'day',
+            initialValue: false,
+            format: 'YYYY-MM-DD',
+            initialValueType: 'persian',
+            calendar: {
+                persian: {
+                    leapYearMode: 'astronomical',
+                    locale: 'fa'
                 }
-            });
+            }
+        });
         $('.invoice_date').persianDatepicker({
-                viewMode: 'day',
-                initialValue: false,
-                format: 'YYYY-MM-DD',
-                initialValueType: 'persian',
-                calendar: {
-                    persian: {
-                        leapYearMode: 'astronomical',
-                        locale: 'fa'
-                    }
+            viewMode: 'day',
+            initialValue: false,
+            format: 'YYYY-MM-DD',
+            initialValueType: 'persian',
+            calendar: {
+                persian: {
+                    leapYearMode: 'astronomical',
+                    locale: 'fa'
                 }
-            });
+            }
+        });
         $(document).ready(function() {
             $('#on-credit-list').DataTable({
                 pageLength: 25,
@@ -179,7 +175,7 @@
                     }).every(function(rowIdx, tableLoop, rowLoop) {
                         var amount = this.data()[2]; // ستون مبلغ
                         var tasvie = $(this.node()).find('td:last').text()
-                    .trim(); // ستون تسویه از DOM
+                            .trim(); // ستون تسویه از DOM
 
                         if (tasvie.length > 0) {
                             pageTotal += intVal(amount);
