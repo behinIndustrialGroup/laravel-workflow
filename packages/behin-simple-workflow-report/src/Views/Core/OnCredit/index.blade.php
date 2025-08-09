@@ -74,13 +74,6 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="text" id="settlement_date" class="settlement_date" name="settlement_date" value="{{ $onCredit->settlement_date }}">
-                                    <script>
-                                        $(document).ready(function() {
-                                            $('.settlement_date').persianDatepicker({
-                                                'format': 'YYYY-MM-DD',
-                                            });
-                                        });
-                                    </script>
                                 </form>
                             </td>
                             <td>{{ $onCredit->description }}</td>
