@@ -78,6 +78,9 @@
                                         $(document).ready(function() {
                                             $('.settlement_date').persianDatepicker({
                                                 'format': 'YYYY-MM-DD',
+                                                'onBlur': function() {
+                                                    submitForm(this.form);
+                                                }
                                             });
                                         });
                                     </script>
