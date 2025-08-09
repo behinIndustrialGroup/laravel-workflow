@@ -133,13 +133,29 @@
 @section('script')
     <script>
         $('.settlement_date').persianDatepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'fa'
-        });
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
+                    }
+                }
+            });
         $('.invoice_date').persianDatepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'fa'
-        });
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
+                    }
+                }
+            });
         $(document).ready(function() {
             $('#on-credit-list').DataTable({
                 pageLength: 25,
