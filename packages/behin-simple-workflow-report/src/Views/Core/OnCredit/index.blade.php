@@ -132,11 +132,11 @@
 @section('script')
 @section('script')
     <script>
-        $('.settlement_date').datetimepicker({
+        $('.settlement_date').persianDatepicker({
             format: 'YYYY-MM-DD',
             locale: 'fa'
         });
-        $('.invoice_date').datetimepicker({
+        $('.invoice_date').persianDatepicker({
             format: 'YYYY-MM-DD',
             locale: 'fa'
         });
