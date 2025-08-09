@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-body">
                 <div class="col-sm-12 table-responsive">
                     <table class="table">
@@ -165,7 +165,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 
