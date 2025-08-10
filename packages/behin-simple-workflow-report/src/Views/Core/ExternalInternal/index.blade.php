@@ -55,7 +55,7 @@
                                 <td>
                                     @foreach ($case->whereIs() as $inbox)
                                         {!! $inbox->task->styled_name !!}
-                                        <span class="text-muted small">({{ getUserInfo($inbox->actor)->name }})</span><br>
+                                        <span class="text-muted small">({{ getUserInfo($inbox->actor)->name ?? '' }})</span><br>
                                     @endforeach
                                 </td>
                                 <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
