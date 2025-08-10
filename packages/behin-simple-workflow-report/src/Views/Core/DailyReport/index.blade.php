@@ -58,11 +58,11 @@ use Carbon\Carbon;
                             <tr>
                                 <th>شماره</th>
                                 <th>نام</th>
+                                <th>اداری</th>
                                 <th>مپاسنتر</th>
                                 <th>داخلی</th>
                                 <th>خارجی</th>
                                 <th>همکار</th>
-                                <th>اداری</th>
                             </tr>
                         </thead>
 
@@ -74,6 +74,7 @@ use Carbon\Carbon;
                                         @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
+                                        <td></td>
                                         <td>
                                             @if ($user->mapa_center > 0)
                                                 <i class="fa fa-external-link text-primary"
@@ -106,7 +107,6 @@ use Carbon\Carbon;
                                                 {{ $user->externalAsAssistant }}
                                             @endif
                                         </td>
-                                        <td></td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -117,15 +117,15 @@ use Carbon\Carbon;
                                         @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
                                         <td>
                                             <i class="fa fa-external-link text-primary"
                                                 onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
                                             {{ $user->done }}
                                         </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 @endif
                             @endforeach
