@@ -93,7 +93,6 @@ class TimeoffController extends Controller
      */
     public static function todayItems($today = null)
     {
-        // return $from;
         $todayShamsi = Jalalian::now();
         $thisYear = $todayShamsi->getYear();
         $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
@@ -102,6 +101,25 @@ class TimeoffController extends Controller
         $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')
         ->where('start_timestamp', '<=', $startOfToday)
         ->where('end_timestamp', '>=', $startOfToday)
+        ->where('approved', 1)->orderBy('start_timestamp', 'desc')->get();
+        return $items;
+    }
+
+    /**
+     * @param null|Carbon $today
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function todayHourlyItems($today = null)
+    {
+        $todayShamsi = Jalalian::now();
+        $thisYear = $todayShamsi->getYear();
+        $thisMonth = str_pad($todayShamsi->getMonth(), 2, '0', STR_PAD_LEFT);
+        $startOfToday = $today ? $today->timestamp : Carbon::today()->timestamp;
+        $endOfToday = $today ? $today->endOfDay()->timestamp : Carbon::today()->endOfDay()->timestamp;
+        $items = Timeoffs::whereNot('uniqueId', 'به صورت دستی')
+        ->where('type', 'ساعتی')
+        ->where('start_timestamp', '>=', $startOfToday)
+        ->where('end_timestamp', '<=', $endOfToday)
         ->where('approved', 1)->orderBy('start_timestamp', 'desc')->get();
         return $items;
     }

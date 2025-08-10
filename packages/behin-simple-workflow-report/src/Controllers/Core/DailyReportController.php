@@ -50,7 +50,7 @@ class DailyReportController extends Controller
         $to_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
 
         // تبدیل تاریخ شمسی به میلادی
-        $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon();
+        $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon()->startOfDay();
         $to = Jalalian::fromFormat('Y-m-d', $to_input)->toCarbon()->endOfDay();
 
         $query = User::query();
@@ -85,9 +85,11 @@ class DailyReportController extends Controller
             $row->mapa_center = $mapa_center->where('expert', $row->id)->distinct('case_number')->count('case_number');
         });
 
-        $timeoffItems = TimeoffController::todayItems($from);
+        // return (string)$from;
+        $timeoffItems = TimeoffController::todayItems(clone $from);
+        $hourlyTimeoffItems = TimeoffController::todayHourlyItems($from);
 
-        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users', 'timeoffItems'));
+        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users', 'timeoffItems', 'hourlyTimeoffItems'));
     }
 
     public function showInternal($user_id, $from = null, $to = null)

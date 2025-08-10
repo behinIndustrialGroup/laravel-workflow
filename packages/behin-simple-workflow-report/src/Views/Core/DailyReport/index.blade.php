@@ -5,6 +5,8 @@
     use Morilog\Jalali\Jalalian;
     use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
     use BehinUserRoles\Models\User;
+use Carbon\Carbon;
+
 
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
@@ -14,6 +16,7 @@
         ->toArray();
     $items = new PersonelActivityController();
     $items = $items->filterItems($fromDate, $toDate, request('user_id'));
+
 @endphp
 
 
@@ -68,7 +71,7 @@
                                 @if (!in_array($user->id, $recieptionists))
                                     <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
                                         @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcab42;" @endif
-                                        @if ($timeoffItems->where('type', 'ساعتی')->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
+                                        @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>
@@ -110,8 +113,8 @@
                             @foreach ($items as $user)
                                 @if (in_array($user->id, $recieptionists))
                                     <tr @if ($user->done > 0) style="background-color: #e6f4ea;" @endif
-                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif
-                                        @if ($timeoffItems->where('type', 'ساعتی')->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
+                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif    
+                                        @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td></td>
