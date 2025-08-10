@@ -235,7 +235,7 @@ class InboxController extends Controller
     public static function caseHistoryListBefore($caseNumber, $inboxId, $limit = null){
         $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
         $inbox = InboxController::getById($inboxId);
-        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->whereDate('created_at', '<', $inbox->created_at);
+        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at', 'desc')->whereDate('created_at', '<=', $inbox->created_at);
         if($limit)
             return $rows->limit($limit)->get();
         return $rows->get();
