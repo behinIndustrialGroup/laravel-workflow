@@ -41,7 +41,7 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
-        $task->update($request->only('name', 'executive_element_id', 'parent_id', 'next_element_id', 'assignment_type', 'case_name', 'color', 'background', 'duration', 'order'));
+        $task->update($request->only('name', 'executive_element_id', 'parent_id', 'next_element_id', 'assignment_type', 'case_name', 'color', 'background', 'duration', 'order', 'number_of_task_to_back'));
         // self::getById($request->id)->update($request->all());
         return redirect()->back()->with('success', trans('Updated Successfully'));
     }

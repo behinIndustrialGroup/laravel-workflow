@@ -77,6 +77,7 @@ class InboxController extends Controller
         $inboxRow->save();
     }
 
+
     public function index(): View
     {
         $rows = self::getUserInbox(Auth::id());
@@ -223,10 +224,21 @@ class InboxController extends Controller
         return view('SimpleWorkflowView::Core.Inbox.history', compact('rows'));
     }
 
-    public static function caseHistoryList($caseNumber){
+    public static function caseHistoryList($caseNumber, $limit = null){
         $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
-        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->get();
-        return $rows;
+        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at');
+        if($limit)
+            return $rows->limit($limit)->get();
+        return $rows->get();
+    }
+
+    public static function caseHistoryListBefore($caseNumber, $inboxId, $limit = null){
+        $cases = CaseController::getAllByCaseNumber($caseNumber)->pluck('id');
+        $inbox = InboxController::getById($inboxId);
+        $rows= Inbox::whereIn('case_id', $cases)->orderBy('created_at')->groupBy('task_id')->whereDate('created_at', '<', $inbox->created_at);
+        if($limit)
+            return $rows->limit($limit)->get();
+        return $rows->get();
     }
 }
 

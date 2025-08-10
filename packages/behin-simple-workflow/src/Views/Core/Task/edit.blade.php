@@ -5,16 +5,16 @@
     $scripts = getProcessScripts();
     $conditions = getProcessConditions();
     $bgColor = '';
-    if($task->type == 'form'){
+    if ($task->type == 'form') {
         $bgColor = 'primary';
     }
-    if($task->type == 'script'){
+    if ($task->type == 'script') {
         $bgColor = 'success';
     }
-    if($task->type == 'condition'){
+    if ($task->type == 'condition') {
         $bgColor = 'warning';
     }
-    if($task->type == 'end'){
+    if ($task->type == 'end') {
         $bgColor = 'danger';
     }
 @endphp
@@ -40,13 +40,13 @@
         @method('PUT')
         <div class="panel-heading p-2 bg-light">
             <a data-toggle="collapse" href="#{{ $task->id }}">{{ $task->name }}</a>
-            <span
-                class="badge bg-{{ $bgColor }}">
+            <span class="badge bg-{{ $bgColor }}">
                 {{ ucfirst($task->type) }}
             </span>
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('ID') }}</label>
-                <input type="text" name="id" id="" class="col-sm-10 form-control" value="{{ $task->id }}" readonly>
+                <input type="text" name="id" id="" class="col-sm-10 form-control"
+                    value="{{ $task->id }}" readonly>
             </div>
             <div class="row mb-3">
                 <label for="parent_id" class="col-sm-2 col-form-label">{{ trans('Name') }}</label>
@@ -108,7 +108,8 @@
                     <select name="parent_id" id="parent_id" class="form-control select2">
                         <option value="">{{ trans('None') }}</option>
                         @foreach ($task->process->tasks() as $item)
-                            <option dir="ltr" value="{{ $item->id }}" {{ $item->id == $task->parent_id ? 'selected' : '' }}>
+                            <option dir="ltr" value="{{ $item->id }}"
+                                {{ $item->id == $task->parent_id ? 'selected' : '' }}>
                                 {{ $item->name }} ({{ $item->id }})</option>
                         @endforeach
                     </select>
@@ -160,8 +161,7 @@
                 <div class="col-sm-10 row">
                     <input type="text" name="color" class="form-control col-sm-10" dir="ltr"
                         value="{{ $task->color }}">
-                    <input type="color" id="color" class="col-sm-2" dir="ltr"
-                        value="{{ $task->color }}">
+                    <input type="color" id="color" class="col-sm-2" dir="ltr" value="{{ $task->color }}">
                     <script>
                         document.getElementById('color').addEventListener('change', function() {
                             $('input[name=color]').val(this.value);
@@ -236,7 +236,8 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <input type="text" name="task_id" id="" value="{{ $task->id }}" class="d-none">
+                            <input type="text" name="task_id" id="" value="{{ $task->id }}"
+                                class="d-none">
                             <input type="text" name="task_name" id="" value="{{ $task->name }}"
                                 class="form-control">
                         </td>
@@ -259,6 +260,20 @@
     </div>
     <div class="row card col-sm-12">
         @include('SimpleWorkflowView::Core.TaskJump.edit', ['task' => $task])
+    </div>
+    <div class="card col-sm-12">
+        <form action="{{ route('simpleWorkflow.task.update', $task->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="task_id" value="{{ $task->id }}">
+            <div class="row col-sm-12">
+                <div class="row col-sm-6">
+                    <label for="number_of_task_to_back">{{ trans('fields.Number of task to back') }}</label>
+                    <input type="text" name="number_of_task_to_back" id="number_of_task_to_back" class="form-control" dir="ltr" value="{{ $task->number_of_task_to_back }}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
+        </form>
     </div>
 @endsection
 

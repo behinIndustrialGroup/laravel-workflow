@@ -43,6 +43,7 @@ class Task extends Model
         'background',
         'duration',
         'order',
+        'number_of_task_to_back',
     ];
 
     public function getStyledNameAttribute()
