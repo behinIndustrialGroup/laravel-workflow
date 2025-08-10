@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wf_scripts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name')->nullable();
-            $table->string('executive_file')->nullable();
-            $table->longText('content')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('wf_scripts', function (Blueprint $table) {
+            $table->longText('content')->nullable()->change();
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wf_scripts');
+        Schema::table('wf_scripts', function (Blueprint $table) {
+            $table->dropColumn('content');
+        });
     }
 };

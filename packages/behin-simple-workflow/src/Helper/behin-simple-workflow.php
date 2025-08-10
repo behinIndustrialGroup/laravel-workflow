@@ -86,14 +86,14 @@ if (!function_exists('taskHasError')) {
 if (!function_exists('getUserInfo')) {
     function getUserInfo($userId) {
         // Log::info("function getUserInfo Used By user". Auth::user()->name);
-        if(!$userId){
+        if (!$userId) {
             return null;
         }
-        $user = User::find($userId);
-        if($user){
-            return $user;
-        }
-        return User::where('pm_user_uid', $userId)->first();
+
+        return User::query()
+            ->where('id', $userId)
+            ->orWhere('pm_user_uid', $userId)
+            ->first();
     }
 }
 
@@ -106,10 +106,10 @@ if (!function_exists('runScript')) {
 
 if(!function_exists('toJalali')){
     function toJalali($date){
-        if(gettype($date) == 'string'){
+        if (is_string($date)) {
             $date = Carbon::parse($date);
         }
-        if(gettype($date) == 'integer'){
+        if (is_int($date)) {
             $date = Carbon::createFromTimestamp($date, 'Asia/Tehran');
         }
         // Log::info("function toJalali Used By user". Auth::user()->name);
@@ -127,9 +127,20 @@ if(!function_exists('getFormInformation')){
 
 if (!function_exists('convertPersianToEnglish')) {
     function convertPersianToEnglish($string) {
-        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        return str_replace($persianNumbers, $englishNumbers, $string);
+        static $map = [
+            '۰' => '0',
+            '۱' => '1',
+            '۲' => '2',
+            '۳' => '3',
+            '۴' => '4',
+            '۵' => '5',
+            '۶' => '6',
+            '۷' => '7',
+            '۸' => '8',
+            '۹' => '9',
+        ];
+
+        return strtr($string, $map);
     }
 }
 
@@ -137,7 +148,7 @@ if (!function_exists('convertPersianToEnglish')) {
 if (!function_exists('convertPersianDateToTimestamp')) {
     function convertPersianDateToTimestamp($string) {
         $date = convertPersianToEnglish($string);
-        return Jalalian::fromFormat('Y-m-d', "$date")->toCarbon()->timestamp;
+        return Jalalian::fromFormat('Y-m-d', $date)->toCarbon()->timestamp;
     }
 }
 

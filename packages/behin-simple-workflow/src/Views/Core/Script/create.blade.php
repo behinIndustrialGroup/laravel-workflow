@@ -8,7 +8,7 @@
         <input type="text" name="name" required>
         <label>Executive File:</label>
         <input type="text" name="executive_file">
-        <label>Content (JSON):</label>
+        <label>Content:</label>
         <textarea name="content"></textarea>
         <button type="submit">Create</button>
     </form>

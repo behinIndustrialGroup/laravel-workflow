@@ -27,16 +27,23 @@ class ScriptController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'executive_file' => 'nullable|string',
-            'content' => 'nullable|json',
+            'content' => 'nullable|string',
         ]);
-        if($request->executive_file){
+        $content = $request->content;
+        if ($request->executive_file) {
             $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $request->executive_file . '.php');
-            if(!file_exists($filePath)){
+            if (!file_exists($filePath)) {
                 file_put_contents($filePath, '<?php');
+                $content = '<?php';
+            } elseif (!$content) {
+                $content = file_get_contents($filePath);
             }
         }
 
-        Script::updateOrCreate($request->only('name'), $request->only('executive_file'));
+        Script::updateOrCreate(
+            ['name' => $request->name],
+            ['executive_file' => $request->executive_file, 'content' => $content]
+        );
 
         return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script created successfully.');
     }
@@ -57,6 +64,7 @@ class ScriptController extends Controller
         if ($request->executive_file_content) {
             $file = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
             file_put_contents($file, $request->executive_file_content);
+            $script->update(['content' => $request->executive_file_content]);
             return redirect()->route('simpleWorkflow.scripts.edit', $script->id)->with('success', 'Script updated successfully.');
         }
 
@@ -79,9 +87,10 @@ class ScriptController extends Controller
         return DB::transaction(function () use ($id, $caseId, $forTest) {
             $script = self::getById($id);
             $case = CaseController::getById($caseId);
+            self::loadContent($script);
             $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
-            $script = new $executiveFile($case);
-            $output = $script->execute();
+            $scriptInstance = new $executiveFile($case);
+            $output = $scriptInstance->execute();
             if ($forTest) {
                 return throw new \Exception($output);
             }
@@ -108,10 +117,29 @@ class ScriptController extends Controller
     {
         return DB::transaction(function () use ($id, $request) {
             $script = self::getById($id);
+            self::loadContent($script);
             $executiveFile = "\\Behin\SimpleWorkflow\Controllers\Scripts\\$script->executive_file";
-            $script = new $executiveFile();
-            $output = $script->execute($request);
+            $scriptInstance = new $executiveFile();
+            $output = $scriptInstance->execute($request);
             return $output;
         });
+    }
+
+    private static function loadContent(Script $script)
+    {
+        $executiveClass = "Behin\\SimpleWorkflow\\Controllers\\Scripts\\" . $script->executive_file . '.php';
+
+        if (!$script->content && $script->executive_file) {
+            $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
+            if (file_exists($filePath)) {
+                $content = file_get_contents($filePath);
+                $script->update(['content' => $content]);
+            }
+        }
+
+        if ($script->content && !class_exists($executiveClass)) {
+            $code = preg_replace('/^<\?php\s*/', '', $script->content);
+            eval($code);
+        }
     }
 }

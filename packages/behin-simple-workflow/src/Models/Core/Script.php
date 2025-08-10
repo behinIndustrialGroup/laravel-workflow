@@ -31,7 +31,7 @@ class Script extends Model
 
     protected $fillable = ['name', 'executive_file', 'content'];
     protected $casts = [
-        'content' => 'array',
+        'content' => 'string',
     ];
 
 }

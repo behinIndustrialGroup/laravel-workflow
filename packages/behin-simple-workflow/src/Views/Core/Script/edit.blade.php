@@ -5,11 +5,14 @@
 @endsection
 
 @php
-    $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
-    if (file_exists($filePath)) {
-        $executive_file_content = File::get($filePath);
-    } else {
-        $executive_file_content = '';
+    $executive_file_content = $script->content;
+    if (!$executive_file_content && $script->executive_file) {
+        $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
+        if (file_exists($filePath)) {
+            $executive_file_content = File::get($filePath);
+        } else {
+            $executive_file_content = '';
+        }
     }
 @endphp
 
