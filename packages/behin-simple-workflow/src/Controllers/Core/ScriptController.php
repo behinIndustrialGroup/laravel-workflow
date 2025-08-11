@@ -8,6 +8,7 @@ use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Script;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OpenAI;
 
 class ScriptController extends Controller
 {
@@ -141,5 +142,30 @@ class ScriptController extends Controller
             $code = preg_replace('/^<\?php\s*/', '', $script->content);
             eval($code);
         }
+    }
+
+    public function autocomplete(Request $request)
+    {
+        return response()->json([
+            'suggestion' => ''
+        ]);
+        $client = OpenAI::factory()
+        ->withApiKey(env('OPENAI_API_KEY'))
+        ->withHttpClient(new \GuzzleHttp\Client([
+            'verify' => false, // ⛔ فقط برای تست
+        ]))
+        ->make();
+
+        $response = $client->chat()->create([
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are a code autocomplete assistant for PHP code.'],
+                ['role' => 'user', 'content' => $request->code]
+            ],
+        ]);
+
+        return response()->json([
+            'suggestion' => trim($response->choices[0]->message->content ?? '')
+        ]);
     }
 }

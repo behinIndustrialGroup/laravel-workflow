@@ -7,7 +7,9 @@
 @php
     $executive_file_content = $script->content;
     if (!$executive_file_content && $script->executive_file) {
-        $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
+        $filePath = base_path(
+            'packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php',
+        );
         if (file_exists($filePath)) {
             $executive_file_content = File::get($filePath);
         } else {
@@ -20,6 +22,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ext-language_tools.min.js"></script>
+
 
     <h1>Edit Script</h1>
     @if ($errors->any())
@@ -84,12 +88,12 @@
                 <form action="javascript:void(0)" method="POST" id="content-form">
                     @csrf
                     @method('PUT')
-                    <div id="editor" style="height: 80vh; width: 100%;font-size: 16px;">{{ $executive_file_content }}</div>
+                    <div id="editor" style="height: 80vh; width: 100%;font-size: 16px;">{{ $executive_file_content }}
+                    </div>
                     <textarea name="executive_file_content" id="executive_file_content" class="form-control" rows="50"
                         style="text-align: left; white-space: pre; font-family: Monospace; display: none" dir="ltr">{{ $executive_file_content }}</textarea>
                 </form>
                 <button class="btn btn-primary mt-3" onclick="saveContent()">{{ trans('fields.Save') }}</button>
-
             @else
                 <form action="{{ route('simpleWorkflow.scripts.store', $script->id) }}" method="POST">
                     @csrf
@@ -103,7 +107,7 @@
             @endif
         </div>
         <div class="col-md-12 card" dir="ltr">
-            
+
 
         </div>
     </div>
@@ -155,20 +159,56 @@
     </script>
     <script>
         const editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai"); // انتخاب تم
-        editor.session.setMode("ace/mode/php"); // تنظیم زبان PHP
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/php");
 
-
-
-        // غیرفعال کردن تحلیلگر پیش‌فرض Ace
+        // فعال کردن autocomplete
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true
+        });
         editor.getSession().setUseWorker(false);
-
-        // فعال‌سازی خط‌بندی خودکار
         editor.setOption("wrap", true);
 
-        // ذخیره محتوا به textarea مخفی
+        // ذخیره در textarea
         editor.session.on('change', function() {
             $('#executive_file_content').val(editor.getValue());
+        });
+        const langTools = ace.require("ace/ext/language_tools");
+
+        langTools.addCompleter({
+            getCompletions: function(editorInstance, session, pos, prefix, callback) {
+                if (prefix.length === 0) {
+                    callback(null, []);
+                    return;
+                }
+
+                fetch('{{ route('simpleWorkflow.scripts.autocomplete') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            code: editorInstance.getValue(),
+                            prefix
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data && data.suggestion) {
+                            callback(null, [{
+                                caption: data.suggestion,
+                                value: data.suggestion,
+                                meta: "AI Suggestion"
+                            }]);
+                        } else {
+                            callback(null, []);
+                        }
+                    })
+                    .catch(() => callback(null, []));
+            }
         });
     </script>
 @endsection

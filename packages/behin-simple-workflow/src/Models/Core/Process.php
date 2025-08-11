@@ -30,6 +30,7 @@ class Process extends Model
         'name',
         'number_of_error',
         'report_form_id',
+        'category'
     ];
 
     function cases(){

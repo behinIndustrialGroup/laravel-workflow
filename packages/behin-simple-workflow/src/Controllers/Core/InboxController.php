@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use App\Events\NewInboxEvent;
 use App\Models\User;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
+use Behin\SimpleWorkflow\Models\Entities\CasesManual;
 
 class InboxController extends Controller
 {
@@ -167,6 +168,9 @@ class InboxController extends Controller
                     'form' => $form
                 ]);
             }
+            if($inbox->actor != Auth::id()){
+                return abort(403, trans("fields.Sorry you don't have permission to see this page"));
+            }
             return view('SimpleWorkflowView::Core.Inbox.show')->with([
                 'inbox' => $inbox,
                 'case' => $case,
@@ -196,6 +200,18 @@ class InboxController extends Controller
             ->toArray();
         // دریافت عنوان تسک
         $title = $task->case_name;
+
+        if (!$task->case_name) {
+            $case = CasesManual::find($caseId);
+            return $case->createName();
+
+            if (method_exists($case, 'name')) {
+                $case_name = $case->name();
+                if ($case_name) {
+                    return $case_name;
+                }
+            }
+        }
 
         // جایگزینی متغیرها در عنوان
         $patterns = config('workflow.patterns');

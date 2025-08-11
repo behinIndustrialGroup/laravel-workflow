@@ -17,6 +17,9 @@
     if ($task->type == 'end') {
         $bgColor = 'danger';
     }
+    if ($task->type == 'timed_condition') {
+        $bgColor = 'info';
+    }
 @endphp
 
 @section('content')
@@ -95,6 +98,12 @@
                         </a>
                     @endif
                     @if ($task->type == 'condition' and $task->executive_element_id)
+                        <a
+                            href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
+                            {{ trans('Edit') }}
+                        </a>
+                    @endif
+                    @if ($task->type == 'timed_condition' and $task->executive_element_id)
                         <a
                             href="{{ route('simpleWorkflow.conditions.edit', ['condition' => $task->executive_element_id]) }}">
                             {{ trans('Edit') }}
@@ -190,9 +199,38 @@
                         value="{{ $task->order }}">
                 </div>
             </div>
+            @if ($task->type == 'timed_condition')
+                <div class="row mb-3">
+                    <label for="order" class="col-sm-2 col-form-label">{{ trans('Timing Type') }}</label>
+                    <div class="col-sm-10 row">
+                        <select name="timing_type" id="" class="form-control">
+                            <option value="static" {{ $task->timing_type == 'static' ? 'selected' : '' }}>
+                                {{ trans('fields.static') }}</option>
+                            <option value="dynamic" {{ $task->timing_type == 'dynamic' ? 'selected' : '' }}>
+                                {{ trans('fields.dynamic') }}</option>
+                        </select>
+                    </div>
+                </div>
+            @endif
+            @if ($task->timing_type == 'static')
+                <div class="row mb-3">
+                    <label for="order" class="col-sm-2 col-form-label">{{ trans('Timing Value') }}</label>
+                    <div class="col-sm-10 row">
+                        <input type="text" name="timing_value" class="form-control col-sm-12" dir="ltr"
+                            value="{{ $task->timing_value }}">
+                    </div>
+                </div>
+            @endif
+            @if ($task->timing_type == 'dynamic')
+                <div class="row mb-3">
+                    <label for="order" class="col-sm-2 col-form-label">{{ trans('Timing Key') }}</label>
+                    <div class="col-sm-10 row">
+                        <input type="text" name="timing_key_name" class="form-control col-sm-12" dir="ltr"
+                            value="{{ $task->timing_key_name }}">
+                    </div>
+                </div>
+            @endif
             <button type="submit" class="btn btn-primary" style="float: left">{{ trans('Edit') }}</button>
-
-
 
         </div>
     </form>

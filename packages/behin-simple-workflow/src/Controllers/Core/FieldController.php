@@ -78,6 +78,20 @@ class FieldController extends Controller
         return redirect()->route('simpleWorkflow.fields.edit', $field->id)->with('success', 'Fields updated successfully.');
     }
 
+    public function copy(Fields $field)
+    {
+        // کپی اطلاعات رکورد
+        $field = $field->replicate();
+
+        // در صورت نیاز، فیلدهایی که باید منحصر به‌فرد باشن رو تغییر بده (مثلاً نام یا شناسه)
+        $field->name = $field->name . ' (Copy)';
+
+        // ذخیره رکورد جدید
+        $field->save();
+
+        return $this->edit($field);
+    }
+
     public static function getAll()
     {
         return Fields::orderBy('created_at')->get();

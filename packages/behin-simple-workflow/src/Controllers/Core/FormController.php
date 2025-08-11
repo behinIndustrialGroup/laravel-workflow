@@ -192,7 +192,7 @@ class FormController extends Controller
         ]);
     }
 
-    public function open(Request $request, $form_id){
+    public static function open(Request $request, $form_id, $modalShow = true){
         $form = FormController::getById($form_id);
         $viewModel = ViewModel::find($request->viewModel_id);
         if($viewModel->api_key != $request->api_key){
@@ -207,10 +207,10 @@ class FormController extends Controller
             $case = CaseController::getById($request->case_id);
         }
         $inbox = InboxController::getById($request->inbox_id);
-        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel', 'row'));
+        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel', 'row', 'modalShow'));
     }
 
-    public function openCreateNew(Request $request, $form_id){
+    public function openCreateNew(Request $request, $form_id, $modalShow = true){
         $form = FormController::getById($form_id);
         $viewModel = ViewModel::find($request->viewModel_id);
         if($viewModel->api_key != $request->api_key){
@@ -224,6 +224,24 @@ class FormController extends Controller
             $case = CaseController::getById($request->case_id);
         }
         $inbox = InboxController::getById($request->inbox_id);
-        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel'));
+        return view('SimpleWorkflowView::Core.ViewModel.front.show', compact('form', 'inbox', 'case', 'viewModel', 'modalShow'));
+    }
+
+    public static function openReadForm(Request $request, $form_id, $modalShow = true){
+        $form = FormController::getById($form_id);
+        $viewModel = ViewModel::find($request->viewModel_id);
+        if($viewModel->api_key != $request->api_key){
+            return response("", 403);
+        }
+        $model = ViewModelController::getModelById($viewModel->id);
+        $row = $model::find($request->row_id);
+
+        if(!isset($request->case_id)){
+            $case = Cases::first();
+        }else{
+            $case = CaseController::getById($request->case_id);
+        }
+        $inbox = InboxController::getById($request->inbox_id);
+        return view('SimpleWorkflowView::Core.ViewModel.front.read', compact('form', 'inbox', 'case', 'viewModel', 'row', 'modalShow'));
     }
 }

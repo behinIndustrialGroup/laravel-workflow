@@ -5,6 +5,7 @@ namespace Behin\SimpleWorkflow\Controllers\Core;
 use App\Http\Controllers\Controller;
 use BaleBot\BaleBotProvider;
 use BaleBot\Controllers\BotController;
+use Behin\SimpleWorkflow\Jobs\ExecuteNextTaskWithDelay;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Process;
@@ -383,6 +384,38 @@ class RoutingController extends Controller
             }
             if ($task->type == 'end') {
                 $inbox = InboxController::create($task->id, $caseId, null, 'done');
+                return 'break';
+            }
+            if ($task->type == 'timed_condition') {
+                // 1. بررسی اینکه زمان‌بندی استاتیک است یا داینامیک
+                $delayMinutes = 0;
+                if ($task->timing_type == 'static') {
+                    // فیلدی مانند `timing_value` در تسک ذخیره شده است (مثلاً 10 دقیقه)
+                    Log::info('Timing value: ' . $task->timing_value);
+                    $delayMinutes = intval($task->timing_value);
+                } elseif ($task->timing_type == 'dynamic') {
+                    // متغیر مثل "nexttime" از پرونده گرفته می‌شود
+                    $key = $task->timing_key_name;
+                    $variable = CaseController::getById($caseId)->getVariable($key);
+                    Log::info('Variable: ' . $variable);
+                    $delayMinutes = (int)$variable;
+                    
+                }
+
+                if ($delayMinutes > 0) {
+                    Log::info('Delay minutes: ' . $delayMinutes);
+                    $taskChildren = $task->children();
+                    foreach ($taskChildren as $task) {
+                        ExecuteNextTaskWithDelay::dispatch($task, $caseId)->delay(now()->addMinutes($delayMinutes));
+                    }
+                } else {
+                    // اگر زمان‌بندی معتبر نبود، فوراً اجرا شود یا خطا داده شود
+                    return response()->json([
+                        'status' => 400,
+                        'msg' => 'زمان‌بندی معتبر نیست'
+                    ]);
+                }
+
                 return 'break';
             }
         } catch (Exception $th) {

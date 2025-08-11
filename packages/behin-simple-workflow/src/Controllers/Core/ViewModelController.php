@@ -7,9 +7,12 @@ use Behin\SimpleWorkflow\Models\Core\Entity;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\ViewModel;
+use BehinFileControl\Controllers\FileController;
 use BehinUserRoles\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ViewModelController extends Controller
@@ -39,13 +42,24 @@ class ViewModelController extends Controller
     {
         $entities = EntityController::getAll();
         $forms = FormController::getAll();
-        return view('SimpleWorkflowView::Core.ViewModel.edit', compact('view_model', 'entities', 'forms'));
+        $scripts = ScriptController::getAll();
+        return view('SimpleWorkflowView::Core.ViewModel.edit', compact('view_model', 'entities', 'forms', 'scripts'));
     }
 
     public function update(Request $request, ViewModel $view_model)
     {
         $data = $request->except('_token');
         $data['api_key'] = $request->api_key ? $request->api_key : Str::random(16);
+        $nullableArrayFields = [
+            'which_rows_user_can_delete',
+            'which_rows_user_can_update',
+            'which_rows_user_can_read'
+        ];
+
+        foreach ($nullableArrayFields as $field) {
+            $data[$field] = $request->has($field) ? $request->$field : [];
+        }
+
         $view_model->update($data);
         return redirect()->back()->with(['success' => trans('Updated Successfully')]);
     }
@@ -91,10 +105,37 @@ class ViewModelController extends Controller
 
             return null;
         } catch (\Throwable $e) {
-            return $e->getMessage() ;
+            return $e->getMessage();
         }
     }
 
+    public static function userCanUpdateRow($row, $updateCondition)
+    {
+        if (
+            in_array('all', $updateCondition) ||
+            (in_array('user-created-it', $updateCondition) && $row->created_by == Auth::id()) ||
+            (in_array('user-contributed-it', $updateCondition) && in_array(Auth::id(), explode(',', $row->contributers ?? ''))) ||
+            (in_array('user-updated-it', $updateCondition) && $row->updated_by == Auth::id())
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function userCanDeleteRow($row, $deleteCondition)
+    {
+        if (
+            in_array('all', $deleteCondition) ||
+            (in_array('user-created-it', $deleteCondition) && $row->created_by == Auth::id()) ||
+            (in_array('user-contributed-it', $deleteCondition) && in_array(Auth::id(), explode(',', $row->contributers ?? ''))) ||
+            (in_array('user-updated-it', $deleteCondition) && $row->updated_by == Auth::id())
+        ) {
+            return true;
+        }
+
+        return false;
+    }
 
 
     public function getRows(Request $request)
@@ -129,8 +170,11 @@ class ViewModelController extends Controller
         if ($viewModel->allow_read_row) {
             if ($viewModel->show_rows_based_on == 'case_id') {
                 $rows = $model::where('case_id', $case->id);
-            } else {
+            }
+            elseif ($viewModel->show_rows_based_on == 'case_number') {
                 $rows = $model::where('case_number', $case->number);
+            }else{
+                $rows = $model::query();
             }
 
             $rows = $rows->where(function ($query) use ($readCondition) {
@@ -153,83 +197,141 @@ class ViewModelController extends Controller
 
             $rows = $rows->orderBy('updated_at', 'desc')
                 ->take($max_number_of_rows)
-                ->get();
+                ->get()->each(function ($row) use ($viewModel, $updateCondition, $deleteCondition) {
+                    $row->show_as = $viewModel->show_as;
+                    $row->alllow_update = self::userCanUpdateRow($row, $updateCondition);
+                    $row->alllow_delete = self::userCanDeleteRow($row, $deleteCondition);
+                });
+            if($viewModel->script_before_show_rows){
+                $request->merge(['rows' => $rows]);
+                $rows = ScriptController::runFromView($request, $viewModel->script_before_show_rows);
+            }
 
             foreach ($rows as $row) {
-                $s .= "<tr>";
-                foreach ($columns as $column) {
-                    try {
-                        if (str_contains($column, '()->')) {
-                            $value = $this->resolveColumnPath($row, $column);
-                        } else {
-                            $value = $row->$column ?? null;
+                if ($row->show_as == 'table') {
+                    $s .= "<tr>";
+                    foreach ($columns as $column) {
+                        try {
+                            if (str_contains($column, '()->')) {
+                                $value = $this->resolveColumnPath($row, $column);
+                            } else {
+                                $value = $row->$column ?? null;
+                            }
+
+                            $s .= "<td>{$value}</td>";
+                        } catch (\Throwable $e) {
+                            $s .= "<td>" . $e->getMessage() . "</td>";
                         }
-
-                        $s .= "<td>{$value}</td>";
-                    } catch (\Throwable $e) {
-                        $s .= "<td>". $e->getMessage() . "</td>";
                     }
-                }
-                $s .= "<td>";
-                if (
-                    in_array('all', $updateCondition) ||
-                    (in_array('user-created-it', $updateCondition) && $row->created_by == Auth::id()) ||
-                    (in_array('user-contributed-it', $updateCondition) && in_array(Auth::id(), explode(',', $row->contributers ?? ''))) ||
-                    (in_array('user-updated-it', $updateCondition) && $row->updated_by == Auth::id())
-                ) {
-                    $s .= "<i class='fa fa-edit btn btn-sm btn-success p-1 m-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
-                }
+                    $s .= "<td>";
+                    if ($row->alllow_update) {
+                        $s .= "<i class='fa fa-edit btn btn-sm btn-success p-1 m-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                    }
 
-                if (
-                    in_array('all', $deleteCondition) ||
-                    (in_array('user-created-it', $deleteCondition) && $row->created_by == Auth::id()) ||
-                    (in_array('user-contributed-it', $deleteCondition) && in_array(Auth::id(), explode(',', $row->contributers ?? ''))) ||
-                    (in_array('user-updated-it', $deleteCondition) && $row->updated_by == Auth::id())
-                ) {
-                    $s .= "<i class='fa fa-trash btn-sm btn-danger p-1 m-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                    if ($row->alllow_delete) {
+                        $s .= "<i class='fa fa-trash btn-sm btn-danger p-1 m-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                    }
+                    $s .= "</td>";
+                    $s .= "</tr>";
                 }
-                $s .= "</td>";
-                $s .= "</tr>";
+                if ($row->show_as == 'box') {
+                    $request = new Request([
+                        'api_key' => $viewModel->api_key,
+                        'row_id' => $row->id,
+                        'case_id' => $request->case_id,
+                        'viewModel_id' => $viewModel->id,
+                    ]);
+                    $s .= "<div class='card'>";
+                    if ($row->alllow_update) {
+                        $s .= FormController::open($request, $viewModel->update_form, false);
+                    } else {
+                        $s .= FormController::openReadForm($request, $viewModel->read_form, false);
+                    }
+                    $s .= "</div>";
+                }
             }
+        }
+
+        //
+        if ($viewModel->allow_create_row and count($rows) < $max_number_of_rows) {
+            $s .= "<tr>";
+            $colspan = count($columns) + 1;
+            $btnLabel = trans('fields.Create new');
+            $s .= "<td colspan='{$colspan}'>";
+            $s .= "<button class='btn btn-sm btn-primary' onclick='open_view_model_create_new_form(`$viewModel->create_form`, `$viewModel->id`, `$viewModel->api_key`)'>";
+            $s .= "{$btnLabel}</button></td>";
+            $s .= "</tr>";
         }
         return $s;
     }
 
     public function updateRecord(Request $request)
     {
-        // $inbox = InboxController::getById($request->inboxId);
-        $case = CaseController::getById($request->caseId);
-        $viewModel = self::getById($request->viewModelId);
+        try {
+            $case = CaseController::getById($request->caseId);
+            $viewModel = self::getById($request->viewModelId);
 
-        if ($viewModel->api_key != $request->api_key) {
-            return response(trans("fields.Api key is not valid"), 403);
-        }
+            if ($viewModel->api_key != $request->api_key) {
+                return response(trans("fields.Api key is not valid"), 403);
+            }
 
-        $model = self::getModelById($viewModel->id);
+            $model = self::getModelById($viewModel->id);
 
-        $row = $model::findOrNew($request->rowId);
+            $row = $model::findOrNew($request->rowId);
 
-        $isNew = !$row->exists;
+            $isNew = !$row->exists;
+            $data = $request->all();
+            // بررسی داینامیک فایل‌ها
+            foreach ($request->allFiles() as $fieldName => $file) {
+                $savedPaths = [];
+                $path = FileController::store($file, 'simpleWorkflow');
+                if ($path['status'] == 200) {
+                    $data[$fieldName] = $path['dir'];
+                }
+            }
+            // $data[$fieldName] = $savedPaths;
 
-        $row->fill($request->all());
+            $fillable = $row->getFillable();
+            foreach ($data as $key => $value) {
+                if (in_array($key, $fillable)) {
+                    $row->$key = $value;
+                }
+            }
 
-        if ($isNew) {
-            $row->case_id = $case->id;
-            $row->case_number = $case->number;
-            $row->created_by = Auth::id();
-            $row->contributers = Auth::id();
-        }
+            if ($isNew) {
+                if (in_array('case_id', $fillable)) {
+                    $row->case_id = $case->id;
+                }
+                if (in_array('case_number', $fillable)) {
+                    $row->case_number = $case->number;
+                }
+                $row->created_by = Auth::id();
+                $row->contributers = Auth::id();
+            }
+            $row->updated_by = Auth::id();
 
-        $row->updated_by = Auth::id();
-
-        // اضافه کردن کاربر فعلی به contributers (بدون تکرار)
-        $contribs = explode(',', $row->contributers ?? '');
-        if (!in_array(Auth::id(), $contribs)) {
-            $contribs[] = Auth::id();
+            // اضافه کردن کاربر فعلی به contributers (بدون تکرار)
+            $contribs = explode(',', $row->contributers ?? '');
+            if (!in_array(Auth::id(), $contribs)) {
+                $contribs[] = Auth::id();
+            }
             $row->contributers = implode(',', array_filter($contribs));
+
+            $row->save();
+
+            if ($viewModel->script_after_create) {
+                $request->merge(['rowId' => $row->id]);
+
+                $result = ScriptController::runFromView($request, $viewModel->script_after_create);
+
+                if ($result) {
+                    return $result;
+                }
+            }
+        } catch (Exception $th) {
+            return response($th->getMessage(), 500);
         }
 
-        $row->save();
 
         return response(trans('fields.updated'));
     }

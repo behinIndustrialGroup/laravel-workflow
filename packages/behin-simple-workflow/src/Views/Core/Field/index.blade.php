@@ -80,6 +80,8 @@
                         <td>
                             <a href="{{ route('simpleWorkflow.fields.edit', $field->id) }}" class="btn btn-default">{{ trans('fields.Edit') }}</a>
                             <button class="btn btn-danger">{{ trans('fields.Delete') }}</button>
+                            <a href="{{ route('simpleWorkflow.fields.copy', $field->id) }}" class="btn btn-success">{{ trans('fields.Copy') }}</a>
+
                         </td>
                     </tr>
                 @endforeach

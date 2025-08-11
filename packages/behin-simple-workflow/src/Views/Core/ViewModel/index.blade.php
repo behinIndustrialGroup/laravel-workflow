@@ -30,7 +30,7 @@
                                                 value="{{ $viewModel->id }}"></td>
                                         <td>{{ $viewModel->name }}</td>
                                         <td>
-                                            {{ $viewModel->entity_name }}
+                                            {{ $viewModel->entity->name }}
                                         </td>
                                         <td><a class="btn btn-primary"
                                                 href="{{ route('simpleWorkflow.view-model.edit', $viewModel->id) }}">

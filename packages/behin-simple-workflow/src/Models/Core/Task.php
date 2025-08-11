@@ -43,6 +43,9 @@ class Task extends Model
         'background',
         'duration',
         'order',
+        'timing_type',
+        'timing_value',
+        'timing_key_name',
         'number_of_task_to_back',
     ];
 

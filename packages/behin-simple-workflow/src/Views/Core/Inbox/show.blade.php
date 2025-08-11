@@ -126,6 +126,9 @@
         }
 
         function saveForm() {
+            if($('.view-model-update-btn').length > 0){
+                $('.view-model-update-btn').click()
+            }
             var form = $('#form')[0];
             var fd = new FormData(form);
             send_ajax_formdata_request(
@@ -144,6 +147,9 @@
         }
 
         function saveAndNextForm() {
+            if($('.view-model-update-btn').length > 0){
+                $('.view-model-update-btn').click()
+            }
             var form = $('#form')[0];
             var fd = new FormData(form);
             send_ajax_formdata_request(
@@ -170,9 +176,7 @@
             send_ajax_get_request(
                 '{{ route('simpleWorkflow.task-jump.show', [$task->id , $inbox->id , $case->id , $process->id] ) }}',
                 function(response) {
-                    open_admin_modal_with_data(response, '', function() {
-                        initial_view()
-                    })
+                    open_admin_modal_with_data(response, '')
                 }
             )
         }
