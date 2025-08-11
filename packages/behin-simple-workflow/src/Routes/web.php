@@ -64,6 +64,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::resource('conditions', ConditionController::class);
     Route::post('conditions/{id}/test', [ ConditionController::class, 'runConditionForTest' ])->name('conditions.test');
     Route::resource('task-actors', TaskActorController::class);
+    Route::post('fields/export', [FieldController::class, 'export'])->name('fields.export');
+    Route::post('fields/import', [FieldController::class, 'import'])->name('fields.import');
     Route::resource('fields', FieldController::class);
     Route::get('fields/{field}/copy', [FieldController::class, 'copy'])->name('fields.copy');
 

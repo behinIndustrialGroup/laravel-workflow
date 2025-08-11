@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Behin\SimpleWorkflow\Models\Core\Fields;
 use Behin\SimpleWorkflow\Models\Core\ViewModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class FieldController extends Controller
 {
@@ -90,6 +91,50 @@ class FieldController extends Controller
         $field->save();
 
         return $this->edit($field);
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('field_ids', []);
+        if (empty($ids)) {
+            return redirect()->route('simpleWorkflow.fields.index')->with('error', 'No fields selected for export.');
+        }
+        $fields = Fields::whereIn('id', $ids)->get();
+        $fileName = 'fields-' . date('Ymd_His') . '.json';
+        if ($fields->count() === 1) {
+            $content = $fields->first()->toJson(JSON_PRETTY_PRINT);
+        } else {
+            $content = $fields->toJson(JSON_PRETTY_PRINT);
+        }
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, $fileName);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'fields_file' => 'required|file',
+        ]);
+
+        $content = file_get_contents($request->file('fields_file')->getRealPath());
+        $data = json_decode($content, true);
+        if (is_null($data)) {
+            return redirect()->route('simpleWorkflow.fields.index')->with('error', 'Invalid import file.');
+        }
+
+        $fieldsData = isset($data[0]) ? $data : [$data];
+        foreach ($fieldsData as $fieldData) {
+            $fieldArray = [
+                'id' => $fieldData['id'] ?? Str::uuid()->toString(),
+                'name' => $fieldData['name'] ?? null,
+                'type' => $fieldData['type'] ?? null,
+                'attributes' => $fieldData['attributes'] ?? null,
+            ];
+            Fields::updateOrCreate(['id' => $fieldArray['id']], $fieldArray);
+        }
+
+        return redirect()->route('simpleWorkflow.fields.index')->with('success', 'Fields imported successfully.');
     }
 
     public static function getAll()
