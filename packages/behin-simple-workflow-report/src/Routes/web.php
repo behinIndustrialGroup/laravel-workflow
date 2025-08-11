@@ -25,6 +25,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
+use Behin\SimpleWorkflowReport\Controllers\Core\PhonebookController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('external-internal-archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal-archive');
 
     Route::resource('counter-party', CounterPartyController::class);
+    Route::get('phonebook', [PhonebookController::class, 'index'])->name('phonebook.index');
 
     Route::name('fin.')->prefix('fin')->group(function(){
         Route::get('', [FinReportController::class, 'index'])->name('index');

@@ -171,6 +171,17 @@
                                             </tr>
                                         @endif
                                     @endforeach
+                                    @if (auth()->user()->access('دفتر تلفن'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>دفتر تلفن</td>
+                                            <td class="d-none"></td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.phonebook.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('امور جاری: گزارش فرایند های داخلی و خارجی'))
                                         <tr>
                                             <td class="d-none"></td>
