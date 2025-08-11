@@ -30,6 +30,20 @@ class DateField extends AbstractField
             }
         }
         $s .= '>';
+        $s .= "<input type='hidden' name='". $this->name ."_alt' id='". $this->name ."_alt'>";
+        $s .= "<script>$('#$this->name').persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                altField: '#". $this->name ."_alt',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
+                    }
+                }
+            });</script>";
         $s .= '</div>';
         return $s;
         if (!isset($this->attributes['type'])) {
