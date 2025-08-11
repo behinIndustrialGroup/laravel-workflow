@@ -21,7 +21,7 @@
                         @foreach($customers as $customer)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $customer->fullname }}</td>
+                                <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->mobile }}</td>
                                 <td>{{ $customer->national_id }}</td>
                                 <td>{{ $customer->address }}</td>
