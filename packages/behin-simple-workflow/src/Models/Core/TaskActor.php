@@ -4,6 +4,7 @@ namespace Behin\SimpleWorkflow\Models\Core;
 
 use App\Models\User;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
+use BehinUserRoles\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +17,7 @@ class TaskActor extends Model
     protected $fillable = [
         'task_id',
         'actor',
+        'role_id',
     ];
 
     public function task()
@@ -26,6 +28,11 @@ class TaskActor extends Model
     public function actor()
     {
         return $this->belongsTo(User::class, 'actor');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
 }

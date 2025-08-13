@@ -3,6 +3,7 @@
 namespace Behin\SimpleWorkflow\Controllers\Core;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
@@ -13,7 +14,14 @@ class TaskActorController extends Controller
 {
     public static function userIsAssignToTask($taskId, $userId)
     {
-        return TaskActor::where('task_id', $taskId)->where('actor', $userId)->first();
+        $user = User::find($userId);
+        return TaskActor::where('task_id', $taskId)
+            ->where(function ($q) use ($userId, $user) {
+                $q->where('actor', $userId);
+                if ($user) {
+                    $q->orWhere('role_id', $user->role_id);
+                }
+            })->first();
     }
 
     public static function getActorsByTaskId($taskId)
@@ -38,7 +46,7 @@ class TaskActorController extends Controller
 
     public static function getAll()
     {
-        return TaskActor::with(['task', 'actor'])->get();
+        return TaskActor::with(['task', 'actor', 'role'])->get();
     }
 
     public function index()
@@ -49,7 +57,7 @@ class TaskActorController extends Controller
 
     public function store(Request $request)
     {
-        TaskActor::create($request->only('task_id', 'actor'));
+        TaskActor::create($request->only('task_id', 'actor', 'role_id'));
         return redirect()->back();
     }
 

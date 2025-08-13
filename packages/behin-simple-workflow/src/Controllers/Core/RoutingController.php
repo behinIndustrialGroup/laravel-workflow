@@ -12,6 +12,7 @@ use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Task;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -280,15 +281,23 @@ class RoutingController extends Controller
         try {
             if ($task->type == 'form') {
                 if ($task->assignment_type == 'normal' or $task->assignment_type == null) {
-                    $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
-                    foreach ($taskActors as $actor) {
-                        $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
-                        SendPushNotification::dispatch(
-                            $inbox->actor,
-                            'کار جدید',
-                            'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
-                            route('simpleWorkflow.inbox.view', $inbox->id)
-                        );
+                    $taskActors = TaskActorController::getActorsByTaskId($task->id);
+                    foreach ($taskActors as $ta) {
+                        $actors = collect();
+                        if ($ta->role_id) {
+                            $actors = User::where('role_id', $ta->role_id)->pluck('id');
+                        } else {
+                            $actors->push($ta->actor);
+                        }
+                        foreach ($actors as $actor) {
+                            $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
+                            SendPushNotification::dispatch(
+                                $inbox->actor,
+                                'کار جدید',
+                                'کار جدید بهتون ارجاع داده شد: ' . $inbox->case_name,
+                                route('simpleWorkflow.inbox.view', $inbox->id)
+                            );
+                        }
                     }
                     // echo json_encode($taskActors);
                 }
@@ -305,9 +314,17 @@ class RoutingController extends Controller
                     }
                 }
                 if ($task->assignment_type == 'public') {
-                    $taskActors = TaskActorController::getActorsByTaskId($task->id)->pluck('actor');
-                    foreach ($taskActors as $actor) {
-                        $inbox = InboxController::create($task->id, $caseId, $actor, 'done');
+                    $taskActors = TaskActorController::getActorsByTaskId($task->id);
+                    foreach ($taskActors as $ta) {
+                        $actors = collect();
+                        if ($ta->role_id) {
+                            $actors = User::where('role_id', $ta->role_id)->pluck('id');
+                        } else {
+                            $actors->push($ta->actor);
+                        }
+                        foreach ($actors as $actor) {
+                            $inbox = InboxController::create($task->id, $caseId, $actor, 'done');
+                        }
                     }
                 }
             }

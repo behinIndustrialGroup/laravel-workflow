@@ -20,6 +20,7 @@
                     <td>{{ trans('Task') }}</td>
                     <td>{{ trans('Task Assignment Type') }}</td>
                     <td>{{ trans('Actor') }}</td>
+                    <td>{{ trans('Role') }}</td>
                     <td>{{ trans('Created at') }}</td>
                     <td>{{ trans('Action') }}</td>
                 </tr>
@@ -33,6 +34,7 @@
                         <td>{{ $value->task->name }}</td>
                         <td>{{ $value->task->assignment_type }}</td>
                         <td>{{ $value->actor }}</td>
+                        <td>{{ $value->role?->name }}</td>
                         <td>{{ $value->created_at }}</td>
                         <td>
                             <form action="{{ route('simpleWorkflow.task-actors.destroy', $value->id) }}" method="POST">
@@ -61,6 +63,14 @@
                         <td></td>
                         <td>
                             <input type="text" name="actor" id="">
+                        </td>
+                        <td>
+                            <select name="role_id" id="">
+                                <option value=""></option>
+                                @foreach (BehinUserRoles\Models\Role::all() as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td><button>{{ trans('Create') }}</button></td>
                     </tr>
