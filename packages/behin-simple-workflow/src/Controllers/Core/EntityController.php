@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Models\Core\Entity;
 use Behin\SimpleWorkflow\Models\Core\Fields;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class EntityController extends Controller
@@ -37,7 +38,10 @@ class EntityController extends Controller
 
     public function edit(Entity $entity)
     {
-        $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $tables = collect(DB::select('SHOW TABLES'))->map(function ($row) {
+            return array_values((array) $row)[0];
+        })->toArray();
+
         return view('SimpleWorkflowView::Core.Entity.edit', compact('entity', 'tables'));
     }
 
@@ -198,8 +202,8 @@ class EntityController extends Controller
         }
         $entityFileContent .= " 'created_by', 'updated_by', 'contributers', ";
         $entityFileContent .= "]; \n";
-
         $entityFileContent .= "protected static function boot()\n        {\n            parent::boot();\n\n            static::creating(function (\$model) {\n                \$model->id = \$model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);\n            });\n        }\n";
+
         $entityFileContent .= $entity->class_contents;
         $entityFileContent .= "}";
         file_put_contents($entityFile, $entityFileContent);
