@@ -46,14 +46,11 @@ class EntityController extends Controller
         $defaultUses = "use Behin\\SimpleWorkflow\\Controllers\\Core\\VariableController; use Illuminate\\Database\\Eloquent\\Factories\\HasFactory; use Illuminate\\Database\\Eloquent\\Model; use Illuminate\\Support\\Str; use Illuminate\\Database\\Eloquent\\SoftDeletes;";
         $uses = $request->uses ?? $defaultUses;
         $classContents = $request->class_contents ?? '';
-<<<<<<< Updated upstream
-=======
         // $classContents = preg_replace(
         //     "/\r?\n\s*public function \w+\(\)\s*\r?\n\s*{\s*\r?\n\s*return \\$this->belongsTo\([^;]+;\s*\r?\n\s*}\s*/",
         //     "\n",
         //     $classContents
         // );
->>>>>>> Stashed changes
 
         $relations = '';
         $columnsLines = preg_split('/\r\n|\n|\r/', trim($request->columns));
@@ -202,7 +199,7 @@ class EntityController extends Controller
         $entityFileContent .= " 'created_by', 'updated_by', 'contributers', ";
         $entityFileContent .= "]; \n";
 
-        $entityFileContent .= "protected static function boot()\n        {\n            parent::boot();\n\n            static::creating(function (\\$model) {\n                \\$model->id = \\$model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);\n            });\n        }\n";
+        $entityFileContent .= "protected static function boot()\n        {\n            parent::boot();\n\n            static::creating(function (\$model) {\n                \$model->id = \$model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);\n            });\n        }\n";
         $entityFileContent .= $entity->class_contents;
         $entityFileContent .= "}";
         file_put_contents($entityFile, $entityFileContent);
