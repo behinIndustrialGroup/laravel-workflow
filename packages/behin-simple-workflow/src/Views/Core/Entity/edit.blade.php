@@ -93,6 +93,7 @@
                 <td>
                     <select class="form-control field-type">
                         <option value="string" ${type === 'string' ? 'selected' : ''}>string</option>
+                        <option value="text" ${type === 'text' ? 'selected' : ''}>text</option>
                         <option value="integer" ${type === 'integer' ? 'selected' : ''}>integer</option>
                         <option value="json" ${type === 'json' ? 'selected' : ''}>json</option>
                         <option value="entity" ${type === 'entity' ? 'selected' : ''}>entity</option>
