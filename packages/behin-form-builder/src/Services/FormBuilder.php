@@ -24,6 +24,7 @@ use MyFormBuilder\Renderers\FormRenderer;
 use MyFormBuilder\Fields\SelectMultipleField;
 use MyFormBuilder\Fields\SignatureField;
 use MyFormBuilder\Fields\TimeField;
+use MyFormBuilder\Fields\DateTimeField;
 use MyFormBuilder\Fields\ViewModelField;
 
 class FormBuilder
@@ -150,6 +151,15 @@ class FormBuilder
         $attributes = $attributes ?? [];
         // $field = $this->fieldFactory->create('text', $name, $attributes);
         return (new TimeField($name, $attributes))->render();
+        return $this;
+    }
+
+    public function datetime(string $name, array $attributes = null)
+    {
+
+        $attributes = $attributes ?? [];
+        // $field = $this->fieldFactory->create('text', $name, $attributes);
+        return (new DateTimeField($name, $attributes))->render();
         return $this;
     }
 

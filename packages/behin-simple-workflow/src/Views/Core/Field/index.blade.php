@@ -18,6 +18,7 @@
                 <option value="text">text</option>
                 <option value="date">date</option>
                 <option value="time">time</option>
+                <option value="datetime">datetime</option>
                 <option value="select">select</option>
                 <option value="select-multiple">select-multiple</option>
                 <option value="file">file</option>

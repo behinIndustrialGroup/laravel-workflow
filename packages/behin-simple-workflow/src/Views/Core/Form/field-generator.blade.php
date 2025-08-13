@@ -113,6 +113,18 @@
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
     ]) !!}
 @endif
+@if ($fieldDetails->type == 'datetime')
+    {!! Form::datetime($fieldId, [
+        'value' => $fieldValue,
+        'class' => 'form-control',
+        'id' => $fieldId,
+        'placeholder' => $fieldAttributes?->placeholder,
+        'required' => $required,
+        'readonly' => $readOnly,
+        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+    ]) !!}
+@endif
 @if ($fieldDetails->type == 'select')
     {!! Form::select($fieldId, is_string($fieldAttributes?->options) ? $fieldAttributes?->options : null, [
         'value' => $fieldValue,
