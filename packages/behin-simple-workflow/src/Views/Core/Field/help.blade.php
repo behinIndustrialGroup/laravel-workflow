@@ -38,6 +38,7 @@
     styleEditor.setOptions({
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
+        enableSnippets: true,
         wrap: true,
     });
     styleEditor.getSession().setUseWorker(false);
@@ -51,6 +52,7 @@
     scriptEditor.setOptions({
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
+        enableSnippets: true,
         wrap: true,
     });
     scriptEditor.getSession().setUseWorker(false);

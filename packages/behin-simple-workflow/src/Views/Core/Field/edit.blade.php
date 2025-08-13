@@ -6,7 +6,7 @@
 
 @section('content')
     {{-- ACE Editor --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-javascript.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-css.js"></script>
@@ -128,6 +128,7 @@
                                 styleEditor.setOptions({
                                     enableBasicAutocompletion: true,
                                     enableLiveAutocompletion: true,
+                                    enableSnippets: true,
                                     wrap: true,
                                 });
                                 styleEditor.getSession().setUseWorker(false);
@@ -162,6 +163,7 @@
                                 editor.setOptions({
                                     enableBasicAutocompletion: true,
                                     enableLiveAutocompletion: true,
+                                    enableSnippets: true,
                                     wrap: true,
                                 });
                                 editor.getSession().setUseWorker(false);
