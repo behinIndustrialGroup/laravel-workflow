@@ -31,26 +31,22 @@ class ViewModelField extends AbstractField
 
         $s .= "</div>";
 
-        $s .= "<table class='table table-striped' id='{$viewModel->id}'>";
-        $s .= "<thead><tr>";
-        foreach ($columns as $column) {
-            $columnLabel = trans("fields." . $column);
-            $s .= "<th>$columnLabel</th>";
+        $s .= "<table class='table table-striped' id='{$viewModel->id}' style='width: 100%'>";
+        if ($viewModel->show_as == 'table') {
+
+            $s .= "<thead><tr>";
+            foreach ($columns as $column) {
+                $columnLabel = trans("fields." . $column);
+                $s .= "<th>$columnLabel</th>";
+            }
+            $s .= "<th></th>";
+            $s .= "</tr></thead>";
         }
-        $s .= "<th></th>";
-        $s .= "</tr></thead>";
+
 
         $s .= "<tbody></tbody>";
 
-        if ($viewModel->allow_create_row) {
-            $s .= "<tfoot><tr>";
-            $colspan = count($columns) +1;
-            $btnLabel = trans('fields.Create new');
-            $s .= "<td colspan='{$colspan}'>";
-            $s .= "<button class='btn btn-sm btn-primary' onclick='open_view_model_create_new_form(`$viewModel->create_form`, `$viewModel->id`, `$viewModel->api_key`)'>";
-            $s .= "{$btnLabel}</button></td>";
-            $s .= "</tr></tfoot>";
-        }
+
 
         $s .= "</table>";
         $s .= "</div>";
