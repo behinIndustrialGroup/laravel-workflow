@@ -18,7 +18,7 @@ use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
 use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
-use Behin\SimpleWorkflow\Models\Entities\Other_daily_report;
+use Behin\SimpleWorkflow\Models\Entities\Other_daily_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
@@ -66,7 +66,7 @@ class DailyReportController extends Controller
             $externalAsAssistant = Repair_reports::query();
 
             $mapa_center = Mapa_center_fix_report::query();
-            $otherDailyReport = Other_daily_report::query();
+            $otherDailyReport = Other_daily_reports::query();
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
@@ -194,7 +194,7 @@ class DailyReportController extends Controller
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
-        $query = Other_daily_report::query();
+        $query = Other_daily_reports::query();
         if ($from) {
             $query->whereDate('created_at', '>=', $from);
         }
