@@ -8,6 +8,7 @@ use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Script;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use OpenAI;
 
 class ScriptController extends Controller
@@ -72,6 +73,56 @@ class ScriptController extends Controller
         $script->update($request->only('name', 'executive_file', 'content'));
 
         return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script updated successfully.');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('script_ids', []);
+        if (empty($ids)) {
+            return redirect()->route('simpleWorkflow.scripts.index')->with('error', 'No scripts selected for export.');
+        }
+
+        $scripts = Script::whereIn('id', $ids)->get();
+        $fileName = 'scripts-' . date('Ymd_His') . '.json';
+
+        if ($scripts->count() === 1) {
+            $content = $scripts->first()->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        } else {
+            $content = $scripts->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, $fileName);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'scripts_file' => 'required|file',
+        ]);
+
+        $content = file_get_contents($request->file('scripts_file')->getRealPath());
+        $data = json_decode($content, true);
+
+        if (is_null($data)) {
+            return redirect()->route('simpleWorkflow.scripts.index')->with('error', 'Invalid import file.');
+        }
+
+        $scriptsData = isset($data[0]) ? $data : [$data];
+
+        foreach ($scriptsData as $scriptData) {
+            $scriptArray = [
+                'id' => $scriptData['id'] ?? Str::uuid()->toString(),
+                'name' => $scriptData['name'] ?? null,
+                'executive_file' => $scriptData['executive_file'] ?? null,
+                'content' => $scriptData['content'] ?? null,
+            ];
+
+            Script::updateOrCreate(['id' => $scriptArray['id']], $scriptArray);
+        }
+
+        return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Scripts imported successfully.');
     }
 
     public static function getAll()
