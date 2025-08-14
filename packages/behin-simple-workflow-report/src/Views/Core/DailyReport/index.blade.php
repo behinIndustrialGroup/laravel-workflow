@@ -63,6 +63,7 @@ use Carbon\Carbon;
                                 <th>داخلی</th>
                                 <th>خارجی</th>
                                 <th>همکار</th>
+                                <th>متفرقه</th>
                             </tr>
                         </thead>
 
@@ -107,6 +108,14 @@ use Carbon\Carbon;
                                                 {{ $user->externalAsAssistant }}
                                             @endif
                                         </td>
+                                        <td>
+                                            @if ($user->other_daily_report > 0)
+                                                <i class="fa fa-external-link text-primary"
+                                                    onclick="showOtherDailyReport(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)">
+                                                </i>
+                                                {{ $user->other_daily_report }}
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -122,6 +131,7 @@ use Carbon\Carbon;
                                                 onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
                                             {{ $user->done }}
                                         </td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -220,6 +230,14 @@ use Carbon\Carbon;
 
         function showDones(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.personel-activity.showDones', ['user_id', 'from', 'to']) }}";
+            url = url.replace('user_id', userId)
+            url = url.replace('from', from)
+            url = url.replace('to', to)
+            open_admin_modal(url);
+        }
+
+        function showOtherDailyReport(userId, from = '', to = '') {
+            url = "{{ route('simpleWorkflowReport.daily-report.show-other-daily-report', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
             url = url.replace('from', from)
             url = url.replace('to', to)

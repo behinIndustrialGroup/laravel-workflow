@@ -18,6 +18,7 @@ use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
 use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
+use Behin\SimpleWorkflow\Models\Entities\Other_daily_report;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
@@ -65,12 +66,14 @@ class DailyReportController extends Controller
             $externalAsAssistant = Repair_reports::query();
 
             $mapa_center = Mapa_center_fix_report::query();
+            $otherDailyReport = Other_daily_report::query();
 
             if ($from) {
                 $internal = $internal->whereDate('updated_at', '>=', $from);
                 $external = $external->whereDate('created_at', '>=', $from);
                 $externalAsAssistant = $externalAsAssistant->whereDate('created_at', '>=', $from);
                 $mapa_center = $mapa_center->whereDate('updated_at', '>=', $from);
+                $otherDailyReport = $otherDailyReport->whereDate('created_at', '>=', $from);
             }
 
             if ($to) {
@@ -78,11 +81,13 @@ class DailyReportController extends Controller
                 $external = $external->whereDate('created_at', '<=', $to);
                 $externalAsAssistant = $externalAsAssistant->whereDate('created_at', '<=', $to);
                 $mapa_center = $mapa_center->whereDate('updated_at', '<=', $to);
+                $otherDailyReport = $otherDailyReport->whereDate('created_at', '<=', $to);
             }
             $row->internal = $internal->where('registered_by', $row->id)->distinct('case_number')->count('case_number');
             $row->external = $external->where('mapa_expert', $row->id)->distinct('case_number')->count('case_number');
             $row->externalAsAssistant = $externalAsAssistant->where('mapa_expert_companions', 'LIKE', '%"' . $row->id . '"%')->distinct('case_number')->count('case_number');
             $row->mapa_center = $mapa_center->where('expert', $row->id)->distinct('case_number')->count('case_number');
+            $row->other_daily_report = $otherDailyReport->where('created_by', $row->id)->distinct('case_number')->count('case_number');
         });
 
         // return (string)$from;
@@ -179,5 +184,27 @@ class DailyReportController extends Controller
             ->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external-as-assistant', compact('items'));
+    }
+
+    public function showOtherDailyReport($user_id, $from = null, $to = null)
+    {
+        $allowedProcessIds = $this->allowedProcessIds;
+        $from = $from ? convertPersianToEnglish($from) : null;
+        $to = $from ? convertPersianToEnglish($from) : null;
+        $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
+        $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
+
+        $query = Other_daily_report::query();
+        if ($from) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+        $items = $query->where('created_by', $user_id)->groupBy('case_number')
+            ->get();
+
+        return view('SimpleWorkflowReportView::Core.DailyReport.show-other-daily-report', compact('items'));
     }
 }
