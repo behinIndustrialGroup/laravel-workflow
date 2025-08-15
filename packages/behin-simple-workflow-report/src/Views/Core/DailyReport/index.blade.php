@@ -144,43 +144,6 @@ use Carbon\Carbon;
                 </div>
             </div>
         </div>
-        {{-- <div class="card">
-            <div class="card-body">
-                <div class="col-sm-12 table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>شماره</th>
-                                <th>نام</th>
-                                <th>در دست اقدام</th>
-                                <th>انجام داده</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($items as $user)
-                                @if (in_array($user->id, $recieptionists))
-                                    <tr @if ($user->done > 0) style="background-color: #e6f4ea;" @endif
-                                        @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif>
-                                        <td>{{ $user->number }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showInboxes(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
-                                            {{ $user->inbox }}
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-external-link text-primary"
-                                                onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
-                                            {{ $user->done }}
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> --}}
     </div>
 @endsection
 
