@@ -287,9 +287,10 @@
 
 
 <script>
-    $(document).ready(function() {
-        initial_view()
-    })
+    $(window).on('load', function() {
+        initial_view();
+    });
+
 
     function initial_view() {
         $('.select2').select2();
@@ -331,7 +332,7 @@
 
                 let originalHtml = $cell.html();
                 let textOnly = $cell.clone().children().remove().end().text()
-            .trim(); // حذف تگ‌ها برای شمارش دقیق
+                    .trim(); // حذف تگ‌ها برای شمارش دقیق
 
                 if (textOnly.length > 25) {
                     let shortText = textOnly.substr(0, 25);
