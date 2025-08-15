@@ -18,7 +18,7 @@
         <h3 class="card-title">جزئیات بیشتر طلبکار: {{ $creditors[0]->counterparty }}</h3>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" id="cheque-list">
+        <table class="table table-bordered" id="more-details">
             <thead>
                 <tr>
                     <th>نوع</th>
@@ -59,7 +59,7 @@
 </div>
 
 <script>
-    $('#cheque-list').DataTable({
+    $('#more-details').DataTable({
         "pageLength": 25,
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"

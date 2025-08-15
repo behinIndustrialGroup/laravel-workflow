@@ -10,7 +10,7 @@
     $viewModelApikey = $viewModel->api_key;
     $viewModelCreateNewForm = $viewModel->create_form;
 
-    $addTasvieViewModelId = "6f34acb3-b60e-4a4a-99a5-4d3f8467ca6a";
+    $addTasvieViewModelId = '6f34acb3-b60e-4a4a-99a5-4d3f8467ca6a';
     $addTasvieViewModel = ViewModelController::getById($addTasvieViewModelId);
     $addTasvieViewModelUpdateForm = $addTasvieViewModel->update_form;
     $addTasvieViewModelApikey = $addTasvieViewModel->api_key;
@@ -73,8 +73,6 @@
                             <td>
                                 <button class="btn btn-primary"
                                     onclick="showDetails(`{{ $creditor->counterparty }}`)">جزئیات بیشتر</button>
-                                <button class="btn btn-danger"
-                                    onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
                             </td>
                         </tr>
                     @endforeach
