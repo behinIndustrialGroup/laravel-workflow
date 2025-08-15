@@ -287,7 +287,9 @@
 
 
 <script>
-    initial_view()
+    $(document).ready(function() {
+        initial_view()
+    })
 
     function initial_view() {
         $('.select2').select2();
