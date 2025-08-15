@@ -333,7 +333,7 @@
             unformatOnSubmit: true
         });
 
-            $('table tbody td .show-less').each(function() {
+            $('.show-less').each(function() {
                 let $cell = $(this);
 
                 // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده

@@ -124,7 +124,7 @@
                             @if($row->cost2)
                                 <tr>
                                     <td>{{ $rowNumber++ }}</td>
-                                    <td>{{ $row->process_name }}
+                                    <td class="show-less">{{ $row->process_name }}
                                         @php
                                             if ($row->process_name == 'داخلی') {
                                                 $numberOfInternalProcess += 1;
