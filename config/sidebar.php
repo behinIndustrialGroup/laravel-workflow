@@ -70,7 +70,7 @@ return [
             ]
         ],
         'users' => [
-            'icon' => 'fa fa-user',
+            'icon' => 'person',
             'fa_name' => 'کاربران',
             'submenu' => [
                 'dashboard' => [ 'fa_name' => 'همه', 'route-name' => '', 'route-url' => 'user/all' ],
