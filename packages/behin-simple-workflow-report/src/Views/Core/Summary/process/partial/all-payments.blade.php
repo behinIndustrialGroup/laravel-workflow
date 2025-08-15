@@ -205,7 +205,6 @@
 
 @section('script')
     <script>
-        initial_view();
         $(document).ready(function() {
             $('#total-cost').DataTable({
                 "dom": 'Bfrtip',

@@ -333,8 +333,7 @@
             unformatOnSubmit: true
         });
 
-        $(document).ready(function() {
-            $('table tbody td').each(function() {
+            $('table tbody td').not('.no-show-less').each(function() {
                 let $cell = $(this);
 
                 // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده
@@ -360,7 +359,6 @@
                 $cell.find('.short-text, .full-text').toggle();
                 $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
             });
-        })
     }
 </script>
 
