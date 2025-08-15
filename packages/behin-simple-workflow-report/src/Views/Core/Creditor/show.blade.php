@@ -57,9 +57,7 @@
             </table>
         </div>
     </div>
-@endsection
 
-@section('script')
     <script>
         $('#cheque-list').DataTable({
             "pageLength": 25,
@@ -68,4 +66,3 @@
             }
         });
     </script>
-@endsection
