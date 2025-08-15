@@ -1,5 +1,3 @@
-
-
 @php
     use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
     $viewModelId = '7735ccdf-d5f2-4c38-8d02-ab7c139e5015';
@@ -8,7 +6,7 @@
     $viewModelApikey = $viewModel->api_key;
     $viewModelCreateNewForm = $viewModel->create_form;
 
-    $addTasvieViewModelId = "6f34acb3-b60e-4a4a-99a5-4d3f8467ca6a";
+    $addTasvieViewModelId = '6f34acb3-b60e-4a4a-99a5-4d3f8467ca6a';
     $addTasvieViewModel = ViewModelController::getById($addTasvieViewModelId);
     $addTasvieViewModelUpdateForm = $addTasvieViewModel->update_form;
     $addTasvieViewModelApikey = $addTasvieViewModel->api_key;
@@ -20,49 +18,51 @@
         <h3 class="card-title">جزئیات بیشتر طلبکار: {{ $creditors[0]->counterparty }}</h3>
     </div>
     <div class="card-body">
-            <table class="table table-bordered" id="cheque-list">
-                <thead>
+        <table class="table table-bordered" id="cheque-list">
+            <thead>
+                <tr>
+                    <th>نوع</th>
+                    <th>توضیحات</th>
+                    <th>طرف حساب</th>
+                    <th>مبلغ طلب</th>
+                    <th>شماره فاکتور</th>
+                    <th>تاریخ فاکتور</th>
+                    <th>اقدامات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($creditors as $creditor)
                     <tr>
-                        <th>توضیحات</th>
-                        <th>طرف حساب</th>
-                        <th>مبلغ طلب</th>
-                        <th>شماره فاکتور</th>
-                        <th>تاریخ فاکتور</th>
-                        <th>تسویه</th>
-                        <th>نحوه تسویه</th>
-                        <th>تاریخ پرداخت</th>
-                        <th>اقدامات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($creditors as $creditor)
-                        <tr>
-                            <td>{{ $creditor->description }}</td>
-                            <td>{{ $creditor->counterparty }}</td>
-                            <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
-                            <td>{{ $creditor->invoice_number }}</td>
-                            <td>{{ $creditor->invoice_date }}</td>
-                            <td>{{ $creditor->is_settled }}</td>
-                            <td>{{ $creditor->settlement_type }}</td>
-                            <td>{{ $creditor->settlement_date }}</td>
-                            <td>
-                                <button class="btn btn-primary"
+                        <td>{{ $creditor->type }}</td>
+                        <td>{{ $creditor->description }}</td>
+                        <td>{{ $creditor->counterparty }}</td>
+                        <td dir="ltr">{{ number_format($creditor->amount) }}</td>
+                        <td>{{ $creditor->invoice_number }}</td>
+                        <td>{{ $creditor->invoice_date }}</td>
+                        <td>
+                            @if ($creditor->type == 'طلب')
+                                <button class="btn btn-sm btn-warning"
                                     onclick="open_view_model_form(`{{ $viewModelUpdateForm }}`, `{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">ویرایش</button>
-                                <button class="btn btn-danger"
-                                    onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                            @endif
+                            @if ($creditor->type == 'تسویه')
+                                <button class="btn btn-sm btn-primary"
+                                    onclick="open_view_model_form(`{{ $addTasvieViewModelUpdateForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $creditor->id }}`, `{{ $addTasvieViewModelApikey }}`)">ویرایش</button>
+                            @endif
+                            <button class="btn btn-sm btn-danger"
+                                onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <script>
-        $('#cheque-list').DataTable({
-            "pageLength": 25,
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            }
-        });
-    </script>
+<script>
+    $('#cheque-list').DataTable({
+        "pageLength": 25,
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+        }
+    });
+</script>

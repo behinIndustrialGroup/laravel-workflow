@@ -31,11 +31,11 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <button class="btn btn-primary"
+            <button class="btn btn-sm btn-warning"
                 onclick="open_view_model_create_new_form(`{{ $viewModelCreateNewForm }}`, `{{ $viewModelId }}`, `{{ $viewModelApikey }}`)">افزودن
                 طلبکار</button>
 
-            <button class="btn btn-primary"
+            <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
                 تسویه</button>
         </div>
