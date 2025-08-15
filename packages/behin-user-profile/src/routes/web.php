@@ -7,6 +7,7 @@ use UserProfile\Controllers\ChangePasswordController;
 use UserProfile\Controllers\GetUserAgenciesController;
 use UserProfile\Controllers\NationalIdController;
 use UserProfile\Controllers\UserProfileController;
+use UserProfile\Controllers\ThemeColorController;
 
 Route::name('user-profile.')->prefix('user-profile')->middleware(['web','auth'])->group(function(){
     Route::post('getUserAgencies', [GetUserAgenciesController::class, 'get'])->name('getUserAgencies');
@@ -17,6 +18,7 @@ Route::name('user-profile.')->prefix('user-profile')->middleware(['web','auth'])
 
     Route::get('/change-password', [ChangePasswordController::class, 'edit'])->name('change-password');
     Route::post('', [NationalIdController::class, 'store'])->name('storeNationalId');
+    Route::post('colors', [ThemeColorController::class, 'store'])->name('storeColors');
     Route::put('/', [ChangePasswordController::class, 'update'])->name('update-password');
 
 });

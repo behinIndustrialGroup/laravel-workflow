@@ -1,60 +1,53 @@
+<aside class="main-sidebar elevation-4" style="background: {{ $sidebarColor ?? '#263238' }}; color: #fff; min-height: 100vh;">
 
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    {{-- <a href="index3.html" class="brand-link">
-        <img src="{{ url('public/behin/behin-dist/dist/img/avatar5.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8">
-        <span class="brand-text font-weight-light">پنل مدیریت</span>
-    </a> --}}
-
-    <div class="sidebar" style="direction: ltr">
-        <div style="direction: rtl">
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
+    <!-- User Profile -->
+    <div class="sidebar p-3" style="direction: ltr;">
+        <div style="direction: rtl;">
+            <div class="user-panel d-flex align-items-center mb-4 p-2 rounded" style="background: rgba(255,255,255,0.05);">
+                <div class="image me-2">
                     <img src="{{ url('public/behin/behin-dist/dist/img/avatar5.png') }}"
-                        class="img-circle elevation-2" alt="User Image">
+                         class="rounded-circle" alt="User Image" width="45" height="45">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">{{ auth()->user()->name ?? ''}}</a>
+                    <span class="fw-bold">{{ auth()->user()->name ?? 'کاربر' }}</span>
                 </div>
             </div>
 
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
+            <!-- Navigation Menu -->
+            <nav>
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     @foreach (config('sidebar.menu') as $menu)
                         @if ( access('منو >>' .$menu['fa_name']) )
-                          <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link active">
-                                <i class="nav-icon @isset($menu['icon']) {{$menu['icon']}} @endisset"></i>
-                                <p>
-                                    {{ $menu['fa_name'] }}
-                                    <i class="right fa fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @foreach ($menu['submenu'] as $submenu)
-                                  @if ( access('منو >>' .$menu['fa_name'] . '>>' . $submenu['fa_name'] ) )
-                                    <li class="nav-item">
-                                        <a
-                                          @isset($submenu['target']) target="{{ $submenu['target'] }}" @endisset
-                                         href="@if(Route::has($submenu['route-name'])) 
-                                                    {{ route($submenu['route-name']) }} 
-                                                @elseif(isset($submenu['static-url']))
-                                                    {{ $submenu['static-url'] }}
-                                                @else
-                                                    {{ url($submenu['route-url']) }} 
-                                                @endif" class="nav-link active">
-                                            <i class="fa fa-circle-o nav-icon"></i>
-                                            <p>{{ $submenu['fa_name'] }}</p>
-                                        </a>
-                                    </li>
-                                  @endif
-                                @endforeach
-                            </ul>
-                          </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link d-flex align-items-center" style="color: #fff; padding: 10px 15px;">
+                                    <i class="material-icons me-2">@isset($menu['icon']) {{ $menu['icon'] }} @else menu @endisset</i>
+                                    <span>{{ $menu['fa_name'] }}</span>
+                                    <i class="material-icons ms-auto" style="font-size: 18px;">expand_more</i>
+                                </a>
+                                <ul class="nav nav-treeview ms-3" style="border-left: 2px solid rgba(255,255,255,0.1); margin-left: 10px;">
+                                    @foreach ($menu['submenu'] as $submenu)
+                                        @if ( access('منو >>' .$menu['fa_name'] . '>>' . $submenu['fa_name'] ) )
+                                            <li class="nav-item">
+                                                <a 
+                                                    @isset($submenu['target']) target="{{ $submenu['target'] }}" @endisset
+                                                    href="@if(Route::has($submenu['route-name'])) 
+                                                                {{ route($submenu['route-name']) }} 
+                                                            @elseif(isset($submenu['static-url']))
+                                                                {{ $submenu['static-url'] }}
+                                                            @else
+                                                                {{ url($submenu['route-url']) }} 
+                                                            @endif"
+                                                    class="nav-link" 
+                                                    style="color: #cfd8dc; padding: 8px 15px; transition: all 0.3s ease;">
+                                                    <i class="material-icons" style="font-size: 16px;">chevron_left</i>
+                                                    <span>{{ $submenu['fa_name'] }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
                         @endif
-                        
                     @endforeach
                 </ul>
             </nav>
@@ -62,4 +55,21 @@
     </div>
 </aside>
 
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<style>
+    .nav-link {
+        color: #bfbfbf !important;
+        border-radius: 8px;
+    }
+    .nav-link:hover {
+        background: rgba(255,255,255,0.08);
+        color: #fff !important;
+        border-radius: 8px;
+    }
+    .nav-treeview .nav-link:hover {
+        background: rgba(255,255,255,0.05);
+        padding-left: 20px !important;
+    }
+</style>

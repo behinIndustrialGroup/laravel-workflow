@@ -25,9 +25,22 @@
                         <button class="btn btn-primary btn-sm col-sm-2" onclick="store_national_id()">ثبت</button>
                     </form>
                 @endif
-                <div class="row">
-
-                </div>
+                <form action="javascript:void(0)" class="row mt-3" id="store-colors-form">
+                    @csrf
+                    <div class="col-sm-4">رنگ هدر :</div>
+                    <div class="col-sm-6">
+                        <input type="color" class="form-control" name="header_background"
+                            value="{{ $userProfile->header_background ?? '#263238' }}">
+                    </div>
+                    <div class="col-sm-4 mt-2">رنگ سایدبار :</div>
+                    <div class="col-sm-6 mt-2">
+                        <input type="color" class="form-control" name="sidebar_background"
+                            value="{{ $userProfile->sidebar_background ?? '#263238' }}">
+                    </div>
+                    <div class="col-sm-12 mt-2">
+                        <button class="btn btn-primary btn-sm" onclick="store_colors()">ثبت</button>
+                    </div>
+                </form>
             </div>
             <div class="col-sm-3"></div>
             <div class="col-sm-3">
@@ -70,6 +83,19 @@
             var data = new FormData(form);
             send_ajax_formdata_request(
                 "{{ route('user-profile.storeNationalId') }}",
+                data,
+                function(response) {
+                    show_message("{{ trans('ok') }}")
+                    location.reload()
+                }
+            )
+        }
+
+        function store_colors() {
+            var form = $('#store-colors-form')[0];
+            var data = new FormData(form);
+            send_ajax_formdata_request(
+                "{{ route('user-profile.storeColors') }}",
                 data,
                 function(response) {
                     show_message("{{ trans('ok') }}")

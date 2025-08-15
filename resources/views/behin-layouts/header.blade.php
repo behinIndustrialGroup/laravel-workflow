@@ -2,72 +2,91 @@
 use App\CustomClasses\Access;
 ?>
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+<nav class="main-header navbar navbar-expand" style="background-color: {{ $headerColor ?? '#263238' }}; color: #fff; border-bottom: none;">
+
     <!-- Left navbar links -->
-    <ul class="navbar-nav">
+    <ul class="navbar-nav align-items-center">
+        <!-- Menu Toggle -->
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            <a class="nav-link text-white" data-widget="pushmenu" href="#">
+                <i class="material-icons">menu</i>
+            </a>
         </li>
-        {{-- <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">خانه</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">تماس</a>
-      </li> --}}
+
+        <!-- Send SMS -->
         @if (access('send-sms'))
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="{{ url('admin/send-sms') }}" class="nav-link btn btn-default">
+            <li class="nav-item">
+                <a href="{{ url('admin/send-sms') }}" class="btn btn-sm btn-outline-light ms-2">
+                    <i class="material-icons" style="font-size:18px;">sms</i>
                     ارسال پیامک
                 </a>
             </li>
         @endif
-        <a href="{{ route('send-notification') }}" class="btn btn-sm btn-warning">
-            تست نوتیفیکیشن
-        </a>
-        
+
+        <!-- Test Notification -->
+        <li class="nav-item d-none d-md-block">
+            <a href="{{ route('send-notification') }}" class="btn btn-sm btn-warning">
+                <i class="fa fa-bell"></i>
+                تست نوتیفیکیشن
+            </a>
+        </li>
     </ul>
 
-    <!-- SEARCH FORM -->
-    {{-- <form class="form-inline ml-3">
-        <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="جستجو" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </form> --}}
-
     <!-- Right navbar links -->
-    <ul class="navbar-nav mr-auto">
-        <!-- Messages Dropdown Menu -->
-        {{-- <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="fa fa-comments-o"></i>
-                <span class="badge badge-danger navbar-badge">3</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
-                <a href="{{ url('admin/messages/list') }}" class="dropdown-item dropdown-footer">نمایش تماام پیام ها</a>
-            </div>
-        </li> --}}
+    <ul class="navbar-nav ms-auto align-items-center" >
+
+        <!-- Refresh -->
         <li class="mr-2">
-            <button type="button" class="btn btn-sm btn-warning" onclick="window.location.reload()">
-                <i class="fa fa-refresh"></i> {{ __('Refresh') }}
+            <button type="button" class="btn btn-sm btn-outline-light" onclick="window.location.reload()">
+                <i class="fa fa-refresh"></i>
+                {{ __('Refresh') }}
             </button>
         </li>
+
+        <!-- Home -->
         <li class="mr-2">
-            <a href="{{ url('admin') }}" class="btn btn-sm btn-warning">
+            <a href="{{ url('admin') }}" class="btn btn-sm btn-primary">
                 <i class="fa fa-home"></i>
             </a>
         </li>
 
+        <!-- Todo List -->
         @include('TodoListViews::partial-views.todo-list-icon')
 
+        <!-- User Profile -->
         @include('UserProfileViews::partial-views.user-profile-icon')
 
+        <!-- Logout -->
         <li class="mr-2">
-            <button class="btn btn-sm btn-danger" onclick="logout()"><i class="fa fa-power-off"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="logout()">
+                <i class="fa fa-sign-out"></i>
+            </button>
         </li>
     </ul>
 </nav>
+
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+    .navbar .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .navbar .btn-outline-light:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+    .navbar .btn-warning {
+        color: #000;
+        font-weight: 600;
+    }
+    .navbar .nav-link:hover {
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+    }
+    .navbar-expand{
+        justify-content:space-between !important;
+    }
+</style>
