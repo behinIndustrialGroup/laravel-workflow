@@ -5,18 +5,18 @@
 @endsection
 
 @php
-use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
+    use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
     $disableBackBtn = true;
-    $installPartViewModelId = "218c2926-67c3-4344-a54d-5f718eba3882";
+    $installPartViewModelId = '218c2926-67c3-4344-a54d-5f718eba3882';
     $installPartViewModel = ViewModelController::getById($installPartViewModelId);
     $installPartViewModelUpdateForm = $installPartViewModel->update_form;
     $installPartViewModelApikey = $installPartViewModel->api_key;
 @endphp
 
 @php
-    if(auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری')){
+    if (auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری')) {
         $customerForm = getFormInformation('d6a98160-91aa-4f17-9bb3-f9284b2882b2');
-    }else{
+    } else {
         $customerForm = getFormInformation('ac67f40d-4aa1-417a-9284-6a5c2f571ea1');
     }
     $deviceForm = getFormInformation('670fb05c-a794-4677-be5d-80b6c9b13da9');
@@ -315,7 +315,7 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                     <td>{{ jdate($part->created_at)->format('Y/m/d') }}</td>
                                     @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
                                         @php
-                                            $totalAmount += (int)str_replace(',', '', $part->amount);
+                                            $totalAmount += (int) str_replace(',', '', $part->amount);
                                         @endphp
                                         <td>{{ $part->supply_source }}</td>
                                         <td>{{ $part->invoice_number }}</td>
@@ -342,14 +342,14 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
                                 </tr>
                             @endforelse
                         </tbody>
-                        @if(auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
-                        <tfoot>
-                            <tr>
-                                <td colspan="{{ $colspan - 2 }}" class="text-center">مجموع</td>
-                                <td>{{ number_format($totalAmount) }}</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
+                        @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                            <tfoot>
+                                <tr>
+                                    <td colspan="{{ $colspan - 2 }}" class="text-center">مجموع</td>
+                                    <td>{{ number_format($totalAmount) }}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         @endif
                     </table>
                 </div>
@@ -492,13 +492,18 @@ use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
     </script>
     <script>
         $(document).ready(function() {
-            $('#mapa-center-reports').DataTable({
-                'language': {
-                    'url': 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+            var table = $('#mapa-center-reports').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
                 },
-                'order': [
+                order: [
                     [1, 'desc']
-                ],
+                ]
+            });
+
+            // اجرا بعد از هر بار لود/رفرش جدول
+            table.on('draw.dt', function() {
+                initial_view();
             });
         });
 
