@@ -105,7 +105,7 @@
                             گزارش مجموع هزینه های دریافت شده
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table no-show-less" id="total-cost">
+                            <table class="table" id="total-cost">
                                 <thead>
                                     <tr>
                                         <th>{{ trans('fields.case_number') }}</th>
