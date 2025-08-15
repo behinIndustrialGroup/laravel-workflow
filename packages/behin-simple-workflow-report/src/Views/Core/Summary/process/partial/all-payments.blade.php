@@ -139,7 +139,7 @@
                                             href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->case_number]) }}"><i
                                                 class="fa fa-external-link"></i></a>
                                     </td>
-                                    <td>{{ $row->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
+                                    <td class="show-less">{{ $row->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : '' }}
                                     </td>
                                     <td class="d-none">{{ number_format((int)$row->cost2) }}</td>
