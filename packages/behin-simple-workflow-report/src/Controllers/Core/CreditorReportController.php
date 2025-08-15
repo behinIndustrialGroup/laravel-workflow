@@ -32,4 +32,10 @@ class CreditorReportController extends Controller
 
         return view('SimpleWorkflowReportView::Core.Creditor.index', compact('creditors'));
     }
+
+    public function show($counterparty)
+    {
+        $creditors = Creditor::where('counterparty', $counterparty)->get();
+        return view('SimpleWorkflowReportView::Core.Creditor.show', compact('creditors'));
+    }
 }
