@@ -64,7 +64,7 @@
                         <tr>
                             <td>{{ $creditor->description }}</td>
                             <td>{{ $creditor->counterparty }}</td>
-                            <td>{{ $creditor->total_amount }}</td>
+                            <td>{{ number_format($creditor->total_amount) }}</td>
                             {{-- <td>{{ $creditor->invoice_number }}</td>
                             <td>{{ $creditor->invoice_date }}</td>
                             <td>{{ $creditor->is_settled }}</td>
