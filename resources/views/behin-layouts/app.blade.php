@@ -320,32 +320,34 @@
             unformatOnSubmit: true
         });
 
-        $('table tbody td').each(function() {
-            let $cell = $(this);
+        $(document).ready(function() {
+            $('table tbody td').each(function() {
+                let $cell = $(this);
 
-            // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده
-            if ($cell.find('.toggle-btn').length) return;
+                // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده
+                if ($cell.find('.toggle-btn').length) return;
 
-            let originalHtml = $cell.html();
-            let textOnly = $cell.clone().children().remove().end().text().trim(); // حذف تگ‌ها برای شمارش دقیق
+                let originalHtml = $cell.html();
+                let textOnly = $cell.clone().children().remove().end().text()
+            .trim(); // حذف تگ‌ها برای شمارش دقیق
 
-            if (textOnly.length > 25) {
-                let shortText = textOnly.substr(0, 25);
+                if (textOnly.length > 25) {
+                    let shortText = textOnly.substr(0, 25);
 
-                $cell.html(`
+                    $cell.html(`
             <span class="short-text">${shortText}</span>
             <span class="full-text" style="display:none;">${originalHtml}</span>
             <button class="toggle-btn show-more-btn material-icons" style="border:none;background:none;cursor:pointer;">more_horiz</button>
         `);
-            }
-        });
+                }
+            });
 
-        $(document).on('click', '.toggle-btn', function() {
-            let $cell = $(this).closest('td');
-            $cell.find('.short-text, .full-text').toggle();
-            $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
-        });
-
+            $(document).on('click', '.toggle-btn', function() {
+                let $cell = $(this).closest('td');
+                $cell.find('.short-text, .full-text').toggle();
+                $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
+            });
+        })
     }
 </script>
 
