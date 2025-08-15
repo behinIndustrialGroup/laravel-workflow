@@ -87,5 +87,8 @@ return [
     'visit_time'=> 'زمان مراجعه',
     'dispatched_expert_needed' => 'نیاز به کارشناس اعزامی',
     'refer_to_unit' => 'ارجاع به واحد',
+    'Forms' => 'فرم ها',
+    'Transfer cases to task' => 'انتقال کیس ها به تسک',
+    'Task deleted successfully' => 'تسک با موفقیت حذف شد',
 
 ];

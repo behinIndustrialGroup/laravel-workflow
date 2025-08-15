@@ -78,6 +78,59 @@ class ViewModelController extends Controller
         return redirect()->back()->with(['success' => trans('fields.Copy Successfully')]);
     }
 
+    public function export(Request $request)
+    {
+        $ids = $request->input('view_model_ids', []);
+        if (empty($ids)) {
+            return redirect()->route('simpleWorkflow.view-model.index')->with('error', 'No view models selected for export.');
+        }
+        $viewModels = ViewModel::whereIn('id', $ids)->get();
+        $fileName = 'view-models-' . date('Ymd_His') . '.json';
+
+        if ($viewModels->count() === 1) {
+            $content = $viewModels->first()->toJson(JSON_PRETTY_PRINT);
+        } else {
+            $content = $viewModels->toJson(JSON_PRETTY_PRINT);
+        }
+
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, $fileName);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'view_models_file' => 'required|file',
+        ]);
+
+        $content = file_get_contents($request->file('view_models_file')->getRealPath());
+        $data = json_decode($content, true);
+
+        if (is_null($data)) {
+            return redirect()->route('simpleWorkflow.view-model.index')->with('error', 'Invalid import file.');
+        }
+
+        $items = isset($data[0]) ? $data : [$data];
+        $fillable = (new ViewModel())->getFillable();
+
+        foreach ($items as $item) {
+            $attributes = [];
+            foreach ($fillable as $field) {
+                if (array_key_exists($field, $item)) {
+                    $attributes[$field] = $item[$field];
+                }
+            }
+
+            $id = $item['id'] ?? Str::uuid()->toString();
+            $attributes['id'] = $id;
+
+            ViewModel::updateOrCreate(['id' => $id], $attributes);
+        }
+
+        return redirect()->route('simpleWorkflow.view-model.index')->with('success', 'View models imported successfully.');
+    }
+
 
     public static function getById($id)
     {

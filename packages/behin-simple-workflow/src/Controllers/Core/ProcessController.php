@@ -34,6 +34,19 @@ class ProcessController extends Controller
         return Process::create($request->all());
     }
 
+    public function edit($processId): View
+    {
+        $process = Process::findOrFail($processId);
+        return view('SimpleWorkflowView::Core.Process.edit', compact('process'));
+    }
+
+    public function update(Request $request, $processId)
+    {
+        $process = Process::findOrFail($processId);
+        $process->update($request->only(['name', 'category', 'case_prefix']));
+        return redirect()->route('simpleWorkflow.process.index');
+    }
+
     public static function getById($id): Process
     {
         return Process::find($id);

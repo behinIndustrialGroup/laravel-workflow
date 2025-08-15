@@ -46,6 +46,30 @@ class TaskController extends Controller
         return redirect()->back()->with('success', trans('Updated Successfully'));
     }
 
+    public function destroy(Request $request, Task $task)
+    {
+        $request->validate([
+            'transfer_task_id' => 'required|exists:wf_task,id',
+        ]);
+
+        $transferTaskId = $request->transfer_task_id;
+
+        $inboxes = InboxController::getAllByTaskId($task->id);
+        foreach ($inboxes as $inbox) {
+            $inbox->task_id = $transferTaskId;
+            $newTask = self::getById($transferTaskId);
+            $caseName = InboxController::createCaseName($newTask, $inbox->case_id);
+            InboxController::editCaseName($inbox->id, $caseName);
+            $inbox->save();
+        }
+
+        $processId = $task->process_id;
+        $task->delete();
+
+        return redirect()->route('simpleWorkflow.task.index', ['process_id' => $processId])
+            ->with('success', trans('fields.Task deleted successfully'));
+    }
+
     public static function getById($id){
         return Task::find($id);
     }

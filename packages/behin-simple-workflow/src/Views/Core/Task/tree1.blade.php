@@ -17,7 +17,7 @@
         }
 
     @endphp
-    {{ $task->id }} --> {{ $child->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"
+    {{ $task->id }} --> {{ $child->id }}["<a type='submit' class="{{ $taskClass }} task-edit-link"
         href='{{ route('simpleWorkflow.task.edit', $child->id) }}'>{{ $child->name }}</a>"]:::{{ $taskClass }}
     @php
         $children = $child->children();

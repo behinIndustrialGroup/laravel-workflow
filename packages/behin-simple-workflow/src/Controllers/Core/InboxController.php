@@ -202,15 +202,17 @@ class InboxController extends Controller
         $title = $task->case_name;
 
         if (!$task->case_name) {
-            $case = CasesManual::find($caseId);
-            return $case->createName();
-
-            if (method_exists($case, 'name')) {
-                $case_name = $case->name();
-                if ($case_name) {
-                    return $case_name;
-                }
+            if(class_exists(CasesManual::class)){
+                $case = CasesManual::find($caseId);
+                return $case->createName();
             }
+
+            // if (method_exists($case, 'name')) {
+            //     $case_name = $case->name();
+            //     if ($case_name) {
+            //         return $case_name;
+            //     }
+            // }
         }
 
         // جایگزینی متغیرها در عنوان

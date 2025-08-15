@@ -32,44 +32,67 @@
                 {{ session('success') }}
             </div>
         @endif
-        <table class="table table-strpped" id="table">
-            <thead>
-                <tr>
-                    <th>{{ trans('ID') }}</th>
-                    <th class="text-left">{{ trans('fields.Name') }}</th>
-                    <th class="text-left">{{ trans('fields.Name') }}</th>
-                    <th>{{ trans('fields.Actions') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($entities as $entity)
+        <form action="{{ route('simpleWorkflow.entities.export') }}" method="POST">
+            @csrf
+            <div class="mb-2">
+                <button class="btn btn-default">{{ trans('fields.Export') }}</button>
+            </div>
+            <table class="table table-strpped" id="table">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td class="text-left">{{ trans("fields.".$entity->name) }}</td>
-                        <td class="text-left">{{ $entity->name }}</td>
-                        <td>
-                            <a href="{{ route('simpleWorkflow.entities.edit', $entity->id) }}">{{ trans('fields.Edit') }}</a> |
-                            <a href="{{ route('simpleWorkflow.entities.destroy', $entity->id) }}" onclick="return confirm('{{ trans('messages.confirmDelete') }}')">{{ trans('fields.Delete') }}</a>
-                        </td>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>{{ trans('ID') }}</th>
+                        <th class="text-left">{{ trans('fields.Name') }}</th>
+                        <th class="text-left">{{ trans('fields.Name') }}</th>
+                        <th>{{ trans('fields.Actions') }}</th>
                     </tr>
-                @endforeach
+                </thead>
+                <tbody>
+                    @foreach ($entities as $entity)
+                        <tr>
+                            <td><input type="checkbox" name="ids[]" value="{{ $entity->id }}"></td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-left">{{ trans("fields.".$entity->name) }}</td>
+                            <td class="text-left">{{ $entity->name }}</td>
+                            <td>
+                                <a href="{{ route('simpleWorkflow.entities.edit', $entity->id) }}">{{ trans('fields.Edit') }}</a> |
+                                <a href="{{ route('simpleWorkflow.entities.records', $entity->id) }}">{{ trans('fields.Edit Records') }}</a> |
+                                <a href="{{ route('simpleWorkflow.entities.destroy', $entity->id) }}" onclick="return confirm('{{ trans('messages.confirmDelete') }}')">{{ trans('fields.Delete') }}</a>
+                            </td>
+                        </tr>
+                    @endforeach
 
-            </tbody>
-            <tfoot id="createForm">
+                </tbody>
+                <tfoot id="createForm">
 
-            </tfoot>
-        </table>
-
+                </tfoot>
+            </table>
+        </form>
+        <form action="{{ route('simpleWorkflow.entities.import') }}" method="POST" enctype="multipart/form-data" class="mt-3">
+            @csrf
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="file" name="file" class="form-control" required>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-default">{{ trans('fields.Import') }}</button>
+                </div>
+            </div>
+        </form>
+        
     </div>
 @endsection
 
 @section('script')
     <script>
-        initial_view();
         $('#table').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
+        });
+        document.getElementById('select-all').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#table tbody input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
         });
     </script>
 @endsection

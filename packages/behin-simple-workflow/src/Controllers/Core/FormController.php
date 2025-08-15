@@ -24,6 +24,7 @@ class FormController extends Controller
     public static function getFormFields($id){
         $form = self::getById($id);
         $fields = json_decode($form->content);
+        $fields = is_array($fields) ? $fields : [];
         $ar = [];
         foreach($fields as $field){
             $fieldDetails = getFieldDetailsByName($field->fieldName);

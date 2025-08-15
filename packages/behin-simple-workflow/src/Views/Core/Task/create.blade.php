@@ -96,7 +96,7 @@
                         if($task->type == 'timed_condition')
                             $taskClass = 'task-timed_condition';
                     @endphp
-                    {{ $task->id }}["<a type='submit' target="_blank" class="{{ $taskClass }}"
+                    {{ $task->id }}["<a type='submit' class="{{ $taskClass }} task-edit-link"
                         href='{{ route('simpleWorkflow.task.edit', $task->id) }}'>{{ $task->name }}</a>"]:::{{ $taskClass }}
                     @php
                         $children = $task->children();
@@ -156,12 +156,39 @@
             </div>
         </form>
 
+        <!-- Modal for editing tasks -->
+        <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <iframe id="taskModalIframe" style="width:100%;height:80vh;border:0;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
 @section('script')
     <script>
-        initial_view()
+        initial_view();
+
+        document.addEventListener('click', function(e){
+            const link = e.target.closest('.task-edit-link');
+            if(link){
+                e.preventDefault();
+                var url = link.getAttribute('href');
+                open_admin_modal(url);
+            }
+        });
+
+        window.addEventListener('message', function(e){
+            if(e.data === 'task-updated'){
+                $('#taskModal').modal('hide');
+                location.reload();
+            }
+        });
 
         function create_process() {
             var form = $('#create-process-form')[0];
