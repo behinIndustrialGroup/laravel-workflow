@@ -19,14 +19,17 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
 class CreditorReportController extends Controller
 {
     public function index()
     {
-        $creditors = Creditor::get();
+        $creditors = Creditor::select('counterparty', DB::raw('SUM(amount) as total_amount'))
+            ->groupBy('counterparty')
+            ->get();
+
         return view('SimpleWorkflowReportView::Core.Creditor.index', compact('creditors'));
     }
-
 }

@@ -9,6 +9,12 @@
     $viewModelUpdateForm = $viewModel->update_form;
     $viewModelApikey = $viewModel->api_key;
     $viewModelCreateNewForm = $viewModel->create_form;
+
+    $addTasvieViewModelId = "6f34acb3-b60e-4a4a-99a5-4d3f8467ca6a";
+    $addTasvieViewModel = ViewModelController::getById($addTasvieViewModelId);
+    $addTasvieViewModelUpdateForm = $addTasvieViewModel->update_form;
+    $addTasvieViewModelApikey = $addTasvieViewModel->api_key;
+    $addTasvieViewModelCreateNewForm = $addTasvieViewModel->create_form;
 @endphp
 
 
@@ -28,6 +34,10 @@
             <button class="btn btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $viewModelCreateNewForm }}`, `{{ $viewModelId }}`, `{{ $viewModelApikey }}`)">افزودن
                 طلبکار</button>
+
+            <button class="btn btn-primary"
+                onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
+                تسویه</button>
         </div>
     </div>
     <div class="card table-responsive">
@@ -41,11 +51,11 @@
                         <th>توضیحات</th>
                         <th>طرف حساب</th>
                         <th>مبلغ</th>
-                        <th>شماره فاکتور</th>
+                        {{-- <th>شماره فاکتور</th>
                         <th>تاریخ فاکتور</th>
                         <th>تسویه</th>
                         <th>نحوه تسویه</th>
-                        <th>تاریخ پرداخت</th>
+                        <th>تاریخ پرداخت</th> --}}
                         <th>اقدامات</th>
                     </tr>
                 </thead>
@@ -55,11 +65,11 @@
                             <td>{{ $creditor->description }}</td>
                             <td>{{ $creditor->counterparty }}</td>
                             <td>{{ $creditor->amount }}</td>
-                            <td>{{ $creditor->invoice_number }}</td>
+                            {{-- <td>{{ $creditor->invoice_number }}</td>
                             <td>{{ $creditor->invoice_date }}</td>
                             <td>{{ $creditor->is_settled }}</td>
                             <td>{{ $creditor->settlement_type }}</td>
-                            <td>{{ $creditor->settlement_date }}</td>
+                            <td>{{ $creditor->settlement_date }}</td> --}}
                             <td>
                                 <button class="btn btn-primary"
                                     onclick="open_view_model_form(`{{ $viewModelUpdateForm }}`, `{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">ویرایش</button>
