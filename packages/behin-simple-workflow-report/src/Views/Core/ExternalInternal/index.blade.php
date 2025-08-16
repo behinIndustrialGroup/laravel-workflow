@@ -44,9 +44,12 @@
                         @foreach ($cases as $case)
                             <tr>
                                 <td>
-                                    <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) ?? '' }}" class="text-decoration-none me-1">
-                                        <i class="fa fa-external-link text-primary"></i>
-                                    </a>
+                                    @if (!empty($case->number))
+                                        <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"
+                                            class="text-decoration-none me-1">
+                                            <i class="fa fa-external-link text-primary"></i>
+                                        </a>
+                                    @endif
                                     <span class="fw-bold">{{ $case->number }}</span>
                                     {!! $case->history !!}
                                 </td>
@@ -55,7 +58,8 @@
                                 <td>
                                     @foreach ($case->whereIs() as $inbox)
                                         {!! $inbox->task->styled_name !!}
-                                        <span class="text-muted small">({{ getUserInfo($inbox->actor)->name ?? '' }})</span><br>
+                                        <span
+                                            class="text-muted small">({{ getUserInfo($inbox->actor)->name ?? '' }})</span><br>
                                     @endforeach
                                 </td>
                                 <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
@@ -85,7 +89,9 @@
                         footer: true
                     }
                 }],
-                order: [[0, "desc"]],
+                order: [
+                    [0, "desc"]
+                ],
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
                 }
