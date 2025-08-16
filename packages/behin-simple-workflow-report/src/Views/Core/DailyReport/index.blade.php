@@ -70,7 +70,7 @@ use Carbon\Carbon;
                         <tbody>
                             @foreach ($users as $user)
                                 @if (!in_array($user->id, $recieptionists))
-                                    <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0) style="background-color: #e6f4ea;" @endif
+                                    <tr @if ($user->internal > 0 || $user->external > 0 || $user->mapa_center > 0 || $user->externalAsAssistant > 0 || $user->other_daily_report > 0) style="background-color: #e6f4ea;" @endif
                                         @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcab42;" @endif
                                         @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
