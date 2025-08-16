@@ -79,17 +79,27 @@ class InboxController extends Controller
     }
 
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $rows = self::getUserInbox(Auth::id());
+        $processes = $rows->pluck('task.process')->filter()->unique('id');
+        if ($request->filled('process')) {
+            $rows = $rows->where('task.process.id', $request->process);
+        }
         return view('SimpleWorkflowView::Core.Inbox.list')->with([
-            'rows' => $rows
+            'rows' => $rows,
+            'processes' => $processes,
+            'selectedProcess' => $request->process
         ]);
     }
 
     public static function getUserInbox($userId): Collection
     {
-        $rows = Inbox::where('actor', $userId)->whereIn('status', ['new', 'opened', 'inProgress', 'draft'])->with('task')->orderBy('created_at', 'desc')->get();
+        $rows = Inbox::where('actor', $userId)
+            ->whereIn('status', ['new', 'opened', 'inProgress', 'draft'])
+            ->with('task.process')
+            ->orderBy('created_at', 'desc')
+            ->get();
         return $rows;
     }
 

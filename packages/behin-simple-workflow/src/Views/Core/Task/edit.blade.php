@@ -1,4 +1,4 @@
-@extends('behin-layouts.app')
+
 @php
     $forms = getProcessForms();
     $scripts = getProcessScripts();
@@ -20,7 +20,7 @@
         $bgColor = 'info';
     }
 @endphp
-@section('content')
+
     @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -305,8 +305,7 @@
             </div>
         </form>
     </div>
-@endsection
-@section('script')
+
     <script>
         initial_view();
         if (window.parent !== window) {
@@ -316,4 +315,3 @@
             }
         }
     </script>
-@endsection
