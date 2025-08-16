@@ -5,7 +5,9 @@
 @section('content')
     <div class="container">
         <div class="card">
-            <div class="card-header bg-success">دفتر تلفن</div>
+            <div class="card-header bg-success">دفتر تلفن
+                <a href="{{ route('simpleWorkflowReport.phonebook.create') }}" class="btn btn-light btn-sm float-end">افزودن</a>
+            </div>
             <div class="card-body table-responsive">
                 <table class="table" id="phonebook">
                     <thead>
@@ -15,16 +17,25 @@
                             <th>{{ trans('fields.customer_mobile') }}</th>
                             <th>{{ trans('fields.customer_nid') }}</th>
                             <th>{{ trans('fields.customer_address') }}</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($customers as $customer)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $customer->name }}</td>
+                                <td>{{ $customer->fullname }}</td>
                                 <td>{{ $customer->mobile }}</td>
                                 <td>{{ $customer->national_id }}</td>
                                 <td>{{ $customer->address }}</td>
+                                <td>
+                                    <a href="{{ route('simpleWorkflowReport.phonebook.edit', $customer->id) }}" class="btn btn-primary btn-sm">ویرایش</a>
+                                    <form method="POST" action="{{ route('simpleWorkflowReport.phonebook.destroy', $customer->id) }}" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
