@@ -59,6 +59,13 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" style="text-align:right">جمع این صفحه:</th>
+                        <th id="page-total"></th>
+                        <th colspan="2"></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <div class="card-body">
