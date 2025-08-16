@@ -287,21 +287,6 @@
 
 
 <script>
-    function runAfterTableReady(selector, callback) {
-        let checkExist = setInterval(function() {
-            let $table = $(selector);
-            if ($table.length && $table.find('tbody tr').length > 0) {
-                clearInterval(checkExist);
-                callback();
-            }
-        }, 100); // هر 100 میلی‌ثانیه چک می‌کنه
-    }
-
-    // استفاده:
-    runAfterTableReady('table', initial_view);
-
-
-
     function initial_view() {
         $('.select2').select2();
         $('.select2').css('width', '100%')
