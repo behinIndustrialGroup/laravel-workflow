@@ -90,6 +90,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external');
     Route::get('daily-report/{user_id}/show-mapa-center/{from?}/{to?}', [DailyReportController:: class, 'showMapaCenter'])->name('daily-report.show-mapa-center');
     Route::get('daily-report/{user_id}/show-external-as-assistant/{from?}/{to?}', [DailyReportController:: class, 'showExternalAsAssistant'])->name('daily-report.show-external-as-assistant');
+    Route::get('daily-report/{user_id}/show-other-daily-report/{from?}/{to?}', [DailyReportController:: class, 'showOtherDailyReport'])->name('daily-report.show-other-daily-report');
 
     Route::resource('creditor', CreditorReportController::class);
 
