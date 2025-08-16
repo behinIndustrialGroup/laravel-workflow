@@ -13,13 +13,18 @@ class FileField extends AbstractField
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label><br>';
-        foreach($this->attributes['value'] as $value){
-            $s .= '<a href="' . url('public/' . $value) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        if(isset($this->attributes['value']) && is_string($this->attributes['value'])){
+            $s .= '<a href="' . url('public/' . $this->attributes['value']) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        }
+        if(isset($this->attributes['value']) && is_array($this->attributes['value']) && count($this->attributes['value']) > 0){
+            foreach($this->attributes['value'] as $value){
+                $s .= '<a href="' . url('public/' . $value) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+            }
         }
         if($this->attributes['readonly'] == 'on'){
             $s .= '<input type="file" multiple name="' . $this->name . '" disabled>';
         }else{
-            $s .= '<input type="file" multiple name="' . $this->name . '" ';
+            $s .= '<input type="file" name="' . $this->name . '" ';
             foreach($this->attributes as $key => $value){
                 if($key != 'value'){
                     if($key == 'required'){
@@ -38,13 +43,7 @@ class FileField extends AbstractField
             }
             $s .= '>';
         }
-
-
         $s .= '</div>';
         return $s;
-        if (!isset($this->attributes['type'])) {
-            $this->attributes['type'] = 'text';
-        }
-        return sprintf('<input %s>', $this->buildAttributes());
     }
 }

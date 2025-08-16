@@ -9,7 +9,7 @@ class ButtonField extends AbstractField
         $id = $this->attributes['id'];
         $style = $this->attributes['style'] ?? '';
 
-        $s = "<button id='$id' style='$style'>";
+        $s = "<button id='$id' class='btn btn-sm' style='$style'>";
         $s .= trans('fields.' . $this->name);
         $s .= '</button>';
         if(isset($this->attributes['script'])){
