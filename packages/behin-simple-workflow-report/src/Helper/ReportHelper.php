@@ -55,6 +55,7 @@ class ReportHelper
                 $fin->case_costs = Case_costs::where('case_number', $fin->case_number)->get();
             }
         }
+        $fins = $fins->unique('case_number')->values();
         return $fins;
 
 
