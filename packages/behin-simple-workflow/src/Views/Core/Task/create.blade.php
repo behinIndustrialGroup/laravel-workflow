@@ -179,7 +179,7 @@
             if(link){
                 e.preventDefault();
                 var url = link.getAttribute('href');
-                open_admin_modal(url);
+                window.location = url;
             }
         });
 
