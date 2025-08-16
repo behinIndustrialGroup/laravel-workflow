@@ -287,36 +287,37 @@
 
 
 <script>
-    function initial_view() {
-        $('.select2').select2();
-        $('.select2').css('width', '100%')
-        $(".persian-date").persianDatepicker({
-            viewMode: 'day',
-            initialValue: false,
-            format: 'YYYY-MM-DD',
-            initialValueType: 'persian',
-            calendar: {
-                persian: {
-                    leapYearMode: 'astronomical',
-                    locale: 'fa'
+    $(document).ready(function() {
+        function initial_view() {
+            $('.select2').select2();
+            $('.select2').css('width', '100%')
+            $(".persian-date").persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
+                    }
                 }
-            }
-        });
-        $('.timepicker').timepicker({
-            timeFormat: 'HH:mm', // فرمت 24 ساعته
-            interval: 1, // نمایش با فاصله 5 دقیقه‌ای
-            minTime: '00:00',
-            maxTime: '23:55',
-            dynamic: true,
-            dropdown: true,
-            scrollbar: true
-        });
-        AutoNumeric.multiple('.formatted-digit', {
-            digitGroupSeparator: ',',
-            decimalCharacter: '.',
-            decimalPlaces: 0,
-            unformatOnSubmit: true
-        });
+            });
+            $('.timepicker').timepicker({
+                timeFormat: 'HH:mm', // فرمت 24 ساعته
+                interval: 1, // نمایش با فاصله 5 دقیقه‌ای
+                minTime: '00:00',
+                maxTime: '23:55',
+                dynamic: true,
+                dropdown: true,
+                scrollbar: true
+            });
+            AutoNumeric.multiple('.formatted-digit', {
+                digitGroupSeparator: ',',
+                decimalCharacter: '.',
+                decimalPlaces: 0,
+                unformatOnSubmit: true
+            });
 
             $('table tbody td .show-less').each(function() {
                 let $cell = $(this);
@@ -344,7 +345,9 @@
                 $cell.find('.short-text, .full-text').toggle();
                 $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
             });
-    }
+        }
+
+    })
 </script>
 
 <script src="{{ url('public/behin/behin-js/loader.js') . '?' . config('app.version') }}"></script>
