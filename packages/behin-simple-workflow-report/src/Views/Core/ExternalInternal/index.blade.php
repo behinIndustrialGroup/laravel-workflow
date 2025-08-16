@@ -44,7 +44,7 @@
                         @foreach ($cases as $case)
                             <tr>
                                 <td>
-                                    <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}" class="text-decoration-none me-1">
+                                    <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) ?? '' }}" class="text-decoration-none me-1">
                                         <i class="fa fa-external-link text-primary"></i>
                                     </a>
                                     <span class="fw-bold">{{ $case->number }}</span>
