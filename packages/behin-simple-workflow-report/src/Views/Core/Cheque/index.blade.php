@@ -44,70 +44,108 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($cheques as $cheque)
-                        <tr @if($cheque->is_passed) style="background-color: #d4edda;" @endif>
+                    @foreach ($cheques as $group)
+                        @php $first = $group->first(); @endphp
+                        <tr @if($group->every(fn ($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
                             <td>
-                                <a
-                                    href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
-                                    <i class="fa fa-external-link"></i>
-                                </a>
-                                {{ $cheque->case_number }}
+                                @foreach ($group as $cheque)
+                                    <a
+                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
+                                        <i class="fa fa-external-link"></i>
+                                    </a>
+                                    {{ $cheque->case_number }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
                             </td>
-                            <td>{{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
-                            <td>{{ number_format($cheque->cost) }}</td>
-                            <td>{{ toJalali((int) $cheque->cheque_due_date)->format('Y-m-d') }}</td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    {{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    {{ number_format($cheque->cost) }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    {{ toJalali((int) $cheque->cheque_due_date)->format('Y-m-d') }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
+                            </td>
 
-                            <td>{{ $cheque->destination_account_name }}</td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    {{ $cheque->destination_account_name }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
+                            </td>
                             {{-- شماره چک --}}
                             <td>
-                                @if ($cheque->cheque_number)
-                                    {{ $cheque->cheque_number }}
+                                @if ($first->cheque_number)
+                                    {{ $first->cheque_number }}
                                 @else
-                                    <form method="POST"
-                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
-                                        onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="text" name="cheque_number" class="form-control form-control-sm"
-                                            required>
-                                        <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
-                                    </form>
+                                    @foreach ($group as $cheque)
+                                        <form method="POST"
+                                            action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
+                                            onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="text" name="cheque_number" class="form-control form-control-sm"
+                                                required>
+                                            <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
+                                        </form>
+                                        @if (!$loop->last)<br>@endif
+                                    @endforeach
                                 @endif
                             </td>
 
                             {{-- گیرنده چک --}}
                             <td>
-                                @if ($cheque->cheque_receiver)
-                                    {{ $cheque->cheque_receiver }}
-                                @else
-                                    <form method="POST"
-                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
-                                        onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="text" name="cheque_receiver" class="form-control form-control-sm"
-                                            required>
-                                        <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
-                                    </form>
-                                @endif
+                                @foreach ($group as $cheque)
+                                    @if ($cheque->cheque_receiver)
+                                        {{ $cheque->cheque_receiver }}
+                                    @else
+                                        <form method="POST"
+                                            action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
+                                            onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="text" name="cheque_receiver" class="form-control form-control-sm"
+                                                required>
+                                            <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
+                                        </form>
+                                    @endif
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
                             </td>
 
-                            <td>{{ $cheque->description }}</td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    {{ $cheque->description }}
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
+                            </td>
 
                             {{-- دکمه پاس شد --}}
                             <td>
-                                @if ($cheque->is_passed)
-                                    {{-- <span class="badge bg-success">پاس شد</span> --}}
-                                @else
-                                    <form method="POST"
-                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
-                                        onsubmit="return confirm('آیا از پاس شدن این چک مطمئن هستید؟')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="is_passed" value="1">
-                                        <button type="submit" class="btn btn-sm btn-success">پاس شد</button>
-                                    </form>
-                                @endif
+                                @foreach ($group as $cheque)
+                                    @if ($cheque->is_passed)
+                                        {{-- <span class="badge bg-success">پاس شد</span> --}}
+                                    @else
+                                        <form method="POST"
+                                            action="{{ route('simpleWorkflowReport.cheque-report.update', $cheque->id) }}"
+                                            onsubmit="return confirm('آیا از پاس شدن این چک مطمئن هستید؟')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="is_passed" value="1">
+                                            <button type="submit" class="btn btn-sm btn-success">پاس شد</button>
+                                        </form>
+                                    @endif
+                                    @if (!$loop->last)<br>@endif
+                                @endforeach
                             </td>
                         </tr>
                     @endforeach
