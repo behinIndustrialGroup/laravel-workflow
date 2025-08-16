@@ -1,6 +1,6 @@
 @extends('behin-layouts.app')
 
-@section('title', 'گزارش حساب دفتری')
+@section('title', 'گزارش کل بدهکاران')
 
 
 @php
@@ -54,7 +54,7 @@
                             <td>{{ $inbox->case->getVariable('customer_workshop_or_ceo_name') }}</td>
                             <td>{{ number_format(Financials::where('case_number', $inbox->case->number)->sum('cost')) }}
                             </td>
-                            <td>{{ toJalali((int) $inbox->created_at)->format('Y-m-d') }}</td>
+                            <td>{{ toJalali($inbox->created_at)->format('Y-m-d') }}</td>
                             <td>{{ $inbox->case_name }}</td>
                         </tr>
                     @endforeach
