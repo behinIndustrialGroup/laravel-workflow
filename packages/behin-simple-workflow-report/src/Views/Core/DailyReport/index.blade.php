@@ -149,7 +149,7 @@ use Carbon\Carbon;
 
 @section('script')
     <script>
-
+        initial_view()
         function showInternal(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.daily-report.show-internal', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)
