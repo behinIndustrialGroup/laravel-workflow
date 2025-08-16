@@ -24,7 +24,7 @@ class PhonebookController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'fullname' => 'required',
+            'name' => 'required',
             'mobile' => 'required',
             'national_id' => 'nullable',
             'address' => 'nullable',
@@ -43,7 +43,7 @@ class PhonebookController extends Controller
     public function update(Request $request, Customers $phonebook)
     {
         $data = $request->validate([
-            'fullname' => 'required',
+            'name' => 'required',
             'mobile' => 'required',
             'national_id' => 'nullable',
             'address' => 'nullable',

@@ -12,7 +12,7 @@
                     @method('PUT')
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_name') }}</label>
-                        <input type="text" name="fullname" class="form-control" value="{{ $customer->fullname }}" required>
+                        <input type="text" name="name" class="form-control" value="{{ $customer->name }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_mobile') }}</label>
