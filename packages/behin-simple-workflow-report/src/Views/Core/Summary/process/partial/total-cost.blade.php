@@ -218,7 +218,7 @@
                                                         @if ($quser)
                                                             {{ $case_cost->amount }}
                                                         @else
-                                                            {{ $case_cost->counterparty()->name }}
+                                                            {{ $case_cost->counterparty()->name ?? '<span class="text-danger">not found</span>' }}
                                                             ({{ $case_cost->amount }})
                                                             <br>
                                                         @endif
