@@ -31,17 +31,26 @@ class RegisterUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'digits:11', 'lowercase', 'unique:'.User::class],
+            'email' => ['required', 'digits:11', 'lowercase', 'unique:' . User::class],
             'password' => ['required', Rules\Password::defaults()],
-            
+        ], [
+            'name.required' => 'نام الزامی است.',
+            'email.required' => 'شماره موبایل الزامی است.',
+            'email.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'email.unique' => 'این شماره موبایل قبلاً ثبت شده است.',
+            'password.required' => 'رمز عبور الزامی است.',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => 2
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => 2
+            ]);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['register' => 'خطایی در ثبت نام رخ داده است.'])->withInput();
+        }
 
         event(new Registered($user));
 
