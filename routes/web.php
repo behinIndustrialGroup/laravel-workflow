@@ -131,10 +131,10 @@ Route::get('test2', function () {
     foreach ($collection as $sheet) {
         foreach ($sheet as $row) {
             Customers::updateOrCreate(
-                ['mobile' => $row[1]],
+                ['mobile' => trim($row[1])],
                 [
-                    'name' => $row[0],
-                    'address' => $row[2],
+                    'name' => trim($row[0]),
+                    'address' => trim($row[2]),
                 ]
             );
         }
