@@ -26,7 +26,7 @@ use UserProfile\Controllers\GetUserAgenciesController;
 use UserProfile\Controllers\NationalIdController;
 use UserProfile\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Http;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
 
 Route::get('', function(){
