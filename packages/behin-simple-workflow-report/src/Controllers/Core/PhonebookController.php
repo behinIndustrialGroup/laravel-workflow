@@ -9,9 +9,19 @@ use Illuminate\Http\Request;
 
 class PhonebookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customers::all();
+        $query = Customers::query();
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', "%" . $request->name . "%");
+        }
+
+        if ($request->filled('mobile')) {
+            $query->where('mobile', 'like', "%" . $request->mobile . "%");
+        }
+
+        $customers = $query->get();
 
         return view('SimpleWorkflowReportView::Core.Phonebook.index', compact('customers'));
     }

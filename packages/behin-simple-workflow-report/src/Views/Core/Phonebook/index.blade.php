@@ -10,6 +10,17 @@
                     style="color: black !important">افزودن</a>
             </div>
             <div class="card-body table-responsive">
+                <form method="GET" action="{{ route('simpleWorkflowReport.phonebook.index') }}" class="row g-2 mb-3">
+                    <div class="col-md-4">
+                        <input type="text" name="name" class="form-control" placeholder="{{ trans('fields.customer_name') }}" value="{{ request('name') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="mobile" class="form-control" placeholder="{{ trans('fields.customer_mobile') }}" value="{{ request('mobile') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">جستجو</button>
+                    </div>
+                </form>
                 <table class="table" id="phonebook">
                     <thead>
                         <tr>
