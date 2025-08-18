@@ -6,7 +6,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header bg-success">دفتر تلفن
-                <a href="{{ route('simpleWorkflowReport.phonebook.create') }}" class="btn btn-light btn-sm float-end" style="color: black">افزودن</a>
+                <a href="{{ route('simpleWorkflowReport.phonebook.create') }}" class="btn btn-light btn-sm float-end" style="color: black !important">افزودن</a>
             </div>
             <div class="card-body table-responsive">
                 <table class="table" id="phonebook">
