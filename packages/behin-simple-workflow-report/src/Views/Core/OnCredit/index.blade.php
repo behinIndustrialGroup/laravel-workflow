@@ -37,9 +37,9 @@
                         <th>نام مشتری</th>
                         <th>مبلغ</th>
                         <th>تاریخ اعلام صورت حساب</th>
-                        <th>تاریخ تسویه</th>
+                        {{-- <th>تاریخ تسویه</th>
                         <th>تسویه مطابق شماره فاکتور</th>
-                        <th>تاریخ فاکتور</th>
+                        <th>تاریخ فاکتور</th> --}}
                         <th>توضیحات</th>
                         <th>تسویه شد</th>
                     </tr>
@@ -68,7 +68,7 @@
                                 {{ number_format($onCredit->cost) }}
                             </td>
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
-                            <td>
+                            {{-- <td>
                                 <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
                                     method="POST">
                                     @csrf
@@ -85,7 +85,7 @@
                                     value="{{ $onCredit->invoice_date }}">
                                 <button type="submit" class="btn btn-sm btn-primary">ذخیره</button>
                                 </form>
-                            </td>
+                            </td> --}}
                             <td>{{ $onCredit->description }}</td>
 
                             {{-- دکمه پاس شد --}}
