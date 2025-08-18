@@ -100,7 +100,7 @@
                         خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="external-reports-table">
                                 <tr>
                                     <th>شروع</th>
                                     <th>پایان</th>
@@ -245,7 +245,7 @@
                                 گزارش تعمیرات روزانه داخلی
                             </div>
                             <div class="card-body table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered" id="internal-reports-table">
 
                                     <thead>
                                         <tr>
@@ -438,15 +438,34 @@
 @endsection
 
 @section('script')
-$(document).ready(function() {
-    var table = $('#mapa-center-reports').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
-        },
-        order: [
-            [1, 'desc']
-        ]
-    });
+    <script>
+        $(document).ready(function() {
+            var table = $('#mapa-center-reports').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
+                order: [
+                    [1, 'desc']
+                ]
+            });
 
-});
+            $('#internal-reports-table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
+                order: [
+                    [2, 'desc']
+                ]
+            });
+
+            $('#external-reports-table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
+                order: [
+                    [2, 'desc']
+                ]
+            });
+        });
+    </script>
 @endsection
