@@ -101,7 +101,7 @@
                                         <input type="hidden" name="is_passed" value="1">
                                         <button type="submit" class="btn btn-sm btn-success">تسویه شد</button>
                                     </form> --}}
-                                    <button class="btn btn-sm " onclick="open_view_model_form('dfd41076-26ca-47e4-ab34-17bec3bd89db', '9e6d25a3-df4b-444c-a600-b4805847bb17', '{{ $onCredit->id }}', 'QRcpdfla1CGfMj9v')">
+                                    <button class="btn btn-sm " onclick="open_view_model_form('285961ab-c11b-45f6-8bcd-adb8e1298cd0', '9e6d25a3-df4b-444c-a600-b4805847bb17', '{{ $onCredit->id }}', 'QRcpdfla1CGfMj9v')">
                                         ویرایش
                                     </button>
                                 @endif
