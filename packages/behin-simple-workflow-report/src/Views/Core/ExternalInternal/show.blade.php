@@ -254,7 +254,7 @@
                                             <th>کارشناس مپا</th>
                                             <th>{{ trans('fields.done_at') }}</th>
                                             <th>{{ trans('fields.repair_duration') }}</th>
-                                            <th colspan="6">{{ trans('fields.fix_report') }}</th>
+                                            <th>{{ trans('fields.fix_report') }}</th>
                                             <th>{{ trans('fields.see_the_problem') }}</th>
                                             <th>{{ trans('fields.other_parts') }}</th>
                                             <th>{{ trans('fields.special_parts') }}</th>
@@ -270,7 +270,7 @@
                                                     <td>{{ $report->done_at ? toJalali((int) $report->done_at)->format('Y-m-d') : '' }}
                                                     </td>
                                                     <td>{{ $report->repair_duration }}</td>
-                                                    <td colspan="6">{{ $report->fix_report }}</td>
+                                                    <td>{{ $report->fix_report }}</td>
                                                     <td>{{ $report->see_the_problem }}</td>
                                                     <td>{{ $report->other_parts }}</td>
                                                     <td>{{ $report->special_parts }}</td>
