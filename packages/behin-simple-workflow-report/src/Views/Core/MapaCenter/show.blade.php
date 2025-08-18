@@ -94,7 +94,7 @@
                 <div class="card-body">
                     <div class="col-sm-12">
                         <div class="row table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="parts-table">
                                 <tr>
                                     <th>قطعه</th>
                                     <th>سرپرست</th>
@@ -513,6 +513,12 @@
                 order: [
                     [2, 'desc']
                 ]
+            });
+            
+            $('#parts-table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
             });
 
         });
