@@ -170,8 +170,9 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="8" class="text-right">مجموع در این صفحه:</th>
-                        <th id="sum-pass"></th>
+                        <th colspan="2" class="text-right">مجموع در این صفحه:</th>
+                        <th colspan="2" id="sum-pass"></th>
+                        <th colspan="5"></th>
                     </tr>
                 </tfoot>
             </table>
