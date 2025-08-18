@@ -189,29 +189,44 @@
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api();
 
-                // شمارش پاس شده‌ها
                 var passed = 0;
                 var notPassed = 0;
+                var passedAmount = 0;
+                var notPassedAmount = 0;
 
-                // ستون پاس شد (آخرین ستون = ایندکس 8)
                 api.rows({
                     page: 'current'
-                }).data().each(function(rowData, index) {
-                    // متن سلول آخر (ستون 8)
-                    var cell = api.cell(index, 8).node();
+                }).every(function(rowIdx, tableLoop, rowLoop) {
+                    var rowData = this.data();
+
+                    // ستون مبلغ پرونده (ایندکس 2)
+                    var cellAmount = api.cell(rowIdx, 2).data();
+                    var amount = parseInt(cellAmount.replace(/,/g, '')) || 0;
+
+                    // ستون پاس شد (ایندکس 8)
+                    var cell = api.cell(rowIdx, 8).node();
+
                     if ($(cell).find('form').length > 0) {
-                        // هنوز پاس نشده (چون فرم دکمه پاس شد وجود داره)
+                        // پاس نشده
                         notPassed++;
+                        notPassedAmount += amount;
                     } else {
                         // پاس شده
                         passed++;
+                        passedAmount += amount;
                     }
                 });
 
                 // نمایش در فوتر
                 $('#sum-pass').html(
-                    '<span class="badge bg-success">پاس شده: ' + passed + '</span> ' +
-                    '<span class="badge bg-danger">پاس نشده: ' + notPassed + '</span>'
+                    '<div>' +
+                    '<span class="badge bg-success">پاس شده: ' + passed + ' فقره - ' + passedAmount
+                    .toLocaleString() + ' ریال</span>' +
+                    '</div>' +
+                    '<div class="mt-1">' +
+                    '<span class="badge bg-danger">پاس نشده: ' + notPassed + ' فقره - ' + notPassedAmount
+                    .toLocaleString() + ' ریال</span>' +
+                    '</div>'
                 );
             }
         });
