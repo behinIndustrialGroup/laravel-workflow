@@ -9,6 +9,7 @@ return [
         'device_name',
         'creator_name',
         'part_name',
-        'mapa_serial'
+        'mapa_serial',
+        'case_name',
     ],
 ];
