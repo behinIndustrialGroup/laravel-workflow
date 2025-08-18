@@ -75,7 +75,14 @@
         @endif
 
         @if (auth()->user()->access('ثبت درخواست مرخصی'))
-            <div class="col-sm-3 ">
+            <div class="col-sm-3 "
+            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
+                'inDraft' => 0,
+                'force' => 1,
+                'redirect' => true,
+            ]) }}'; }"
+            >
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
@@ -86,13 +93,7 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="{{ route('simpleWorkflow.process.start', [
-                        'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
-                        'inDraft' => 0,
-                        'force' => 0,
-                        'redirect' => true,
-                    ]) }}"
-                        class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></a>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
                 </div>
             </div>
         @endauth
