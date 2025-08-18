@@ -15,7 +15,6 @@
                             <th>#</th>
                             <th>{{ trans('fields.customer_name') }}</th>
                             <th>{{ trans('fields.customer_mobile') }}</th>
-                            <th>{{ trans('fields.customer_nid') }}</th>
                             <th>{{ trans('fields.customer_address') }}</th>
                             <th>عملیات</th>
                         </tr>
@@ -26,7 +25,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->mobile }}</td>
-                                <td>{{ $customer->national_id }}</td>
                                 <td>{{ $customer->address }}</td>
                                 <td>
                                     <a href="{{ route('simpleWorkflowReport.phonebook.edit', $customer->id) }}" class="btn btn-primary btn-sm">ویرایش</a>
