@@ -51,3 +51,15 @@
         </div>
     </div>
 @endsection
+@section('script')
+    <script>
+        $('#draft-list').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+            },
+            order: [
+                [0, 'desc']
+            ]
+        });
+    </script>
+@endsection
