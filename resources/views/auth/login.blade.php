@@ -7,7 +7,7 @@
                 <img src="{{ url('public/behin/logo.png') . '?' . config('app.version') }}" class="col-sm-12" alt="">
             </div>
             <div class="card-body">
-                <form action="javascript:void(0)" method="post" id="login-form">
+                <form action="javascript:void(0)" method="post" id="login-form" onsubmit="submitLogin(event)">
                     @csrf
                     <input type="hidden" name="remember" value="1">
                     <div class="input-group mb-3">
@@ -26,17 +26,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary col-sm-12">ورود</button>
                     </div>
                 </form>
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary col-sm-12" onclick="submit()">ورود</button>
-                </div>
+
                 {{-- <hr>
             <div class="center-align" style="text-align: center">
                 <a href="{{ route('register') }}" class="text-center">صفحه ثبت نام</a>
@@ -63,7 +57,9 @@
             show_message("به صفحه داشبورد منتقل میشوید")
             window.location = "{{ url('admin') }}"
         @endif
-        function submit() {
+
+        function submitLogin(e) {
+            e.preventDefault(); // جلوگیری از رفرش فرم
             send_ajax_request(
                 "{{ route('login') }}",
                 $('#login-form').serialize(),
@@ -72,7 +68,6 @@
                     window.location = "{{ url('admin') }}"
                 },
                 function(response) {
-                    // console.log(response);
                     show_error(response)
                     hide_loading();
                 }
