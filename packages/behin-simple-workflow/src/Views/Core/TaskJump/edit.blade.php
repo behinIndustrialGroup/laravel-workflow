@@ -26,13 +26,13 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">{{ trans('fields.Name') }}</span>
                         </div>
-                        <input type="text" class="form-control" value="{{ $jump->nextTask->name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $jump->nextTask->name ?? '' }}" readonly>
                     </div>
                     <div class="input-group col-sm-5">
                         <div class="input-group-prepend">
                             <span class="input-group-text">{{ trans('fields.Next Task') }}</span>
                         </div>
-                        <input type="text" name="next_task_id" value="{{ $jump->next_task_id }}" list="tasks"
+                        <input type="text" name="next_task_id" value="{{ $jump->next_task_id ?? '' }}" list="tasks"
                             class="form-control">
                         <datalist id="tasks">
                             @foreach ($task->process->tasks() as $item)

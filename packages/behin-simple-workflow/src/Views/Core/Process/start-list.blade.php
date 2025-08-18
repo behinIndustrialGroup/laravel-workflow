@@ -16,7 +16,7 @@
                         class="list-group-item list-group-item-action"
                         onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
                             'taskId' => $process->task->id,
-                            'inDraft' => true,
+                            'inDraft' => 0,
                             'force' => 0,
                             'redirect' => true,
                         ]) }}'; }"
