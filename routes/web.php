@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Core\Cases;
 use Behin\SimpleWorkflow\Models\Core\Variable;
+use Behin\SimpleWorkflow\Models\Entities\Customers;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Timeoffs;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportController;
@@ -25,6 +26,7 @@ use UserProfile\Controllers\GetUserAgenciesController;
 use UserProfile\Controllers\NationalIdController;
 use UserProfile\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Excel;
 use Morilog\Jalali\Jalalian;
 
 Route::get('', function(){
@@ -122,61 +124,23 @@ Route::get('test', function(){
     }
 });
 
-Route::get('test2', function(){
-    $timeoffs = Timeoffs::whereIn('request_month', ['01', '02'])->whereNot('uniqueId', 'به صورت دستی')->get();
-    $processId = "211ed341-c06c-41cb-881c-d33e8d4cd905";
-    foreach($timeoffs as $t){
-        $t->request_timestamp = $t->created_at->timestamp;
-        $t->save();
-        if($t->type == 'ساعتی'){
-            $t->start_timestamp = '';
-            $uniqueId = $t->uniqueId;
-            $var = Variable::where('key', 'timeoff_uniqueId')->where('value', $uniqueId)->first();
-            if($var){
-                $caseId = $var->case_id;
-                $case = CaseController::getById($caseId);
-                if($case){
-                    $start = $case->getVariable('timeoff_start_time');
-                    $end = $case->getVariable('timeoff_end_time');
-                    $timeoff_hourly_request_start_date = $case->getVariable('timeoff_hourly_request_start_date');
-                    $startDate = convertPersianToEnglish($timeoff_hourly_request_start_date);
-                    $start = str_pad($start, 5, '0', STR_PAD_LEFT);
-                    $end = str_pad($end, 5, '0', STR_PAD_LEFT);
-                    $startTimeStamp = Jalalian::fromFormat('Y-m-d H:i', "$startDate $start")->toCarbon()->timestamp;
-                    $endTimeStamp = Jalalian::fromFormat('Y-m-d H:i', "$startDate $end")->toCarbon()->timestamp;
-                    // $s = Carbon::createFromTimestamp($startTimeStamp, 'Asia/Tehran');
-                    // echo $caseId . ' ### ' . $startTimeStamp .' ### ' . $s . '<br>';
-                    $t->start_timestamp = $startTimeStamp;
-                    $t->end_timestamp = $endTimeStamp;
-                    $t->save();
-                }
-                
-            }
-        }
-        if($t->type == 'روزانه'){
-            $t->start_timestamp = '';
-            $uniqueId = $t->uniqueId;
-            $var = Variable::where('key', 'timeoff_uniqueId')->where('value', $uniqueId)->first();
-            if($var){
-                $caseId = $var->case_id;
-                $case = CaseController::getById($caseId);
-                if($case){
-                    $start = $case->getVariable('timeoff_start_date');
-                    $end = $case->getVariable('timeoff_end_date');
-                    $startDate = convertPersianToEnglish($start);
-                    $endDate = convertPersianToEnglish($end);
-                    $startTimeStamp = Jalalian::fromFormat('Y-m-d', "$startDate")->toCarbon()->timestamp;
-                    $endTimeStamp = Jalalian::fromFormat('Y-m-d', "$endDate")->toCarbon()->timestamp;
-                    // $s = Carbon::createFromTimestamp($startTimeStamp, 'Asia/Tehran');
-                    // echo $caseId . ' ### ' . $startTimeStamp .' ### ' . $s . '<br>';
-                    $t->start_timestamp = $startTimeStamp;
-                    $t->end_timestamp = $endTimeStamp;
-                    $t->save();
-                }
-                
-            }
+Route::get('test2', function () {
+    $collection = Excel::toCollection(null, public_path('123.xlsx'));
+
+    // هر شیت داخل فایل
+    foreach ($collection as $sheet) {
+        foreach ($sheet as $row) {
+            Customers::updateOrCreate(
+                ['mobile' => $row[1]],
+                [
+                    'name' => $row[0],
+                    'address' => $row[2],
+                ]
+            );
         }
     }
+
+    return "Imported successfully!";
 });
 
 Route::get('test3', function(){
