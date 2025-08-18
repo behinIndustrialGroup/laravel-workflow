@@ -48,9 +48,9 @@
             <table class="table table-bordered" id="cheque-list">
                 <thead>
                     <tr>
-                        <th>توضیحات</th>
                         <th>طرف حساب</th>
-                        <th>مبلغ طلب</th>
+                        <th>مانده حساب</th>
+                        <th>توضیحات</th>
                         {{-- <th>شماره فاکتور</th>
                         <th>تاریخ فاکتور</th>
                         <th>تسویه</th>
