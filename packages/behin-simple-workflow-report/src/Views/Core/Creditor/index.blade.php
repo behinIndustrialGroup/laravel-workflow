@@ -62,9 +62,9 @@
                 <tbody>
                     @foreach ($creditors as $creditor)
                         <tr>
-                            <td>{{ $creditor->description }}</td>
                             <td>{{ $creditor->counterparty }}</td>
                             <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
+                            <td>{{ $creditor->description }}</td>
                             {{-- <td>{{ $creditor->invoice_number }}</td>
                             <td>{{ $creditor->invoice_date }}</td>
                             <td>{{ $creditor->is_settled }}</td>
