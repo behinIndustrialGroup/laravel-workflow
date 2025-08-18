@@ -46,7 +46,7 @@
                 <tbody>
                     @foreach ($cheques as $group)
                         @php $first = $group->first(); @endphp
-                        <tr @if($group->every(fn ($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
+                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
                             <td>
                                 @foreach ($group as $cheque)
                                     <a
@@ -54,32 +54,42 @@
                                         <i class="fa fa-external-link"></i>
                                     </a>
                                     {{ $cheque->case_number }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ number_format($cheque->cost) }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ toJalali((int) $cheque->cheque_due_date)->format('Y-m-d') }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
 
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ $cheque->destination_account_name }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
                             {{-- شماره چک --}}
@@ -97,7 +107,9 @@
                                                 required>
                                             <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
                                         </form>
-                                        @if (!$loop->last)<br>@endif
+                                        @if (!$loop->last)
+                                            <br>
+                                        @endif
                                     @endforeach
                                 @endif
                             </td>
@@ -113,19 +125,23 @@
                                             onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
                                             @csrf
                                             @method('PATCH')
-                                            <input type="text" name="cheque_receiver" class="form-control form-control-sm"
-                                                required>
+                                            <input type="text" name="cheque_receiver"
+                                                class="form-control form-control-sm" required>
                                             <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
                                         </form>
                                     @endif
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
 
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ $cheque->description }}
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
 
@@ -144,12 +160,20 @@
                                             <button type="submit" class="btn btn-sm btn-success">پاس شد</button>
                                         </form>
                                     @endif
-                                    @if (!$loop->last)<br>@endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
                                 @endforeach
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="8" class="text-right">مجموع در این صفحه:</th>
+                        <th id="sum-pass"></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -161,6 +185,34 @@
             "pageLength": 25,
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            },
+            "footerCallback": function(row, data, start, end, display) {
+                var api = this.api();
+
+                // شمارش پاس شده‌ها
+                var passed = 0;
+                var notPassed = 0;
+
+                // ستون پاس شد (آخرین ستون = ایندکس 8)
+                api.rows({
+                    page: 'current'
+                }).data().each(function(rowData, index) {
+                    // متن سلول آخر (ستون 8)
+                    var cell = api.cell(index, 8).node();
+                    if ($(cell).find('form').length > 0) {
+                        // هنوز پاس نشده (چون فرم دکمه پاس شد وجود داره)
+                        notPassed++;
+                    } else {
+                        // پاس شده
+                        passed++;
+                    }
+                });
+
+                // نمایش در فوتر
+                $('#sum-pass').html(
+                    '<span class="badge bg-success">پاس شده: ' + passed + '</span> ' +
+                    '<span class="badge bg-danger">پاس نشده: ' + notPassed + '</span>'
+                );
             }
         });
     </script>
