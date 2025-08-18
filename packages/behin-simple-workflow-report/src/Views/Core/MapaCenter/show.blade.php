@@ -285,7 +285,7 @@
             <div class="card">
                 <div class="card-header bg-warning text-center">لیست قطعات نصب‌شده</div>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="install-parts-list-table">
                         <thead>
                             <tr>
                                 <th>نام قطعه</th>
@@ -505,6 +505,16 @@
             table.on('draw.dt', function() {
                 initial_view();
             });
+
+            $('#install-parts-list-table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
+                },
+                order: [
+                    [2, 'desc']
+                ]
+            });
+
         });
 
         function deleteReport(id) {
