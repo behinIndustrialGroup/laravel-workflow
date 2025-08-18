@@ -21,10 +21,16 @@ class PhonebookController extends Controller
             $query->where('mobile', 'like', "%" . $request->mobile . "%");
         }
 
-        $customers = $query->get();
+        // اگر هیچ فیلتری وارد نشده باشه → نتیجه خالی
+        if (! $request->filled('name') && ! $request->filled('mobile')) {
+            $customers = collect(); // یک کالکشن خالی
+        } else {
+            $customers = $query->get();
+        }
 
         return view('SimpleWorkflowReportView::Core.Phonebook.index', compact('customers'));
     }
+
 
     public function create()
     {
@@ -71,4 +77,3 @@ class PhonebookController extends Controller
         return redirect()->route('simpleWorkflowReport.phonebook.index');
     }
 }
-
