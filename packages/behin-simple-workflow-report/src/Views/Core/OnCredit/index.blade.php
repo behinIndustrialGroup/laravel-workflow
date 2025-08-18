@@ -93,14 +93,17 @@
                                 @if ($onCredit->is_passed)
                                     {{-- <span class="badge bg-success">تسویه شد</span> --}}
                                 @else
-                                    <form method="POST"
+                                    {{-- <form method="POST"
                                         action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
                                         onsubmit="return confirm('آیا از تسویه شدن این حساب دفتری مطمئن هستید؟')">
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="is_passed" value="1">
                                         <button type="submit" class="btn btn-sm btn-success">تسویه شد</button>
-                                    </form>
+                                    </form> --}}
+                                    <button class="btn btn-sm " onclick="open_view_model_form('dfd41076-26ca-47e4-ab34-17bec3bd89db', '9e6d25a3-df4b-444c-a600-b4805847bb17', '{{ $onCredit->id }}', 'QRcpdfla1CGfMj9v')">
+                                        ویرایش
+                                    </button>
                                 @endif
                             </td>
                         </tr>
