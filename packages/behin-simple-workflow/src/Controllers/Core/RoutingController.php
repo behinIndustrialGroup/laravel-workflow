@@ -400,7 +400,7 @@ class RoutingController extends Controller
                 }
             }
             if ($task->type == 'end') {
-                $inbox = InboxController::create($task->id, $caseId, null, 'done');
+                $inbox = InboxController::create($task->id, $caseId, null, 'new');
                 return 'break';
             }
             if ($task->type == 'timed_condition') {
