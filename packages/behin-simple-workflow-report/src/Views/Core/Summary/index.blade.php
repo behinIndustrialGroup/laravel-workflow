@@ -171,6 +171,17 @@
                                             </tr>
                                         @endif
                                     @endforeach
+                                    @if (auth()->user()->access('پرونده های حذف شده'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>دفتر تلفن</td>
+                                            <td class="d-none"></td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.summary-report.show', ['summary_report' => '243225f2-30b9-4fd7-abc7-fbcf97862a1b']) }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('دفتر تلفن'))
                                         <tr>
                                             <td class="d-none"></td>
