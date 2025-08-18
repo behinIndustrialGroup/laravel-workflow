@@ -49,6 +49,7 @@
     <script>
         $('#phonebook').DataTable({
             "dom": 'Bfrtip',
+            @if(auth()->user()->access('خروجی اکسل دفتر تلفن'))
             "buttons": [{
                 "extend": 'excelHtml5',
                 "text": "خروجی اکسل",
@@ -58,6 +59,7 @@
                     "columns": ':visible'
                 }
             }],
+            @endif
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             }
