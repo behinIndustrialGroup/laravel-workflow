@@ -101,28 +101,31 @@
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
                             <table class="table table-bordered" id="external-reports-table">
-                                <tr>
-                                    <th>شروع</th>
-                                    <th>پایان</th>
-                                    <th>گزارش</th>
-                                    <th>سرپرست</th>
-                                    <th>تعمیرکار</th>
-                                    <th>همکاران</th>
-                                    <th>{{ trans('fields.need_next_visit') }}</th>
-                                    <th>{{ trans('fields.next_visit_description') }}</th>
-                                    <th>{{ trans('fields.part_left_from_customer_location') }}</th>
-                                    <th>{{ trans('fields.was_backups_taken') }}</th>
-                                    <th>{{ trans('fields.parameter_backup') }}</th>
-                                    <th>{{ trans('fields.pcparam_backup') }}</th>
-                                    <th>{{ trans('fields.sram_backup') }}</th>
-                                    <th>{{ trans('fields.sysfile_backup') }}</th>
-                                    <th>{{ trans('fields.prog_backup') }}</th>
-                                    <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
-                                    <th>{{ trans('fields.customer_validation_code') }}</th>
-                                    <th>{{ trans('fields.customer_signature') }}</th>
-                                    <th>{{ trans('fields.job_rank') }}</th>
-
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th>شروع</th>
+                                        <th>پایان</th>
+                                        <th>گزارش</th>
+                                        <th>سرپرست</th>
+                                        <th>تعمیرکار</th>
+                                        <th>همکاران</th>
+                                        <th>{{ trans('fields.need_next_visit') }}</th>
+                                        <th>{{ trans('fields.next_visit_description') }}</th>
+                                        <th>{{ trans('fields.part_left_from_customer_location') }}</th>
+                                        <th>{{ trans('fields.was_backups_taken') }}</th>
+                                        <th>{{ trans('fields.parameter_backup') }}</th>
+                                        <th>{{ trans('fields.pcparam_backup') }}</th>
+                                        <th>{{ trans('fields.sram_backup') }}</th>
+                                        <th>{{ trans('fields.sysfile_backup') }}</th>
+                                        <th>{{ trans('fields.prog_backup') }}</th>
+                                        <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
+                                        <th>{{ trans('fields.customer_validation_code') }}</th>
+                                        <th>{{ trans('fields.customer_signature') }}</th>
+                                        <th>{{ trans('fields.job_rank') }}</th>
+    
+                                    </tr>
+                                </thead>
+                                
                                 @foreach ($deviceRepairReports as $report)
                                     <tr>
                                         <td dir="ltr">{{ convertPersianToEnglish($report->start_date) }}
@@ -170,8 +173,6 @@
                     <div class="card-header {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
-
-
                             <table class="table table-bordered">
                                 <thead style="background-color: #e2f7a2">
                                     <tr>
