@@ -123,18 +123,20 @@ Route::get('test', function(){
         }
     }
 });
-
 Route::get('test2', function () {
     $collection = Excel::toCollection(null, public_path('123.xlsx'));
 
-    // هر شیت داخل فایل
     foreach ($collection as $sheet) {
         foreach ($sheet as $row) {
+            $mobile  = strval($row[1]); // تبدیل به رشته
+            $name    = isset($row[0]) ? trim($row[0]) : '';
+            $address = isset($row[2]) ? trim($row[2]) : '';
+
             Customers::updateOrCreate(
-                ['mobile' => trim($row[1])],
+                ['mobile' => $mobile],
                 [
-                    'name' => trim($row[0]),
-                    'address' => trim($row[2]),
+                    'name'    => $name,
+                    'address' => $address,
                 ]
             );
         }
