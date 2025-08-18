@@ -420,7 +420,7 @@
                                             <th>{{ trans('fields.delivery_description') }}</th>
                                         </tr>
                                         <tr>
-                                            <td>{{ $delivery['delivery_date'] ? toJalali((int) $delivery['delivery_date'])->format('Y-m-d') : '' }}
+                                            <td>{{ $delivery['delivery_date'] ??'' }}
                                             </td>
                                             <td>{{ $delivery['delivered_to'] }}</td>
                                             <td>{{ $delivery['delivery_description'] }}</td>
