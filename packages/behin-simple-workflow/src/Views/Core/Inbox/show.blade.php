@@ -4,6 +4,7 @@
 
 @php
     $content = json_decode($form->content);
+    $formMode = in_array($inbox->status, ['done', 'doneByOther']) ? 'readonly' : null;
 @endphp
 
 @section('content')
@@ -51,6 +52,7 @@
                         'inbox' => $inbox,
                         'variables' => $variables,
                         'process' => $process,
+                        'mode' => $formMode,
                     ])
                 @else
                     @include('SimpleWorkflowView::Core.Form.preview', [
@@ -60,6 +62,7 @@
                         'inbox' => $inbox,
                         'variables' => $variables,
                         'process' => $process,
+                        'mode' => $formMode,
                     ])
                 @endif
             </form>
@@ -180,5 +183,13 @@
                 }
             )
         }
+
+        @if (in_array($inbox->status, ['done', 'doneByOther']))
+        $(document).ready(function () {
+            var form = $('#form');
+            form.find('input, select, textarea, button').prop('disabled', true);
+            form.find('a').removeAttr('href').css('pointer-events', 'none');
+        });
+        @endif
     </script>
 @endsection
