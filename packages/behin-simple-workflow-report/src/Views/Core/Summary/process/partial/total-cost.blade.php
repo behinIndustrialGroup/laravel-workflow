@@ -128,7 +128,7 @@
                                         $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
-                                        <tr>
+                                        <tr @if($row->payment_date) style="background-color: #f7fabe;" @endif>
 
                                             <td>{{ $row->case_number }}
                                                 <a
