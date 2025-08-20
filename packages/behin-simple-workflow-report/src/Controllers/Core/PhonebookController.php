@@ -21,8 +21,8 @@ class PhonebookController extends Controller
             $query->where('mobile', 'like', "%" . $request->mobile . "%");
         }
 
-        // اگر هیچ فیلتری وارد نشده باشه → نتیجه خالی
-        if (! $request->filled('name') && ! $request->filled('mobile')) {
+        // اگر هیچ فیلتری وارد نشده و درخواست نمایش همه نیز وجود نداشته باشد، نتیجه خالی است
+        if (! $request->filled('name') && ! $request->filled('mobile') && ! $request->boolean('show_all')) {
             $customers = collect(); // یک کالکشن خالی
         } else {
             $customers = $query->get();

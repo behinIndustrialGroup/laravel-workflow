@@ -20,6 +20,9 @@
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary w-100">جستجو</button>
                     </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('simpleWorkflowReport.phonebook.index', ['show_all' => 1]) }}" class="btn btn-secondary w-100">نمایش همه</a>
+                    </div>
                 </form>
                 <table class="table" id="phonebook">
                     <thead>
