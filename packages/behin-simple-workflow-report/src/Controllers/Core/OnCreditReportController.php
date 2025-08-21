@@ -71,17 +71,13 @@ class OnCreditReportController extends Controller
                     $fin->payment_date = !empty($payment['cash_date']) ? convertPersianDateToTimestamp($payment['cash_date']) : null;
                     $fin->destination_account = $payment['account_number'] ?? null;
                     $fin->destination_account_name = $payment['account_name'] ?? null;
+                    $fin->invoice_number = $payment['invoice_number'] ?? null;
                     break;
                 case 'تسویه کامل - چک':
-                    $fin->payment = isset($payment['cheque_amount']) ? str_replace(',', '', $payment['cheque_amount']) : null;
+                    $fin->cost = isset($payment['cheque_amount']) ? str_replace(',', '', $payment['cheque_amount']) : null;
                     $fin->cheque_due_date = !empty($payment['cheque_date']) ? convertPersianDateToTimestamp($payment['cheque_date']) : null;
                     $fin->cheque_number = $payment['cheque_number'] ?? null;
-                    $fin->destination_account_name = $payment['bank_name'] ?? null;
-                    break;
-                case 'فاکتور':
-                    $fin->payment = isset($payment['invoice_amount']) ? str_replace(',', '', $payment['invoice_amount']) : null;
-                    $fin->invoice_date = $payment['invoice_date'];
-                    $fin->invoice_date_timestamp = !empty($payment['invoice_date']) ? convertPersianDateToTimestamp($payment['invoice_date']) : null;
+                    $fin->cheque_bank_name = $payment['bank_name'] ?? null;
                     $fin->invoice_number = $payment['invoice_number'] ?? null;
                     break;
             }
