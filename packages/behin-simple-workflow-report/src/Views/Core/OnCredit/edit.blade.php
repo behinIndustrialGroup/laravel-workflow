@@ -55,7 +55,7 @@
         var url = "{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}";
         send_ajax_formdata_request(url, fd, function(response) {
             alert('با موفقیت ذخیره شد.');
-            open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')
+            // open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')
         });
     }
     var rowIndex = 0;
@@ -76,16 +76,13 @@
                         <input type="text" name="payments[${rowIndex}][cash_date]" class="form-control mb-1 persian-date" placeholder="تاریخ پرداخت">
                         <input type="text" name="payments[${rowIndex}][account_number]" class="form-control mb-1" placeholder="شماره مقصد حساب">
                         <input type="text" name="payments[${rowIndex}][account_name]" class="form-control mb-1" placeholder="نام مقصد حساب">
+                        <input type="text" name="payments[${rowIndex}][invoice_number]" class="form-control mb-1" placeholder="شماره فاکتور">
                     </div>
                     <div class="cheque-fields payment-field-group d-none">
                         <input type="text" name="payments[${rowIndex}][cheque_amount]" class="form-control mb-1 formatted-digit" placeholder="مبلغ چک">
                         <input type="text" name="payments[${rowIndex}][cheque_date]" class="form-control mb-1 persian-date" placeholder="تاریخ سررسید چک">
                         <input type="text" name="payments[${rowIndex}][cheque_number]" class="form-control mb-1" placeholder="شماره چک">
                         <input type="text" name="payments[${rowIndex}][bank_name]" class="form-control mb-1" placeholder="نام بانک">
-                    </div>
-                    <div class="invoice-fields payment-field-group d-none">
-                        <input type="text" name="payments[${rowIndex}][invoice_amount]" class="form-control mb-1 formatted-digit" placeholder="مبلغ فاکتور">
-                        <input type="text" name="payments[${rowIndex}][invoice_date]" class="form-control mb-1 persian-date" placeholder="تاریخ فاکتور">
                         <input type="text" name="payments[${rowIndex}][invoice_number]" class="form-control mb-1" placeholder="شماره فاکتور">
                     </div>
                 </td>
@@ -100,9 +97,6 @@
             }
             if (type == 'تسویه کامل - چک') {
                 $row.find('.cheque-fields').removeClass('d-none');
-            }
-            if (type == 'فاکتور') {
-                $row.find('.invoice-fields').removeClass('d-none');
             }
         });
         $row.find('.remove-row').on('click', function() {
