@@ -103,7 +103,7 @@
                                         <button type="submit" class="btn btn-sm btn-success">تسویه شد</button>
                                     </form> --}}
                                     <button class="btn btn-sm"
-                                        onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}')">
+                                        onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')">
                                         ویرایش
                                     </button>
                                 @endif

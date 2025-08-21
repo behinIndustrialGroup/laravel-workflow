@@ -55,7 +55,7 @@
         var url = "{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}";
         send_ajax_formdata_request(url, fd, function(response) {
             alert('با موفقیت ذخیره شد.');
-            open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}')
+            open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')
         });
     }
     var rowIndex = 0;
