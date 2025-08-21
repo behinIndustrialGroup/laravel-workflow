@@ -24,8 +24,7 @@ class ChequeReportController extends Controller
 {
     public function index(Request $request)
     {
-        $cheques = Financials::whereNotNull('case_number')
-            ->whereIn('fix_cost_type', ['تسویه کامل - چک', 'علی الحساب - چک'])
+        $cheques = Financials::whereIn('fix_cost_type', ['تسویه کامل - چک', 'علی الحساب - چک'])
             // ->where('is_passed', null)
             ->get()
             ->groupBy(function ($item) {
