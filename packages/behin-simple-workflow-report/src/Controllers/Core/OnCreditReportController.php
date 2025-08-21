@@ -23,37 +23,72 @@ use Morilog\Jalali\Jalalian;
 
 class OnCreditReportController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $id = null)
     {
         $onCredits = Financials::whereNotNull('case_number')
             ->whereIn('fix_cost_type', ['حساب دفتری'])
             // ->whereNull('is_passed')
             ->get();
-        return view('SimpleWorkflowReportView::Core.OnCredit.index', compact('onCredits'));
+        return view('SimpleWorkflowReportView::Core.OnCredit.index', compact('onCredits', 'id'));
+    }
+
+    public function edit($id)
+    {
+        $onCredit = Financials::findOrFail($id);
+        $payments = Financials::where('case_number', $onCredit->case_number)
+            ->whereNotNull('payment')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('SimpleWorkflowReportView::Core.OnCredit.edit', compact('onCredit', 'payments'));
     }
 
     public function update(Request $request, $id)
     {
         $onCredit = Financials::findOrFail($id);
 
-        if ($request->has('settlement_date')) {
-            $onCredit->settlement_date = $request->settlement_date;
-            $onCredit->settlement_date_timestamp = $request->settlement_date ? convertPersianDateToTimestamp($request->settlement_date) : null;
-        }
-        if ($request->has('invoice_number')) {
-            $onCredit->invoice_number = $request->invoice_number;
-        }
-        if ($request->has('invoice_date')) {
-            $onCredit->invoice_date = $request->invoice_date;
-            $onCredit->invoice_date_timestamp = $request->invoice_date ? convertPersianDateToTimestamp($request->invoice_date) : null;
-        }
         if ($request->has('is_passed')) {
             $onCredit->is_passed = true;
+            $onCredit->save();
+            return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
         }
 
-        $onCredit->save();
+        $payments = $request->input('payments', []);
+        foreach ($payments as $payment) {
+            if (!isset($payment['type']) || $payment['type'] === '') {
+                continue;
+            }
 
-        return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+            $fin = new Financials();
+            $fin->case_number = $onCredit->case_number;
+            $fin->case_id = $onCredit->case_id;
+            $fin->process_id = $onCredit->process_id;
+            $fin->process_name = $onCredit->process_name;
+            $fin->fix_cost_type = $payment['type'];
+
+            switch ($payment['type']) {
+                case 'تسویه کامل - نقدی':
+                    $fin->payment = isset($payment['cash_amount']) ? str_replace(',', '', $payment['cash_amount']) : null;
+                    $fin->payment_date = !empty($payment['cash_date']) ? convertPersianDateToTimestamp($payment['cash_date']) : null;
+                    $fin->destination_account = $payment['account_number'] ?? null;
+                    $fin->destination_account_name = $payment['account_name'] ?? null;
+                    break;
+                case 'تسویه کامل - چک':
+                    $fin->payment = isset($payment['cheque_amount']) ? str_replace(',', '', $payment['cheque_amount']) : null;
+                    $fin->cheque_due_date = !empty($payment['cheque_date']) ? convertPersianDateToTimestamp($payment['cheque_date']) : null;
+                    $fin->cheque_number = $payment['cheque_number'] ?? null;
+                    $fin->destination_account_name = $payment['bank_name'] ?? null;
+                    break;
+                case 'فاکتور':
+                    $fin->payment = isset($payment['invoice_amount']) ? str_replace(',', '', $payment['invoice_amount']) : null;
+                    $fin->invoice_date = $payment['invoice_date'];
+                    $fin->invoice_date_timestamp = !empty($payment['invoice_date']) ? convertPersianDateToTimestamp($payment['invoice_date']) : null;
+                    $fin->invoice_number = $payment['invoice_number'] ?? null;
+                    break;
+            }
+
+            $fin->save();
+        }
+        return "";
     }
 
     public function showAll(Request $request)
