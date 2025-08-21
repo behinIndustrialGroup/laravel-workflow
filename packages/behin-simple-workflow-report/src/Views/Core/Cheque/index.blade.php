@@ -63,7 +63,7 @@
                             </td>
                             <td>
                                 @foreach ($group as $cheque)
-                                    {{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}
+                                    {{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') ?? $cheque->description }}
                                     @if (!$loop->last)
                                         <br>
                                     @endif
