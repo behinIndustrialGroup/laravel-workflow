@@ -35,7 +35,7 @@ class OnCreditReportController extends Controller
     public function edit($id)
     {
         $onCredit = Financials::findOrFail($id);
-        $payments = Financials::where('case_number', $onCredit->case_number)
+        $payments = Financials::where('parent_id', $onCredit->id)
             ->whereNotNull('payment')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -63,11 +63,17 @@ class OnCreditReportController extends Controller
 
             switch ($payment['type']) {
                 case 'تسویه کامل - نقدی':
+                    $fin->case_number = $onCredit->case_number;
+                    $fin->case_id = $onCredit->case_id;
+                    $fin->process_id = $onCredit->process_id;
+                    $fin->process_name = $onCredit->process_name;
                     $fin->payment = isset($payment['cash_amount']) ? str_replace(',', '', $payment['cash_amount']) : null;
                     $fin->payment_date = !empty($payment['cash_date']) ? convertPersianDateToTimestamp($payment['cash_date']) : null;
                     $fin->destination_account = $payment['account_number'] ?? null;
                     $fin->destination_account_name = $payment['account_name'] ?? null;
                     $fin->invoice_number = $payment['invoice_number'] ?? null;
+                    $fin->description = 'تسویه حساب دفتری پرونده ' . $onCredit->case_number;
+                    $fin->parent_id = $onCredit->id;
                     break;
                 case 'تسویه کامل - چک':
                     $fin->cost = isset($payment['cheque_amount']) ? str_replace(',', '', $payment['cheque_amount']) : null;
@@ -75,6 +81,8 @@ class OnCreditReportController extends Controller
                     $fin->cheque_number = $payment['cheque_number'] ?? null;
                     $fin->cheque_bank_name = $payment['bank_name'] ?? null;
                     $fin->invoice_number = $payment['invoice_number'] ?? null;
+                    $fin->description = 'تسویه حساب دفتری پرونده ' . $onCredit->case_number;
+                    $fin->parent_id = $onCredit->id;
                     break;
             }
 
