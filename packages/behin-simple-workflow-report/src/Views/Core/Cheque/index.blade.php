@@ -34,8 +34,8 @@
                     <tr>
                         <th>شماره پرونده</th>
                         <th>نام مشتری</th>
-                        <th>مبلغ چک</th>
-                        <th>تاریخ سررسید چک</th>
+                        <th>مبلغ</th>
+                        <th>تاریخ</th>
                         <th>مقصد حساب</th>
                         <th>شماره چک</th>
                         <th>گیرنده چک</th>
@@ -49,13 +49,15 @@
                         <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
                             <td>
                                 @foreach ($group as $cheque)
-                                    <a
-                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
-                                        <i class="fa fa-external-link"></i>
-                                    </a>
-                                    {{ $cheque->case_number }}
-                                    @if (!$loop->last)
-                                        <br>
+                                    @if ($cheque->case_number)
+                                        <a
+                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        {{ $cheque->case_number }}
+                                        @if (!$loop->last)
+                                            <br>
+                                        @endif
                                     @endif
                                 @endforeach
                             </td>
@@ -168,13 +170,6 @@
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2" class="text-right">مجموع در این صفحه:</th>
-                        <th colspan="2" id="sum-pass"></th>
-                        <th colspan="5"></th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
@@ -186,49 +181,6 @@
             "pageLength": 25,
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            },
-            "footerCallback": function(row, data, start, end, display) {
-                var api = this.api();
-
-                var passed = 0;
-                var notPassed = 0;
-                var passedAmount = 0;
-                var notPassedAmount = 0;
-
-                api.rows({
-                    page: 'current'
-                }).every(function(rowIdx, tableLoop, rowLoop) {
-                    var rowData = this.data();
-
-                    // ستون مبلغ پرونده (ایندکس 2)
-                    var cellAmount = api.cell(rowIdx, 2).data();
-                    var amount = parseInt(cellAmount.replace(/,/g, '')) || 0;
-
-                    // ستون پاس شد (ایندکس 8)
-                    var cell = api.cell(rowIdx, 8).node();
-
-                    if ($(cell).find('form').length > 0) {
-                        // پاس نشده
-                        notPassed++;
-                        notPassedAmount += amount;
-                    } else {
-                        // پاس شده
-                        passed++;
-                        passedAmount += amount;
-                    }
-                });
-
-                // نمایش در فوتر
-                $('#sum-pass').html(
-                    '<div>' +
-                    '<span class="badge bg-success">پاس شده: ' + passed + ' فقره - ' + passedAmount
-                    .toLocaleString() + ' ریال</span>' +
-                    '</div>' +
-                    '<div class="mt-1">' +
-                    '<span class="badge bg-danger">پاس نشده: ' + notPassed + ' فقره - ' + notPassedAmount
-                    .toLocaleString() + ' ریال</span>' +
-                    '</div>'
-                );
             }
         });
     </script>
