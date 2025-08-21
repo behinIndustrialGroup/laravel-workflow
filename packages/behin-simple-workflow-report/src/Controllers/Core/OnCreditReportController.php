@@ -59,10 +59,6 @@ class OnCreditReportController extends Controller
             }
 
             $fin = new Financials();
-            $fin->case_number = $onCredit->case_number;
-            $fin->case_id = $onCredit->case_id;
-            $fin->process_id = $onCredit->process_id;
-            $fin->process_name = $onCredit->process_name;
             $fin->fix_cost_type = $payment['type'];
 
             switch ($payment['type']) {
