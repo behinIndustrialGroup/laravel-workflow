@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="form-floating mb-2">
                                         <label>نام حساب مقصد</label>
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][destination_account_name]" placeholder="نام حساب مقصد">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_name]" placeholder="نام حساب مقصد">
                                     </div>
                                     <div class="form-floating">
                                         <label>شماره فاکتور</label>
