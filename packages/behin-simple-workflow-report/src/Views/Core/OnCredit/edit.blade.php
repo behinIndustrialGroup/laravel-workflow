@@ -65,50 +65,50 @@
                             <div class="col-md-8">
                                 <div class="cash-fields payment-field-group">
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cash_amount]" placeholder="مبلغ">
                                         <label>مبلغ پرداختی</label>
+                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cash_amount]" placeholder="مبلغ">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cash_date]" placeholder="تاریخ">
                                         <label>تاریخ پرداخت</label>
+                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cash_date]" placeholder="تاریخ">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_number]" placeholder="شماره حساب">
                                         <label>شماره حساب مقصد</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_number]" placeholder="شماره حساب">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_name]" placeholder="نام حساب">
                                         <label>نام حساب مقصد</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_name]" placeholder="نام حساب">
                                     </div>
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][cash_invoice_number]" placeholder="فاکتور">
                                         <label>شماره فاکتور</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cash_invoice_number]" placeholder="فاکتور">
                                     </div>
                                 </div>
                                 <div class="cheque-fields payment-field-group d-none">
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cheque_amount]" placeholder="مبلغ چک">
                                         <label>مبلغ چک</label>
+                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cheque_amount]" placeholder="مبلغ چک">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cheque_due_date]" placeholder="سررسید">
                                         <label>تاریخ سررسید</label>
+                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cheque_due_date]" placeholder="سررسید">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_number]" placeholder="شماره چک">
                                         <label>شماره چک</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_number]" placeholder="شماره چک">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][bank_name]" placeholder="نام بانک">
                                         <label>نام بانک</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][bank_name]" placeholder="نام بانک">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][destination_account_name]" placeholder="نام حساب مقصد">
                                         <label>نام حساب مقصد</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][destination_account_name]" placeholder="نام حساب مقصد">
                                     </div>
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_invoice_number]" placeholder="فاکتور">
                                         <label>شماره فاکتور</label>
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_invoice_number]" placeholder="فاکتور">
                                     </div>
                                 </div>
                             </div>
