@@ -72,7 +72,7 @@ class OnCreditReportController extends Controller
                     $fin->invoice_number = $payment['cash_invoice_number'] ?? null;
                     break;
                 case 'چک':
-                    $preCheque = OnCreditPayment::where('cheque_number', $payment['cheque_number'])->where('payment_type', 'cheque')->first();
+                    $preCheque = OnCreditPayment::where('cheque_number', $payment['cheque_number'])->where('payment_type', 'چک')->first();
                     if($preCheque){
                         if($preCheque->amount != $payment['cheque_amount']){
                             $response = [
