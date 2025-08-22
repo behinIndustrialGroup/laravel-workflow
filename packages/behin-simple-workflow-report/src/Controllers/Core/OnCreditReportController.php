@@ -75,31 +75,31 @@ class OnCreditReportController extends Controller
                     $preCheque = OnCreditPayment::where('cheque_number', $payment['cheque_number'])->where('payment_type', 'cheque')->first();
                     if($preCheque){
                         if($preCheque->amount != $payment['cheque_amount']){
-                            return response()->json([
+                            $response = [
                                 'status' => 'error',
                                 'message' => 'این شماره چک قبلا با مبلغ ' . number_format($preCheque->amount) . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و مبلغ آن با مبلغ وارد شده الان یکسان نیست.'
-                            ]);
+                            ];
                             break;
                         }
                         if($preCheque->bank_name != $payment['bank_name']){
-                            return response()->json([
+                            $response = [
                                 'status' => 'error',
                                 'message' => 'این شماره چک قبلا با نام بانک ' . $preCheque->bank_name . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و نام بانک آن با نام بانک وارد شده الان یکسان نیست.'
-                            ]);
+                            ];
                             break;
                         }
                         if($preCheque->cheque_due_date != $payment['cheque_due_date']){
-                            return response()->json([
+                            $response = [
                                 'status' => 'error',
                                 'message' => 'این شماره چک قبلا با سررسید ' . $preCheque->cheque_due_date . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و سررسید آن با سررسید وارد شده الان یکسان نیست.'
-                            ]);
+                            ];
                             break;
                         }
                         if($preCheque->account_name != $payment['account_name']){
-                            return response()->json([
+                            $response = [
                                 'status' => 'error',
                                 'message' => 'این شماره چک قبلا با نام حساب مقصد ' . $preCheque->account_name . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و نام حساب مقصد آن با نام حساب مقصد وارد شده الان یکسان نیست.'
-                            ]);
+                            ];
                             break;
                         }
                     }
@@ -111,11 +111,18 @@ class OnCreditReportController extends Controller
                     $fin->invoice_number = $payment['cheque_invoice_number'] ?? null;
                     break;
             }
-
-            $fin->save();
+            if(!isset($response)){
+                $fin->save();
+            }
         }
 
-        return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+        if(isset($response)){
+            return response()->json($response);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'با موفقیت ذخیره شد.'
+        ]);
     }
 
     public function showAll(Request $request)
