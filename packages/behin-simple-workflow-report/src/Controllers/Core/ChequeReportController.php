@@ -30,6 +30,10 @@ class ChequeReportController extends Controller
             ->groupBy(function ($item) {
                 return $item->cheque_number ?: 'unique_' . $item->id;
             });
+        $chequeFromOnCredit = OnCreditPayment::where('payment_type', 'چک')->get()->groupBy(function ($item) {
+            return $item->cheque_number ?: 'unique_' . $item->id;
+        });
+        $cheques = $cheques->merge($chequeFromOnCredit);
         return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques'));
     }
 
