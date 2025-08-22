@@ -25,8 +25,7 @@ class ChequeReportController extends Controller
         $chequeFromOnCredit = OnCreditPayment::where('payment_type', 'چک')->get()->groupBy(function ($item) {
             return $item->cheque_number ?: 'unique_' . $item->id;
         });
-        $cheques = $cheques->merge($chequeFromOnCredit);
-        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques'));
+        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit'));
     }
 
     public function update(Request $request, $id)

@@ -102,6 +102,10 @@
                                         <input type="text" class="form-control" name="payments[${rowIndex}][bank_name]" placeholder="نام بانک">
                                         <label>نام بانک</label>
                                     </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][destination_account_name]" placeholder="نام حساب مقصد">
+                                        <label>نام حساب مقصد</label>
+                                    </div>
                                     <div class="form-floating">
                                         <input type="text" class="form-control" name="payments[${rowIndex}][cheque_invoice_number]" placeholder="فاکتور">
                                         <label>شماره فاکتور</label>
@@ -121,10 +125,10 @@
         $row.find('.payment-type').on('change', function() {
             const type = $(this).val();
             $row.find('.payment-field-group').addClass('d-none');
-            if (type === 'cash') {
+            if (type === 'نقدی') {
                 $row.find('.cash-fields').removeClass('d-none');
             }
-            if (type === 'cheque') {
+            if (type === 'چک') {
                 $row.find('.cheque-fields').removeClass('d-none');
             }
         });

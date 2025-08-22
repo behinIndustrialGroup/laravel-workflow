@@ -44,6 +44,50 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($chequeFromOnCredit as $group)
+                        @php $first = $group->first(); @endphp
+                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    @if ($cheque->case_number)
+                                        <a
+                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $cheque->case_number]) }}">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        {{ $cheque->case_number }}
+                                        @if (!$loop->last)
+                                            <br>
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($group as $cheque)
+                                    @if ($cheque->case_number)
+                                        {{ $cheque->case()->getVariable('customer_workshop_or_ceo_name') }}
+                                    @else
+                                        {{ $cheque->description }}
+                                    @endif
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
+                                @endforeach
+                            </td>
+                            <td>{{ number_format($first->amount) }}</td>
+                            <td>{{ toJalali((int) $first->cheque_due_date)->format('Y-m-d') }}</td>
+                            <td>{{ $first->destination_account_name }}</td>
+                            <td>{{ $first->cheque_number }}</td>
+                            <td>{{ $first->check_receiver ?? '' }}</td>
+                            <td>{{ $first->cheque_description ?? ''}}</td>
+                            <td>
+                                @if ($cheque->is_passed)
+                                    <span class="badge bg-success">پاس شد</span>
+                                @else
+                                    <span class="badge bg-danger">پاس نشد</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
                     @foreach ($cheques as $group)
                         @php $first = $group->first(); @endphp
                         <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
