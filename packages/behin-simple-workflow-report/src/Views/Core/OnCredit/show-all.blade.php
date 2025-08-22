@@ -1,6 +1,6 @@
 @extends('behin-layouts.app')
 
-@section('title', 'گزارش کل بدهکاران')
+@section('title', 'گزارش حساب دفتری')
 
 
 @php
@@ -52,20 +52,12 @@
                                 {{ $inbox->case->number }}
                             </td>
                             <td>{{ $inbox->case->getVariable('customer_workshop_or_ceo_name') }}</td>
-                            <td>{{ number_format(Financials::where('case_number', $inbox->case->number)->sum('cost')) }}
-                            </td>
-                            <td>{{ toJalali($inbox->created_at)->format('Y-m-d') }}</td>
+                            <td>{{ number_format(Financials::where('case_number', $inbox->case->number)->sum('cost')) }}</td>
+                            <td>{{ toJalali((int) $inbox->fix_cost_date)->format('Y-m-d') }}</td>
                             <td>{{ $inbox->case_name }}</td>
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2" style="text-align:right">جمع این صفحه:</th>
-                        <th id="page-total"></th>
-                        <th colspan="2"></th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
         <div class="card-body">
@@ -92,17 +84,14 @@
                             <td>{{ $onCredit->case()->getVariable('customer_workshop_or_ceo_name') }}</td>
                             <td>{{ number_format($onCredit->cost) }}</td>
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
+
+
+
                             <td>{{ $onCredit->description }}</td>
+
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2" style="text-align:right">جمع این صفحه:</th>
-                        <th id="on-credit-page-total"></th>
-                        <th colspan="2"></th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
@@ -114,30 +103,6 @@
             "pageLength": 25,
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            },
-            footerCallback: function(row, data, start, end, display) {
-                var api = this.api();
-
-                var intVal = function(i) {
-                    if (typeof i === 'string') {
-                        return parseInt(i.replace(/,/g, '')) || 0;
-                    }
-                    return typeof i === 'number' ? i : 0;
-                };
-
-                var pageTotal = 0;
-
-                api.rows({
-                    page: 'current'
-                }).every(function(rowIdx, tableLoop, rowLoop) {
-                    var amount = this.data()[2]; // ستون مبلغ
-                    pageTotal += intVal(amount);
-                });
-
-                // نمایش در فوتر
-                $(api.column(2).footer()).html(
-                    pageTotal.toLocaleString('fa-IR') + ' ریال'
-                );
             }
         });
 
@@ -145,30 +110,6 @@
             "pageLength": 25,
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            },
-            footerCallback: function(row, data, start, end, display) {
-                var api = this.api();
-
-                var intVal = function(i) {
-                    if (typeof i === 'string') {
-                        return parseInt(i.replace(/,/g, '')) || 0;
-                    }
-                    return typeof i === 'number' ? i : 0;
-                };
-
-                var pageTotal = 0;
-
-                api.rows({
-                    page: 'current'
-                }).every(function(rowIdx, tableLoop, rowLoop) {
-                    var amount = this.data()[2]; // ستون مبلغ
-                    pageTotal += intVal(amount);
-                });
-
-                // نمایش در فوتر
-                $(api.column(2).footer()).html(
-                    pageTotal.toLocaleString('fa-IR') + ' ریال'
-                );
             }
         });
     </script>

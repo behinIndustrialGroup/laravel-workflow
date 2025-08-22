@@ -1,108 +1,137 @@
-<div class="container-fluid">
-    <h5 class="mb-3">ثبت پرداخت برای پرونده {{ $onCredit->case_number }}</h5>
+<div class="container-fluid py-3">
+    <h5 class="mb-4 fw-bold text-primary">
+        <i class="fa fa-credit-card"></i> ثبت پرداخت برای پرونده {{ $onCredit->case_number }}
+    </h5>
+
     <form method="POST" action="javascript:void(0);" id="payment-form">
         @csrf
         @method('PATCH')
-        <table class="table" id="payment-rows">
-            <thead>
-                <tr>
-                    <th>نوع پرداخت</th>
-                    <th>جزئیات</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button type="button" class="btn btn-secondary btn-sm" id="add-payment">افزودن ردیف پرداخت</button>
 
+        <div id="payment-rows" class="row gy-3"></div>
+
+        <div class="d-flex justify-content-between mt-3">
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="add-payment">
+                <i class="fa fa-plus"></i> افزودن ردیف پرداخت
+            </button>
+            <button type="button" class="btn btn-success rounded-pill px-4" onclick="submitForm()">
+                <i class="fa fa-save"></i> ذخیره
+            </button>
+        </div>
     </form>
-    <div class="text-right mt-3">
-        <button type="button" class="btn btn-primary" onclick="submitForm()">ذخیره</button>
+    <div id="payments-list">
+        @include('SimpleWorkflowReportView::Core.OnCredit.payments-list', ['payments' => $payments])
     </div>
 
-    @if ($payments->count())
-        <hr>
-        <h6 class="mb-2 p-2 bg-light text-center">پرداخت های ثبت شده</h6>
-        <ul class="list-group">
-            @foreach ($payments as $payment)
-                @switch($payment->fix_cost_type)
-                    @case('تسویه کامل - نقدی')
-                        <li class="list-group-item">نقدی | {{ number_format($payment->payment) }} | {{ $payment->payment_date }} | {{ $payment->destination_account_name }} | {{ $payment->destination_account }}</li>
-                    @break
-
-                    @case('تسویه کامل - چک')
-                        <li class="list-group-item">چک - {{ number_format($payment->payment) }} | {{ $payment->cheque_due_date }} | {{ $payment->cheque_number }} | {{ $payment->destination_account_name }} | {{ $payment->destination_account }}</li>
-                    @break
-
-                    @case('فاکتور')
-                        <li class="list-group-item">فاکتور - {{ number_format($payment->payment) }} | {{ $payment->invoice_date }} | {{ $payment->invoice_number }} </li>
-                    @break
-                @endswitch
-            @endforeach
-        </ul>
-    @endif
+    <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
+        method="POST">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="is_passed" value="1">
+        <button type="submit" class="btn btn-danger w-100 rounded-pill">
+            <i class="fa fa-check-circle"></i> تسویه کامل
+        </button>
+    </form>
 </div>
-<form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}" method="POST">
-    @csrf
-    @method('PATCH')
-    <input type="hidden" name="is_passed" value="1">
-    <button type="submit" class="btn btn-success">تسویه کامل</button>
-</form>
 
 <script>
     function submitForm() {
         var fd = new FormData(document.getElementById('payment-form'));
         var url = "{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}";
         send_ajax_formdata_request(url, fd, function(response) {
-            alert('با موفقیت ذخیره شد.');
-            // open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')
+            console.log(response);
+            if (response.status === 'success') {
+                alert(response.message);
+            } else {
+                alert(response.message);
+            }
         });
     }
+
     var rowIndex = 0;
 
     function addRow() {
         var row = `
-            <tr>
-                <td>
-                    <select name="payments[${rowIndex}][type]" class="form-control payment-type">
-                        <option value="تسویه کامل - نقدی">نقدی</option>
-                        <option value="تسویه کامل - چک">چک</option>
-                        <option value="فاکتور">فاکتور</option>
-                    </select>
-                </td>
-                <td>
-                    <div class="cash-fields payment-field-group">
-                        <input type="text" name="payments[${rowIndex}][cash_amount]" class="form-control mb-1 formatted-digit" placeholder="مبلغ پرداختی">
-                        <input type="text" name="payments[${rowIndex}][cash_date]" class="form-control mb-1 persian-date" placeholder="تاریخ پرداخت">
-                        <input type="text" name="payments[${rowIndex}][account_number]" class="form-control mb-1" placeholder="شماره مقصد حساب">
-                        <input type="text" name="payments[${rowIndex}][account_name]" class="form-control mb-1" placeholder="نام مقصد حساب">
-                        <input type="text" name="payments[${rowIndex}][invoice_number]" class="form-control mb-1" placeholder="شماره فاکتور">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label">نوع پرداخت</label>
+                                <select name="payments[${rowIndex}][type]" class="form-select payment-type">
+                                    <option value="نقدی">نقدی</option>
+                                    <option value="چک">چک</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="cash-fields payment-field-group">
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cash_amount]" placeholder="مبلغ">
+                                        <label>مبلغ پرداختی</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cash_date]" placeholder="تاریخ">
+                                        <label>تاریخ پرداخت</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_number]" placeholder="شماره حساب">
+                                        <label>شماره حساب مقصد</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][account_name]" placeholder="نام حساب">
+                                        <label>نام حساب مقصد</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cash_invoice_number]" placeholder="فاکتور">
+                                        <label>شماره فاکتور</label>
+                                    </div>
+                                </div>
+                                <div class="cheque-fields payment-field-group d-none">
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control formatted-digit" name="payments[${rowIndex}][cheque_amount]" placeholder="مبلغ چک">
+                                        <label>مبلغ چک</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control persian-date" name="payments[${rowIndex}][cheque_due_date]" placeholder="سررسید">
+                                        <label>تاریخ سررسید</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_number]" placeholder="شماره چک">
+                                        <label>شماره چک</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][bank_name]" placeholder="نام بانک">
+                                        <label>نام بانک</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="payments[${rowIndex}][cheque_invoice_number]" placeholder="فاکتور">
+                                        <label>شماره فاکتور</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle remove-row">
+                                    &times;
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cheque-fields payment-field-group d-none">
-                        <input type="text" name="payments[${rowIndex}][cheque_amount]" class="form-control mb-1 formatted-digit" placeholder="مبلغ چک">
-                        <input type="text" name="payments[${rowIndex}][cheque_date]" class="form-control mb-1 persian-date" placeholder="تاریخ سررسید چک">
-                        <input type="text" name="payments[${rowIndex}][cheque_number]" class="form-control mb-1" placeholder="شماره چک">
-                        <input type="text" name="payments[${rowIndex}][bank_name]" class="form-control mb-1" placeholder="نام بانک">
-                        <input type="text" name="payments[${rowIndex}][invoice_number]" class="form-control mb-1" placeholder="شماره فاکتور">
-                    </div>
-                </td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-row">&times;</button></td>
-            </tr>`;
-        var $row = $(row);
+                </div>
+            </div>`;
+        const $row = $(row);
         $row.find('.payment-type').on('change', function() {
-            var type = $(this).val();
+            const type = $(this).val();
             $row.find('.payment-field-group').addClass('d-none');
-            if (type == 'تسویه کامل - نقدی') {
+            if (type === 'cash') {
                 $row.find('.cash-fields').removeClass('d-none');
             }
-            if (type == 'تسویه کامل - چک') {
+            if (type === 'cheque') {
                 $row.find('.cheque-fields').removeClass('d-none');
             }
         });
         $row.find('.remove-row').on('click', function() {
             $row.remove();
         });
-        $('#payment-rows tbody').append($row);
+        $('#payment-rows').append($row);
         $('.persian-date').persianDatepicker({
             viewMode: 'day',
             initialValue: false,

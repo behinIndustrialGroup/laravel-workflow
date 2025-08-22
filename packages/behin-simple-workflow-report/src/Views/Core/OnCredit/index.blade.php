@@ -49,8 +49,7 @@
                         $totalCost = 0;
                     @endphp
                     @foreach ($onCredits as $onCredit)
-                        <tr @if ($onCredit->is_passed) style="background-color: #d4edda;" @endif
-                            class="{{ $onCredit->is_passed ? 'settled' : 'unsettled' }}">
+                        <tr @if ($onCredit->is_passed) style="background-color: #d4edda;" @endif>
                             <td>
                                 <a
                                     href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $onCredit->case_number]) }}">
@@ -102,8 +101,7 @@
                                         <input type="hidden" name="is_passed" value="1">
                                         <button type="submit" class="btn btn-sm btn-success">تسویه شد</button>
                                     </form> --}}
-                                    <button class="btn btn-sm"
-                                        onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}', '', '{{ $onCredit->id }}')">
+                                    <button class="btn btn-sm" onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}')">
                                         ویرایش
                                     </button>
                                 @endif
@@ -173,39 +171,23 @@
                         return typeof i === 'number' ? i : 0;
                     };
 
-                    let settledSum = 0,
-                        unsettledSum = 0;
-                    let settledCount = 0,
-                        unsettledCount = 0;
+                    var pageTotal = 0;
 
                     api.rows({
                         page: 'current'
                     }).every(function(rowIdx, tableLoop, rowLoop) {
-                        let amount = this.data()[2]; // ستون مبلغ (متن قالب بندی شده)
-                        let numAmount = intVal(amount);
-                        let $row = $(this.node());
+                        var amount = this.data()[2]; // ستون مبلغ
+                        var tasvie = $(this.node()).find('td:last').text()
+                            .trim(); // ستون تسویه از DOM
 
-                        // چک کردن وضعیت: اگر رنگ سبز (یا مثلاً کلاس is_passed) داشته باشه
-                        let isSettled = $row.hasClass("settled");
-                        // 👆 چون توی Blade برای تسویه‌شده‌ها background-color: #d4edda گذاشتی
-
-                        if (isSettled) {
-                            settledSum += numAmount;
-                            settledCount++;
-                        } else {
-                            unsettledSum += numAmount;
-                            unsettledCount++;
+                        if (tasvie.length > 0) {
+                            pageTotal += intVal(amount);
                         }
                     });
 
                     // نمایش در فوتر
                     $(api.column(2).footer()).html(
-                        `
-                <div>
-                    <span class="text-success">تسویه شده: ${settledSum.toLocaleString('fa-IR')} (${settledCount} مورد)</span><br>
-                    <span class="text-danger">تسویه نشده: ${unsettledSum.toLocaleString('fa-IR')} (${unsettledCount} مورد)</span>
-                </div>
-                `
+                        pageTotal.toLocaleString('fa-IR') + ' ریال'
                     );
                 }
             });
