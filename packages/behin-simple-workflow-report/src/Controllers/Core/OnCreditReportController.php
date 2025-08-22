@@ -92,11 +92,18 @@ class OnCreditReportController extends Controller
                                 'message' => 'این شماره چک قبلا با سررسید ' . $preCheque->cheque_due_date . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و سررسید آن با سررسید وارد شده الان یکسان نیست.'
                             ]);
                         }
+                        if($preCheque->account_name != $payment['account_name']){
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => 'این شماره چک قبلا با نام حساب مقصد ' . $preCheque->account_name . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و نام حساب مقصد آن با نام حساب مقصد وارد شده الان یکسان نیست.'
+                            ]);
+                        }
                     }
                     $fin->amount = isset($payment['cheque_amount']) ? str_replace(',', '', $payment['cheque_amount']) : null;
                     $fin->bank_name = $payment['bank_name'] ?? null;
                     $fin->cheque_number = $payment['cheque_number'] ?? null;
                     $fin->cheque_due_date = !empty($payment['cheque_due_date']) ? convertPersianDateToTimestamp($payment['cheque_due_date']) : null;
+                    $fin->account_name = $payment['account_name'] ?? null;
                     $fin->invoice_number = $payment['cheque_invoice_number'] ?? null;
                     break;
             }
