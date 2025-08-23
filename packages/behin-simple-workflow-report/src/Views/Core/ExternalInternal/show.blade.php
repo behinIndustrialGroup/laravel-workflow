@@ -358,7 +358,6 @@
                                             <th>{{ trans('fields.destination_account_name') }}</th>
                                             <th>هزینه دریافت شده</th>
                                             <th>{{ trans('fields.payment_date') }}</th>
-                                            <th>{{ trans('fields.payment_after_completion') }}</th>
                                             <th>{{ trans('fields.description') }}</th>
                                         </tr>
                                         @foreach ($financials as $fin)
@@ -401,7 +400,6 @@
                                                 </td>
                                                 <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
                                                 </td>
-                                                <td>{{ $fin->payment_after_completion }}</td>
                                                 <td>{{ $fin->description }}</td>
                                             </tr>
                                         @endforeach
