@@ -28,20 +28,21 @@ class ChequeReportController extends Controller
         return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit'));
     }
 
+    public function updateFromOnCredit(Request $request, $id)
+    {
+        $cheque = Financials::findOrFail($id);
+        $cheque = OnCreditPayment::where('cheque_number', $id)->get();
+        foreach ($cheque as $item) {
+            $item->cheque_receiver = $request->input('cheque_receiver');
+            $item->is_passed = $request->input('is_passed');
+            $item->save();
+        }
+        return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+    }
+
     public function update(Request $request, $id)
     {
         $cheque = Financials::findOrFail($id);
-
-        if ($request->fromOnCredit) {
-            return $request->all();
-            $cheque = OnCreditPayment::where('cheque_number', $id)->get();
-            foreach ($cheque as $item) {
-                $item->cheque_receiver = $request->input('cheque_receiver');
-                $item->is_passed = $request->input('is_passed');
-                $item->save();
-            }
-            return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
-        }
 
         // اگر کاربر خواسته چک را پاس کند، ولی شماره چک ثبت نشده باشد، ارور بده
         if ($request->has('is_passed') && empty($cheque->cheque_number)) {

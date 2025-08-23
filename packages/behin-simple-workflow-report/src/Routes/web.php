@@ -79,6 +79,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
 
     Route::resource('cheque-report', ChequeReportController::class);
+    Route::patch('cheque-report/{id}/update-from-on-credit', [ChequeReportController::class, 'updateFromOnCredit'])->name('cheque-report.updateFromOnCredit');
     Route::resource('on-credit-report', OnCreditReportController::class);
     Route::get('on-credit-report-show-all', [OnCreditReportController::class, 'showAll'])->name('on-credit-report.showAll');
     Route::resource('personel-activity', PersonelActivityController::class);
