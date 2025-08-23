@@ -189,8 +189,8 @@
                     // نمایش در فوتر
                     $(api.column(2).footer()).html(
                         `<div>
-            <span>تسویه شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
-            <span>تسویه نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
+            <span class='text-success'>تسویه شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
+            <span class='text-danger'>تسویه نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
         </div>`
                     );
                 }
