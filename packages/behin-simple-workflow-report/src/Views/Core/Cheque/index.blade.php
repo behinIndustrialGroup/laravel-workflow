@@ -114,7 +114,7 @@
                     @endforeach
                     @foreach ($cheques as $group)
                         @php $first = $group->first(); @endphp
-                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
+                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" class="passed" @endif>
                             <td>
                                 @foreach ($group as $cheque)
                                     @if ($cheque->case_number)
