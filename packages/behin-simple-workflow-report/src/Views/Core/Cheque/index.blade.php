@@ -82,7 +82,7 @@
                                     {{ $first->cheque_receiver }}
                                 @else
                                     <form method="POST"
-                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $first->id) }}"
+                                        action="{{ route('simpleWorkflowReport.cheque-report.updateFromOnCredit', $first->id) }}"
                                         onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
                                         @csrf
                                         @method('PATCH')
@@ -100,7 +100,7 @@
                                    
                                 @else
                                     <form method="POST"
-                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $first->id) }}"
+                                        action="{{ route('simpleWorkflowReport.cheque-report.updateFromOnCredit', $first->id) }}"
                                         onsubmit="return confirm('آیا از پاس شدن این چک مطمئن هستید؟')">
                                         @csrf
                                         @method('PATCH')
