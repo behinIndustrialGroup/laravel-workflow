@@ -408,7 +408,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header {{ $caseCosts->count() ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div class="card-header {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
                                 تفکیک هزینه های پرونده
                             </div>
                             <div class="card-body">
