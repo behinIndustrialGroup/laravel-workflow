@@ -103,7 +103,7 @@
                                         <input type="text" class="form-control" name="payments[${rowIndex}][bank_name]" placeholder="نام بانک">
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <label>نام حساب مقصد</label>
+                                        <label>در وجه</label>
                                         <input type="text" class="form-control" name="payments[${rowIndex}][account_name]" placeholder="نام حساب مقصد">
                                     </div>
                                     <div class="form-floating">
