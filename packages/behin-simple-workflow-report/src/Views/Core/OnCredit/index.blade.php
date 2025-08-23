@@ -49,7 +49,7 @@
                         $totalCost = 0;
                     @endphp
                     @foreach ($onCredits as $onCredit)
-                        <tr @if ($onCredit->is_passed) style="background-color: #d4edda;" @endif>
+                        <tr @if ($onCredit->is_passed) style="background-color: #d4edda;" class="passed" @endif>
                             <td>
                                 <a
                                     href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $onCredit->case_number]) }}">
@@ -94,7 +94,8 @@
 
                             {{-- دکمه پاس شد --}}
                             <td>
-                                <button class="btn btn-sm" onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}')">
+                                <button class="btn btn-sm"
+                                    onclick="open_admin_modal('{{ route('simpleWorkflowReport.on-credit-report.edit', $onCredit->id) }}')">
                                     ویرایش
                                 </button>
                             </td>
@@ -163,25 +164,37 @@
                         return typeof i === 'number' ? i : 0;
                     };
 
-                    var pageTotal = 0;
+                    var settledTotal = 0;
+                    var unsettledTotal = 0;
+                    var settledCount = 0;
+                    var unsettledCount = 0;
 
                     api.rows({
                         page: 'current'
                     }).every(function(rowIdx, tableLoop, rowLoop) {
+                        var rowNode = $(this.node());
                         var amount = this.data()[2]; // ستون مبلغ
-                        var tasvie = $(this.node()).find('td:last').text()
-                            .trim(); // ستون تسویه از DOM
+                        var cost = intVal(amount);
 
-                        if (tasvie.length > 0) {
-                            pageTotal += intVal(amount);
+                        // بررسی بر اساس کلاس ردیف (passed یعنی تسویه شده)
+                        if (rowNode.hasClass('passed')) {
+                            settledTotal += cost;
+                            settledCount++;
+                        } else {
+                            unsettledTotal += cost;
+                            unsettledCount++;
                         }
                     });
 
                     // نمایش در فوتر
                     $(api.column(2).footer()).html(
-                        pageTotal.toLocaleString('fa-IR') + ' ریال'
+                        `<div>
+            <span>تسویه شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
+            <span>تسویه نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
+        </div>`
                     );
                 }
+
             });
         });
     </script>
