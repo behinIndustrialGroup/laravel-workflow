@@ -33,9 +33,11 @@ class ChequeReportController extends Controller
         $cheque = Financials::findOrFail($id);
 
         if ($request->fromOnCredit) {
-            $cheque = OnCreditPayment::where('cheque_number', $id)->first();
-            $cheque->cheque_receiver = $request->input('cheque_receiver');
-            $cheque->save();
+            $cheque = OnCreditPayment::where('cheque_number', $id)->get();
+            foreach ($cheque as $item) {
+                $item->cheque_receiver = $request->input('cheque_receiver');
+                $item->save();
+            }
             return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
         }
 
