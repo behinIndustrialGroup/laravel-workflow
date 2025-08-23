@@ -46,7 +46,7 @@
                 <tbody>
                     @foreach ($chequeFromOnCredit as $group)
                         @php $first = $group->first(); @endphp
-                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" @endif>
+                        <tr @if ($group->every(fn($c) => $c->is_passed)) style="background-color: #d4edda;" class="passed" @endif>
                             <td>
                                 @foreach ($group as $cheque)
                                     @if ($cheque->case_number)
@@ -87,7 +87,8 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="fromOnCredit" id="" value="1">
-                                        <input type="hidden" name="cheque_number" id="" value="{{ $first->cheque_number }}">
+                                        <input type="hidden" name="cheque_number" id=""
+                                            value="{{ $first->cheque_number }}">
                                         <input type="text" name="cheque_receiver" class="form-control form-control-sm"
                                             required>
                                         <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
@@ -97,7 +98,6 @@
                             <td>{{ $first->cheque_description ?? '' }}</td>
                             <td>
                                 @if ($cheque->is_passed)
-                                   
                                 @else
                                     <form method="POST"
                                         action="{{ route('simpleWorkflowReport.cheque-report.updateFromOnCredit', $first->id) }}"
@@ -242,6 +242,14 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" style="text-align:right">آمار این صفحه:</th>
+                        <th id="page-total"></th>
+                        <th colspan="6"></th>
+                    </tr>
+                </tfoot>
+
             </table>
         </div>
     </div>
@@ -256,7 +264,46 @@
             },
             "order": [
                 [3, "desc"]
-            ]
+            ],
+            footerCallback: function(row, data, start, end, display) {
+                var api = this.api();
+
+                var intVal = function(i) {
+                    if (typeof i === 'string') {
+                        return parseInt(i.replace(/,/g, '')) || 0;
+                    }
+                    return typeof i === 'number' ? i : 0;
+                };
+
+                var settledTotal = 0;
+                var unsettledTotal = 0;
+                var settledCount = 0;
+                var unsettledCount = 0;
+
+                api.rows({
+                    page: 'current'
+                }).every(function() {
+                    var rowNode = $(this.node());
+                    var amount = this.data()[2]; // ستون مبلغ
+                    var cost = intVal(amount);
+
+                    if (rowNode.hasClass('passed')) {
+                        settledTotal += cost;
+                        settledCount++;
+                    } else {
+                        unsettledTotal += cost;
+                        unsettledCount++;
+                    }
+                });
+
+                // نمایش در فوتر
+                $(api.column(2).footer()).html(
+                    `<div>
+                <span>پاس‌شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
+                <span>پاس‌نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
+            </div>`
+                );
+            }
         });
     </script>
 @endsection
