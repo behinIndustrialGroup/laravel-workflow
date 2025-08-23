@@ -47,7 +47,7 @@ class OnCreditReportController extends Controller
         $onCredit = Financials::findOrFail($id);
 
         if ($request->has('is_passed')) {
-            $onCredit->is_passed = true;
+            $onCredit->is_passed = $request->input('is_passed');
             $onCredit->save();
             return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
         }
