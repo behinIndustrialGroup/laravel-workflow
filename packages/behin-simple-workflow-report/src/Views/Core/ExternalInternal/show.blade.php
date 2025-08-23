@@ -407,6 +407,32 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card">
+                            <div class="card-header {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
+                                تفکیک هزینه های پرونده
+                            </div>
+                            <div class="card-body">
+                                {{-- تفکیک هزینه های پرونده --}}
+                                <div class="row table-responsive" id="financials">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>{{ trans('fields.type') }}</th>
+                                            <th>{{ trans('fields.description') }}</th>
+                                            <th>{{ trans('fields.counterparty') }}</th>
+                                            <th>{{ trans('fields.amount') }}</th>
+                                        </tr>
+                                        @foreach ($caseCosts as $cost)
+                                            <tr>
+                                                <td>{{ $cost->type }}</td>
+                                                <td>{{ $cost->description }}</td>
+                                                <td>{{ $cost->counterparty()->name }}</td>
+                                                <td>{{ number_format((int) $cost->amount) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     @endif
                     <div class="card">
                         <div class="card-header {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل
