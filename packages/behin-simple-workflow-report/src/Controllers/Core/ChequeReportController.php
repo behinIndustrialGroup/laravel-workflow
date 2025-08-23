@@ -30,8 +30,10 @@ class ChequeReportController extends Controller
 
     public function updateFromOnCredit(Request $request, $id)
     {
-        $cheque = OnCreditPayment::where('cheque_number', $id)->get();
-        foreach ($cheque as $item) {
+
+        $cheque = OnCreditPayment::find($id);
+        $cheques = OnCreditPayment::where('cheque_number', $cheque->cheque_number)->get();
+        foreach ($cheques as $item) {
             $item->cheque_receiver = $request->input('cheque_receiver');
             $item->is_passed = $request->input('is_passed');
             $item->save();
