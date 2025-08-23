@@ -93,7 +93,7 @@ class OnCreditReportController extends Controller
                         if($preCheque->cheque_due_date != $payment['cheque_due_date']){
                             $response = [
                                 'status' => 'error',
-                                'message' => 'این شماره چک قبلا با سررسید ' . $preCheque->cheque_due_date . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و سررسید آن با سررسید وارد شده الان یکسان نیست.'
+                                'message' => 'این شماره چک قبلا با سررسید ' . toJalali((int) $preCheque->cheque_due_date)->format('Y-m-d') . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و سررسید آن با سررسید وارد شده الان یکسان نیست.'
                             ];
                             break;
                         }
