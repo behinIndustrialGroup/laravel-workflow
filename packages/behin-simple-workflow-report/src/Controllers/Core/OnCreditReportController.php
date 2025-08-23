@@ -143,4 +143,11 @@ class OnCreditReportController extends Controller
         )->where('status', 'new')->get();
         return view('SimpleWorkflowReportView::Core.OnCredit.show-all', compact('onCredits', 'inboxes'));
     }
+
+    public function destroy($id)
+    {
+        $payment = OnCreditPayment::findOrFail($id);
+        $payment->delete();
+        return redirect()->back()->with('success', 'با موفقیت حذف شد.');
+    }
 }
