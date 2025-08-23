@@ -37,9 +37,9 @@
                         <th>نام مشتری</th>
                         <th>مبلغ</th>
                         <th>تاریخ اعلام صورت حساب</th>
-                        {{-- <th>تاریخ تسویه</th>
-                        <th>تسویه مطابق شماره فاکتور</th>
-                        <th>تاریخ فاکتور</th> --}}
+                        <th>شماره فاکتور</th>
+                        <th>نقدی/چک</th>
+                        <th>تاریخ تسویه/چک</th>
                         <th>توضیحات</th>
                         <th>تسویه شد</th>
                     </tr>
@@ -68,24 +68,28 @@
                                 {{ number_format($onCredit->cost) }}
                             </td>
                             <td>{{ toJalali((int) $onCredit->fix_cost_date)->format('Y-m-d') }}</td>
-                            {{-- <td>
-                                <form action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="text" id="settlement_date" class="settlement_date"
-                                        name="settlement_date" value="{{ $onCredit->settlement_date }}">
+                            <td>
+                                @foreach ($onCredit->payments as $payment)
+                                    {{ $payment->invoice_number }}
+                                    <br>
+                                @endforeach
                             </td>
                             <td>
-                                <input type="text" id="invoice_number" name="invoice_number"
-                                    value="{{ $onCredit->invoice_number }}">
+                                @foreach ($onCredit->payments as $payment)
+                                    {{ $payment->payment_type }}
+                                    <br>
+                                @endforeach
                             </td>
                             <td>
-                                <input type="text" id="invoice_date" name="invoice_date" class="invoice_date"
-                                    value="{{ $onCredit->invoice_date }}">
-                                <button type="submit" class="btn btn-sm btn-primary">ذخیره</button>
-                                </form>
-                            </td> --}}
+                                @foreach ($onCredit->payments as $payment)
+                                    @if ($payment->payment_type == 'نقدی')
+                                        {{ toJalali((int) $payment->date)->format('Y-m-d') }}
+                                    @else
+                                        {{ toJalali((int) $payment->cheque_due_date)->format('Y-m-d') }}
+                                    @endif
+                                    <br>
+                                @endforeach
+                            </td>
                             <td>{{ $onCredit->description }}</td>
 
                             {{-- دکمه پاس شد --}}
