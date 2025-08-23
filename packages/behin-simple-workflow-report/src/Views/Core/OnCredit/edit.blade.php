@@ -22,7 +22,6 @@
         <div id="payments-list">
             @include('SimpleWorkflowReportView::Core.OnCredit.payments-list', ['payments' => $payments])
         </div>
-
         <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
             method="POST">
             @csrf
@@ -33,6 +32,9 @@
             </button>
         </form>
     @else
+        <div id="payments-list">
+            @include('SimpleWorkflowReportView::Core.OnCredit.payments-list', ['payments' => $payments])
+        </div>
         <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
             method="POST">
             @csrf
