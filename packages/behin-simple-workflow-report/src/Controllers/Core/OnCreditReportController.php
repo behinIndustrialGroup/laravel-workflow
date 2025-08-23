@@ -74,7 +74,7 @@ class OnCreditReportController extends Controller
                 case 'چک':
                     $preCheque = OnCreditPayment::where('cheque_number', $payment['cheque_number'])->where('payment_type', 'چک')->first();
                     if($preCheque){
-                        if($preCheque->amount != $payment['cheque_amount']){
+                        if($preCheque->amount != str_replace(',', '',$payment['cheque_amount'])){
                             $response = [
                                 'status' => 'error',
                                 'message' => 'این شماره چک قبلا با مبلغ ' . number_format($preCheque->amount) . ' برای پرونده ' . $preCheque->case_number . ' ثبت شده است و مبلغ آن با مبلغ وارد شده الان یکسان نیست.'
