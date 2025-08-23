@@ -299,8 +299,8 @@
                 // نمایش در فوتر
                 $(api.column(2).footer()).html(
                     `<div>
-                <span>پاس‌شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
-                <span>پاس‌نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
+                <span class="text-success">پاس‌شده: ${settledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${settledCount})</span><br>
+                <span class="text-danger">پاس‌نشده: ${unsettledTotal.toLocaleString('fa-IR')} ریال (تعداد: ${unsettledCount})</span>
             </div>`
                 );
             }
