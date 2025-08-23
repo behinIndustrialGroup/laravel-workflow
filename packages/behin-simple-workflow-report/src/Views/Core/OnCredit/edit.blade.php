@@ -1,36 +1,48 @@
 <div class="container-fluid py-3">
-    <h5 class="mb-4 fw-bold text-primary">
-        <i class="fa fa-credit-card"></i> ثبت پرداخت برای پرونده {{ $onCredit->case_number }}
-    </h5>
+    @if (!$onCredit->is_passed)
+        <h5 class="mb-4 fw-bold text-primary">
+            <i class="fa fa-credit-card"></i> ثبت پرداخت برای پرونده {{ $onCredit->case_number }}
+        </h5>
 
-    <form method="POST" action="javascript:void(0);" id="payment-form">
-        @csrf
-        @method('PATCH')
+        <form method="POST" action="javascript:void(0);" id="payment-form">
+            @csrf
+            @method('PATCH')
 
-        <div id="payment-rows" class="row gy-3"></div>
+            <div id="payment-rows" class="row gy-3"></div>
 
-        <div class="d-flex justify-content-between mt-3">
-            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="add-payment">
-                <i class="fa fa-plus"></i> افزودن ردیف پرداخت
-            </button>
-            <button type="button" class="btn btn-success rounded-pill px-4" onclick="submitForm()">
-                <i class="fa fa-save"></i> ذخیره
-            </button>
+            <div class="d-flex justify-content-between mt-3">
+                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="add-payment">
+                    <i class="fa fa-plus"></i> افزودن ردیف پرداخت
+                </button>
+                <button type="button" class="btn btn-success rounded-pill px-4" onclick="submitForm()">
+                    <i class="fa fa-save"></i> ذخیره
+                </button>
+            </div>
+        </form>
+        <div id="payments-list">
+            @include('SimpleWorkflowReportView::Core.OnCredit.payments-list', ['payments' => $payments])
         </div>
-    </form>
-    <div id="payments-list">
-        @include('SimpleWorkflowReportView::Core.OnCredit.payments-list', ['payments' => $payments])
-    </div>
 
-    <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
-        method="POST">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="is_passed" value="1">
-        <button type="submit" class="btn btn-danger w-100 rounded-pill">
-            <i class="fa fa-check-circle"></i> تسویه کامل
-        </button>
-    </form>
+        <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
+            method="POST">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="is_passed" value="1">
+            <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                <i class="fa fa-check-circle"></i> تسویه کامل
+            </button>
+        </form>
+    @else
+        <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
+            method="POST">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="is_passed" value="0">
+            <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                <i class="fa fa-check-circle"></i> حذف تسویه
+            </button>
+        </form>
+    @endif
 </div>
 
 <script>
