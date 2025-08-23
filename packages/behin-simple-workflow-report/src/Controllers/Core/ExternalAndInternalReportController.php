@@ -124,7 +124,7 @@ class ExternalAndInternalReportController extends Controller
         ];
         return view(
             'SimpleWorkflowReportView::Core.ExternalInternal.show',
-            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'delivery', 'mapaCenterReports')
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'caseCosts', 'delivery', 'mapaCenterReports')
         );
     }
 
