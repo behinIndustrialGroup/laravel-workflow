@@ -120,6 +120,8 @@
                                         <th>{{ trans('fields.prog_backup') }}</th>
                                         <th>{{ trans('fields.reason_of_not_taking_backup') }}</th>
                                         <th>{{ trans('fields.customer_validation_code') }}</th>
+                                        <th>{{ trans('fields.customer_representative_name') }}</th>
+                                        <th>{{ trans('fields.customer_representative_mobile') }}</th>
                                         <th>{{ trans('fields.customer_signature') }}</th>
                                         <th>{{ trans('fields.job_rank') }}</th>
     
@@ -157,6 +159,8 @@
                                         <td>{{ $report->prog_backup }}</td>
                                         <td>{{ $report->reason_of_not_taking_backup }}</td>
                                         <td>{{ $report->customer_validation_code }}</td>
+                                        <td>{{ $report->customer_representative_name }}</td>
+                                        <td>{{ $report->customer_representative_mobile }}</td>
                                         <td>
                                             @if ($report->customer_signature)
                                                 <a href="{{ $report->customer_signature }}" download>دانلود</a>
