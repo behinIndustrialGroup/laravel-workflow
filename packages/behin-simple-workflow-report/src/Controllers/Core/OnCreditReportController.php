@@ -48,7 +48,7 @@ class OnCreditReportController extends Controller
 
         if ($request->has('is_passed')) {
             $onCredit->is_passed = $request->input('is_passed');
-            if($onCredit->is_passed == 1){
+            if($onCredit->is_passed == '1'){
                 $onCredit->payment = $onCredit->cost;
             }else{
                 $onCredit->payment = 0;
