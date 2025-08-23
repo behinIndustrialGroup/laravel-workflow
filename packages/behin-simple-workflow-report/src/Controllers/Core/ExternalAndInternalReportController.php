@@ -20,6 +20,7 @@ use Behin\SimpleWorkflow\Models\Entities\Mapa_center_fix_report;
 use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
+use Behin\SimpleWorkflow\Models\Entities\Case_costs;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
