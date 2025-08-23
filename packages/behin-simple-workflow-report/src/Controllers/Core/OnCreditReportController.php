@@ -50,8 +50,10 @@ class OnCreditReportController extends Controller
             $onCredit->is_passed = $request->input('is_passed');
             if($onCredit->is_passed == '1'){
                 $onCredit->payment = $onCredit->cost;
+                $onCredit->payment_date = Carbon::now()->timestamp;
             }else{
                 $onCredit->payment = 0;
+                $onCredit->payment_date = null;
             }
             $onCredit->save();
             return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
