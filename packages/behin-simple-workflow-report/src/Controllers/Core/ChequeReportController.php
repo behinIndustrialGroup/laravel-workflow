@@ -36,6 +36,7 @@ class ChequeReportController extends Controller
             $cheque = OnCreditPayment::where('cheque_number', $id)->get();
             foreach ($cheque as $item) {
                 $item->cheque_receiver = $request->input('cheque_receiver');
+                $item->is_passed = $request->input('is_passed');
                 $item->save();
             }
             return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');

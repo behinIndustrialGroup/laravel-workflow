@@ -27,7 +27,7 @@
                         </thead>
                         <tbody>
                             @foreach ($rows as $row)
-                                <tr @if($row->status == 'new') class='bg-warning' @endif>
+                                <tr @if ($row->status == 'new') class='bg-warning' @endif>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->task->process->name }}</td>
                                     <td>{{ $row->task->name }}</td>
@@ -35,12 +35,16 @@
                                     <td>{{ getUserInfo($row->actor)?->name }}</td>
                                     <td>{{ trans('fields.' . $row->status) }}</td>
                                     <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
-                                    <td dir="ltr">{{ $row->updated_at != $row->created_at ? toJalali($row->updated_at)->format('Y-m-d H:i') : '' }}</td>
+                                    <td dir="ltr">
+                                        {{ $row->updated_at != $row->created_at ? toJalali($row->updated_at)->format('Y-m-d H:i') : '' }}
+                                    </td>
                                     <td>
-                                        <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
-                                            class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>
-                                        <a href="{{ route('simpleWorkflow.inbox.changeStatus', $row->id) }}"
-                                            class="btn btn-sm btn-warning">{{ trans('fields.Change Status') }}</a>
+                                        @if (auth()->user()->access('ویرایش وضعیت در تاریخچه'))
+                                            <a href="{{ route('simpleWorkflow.inbox.edit', $row->id) }}"
+                                                class="btn btn-sm btn-primary">{{ trans('fields.Edit') }}</a>
+                                            <a href="{{ route('simpleWorkflow.inbox.changeStatus', $row->id) }}"
+                                                class="btn btn-sm btn-warning">{{ trans('fields.Change Status') }}</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

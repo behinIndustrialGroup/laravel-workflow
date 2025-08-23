@@ -97,9 +97,17 @@
                             <td>{{ $first->cheque_description ?? '' }}</td>
                             <td>
                                 @if ($cheque->is_passed)
-                                    <span class="badge bg-success">پاس شد</span>
+                                   
                                 @else
-                                    <span class="badge bg-danger">پاس نشد</span>
+                                    <form method="POST"
+                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $first->id) }}"
+                                        onsubmit="return confirm('آیا از پاس شدن این چک مطمئن هستید؟')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="fromOnCredit" id="" value="1">
+                                        <input type="hidden" name="is_passed" value="1">
+                                        <button type="submit" class="btn btn-sm btn-success">پاس شد</button>
+                                    </form>
                                 @endif
                             </td>
                         </tr>
