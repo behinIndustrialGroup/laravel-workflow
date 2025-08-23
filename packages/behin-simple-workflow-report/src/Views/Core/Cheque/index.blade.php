@@ -75,7 +75,7 @@
                             </td>
                             <td>{{ number_format($first->amount) }}</td>
                             <td>{{ toJalali((int) $first->cheque_due_date)->format('Y-m-d') }}</td>
-                            <td>{{ $first->destination_account_name }}</td>
+                            <td>{{ $first->account_name }}</td>
                             <td>{{ $first->cheque_number }}</td>
                             <td>{{ $first->check_receiver ?? '' }}</td>
                             <td>{{ $first->cheque_description ?? ''}}</td>
