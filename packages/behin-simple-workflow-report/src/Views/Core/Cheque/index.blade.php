@@ -77,8 +77,24 @@
                             <td>{{ toJalali((int) $first->cheque_due_date)->format('Y-m-d') }}</td>
                             <td>{{ $first->account_name }}</td>
                             <td>{{ $first->cheque_number }}</td>
-                            <td>{{ $first->check_receiver ?? '' }}</td>
-                            <td>{{ $first->cheque_description ?? ''}}</td>
+                            <td>
+                                @if ($first->cheque_receiver)
+                                    {{ $first->cheque_receiver }}
+                                @else
+                                    <form method="POST"
+                                        action="{{ route('simpleWorkflowReport.cheque-report.update', $first->id) }}"
+                                        onsubmit="return confirm('آیا از ذخیره اطلاعات مطمئن هستید؟')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="fromOnCredit" id="" value="1">
+                                        <input type="hidden" name="cheque_number" id="" value="{{ $first->cheque_number }}">
+                                        <input type="text" name="cheque_receiver" class="form-control form-control-sm"
+                                            required>
+                                        <button type="submit" class="btn btn-sm btn-primary mt-1">ذخیره</button>
+                                    </form>
+                                @endif
+                            </td>
+                            <td>{{ $first->cheque_description ?? '' }}</td>
                             <td>
                                 @if ($cheque->is_passed)
                                     <span class="badge bg-success">پاس شد</span>
@@ -230,7 +246,9 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
-            "order": [[3, "desc"]]
+            "order": [
+                [3, "desc"]
+            ]
         });
     </script>
 @endsection

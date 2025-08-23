@@ -32,6 +32,13 @@ class ChequeReportController extends Controller
     {
         $cheque = Financials::findOrFail($id);
 
+        if ($request->fromOnCredit) {
+            $cheque = OnCreditPayment::where('cheque_number', $id)->first();
+            $cheque->cheque_receiver = $request->input('cheque_receiver');
+            $cheque->save();
+            return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+        }
+
         // اگر کاربر خواسته چک را پاس کند، ولی شماره چک ثبت نشده باشد، ارور بده
         if ($request->has('is_passed') && empty($cheque->cheque_number)) {
             return redirect()->back()->with('error', 'لطفاً ابتدا شماره چک را وارد کنید.');
