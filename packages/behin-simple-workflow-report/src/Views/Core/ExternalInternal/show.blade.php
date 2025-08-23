@@ -426,7 +426,7 @@
                                                 <td>{{ $cost->type }}</td>
                                                 <td>{{ $cost->description }}</td>
                                                 <td>{{ $cost->counterparty()->name }}</td>
-                                                <td>{{ number_format((int) $cost->amount) }}</td>
+                                                <td>{{ $cost->amount }}</td>
                                             </tr>
                                         @endforeach
                                     </table>
