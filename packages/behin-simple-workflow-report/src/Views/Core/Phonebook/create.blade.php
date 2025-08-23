@@ -11,7 +11,7 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_name') }}</label>
-                        <input type="text" name="fullname" class="form-control" required>
+                        <input type="text" name="name" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_mobile') }}</label>
@@ -20,6 +20,10 @@
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_nid') }}</label>
                         <input type="text" name="national_id" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('fields.customer_city') }}</label>
+                        <input type="text" name="city" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ trans('fields.customer_address') }}</label>
