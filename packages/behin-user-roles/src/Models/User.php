@@ -8,17 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
-    public const ACTIVE_SCOPE = 'active';
-
-    protected static function booted(): void
+    protected static function booted()
     {
-        static::addGlobalScope(self::ACTIVE_SCOPE, function (Builder $builder) {
+        static::addGlobalScope('active', function (\Illuminate\Database\Eloquent\Builder $builder) {
             $builder->where('is_disabled', false);
         });
     }
@@ -83,17 +80,6 @@ class User extends Authenticatable
 
         return false;
     }
-
-    public function scopeWithDisabled(Builder $query): Builder
-    {
-        return $query->withoutGlobalScope(self::ACTIVE_SCOPE);
-    }
-
-    public function scopeOnlyDisabled(Builder $query): Builder
-    {
-        return $query->withDisabled()->where('is_disabled', true);
-    }
-
 
     function access($method_name) {
         return (new AccessController($method_name))->check();

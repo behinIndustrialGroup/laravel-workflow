@@ -133,8 +133,12 @@ class UserController extends Controller
     }
 
     public function disable($id){
-        $user = User::withoutGlobalScopes()->findOrFail($id);
-        $user->is_disabled = !$user->is_disabled;
+        $user = User::findOrFail($id);
+        if($user->is_disabled){
+            $user->is_disabled = false;
+        }else{
+            $user->is_disabled = true;
+        }
         $user->save();
         return redirect()->route('user.all', ['id' => $user->id])->with('success', 'Update successfully');
     }
