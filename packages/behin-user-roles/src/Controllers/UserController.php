@@ -21,12 +21,12 @@ class UserController extends Controller
     public function index($id)
     {
         if ($id == 'all'):
-            $users = User::get();
+            $users = User::withoutGlobalScopes()->get();
             return view('URPackageView::user.all')->with(['users' => $users]);
         else:
 
             return view('URPackageView::user.edit')->with([
-                'user' => User::find($id),
+                'user' => User::withoutGlobalScopes()->find($id),
                 'roles' => GetRoleController::getAll(),
                 'departments' => DepartmentController::getAll($id)
             ]);
@@ -130,5 +130,16 @@ class UserController extends Controller
     public function destroy(User $user){
         $user->delete();
         return redirect()->route('user.all', ['id' => 'all'])->with('success', 'User deleted successfully');
+    }
+
+    public function disable($id){
+        $user = User::findOrFail($id);
+        if($user->is_disabled){
+            $user->is_disabled = false;
+        }else{
+            $user->is_disabled = true;
+        }
+        $user->save();
+        return redirect()->route('user.all', ['id' => $user->id])->with('success', 'Update successfully');
     }
 }

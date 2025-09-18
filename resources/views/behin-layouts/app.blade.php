@@ -23,8 +23,7 @@
     <!-- Ionicons -->
     {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
     <!-- Theme style -->
-    <link rel="stylesheet"
-        href="{{ url('behin/behin-dist/dist/css/adminlte.min.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet" href="{{ url('behin/behin-dist/dist/css/adminlte.min.css') . '?' . config('app.version') }}">
     <!-- Date Picker -->
     <link rel="stylesheet"
         href="{{ url('behin/behin-dist/plugins/datepicker/datepicker3.css') . '?' . config('app.version') }}">
@@ -42,8 +41,7 @@
     <!-- template rtl version -->
     <link rel="stylesheet"
         href="{{ url('behin/behin-dist/dist/css/custom-style.css') . '?' . config('app.version') }}">
-    <link rel="stylesheet"
-        href="{{ url('behin/behin-dist/dist/css/custom.css') . '?' . config('app.version') }}">
+    <link rel="stylesheet" href="{{ url('behin/behin-dist/dist/css/custom.css') . '?' . config('app.version') }}">
 
     {{-- <link rel="stylesheet" href="{{ url('behin/behin-dist/dist/css/custom.css')  . '?' . config('app.version') }}"> --}}
     <link rel="stylesheet" type="text/css"
@@ -134,16 +132,12 @@
 
     <script src="{{ url('behin/behin-dist/plugins/jquery/jquery.min.js') . '?' . config('app.version') }}"></script>
     {{-- <script type="text/javascript" src="https://cdn.map.ir/web-sdk/1.4.2/js/jquery-3.2.1.min.js"></script> --}}
-    <script
-        src="{{ url('behin/behin-dist/plugins/datatables/jquery.dataTables.js') . '?' . config('app.version') }}">
+    <script src="{{ url('behin/behin-dist/plugins/datatables/jquery.dataTables.js') . '?' . config('app.version') }}">
     </script>
-    <script
-        src="{{ url('behin/behin-dist/plugins/datatables/dataTables.bootstrap4.js') . '?' . config('app.version') }}">
+    <script src="{{ url('behin/behin-dist/plugins/datatables/dataTables.bootstrap4.js') . '?' . config('app.version') }}">
     </script>
-    <script src="{{ url('behin/behin-dist/persian-date-picker/persian-date.js') . '?' . config('app.version') }}">
-    </script>
-    <script
-        src="{{ url('behin/behin-dist/persian-date-picker/persian-datepicker.js') . '?' . config('app.version') }}">
+    <script src="{{ url('behin/behin-dist/persian-date-picker/persian-date.js') . '?' . config('app.version') }}"></script>
+    <script src="{{ url('behin/behin-dist/persian-date-picker/persian-datepicker.js') . '?' . config('app.version') }}">
     </script>
 
 
@@ -156,8 +150,7 @@
     <script src="{{ url('behin/behin-js/dataTable.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('behin/behin-js/dropzone.js') . '?' . config('app.version') }}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-    <script
-        src="{{ url('behin/behin-dist/plugins/autonumeric/autoNumeric.min.js') . '?' . config('app.version') }}">
+    <script src="{{ url('behin/behin-dist/plugins/autonumeric/autoNumeric.min.js') . '?' . config('app.version') }}">
     </script>
 
 
@@ -194,6 +187,7 @@
 
 
     <footer class="main-footer">
+        @include('behin-layouts.mobile-navigation')
         {{-- <strong> &copy; 2018 <a href="http://github.com/hesammousavi/">حسام موسوی</a>.</strong> --}}
     </footer>
 
@@ -201,16 +195,13 @@
     </aside>
 </div>
 
-<script
-    src="{{ url('behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js') . '?' . config('app.version') }}">
+<script src="{{ url('behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js') . '?' . config('app.version') }}">
 </script>
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script> --}}
 <script src="{{ url('behin/behin-dist/plugins/knob/jquery.knob.js') . '?' . config('app.version') }}"></script>
-<script
-    src="{{ url('behin/behin-dist/plugins/daterangepicker/daterangepicker.js') . '?' . config('app.version') }}">
+<script src="{{ url('behin/behin-dist/plugins/daterangepicker/daterangepicker.js') . '?' . config('app.version') }}">
 </script>
-<script
-    src="{{ url('behin/behin-dist/plugins/datepicker/bootstrap-datepicker.js') . '?' . config('app.version') }}">
+<script src="{{ url('behin/behin-dist/plugins/datepicker/bootstrap-datepicker.js') . '?' . config('app.version') }}">
 </script>
 <script
     src="{{ url('behin/behin-dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') . '?' . config('app.version') }}">
@@ -288,66 +279,65 @@
 
 <script>
     $(document).ready(function() {
-        function initial_view() {
-            $('.select2').select2();
-            $('.select2').css('width', '100%')
-            $(".persian-date").persianDatepicker({
-                viewMode: 'day',
-                initialValue: false,
-                format: 'YYYY-MM-DD',
-                initialValueType: 'persian',
-                calendar: {
-                    persian: {
-                        leapYearMode: 'astronomical',
-                        locale: 'fa'
-                    }
+        initial_view()
+    })
+
+    function initial_view() {
+        $('.select2').select2();
+        $('.select2').css('width', '100%')
+        $(".persian-date").persianDatepicker({
+            viewMode: 'day',
+            initialValue: false,
+            format: 'YYYY-MM-DD',
+            initialValueType: 'persian',
+            calendar: {
+                persian: {
+                    leapYearMode: 'astronomical',
+                    locale: 'fa'
                 }
-            });
-            $('.timepicker').timepicker({
-                timeFormat: 'HH:mm', // فرمت 24 ساعته
-                interval: 1, // نمایش با فاصله 5 دقیقه‌ای
-                minTime: '00:00',
-                maxTime: '23:55',
-                dynamic: true,
-                dropdown: true,
-                scrollbar: true
-            });
-            AutoNumeric.multiple('.formatted-digit', {
-                digitGroupSeparator: ',',
-                decimalCharacter: '.',
-                decimalPlaces: 0,
-                unformatOnSubmit: true
-            });
+            }
+        });
+        $('.timepicker').timepicker({
+            timeFormat: 'HH:mm', // فرمت 24 ساعته
+            interval: 1, // نمایش با فاصله 5 دقیقه‌ای
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        });
+        AutoNumeric.multiple('.formatted-digit', {
+            digitGroupSeparator: ',',
+            decimalCharacter: '.',
+            decimalPlaces: 0,
+            unformatOnSubmit: true
+        });
 
-            $('table tbody td .show-less').each(function() {
-                let $cell = $(this);
+        $('table tbody td .show-less').each(function() {
+            let $cell = $(this);
 
-                // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده
-                if ($cell.find('.toggle-btn').length) return;
+            // اگر دکمه یا اسپن توی همین لحظه وجود داره یعنی قبلا پردازش شده
+            if ($cell.find('.toggle-btn').length) return;
 
-                let originalHtml = $cell.html();
-                let textOnly = $cell.clone().children().remove().end().text()
-                    .trim(); // حذف تگ‌ها برای شمارش دقیق
+            let originalHtml = $cell.html();
+            let textOnly = $cell.clone().children().remove().end().text()
+                .trim(); // حذف تگ‌ها برای شمارش دقیق
 
-                if (textOnly.length > 25) {
-                    let shortText = textOnly.substr(0, 25);
+            if (textOnly.length > 25) {
+                let shortText = textOnly.substr(0, 25);
 
-                    $cell.html(`
+                $cell.html(`
             <span class="short-text">${shortText}</span>
             <span class="full-text" style="display:none;">${originalHtml}</span>
             <button class="toggle-btn show-more-btn material-icons" style="border:none;background:none;cursor:pointer;">more_horiz</button>
         `);
-                }
-            });
+            }
+        });
 
-            $(document).on('click', '.toggle-btn', function() {
-                let $cell = $(this).closest('td');
-                $cell.find('.short-text, .full-text').toggle();
-                $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
-            });
-        }
-
-    })
+        $(document).on('click', '.toggle-btn', function() {
+            let $cell = $(this).closest('td');
+            $cell.find('.short-text, .full-text').toggle();
+            $(this).text($(this).text() === 'more_horiz' ? 'expand_less' : 'more_horiz');
+        });
+    }
 </script>
 
 <script src="{{ url('behin/behin-js/loader.js') . '?' . config('app.version') }}"></script>

@@ -1,13 +1,14 @@
 <div class="table-responsive">
 
-    <table class="table">
+    <table class="table table-striped table-hover align-middle text-center">
         <thead>
             <tr>
                 <td>#</td>
                 <th>شماره پرونده</th>
                 <th>مشتری</th>
-                {{-- <th>دستگاه</th> --}}
+                <th>دستگاه</th>
                 <th>تاریخ ثبت</th>
+                <th>مدت</th>
                 <th>گزارش</th>
             </tr>
         </thead>
@@ -25,8 +26,9 @@
                         @endif
                     </td>
                     <td>{{ $item->case() ? $item->case()->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
-                    {{-- <td>{{ $item->device() ? $item->device()->name : '' }}</td> --}}
+                    <td>{{ $item->case() ? $item->case()->getVariable('device_name') : '' }}</td>
                     <td dir="ltr">{{ toJalali((int) $item->start) }}</td>
+                    <td>{{ ((int)$item->end - (int)$item->start) / 3600 }}</td>
                     <td>{{ $item->report }}</td>
                 </tr>
             @endforeach

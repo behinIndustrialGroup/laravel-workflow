@@ -20,7 +20,7 @@
 
                 </pre> --}}
                 <div class="card">
-                    <div class="card-header bg-success">پذیرش</div>
+                    <div class="card-header bg-success text-center">پذیرش</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="admision">
                             <table class="table table-bordered">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-success">مشتری</div>
+                    <div class="card-header bg-success text-center">مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
                             <table class="table table-bordered">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
+                    <div class="card-header text-center {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="devices">
                             <table class="table table-bordered">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند
+                    <div class="card-header text-center {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند
                         خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
@@ -105,6 +105,8 @@
                                     <tr>
                                         <th>شروع</th>
                                         <th>پایان</th>
+                                        <th>مدت تعمیرات</th>
+                                        <th>زمان تقریبی رفت و برگشت</th>
                                         <th>گزارش</th>
                                         <th>سرپرست</th>
                                         <th>تعمیرکار</th>
@@ -124,16 +126,18 @@
                                         <th>{{ trans('fields.customer_representative_mobile') }}</th>
                                         <th>{{ trans('fields.customer_signature') }}</th>
                                         <th>{{ trans('fields.job_rank') }}</th>
-    
+
                                     </tr>
                                 </thead>
-                                
+
                                 @foreach ($deviceRepairReports as $report)
                                     <tr>
                                         <td dir="ltr">{{ convertPersianToEnglish($report->start_date) }}
                                             {{ $report->start_time }}</td>
                                         <td dir="ltr">{{ convertPersianToEnglish($report->end_date) }}
                                             {{ $report->end_time }}</td>
+                                        <td>{{ $report->duration }}</td>
+                                        <td>{{ $report->round_trip_time }}</td>
                                         <td>{{ $report->report }}</td>
                                         <td>{{ getUserInfo($report->mapa_expert_head)->name ?? $report->mapa_expert_head }}
                                         </td>
@@ -174,7 +178,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
+                    <div class="card-header text-center {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
                             <table class="table table-bordered">
@@ -218,12 +222,12 @@
                                             <td>{{ $part->repair_is_approved }}</td>
                                             <td>
                                                 @if ($part->initial_part_pic)
-                                                    <a href="{{ url("public/$part->initial_part_pic") }}"
+                                                    <a href="{{ url("$part->initial_part_pic") }}"
                                                         download>دانلود</a>
                                                 @endif
                                             </td>
                                             <td>{{ $part->dispatched_expert_needed }}</td>
-                                            <td>{{ $part->dispatched_expert }}</td>
+                                            <td>{{ getUserInfo($part->dispatched_expert)->name ?? '' }}</td>
                                             <td>{{ $part->dispatched_expert_description }}</td>
                                             <td>{{ $part->final_result_and_test }}</td>
                                             <td>{{ $part->test_possibility }}</td>
@@ -236,7 +240,7 @@
                                             <td>{{ $part->has_attachment }}</td>
                                             <td>
                                                 @if ($part->attachment_image)
-                                                    <a href="{{ url("public/$part->attachment_image") }}"
+                                                    <a href="{{ url("$part->attachment_image") }}"
                                                         download>دانلود</a>
                                                 @endif
                                             </td>
@@ -346,7 +350,7 @@
                     @endif
                     @if (auth()->user()->access('امور جاری - جزئیات مالی'))
                         <div class="card">
-                            <div class="card-header {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div class="card-header text-center {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش
                                 دریافتی مالی
                             </div>
                             <div class="card-body">
@@ -359,9 +363,9 @@
                                             <th>{{ trans('fields.fix_cost_date') }}</th>
                                             <th>هزینه اعلام شده</th>
                                             <th>{{ trans('fields.destination_account') }}</th>
-                                            <th>{{ trans('fields.destination_account_name') }}</th>
-                                            <th>هزینه دریافت شده</th>
-                                            <th>{{ trans('fields.payment_date') }}</th>
+                                            <th>نام مقصد حساب/گیرنده چک</th>
+                                            <th>هزینه دریافت شده/مبلغ چک</th>
+                                            <th>تاریخ دریافت هزینه/سررسید چک</th>
                                             <th>{{ trans('fields.description') }}</th>
                                         </tr>
                                         @foreach ($financials as $fin)
@@ -380,7 +384,8 @@
                                                         {{ number_format((int) $fin->cost3) }}
                                                     @endif
                                                 </td>
-                                                <td>{{ $fin->destination_account }}
+                                                <td>
+                                                    {{ $fin->destination_account }}
                                                     @if ($fin->destination_account_2)
                                                         <br>
                                                         {{ $fin->destination_account_2 }}
@@ -390,19 +395,29 @@
                                                         {{ $fin->destination_account_3 }}
                                                     @endif
                                                 </td>
-                                                <td>{{ $fin->destination_account_name }}
-                                                    @if ($fin->destination_account_name_2)
-                                                        <br>
-                                                        {{ $fin->destination_account_name_2 }}
-                                                    @endif
-                                                    @if ($fin->destination_account_name_3)
-                                                        <br>
-                                                        {{ $fin->destination_account_name_3 }}
+                                                <td>
+                                                    @if ($fin->fix_cost_type == 'علی الحساب - چک' || $fin->fix_cost_type == 'تسویه کامل - چک')
+                                                        {{ $fin->cheque_receiver }}
+                                                    @else
+                                                        {{ $fin->destination_account_name }}
+                                                        @if ($fin->destination_account_name_2)
+                                                            <br>
+                                                            {{ $fin->destination_account_name_2 }}
+                                                        @endif
+                                                        @if ($fin->destination_account_name_3)
+                                                            <br>
+                                                            {{ $fin->destination_account_name_3 }}
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td>{{ number_format($fin->payment) }}
                                                 </td>
-                                                <td>{{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
+                                                <td>
+                                                    @if ($fin->fix_cost_type == 'علی الحساب - چک' || $fin->fix_cost_type == 'تسویه کامل - چک')
+                                                        {{ $fin->cheque_due_date ? toJalali((int) $fin->cheque_due_date)->format('Y-m-d') : '' }}
+                                                    @else
+                                                        {{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
+                                                    @endif
                                                 </td>
                                                 <td>{{ $fin->description }}</td>
                                             </tr>
@@ -412,7 +427,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div class="card-header text-center {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
                                 تفکیک هزینه های پرونده
                             </div>
                             <div class="card-body">
@@ -429,7 +444,7 @@
                                             <tr>
                                                 <td>{{ $cost->type }}</td>
                                                 <td>{{ $cost->description }}</td>
-                                                <td>{{ $cost->counterparty()->name }}</td>
+                                                <td>{{ $cost->counterparty()?->name ?? '' }}</td>
                                                 <td>{{ $cost->amount }}</td>
                                             </tr>
                                         @endforeach
@@ -439,7 +454,7 @@
                         </div>
                     @endif
                     <div class="card">
-                        <div class="card-header {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل
+                        <div class="card-header text-center {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل
                         </div>
                         <div class="card-body">
                             {{-- تحویل --}}

@@ -108,7 +108,6 @@
 
 @section('script')
     <script>
-        initial_view()
 
         function createCaseNumberAndSave() {
             var form = $('#form')[0];

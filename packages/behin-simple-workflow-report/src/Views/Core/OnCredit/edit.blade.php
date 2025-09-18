@@ -26,6 +26,15 @@
             method="POST">
             @csrf
             @method('PATCH')
+            <textarea name="description" id="" class="form-control" rows="10">{{ $onCredit->description }}</textarea>
+            <button type="submit" class="btn btn-success w-100 rounded-pill">
+                <i class="fa fa-disk"></i> ذخیره توضیحات
+            </button>
+        </form>
+        <form class="mt-4" action="{{ route('simpleWorkflowReport.on-credit-report.update', $onCredit->id) }}"
+            method="POST">
+            @csrf
+            @method('PATCH')
             <input type="hidden" name="is_passed" value="1">
             <button type="submit" class="btn btn-danger w-100 rounded-pill">
                 <i class="fa fa-check-circle"></i> تسویه کامل

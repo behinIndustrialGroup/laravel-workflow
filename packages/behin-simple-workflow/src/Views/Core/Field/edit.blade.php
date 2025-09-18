@@ -57,7 +57,7 @@
                         <select name="type" id="type" class="form-select">
                             @foreach ([
                                 'string', 'number', 'formatted-digit', 'text', 'date', 'time', 'datetime',
-                                'select', 'select-multiple', 'file', 'checkbox', 'radio',
+                                'select', 'select-multiple', 'select-simple', 'file', 'checkbox', 'radio',
                                 'location', 'signature', 'entity', 'title', 'div', 'button',
                                 'help', 'hidden', 'view-model'
                             ] as $typeOption)
@@ -93,7 +93,7 @@
                         </div>
 
                         {{-- Options --}}
-                        @if (in_array($field->type, ['select', 'select-multiple']))
+                        @if (in_array($field->type, ['select', 'select-multiple', 'select-simple']))
                             <div class="mb-3">
                                 <label for="options" class="form-label">{{ trans('Options') }}</label>
                                 <small class="d-block text-muted">هر گزینه در یک خط</small>

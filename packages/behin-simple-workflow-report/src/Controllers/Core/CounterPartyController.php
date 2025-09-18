@@ -34,6 +34,15 @@ class CounterPartyController extends Controller
         return view('SimpleWorkflowReportView::Core.CounterParty.index', compact('counterParties'));
     }
 
+
+    public static function getAll(){
+        return Counter_parties::all();
+    }
+
+    public static function getByName($name){
+        return Counter_parties::where('name', $name)->first();
+    }
+
     public function create()
     {
         return view('SimpleWorkflowReportView::Core.CounterParty.create');

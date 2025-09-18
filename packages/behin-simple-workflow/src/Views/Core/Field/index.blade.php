@@ -21,6 +21,7 @@
                     <option value="datetime">datetime</option>
                     <option value="select">select</option>
                     <option value="select-multiple">select-multiple</option>
+                    <option value="select-simple">select-simple</option>
                     <option value="file">file</option>
                     <option value="checkbox">checkbox</option>
                     <option value="radio">radio</option>

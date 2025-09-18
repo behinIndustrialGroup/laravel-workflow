@@ -25,6 +25,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
+use Behin\SimpleWorkflowReport\Controllers\Core\PettyCashController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PhonebookController;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\TotalTimeoff;
 use Behin\SimpleWorkflowReport\Controllers\Scripts\UserTimeoffs;
@@ -72,6 +73,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
 
     Route::resource('mapa-center', MapaCenterController::class);
+    Route::get('mapa-center/archive-show/{mapa_center}', [MapaCenterController::class, 'archiveShow'])->name('mapa-center.archive-show');
     Route::put('mapa-center/update-case-info/{mapa_center}', [MapaCenterController::class, 'updateCaseInfo'])->name('mapa-center.update-case-info');
     Route::post('mapa-center/exclude-device/{mapa_center}', [MapaCenterController::class, 'excludeDevice'])->name('mapa-center.exclude-device');
     Route::post('mapa-center/install-part/{mapa_center}', [MapaCenterController::class, 'installPart'])->name('mapa-center.install-part');
@@ -82,6 +84,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::patch('cheque-report/{id}/update-from-on-credit', [ChequeReportController::class, 'updateFromOnCredit'])->name('cheque-report.updateFromOnCredit');
     Route::resource('on-credit-report', OnCreditReportController::class);
     Route::get('on-credit-report-show-all', [OnCreditReportController::class, 'showAll'])->name('on-credit-report.showAll');
+    Route::resource('petty-cash', PettyCashController::class)->except(['show', 'create']);
+    Route::get('petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export');
     Route::resource('personel-activity', PersonelActivityController::class);
     Route::get('personel-activity/{user_id}/show-inboxes/{from?}/{to?}', [PersonelActivityController::class, 'showInboxes'])->name('personel-activity.showInboxes');
     Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
@@ -94,6 +98,10 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('daily-report/{user_id}/show-other-daily-report/{from?}/{to?}', [DailyReportController:: class, 'showOtherDailyReport'])->name('daily-report.show-other-daily-report');
 
     Route::resource('creditor', CreditorReportController::class);
+    Route::get('creditor/{counterparty}/show-add-tasvie', [CreditorReportController::class, 'showAddTasvie'])->name('creditor.showAddTasvie');
+    Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie');
+    Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab');
+    Route::post('creditor/add-talab', [CreditorReportController::class, 'addTalab'])->name('creditor.addTalab');
 
 
 });

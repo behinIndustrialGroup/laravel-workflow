@@ -38,4 +38,43 @@ class CreditorReportController extends Controller
         $creditors = Creditor::where('counterparty', $counterparty)->get();
         return view('SimpleWorkflowReportView::Core.Creditor.show', compact('creditors'));
     }
+
+    public function showAddTasvie($counterparty)
+    {
+        return view('SimpleWorkflowReportView::Core.Creditor.add-tasvie', compact('counterparty'));
+    }
+
+    public function addTasvie(Request $request)
+    {
+        Creditor::create([
+            'type' => 'تسویه',
+            'description' => $request->description,
+            'counterparty' => $request->counterparty,
+            'amount' => -1 * (int)$request->amount,
+            'invoice_number' => $request->invoice_number,
+            'invoice_date' => $request->invoice_date,
+            'invoice_date_alt' => $request->invoice_date_alt,
+            'settlement_type' => $request->settlement_type,
+        ]);
+        return redirect()->route('simpleWorkflowReport.creditor.index');
+    }
+
+    public function showAddTalab($counterparty)
+    {
+        return view('SimpleWorkflowReportView::Core.Creditor.add-talab', compact('counterparty'));
+    }
+
+    public function addTalab(Request $request)
+    {
+        Creditor::create([
+            'type' => 'طلب',
+            'description' => $request->description,
+            'counterparty' => $request->counterparty,
+            'amount' => (int)$request->amount,
+            'invoice_number' => $request->invoice_number,
+            'invoice_date' => $request->invoice_date,
+            'invoice_date_alt' => $request->invoice_date_alt,
+        ]);
+        return redirect()->route('simpleWorkflowReport.creditor.index');
+    }
 }

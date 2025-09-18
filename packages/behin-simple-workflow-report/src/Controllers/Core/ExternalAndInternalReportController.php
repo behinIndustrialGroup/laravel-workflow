@@ -59,7 +59,25 @@ class ExternalAndInternalReportController extends Controller
         ];
 
         $devices = Devices::where('case_number', $caseNumber)->get();
-        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get();
+        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get()->each(function($row) {
+            try {
+                $startDate = convertPersianToEnglish($row->start_date);
+                $startTime = $row->start_time;
+                $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")
+                    ->toCarbon()
+                    ->timestamp;
+        
+                $endDate = convertPersianToEnglish($row->end_date);
+                $endTime = $row->end_time;
+                $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")
+                    ->toCarbon()
+                    ->timestamp;
+        
+                $row->duration = round((($row->end ?? 0) - ($row->start ?? 0)) / 3600, 2); // به ساعت
+            } catch (\Throwable $e) {
+                $row->duration = null; // یا ""
+            }
+        });
         $parts = Parts::where('case_number', $caseNumber)->get();
         if(count($parts) == 0 and $mainCase->getVariable('part_name')){
             Parts::create([

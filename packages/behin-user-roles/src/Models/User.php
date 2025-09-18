@@ -13,6 +13,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (\Illuminate\Database\Eloquent\Builder $builder) {
+            $builder->where('is_disabled', false);
+        });
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,7 +37,8 @@ class User extends Authenticatable
         'reset_code',
         'pm_username', 'pm_user_password', 'pm_user_access_token', 'pm_user_access_token_exp_date',
         'ext_num',
-        'valid_ip'
+        'valid_ip',
+        'is_disabled'
     ];
 
     /**

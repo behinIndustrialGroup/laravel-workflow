@@ -139,6 +139,18 @@ class DailyReportController extends Controller
         $items = $query->where('mapa_expert', $user_id)->groupBy('case_number')
             ->get();
 
+        $items->each(function($row){
+            $startDate = convertPersianToEnglish($row->start_date);
+            $startTime = $row->start_time;
+            $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
+
+            $endDate = convertPersianToEnglish($row->end_date);
+            $endTime = $row->end_time;
+            $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")->toCarbon()->timestamp;
+
+            $row->duration = ((int)$row->end - (int)$row->start) / 3600; //به ساعت
+        });
+
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external', compact('items'));
     }
 
@@ -182,6 +194,18 @@ class DailyReportController extends Controller
         }
         $items = $query->where('mapa_expert_companions', 'LIKE', '%"' . $user_id . '"%')->groupBy('case_number')
             ->get();
+
+        $items->each(function($row){
+            $startDate = convertPersianToEnglish($row->start_date);
+            $startTime = $row->start_time;
+            $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
+
+            $endDate = convertPersianToEnglish($row->end_date);
+            $endTime = $row->end_time;
+            $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")->toCarbon()->timestamp;
+
+            $row->duration = ((int)$row->end - (int)$row->start) / 3600; //به ساعت
+        });
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external-as-assistant', compact('items'));
     }

@@ -138,6 +138,19 @@
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
     ]) !!}
 @endif
+@if ($fieldDetails->type == 'select-simple')
+    {!! Form::selectSimple($fieldId, is_string($fieldAttributes?->options) ? $fieldAttributes?->options : null, [
+        'value' => $fieldValue,
+        'query' => is_string($fieldAttributes?->query) ? $fieldAttributes?->query : null,
+        'class' => 'form-control',
+        'id' => $fieldId,
+        'placeholder' => $fieldAttributes?->placeholder,
+        'required' => $required,
+        'readonly' => $readOnly,
+        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+    ]) !!}
+@endif
 @if ($fieldDetails->type == 'select-multiple')
     {!! Form::selectMultiple($fieldId, is_string($fieldAttributes?->options) ? $fieldAttributes?->options : null, [
         'value' => json_decode($fieldValue),

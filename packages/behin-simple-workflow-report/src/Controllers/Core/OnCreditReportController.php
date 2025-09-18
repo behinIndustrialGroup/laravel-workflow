@@ -58,6 +58,11 @@ class OnCreditReportController extends Controller
             $onCredit->save();
             return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
         }
+        if($request->has('description')){
+            $onCredit->description = $request->input('description');
+            $onCredit->save();
+            return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+        }
 
         $payments = $request->input('payments', []);
         foreach ($payments as $payment) {

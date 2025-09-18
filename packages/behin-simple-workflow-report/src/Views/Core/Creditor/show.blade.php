@@ -24,18 +24,27 @@
                     <th>نوع</th>
                     <th>طرف حساب</th>
                     <th>مبلغ طلب</th>
-                    <th>شماره فاکتور</th>
-                    <th>تاریخ فاکتور</th>
+                    <th>نوع پرداختی</th>
+                    <th>شماره فاکتور خرید/شماره چک</th>
+                    <th>تاریخ فاکتور/واریزی/سررسید چک</th>
                     <th>توضیحات</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($creditors as $creditor)
-                    <tr>
+                    <tr 
+                        @if($creditor->type == 'طلب')
+                            style="background: #f56c6c"
+                        @endif
+                        @if($creditor->type == 'تسویه')
+                            class="bg-success"
+                        @endif
+                    >
                         <td>{{ $creditor->type }}</td>
                         <td>{{ $creditor->counterparty }}</td>
                         <td dir="ltr">{{ number_format($creditor->amount) }}</td>
+                        <td>{{ $creditor->settlement_type }}</td>
                         <td>{{ $creditor->invoice_number }}</td>
                         <td>{{ $creditor->invoice_date }}</td>
                         <td>{{ $creditor->description }}</td>
@@ -48,8 +57,10 @@
                                 <button class="btn btn-sm btn-primary"
                                     onclick="open_view_model_form(`{{ $addTasvieViewModelUpdateForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $creditor->id }}`, `{{ $addTasvieViewModelApikey }}`)">ویرایش</button>
                             @endif
-                            <button class="btn btn-sm btn-danger"
-                                onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
+                            @if(auth()->user()->access('حذف رکورد طلب/تسویه در گزارش لیست طلبکاران'))
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -71,6 +82,7 @@
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
         },
+        "order": [[ 5, "desc" ]],
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api();
 

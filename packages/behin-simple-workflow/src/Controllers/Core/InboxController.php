@@ -158,6 +158,12 @@ class InboxController extends Controller
     public static function view($inboxId)
     {
         $inbox = InboxController::getById($inboxId);
+
+        if (Auth::id() && $inbox->actor == Auth::id() && $inbox->status == 'new') {
+            self::changeStatusByInboxId($inboxId, 'opened');
+            $inbox->refresh();
+        }
+
         $case = CaseController::getById($inbox->case_id);
         $task = TaskController::getById($inbox->task_id);
         $process = ProcessController::getById($task->process_id);

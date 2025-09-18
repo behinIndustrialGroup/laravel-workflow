@@ -27,20 +27,20 @@
                         @foreach ($process->cases->where('parent_id', null) as $case)
                             @if ($case->getVariable('end_of_repair') == 'yes')
                                 <tr
-                                    ondblclick="window.location.href='{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}'">
+                                    ondblclick="window.location.href='{{ route('simpleWorkflowReport.mapa-center.archive-show', ['mapa_center' => $case->id]) }}'">
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
                                     <td class="d-none">{{ $case->id }}</td>
                                     <td>{{ $case->number }}
                                         <a
-                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"><i
+                                            href="{{ route('simpleWorkflowReport.mapa-center.archive-show', ['mapa_center' => $case->id]) }}"><i
                                                 class="fa fa-external-link"></i></a>
                                     </td>
                                     <td>{{ $case->getVariable('device_name') }}</td>
                                     <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
                                     <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                     <td><a
-                                            href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->number]) }}"><button
-                                                class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
+                                        href="{{ route('simpleWorkflowReport.mapa-center.archive-show', ['mapa_center' => $case->id]) }}"><button
+                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button></a>
                                     </td>
                                 </tr>
                             @endif

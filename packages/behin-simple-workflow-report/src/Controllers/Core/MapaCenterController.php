@@ -46,6 +46,19 @@ class MapaCenterController extends Controller
         return view('SimpleWorkflowReportView::Core.MapaCenter.show', compact('case', 'reports', 'parts', 'internalCases', 'financials', 'installParts'));
     }
 
+    public function archiveShow($mapa_center)
+    {
+        $case = CaseController::getById($mapa_center);
+        $reports = Mapa_center_fix_report::where('case_number', $case->number)->get();
+        $parts = Parts::where('case_number', $case->number)->get();
+        $internalCases = Cases::whereIn('process_id', [
+            '4bb6287b-9ddc-4737-9573-72071654b9de'
+        ])->get();
+        $financials = Financials::where('case_number', $case->number)->get();
+        $installParts = Mapa_center_install_parts::where('case_number', $case->number)->get();
+        return view('SimpleWorkflowReportView::Core.MapaCenter.show-archive', compact('case', 'reports', 'parts', 'internalCases', 'financials', 'installParts'));
+    }
+
     public function updateCaseInfo(Request $request, $mapa_center){
         $data = $request->except('_token', '_method');
         $case = CaseController::getById($mapa_center);

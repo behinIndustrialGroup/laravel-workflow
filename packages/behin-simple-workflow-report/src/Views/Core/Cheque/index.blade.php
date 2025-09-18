@@ -33,9 +33,9 @@
                 <thead>
                     <tr>
                         <th>شماره پرونده</th>
-                        <th>نام مشتری</th>
-                        <th>مبلغ</th>
-                        <th>تاریخ</th>
+                        <th>نام مشتری (پرداخت کننده چک)</th>
+                        <th>مبلغ چک</th>
+                        <th>تاریخ سررسید</th>
                         <th>در وجه</th>
                         <th>شماره چک</th>
                         <th>گیرنده چک</th>
@@ -161,6 +161,7 @@
                             <td>
                                 @foreach ($group as $cheque)
                                     {{ $cheque->destination_account_name }}
+
                                     @if (!$loop->last)
                                         <br>
                                     @endif

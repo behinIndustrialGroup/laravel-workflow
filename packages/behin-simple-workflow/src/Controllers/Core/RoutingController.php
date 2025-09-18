@@ -43,6 +43,7 @@ class RoutingController extends Controller
         $request->validate([
             'processId' => 'required',
             'caseId' => 'required',
+            'inboxId' => 'required',
         ]);
         $processId = $request->processId;
         $caseId = $request->caseId;
@@ -75,6 +76,12 @@ class RoutingController extends Controller
                     ];
             }
         }
+
+        $inbox = InboxController::getById($request->inboxId);
+        if ($inbox && !in_array($inbox->status, ['done', 'doneByOther'])) {
+            InboxController::changeStatusByInboxId($request->inboxId, 'inProgress');
+        }
+
         return
             [
                 'status' => 200,
@@ -400,7 +407,7 @@ class RoutingController extends Controller
                 }
             }
             if ($task->type == 'end') {
-                $inbox = InboxController::create($task->id, $caseId, null, 'new');
+                $inbox = InboxController::create($task->id, $caseId, null, 'done');
                 return 'break';
             }
             if ($task->type == 'timed_condition') {

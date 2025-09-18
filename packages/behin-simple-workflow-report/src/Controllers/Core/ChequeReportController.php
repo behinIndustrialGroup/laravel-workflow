@@ -25,7 +25,9 @@ class ChequeReportController extends Controller
         $chequeFromOnCredit = OnCreditPayment::where('payment_type', 'چک')->get()->groupBy(function ($item) {
             return $item->cheque_number ?: 'unique_' . $item->id;
         });
-        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit'));
+
+        $counterParties = CounterPartyController::getAll();
+        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit', 'counterParties'));
     }
 
     public function updateFromOnCredit(Request $request, $id)
@@ -64,6 +66,14 @@ class ChequeReportController extends Controller
 
         if ($request->has('is_passed')) {
             $cheque->is_passed = true;
+            $cheque->payment = $cheque->cost;
+            $cheque->payment_date = $cheque->cheque_due_date;
+        }
+
+        if ($request->has('destination_account_name')) {
+            $counterParty = CounterPartyController::getByName($request->destination_account_name);
+            $cheque->destination_account_name = $counterParty->name;
+            $cheque->destination_account = $counterParty->account_number;
         }
 
         $cheque->save();

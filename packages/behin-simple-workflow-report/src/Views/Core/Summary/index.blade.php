@@ -316,6 +316,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش تنخواه'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش ریز خرج کرد</td>
+                                            <td class="d-none">گزارش تنخواه</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.petty-cash.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
 
                                 </tbody>
                             </table>

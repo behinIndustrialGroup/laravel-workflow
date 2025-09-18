@@ -36,6 +36,7 @@ Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(functio
     Route::delete('/{user}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
     Route::delete('/{id}/removeFromDepartment', [UserController::class, 'removeFromDepartment'])->name('user.removeFromDepartment');
     Route::post('/{id}/invalidate-sessions', [UserController::class, 'invalidateSessions'])->name('user.invalidateSessions');
+    Route::post('/{id}/disable', [UserController::class, 'disable'])->name('user.disable');
 
 });
 

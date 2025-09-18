@@ -26,6 +26,7 @@
                         <th>{{ trans('fields.Case Title') }}</th>
                         <th>{{ trans('fields.Status') }}</th>
                         <th>{{ trans('fields.Received At') }}</th>
+                        <th>{{ trans('fields.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,8 +40,10 @@
                             <td>
                                 @if ($row->status == 'new')
                                     <span class="badge bg-primary">{{ trans('fields.New') }}</span>
-                                @elseif($row->status == 'in_progress')
-                                    <span class="badge bg-warning">{{ trans('fields.In Progress') }}</span>
+                                @elseif($row->status == 'opened')
+                                    <span class="badge bg-secondary">{{ trans('fields.opened') }}</span>
+                                @elseif($row->status == 'inProgress')
+                                    <span class="badge bg-warning">{{ trans('fields.inProgress') }}</span>
                                 @elseif($row->status == 'draft')
                                     <span class="badge bg-info">{{ trans('fields.Draft') }}</span>
                                 @else
@@ -48,6 +51,16 @@
                                 @endif
                             </td>
                             <td dir="ltr">{{ toJalali($row->created_at)->format('Y-m-d H:i') }}</td>
+                            <td>
+                                <a href="{{ route('simpleWorkflow.inbox.view', $row->id) }}"
+                                    class="btn btn-sm btn-primary">{{ trans('fields.View') }}<i
+                                        class="fa fa-external-link"></i></a>
+                                @if ($row->status == 'draft')
+                                    <a href="{{ route('simpleWorkflow.inbox.delete', $row->id) }}"
+                                        class="btn btn-sm btn-danger">{{ trans('fields.Delete') }}
+                                    <i class="fa fa-trash"></i></a>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

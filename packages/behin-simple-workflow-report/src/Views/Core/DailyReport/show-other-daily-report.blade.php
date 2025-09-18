@@ -1,13 +1,13 @@
 <div class="table-responsive">
 
-    <table class="table">
+    <table class="table table-striped table-hover align-middle text-center">
         <thead>
             <tr>
                 <td>#</td>
                 <th>شماره پرونده</th>
                 <th>نویسنده</th>
-                <th>شروع</th>
-                <th>پایان</th>
+                <th>تاریخ ثبت</th>
+                <th>مدت</th>
                 <th>گزارش</th>
             </tr>
         </thead>
@@ -21,8 +21,8 @@
                         @endif
                     </td>
                     <td>{{ getUserInfo($item->created_by)->name ?? '' }}</td>
-                    <td>{{ toJalali( (int) ($item->start_alt / 1000) )->format('Y-m-d H:i') }}</td>
-                    <td>{{ toJalali( (int) ($item->end_alt / 1000) )->format('Y-m-d H:i') }}</td>
+                    <td>{{ toJalali($item->created_at)->format('Y-m-d H:i') }}</td>
+                    <td>{{ round(( (int) ($item->end_alt / 1000) - (int)($item->start_alt / 1000) ) /3600 , 2) }}</td>
                     <td>{{ $item->report }}</td>
                 </tr>
             @endforeach
