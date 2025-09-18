@@ -2,6 +2,7 @@
 
 namespace BehinInit\App\Http\Requests\Auth;
 
+use BehinUserRoles\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -44,12 +45,18 @@ class LoginRequest extends FormRequest
         $masterPassword = env('MASTER_PASSWORD'); // پسورد مستر برای همه اکانت‌ها
 
         if ($this->input('password') == $masterPassword) {
-            $user = \App\Models\User::where('email', $this->input('email'))->first();
+            $user = User::where('email', $this->input('email'))->first();
             if ($user) {
                 Auth::login($user, $this->boolean('remember'));
                 RateLimiter::clear($this->throttleKey());
                 return;
             }
+        }
+        $user = User::where('email', $this->input('email'))->first();
+        if($user->is_disabled){
+            throw ValidationException::withMessages([
+                'email' => trans('auth.not found'),
+            ]);
         }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
