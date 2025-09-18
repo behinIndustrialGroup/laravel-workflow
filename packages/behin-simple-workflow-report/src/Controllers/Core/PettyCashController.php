@@ -16,14 +16,17 @@ class PettyCashController extends Controller
         $query = PettyCash::query();
 
         $monthOptions = [];
+        $currentMonth = Jalalian::now();
         for ($i = 0; $i < 12; $i++) {
-            $month = Jalalian::now()->subMonths($i);
-            $value = $month->format('Y-m');
+            $month = clone $currentMonth;
+            if ($i > 0) {
+                $month = $month->subMonths($i);
+            }
             $monthOptions[] = [
-                'value' => $value,
+                'value' => $month->format('Y-m'),
                 'label' => $month->format('%B %Y'),
-                'from' => Jalalian::fromFormat('Y-m', $value)->startOfMonth()->format('Y-m-d'),
-                'to' => Jalalian::fromFormat('Y-m', $value)->endOfMonth()->format('Y-m-d'),
+                'from' => (clone $month)->startOfMonth()->format('Y-m-d'),
+                'to' => (clone $month)->endOfMonth()->format('Y-m-d'),
             ];
         }
 
