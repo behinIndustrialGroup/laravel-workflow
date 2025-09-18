@@ -10,7 +10,7 @@
 
     $todayJalali = Jalalian::now()->format('Y-m-d');
     $fromDate = request('from_date') ?? $todayJalali;
-    $toDate = request('to_date') ?? $todayJalali;
+    $toDate = request('to_date') ?? request('from_date') ?? $todayJalali;
     $recieptionists = User::whereIn('role_id', [4, 6, 11, 13, 17])
         ->pluck('id')
         ->toArray();
@@ -27,10 +27,18 @@
                 <form method="GET" action="{{ route('simpleWorkflowReport.daily-report.index') }}">
                     <div class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label for="from_date" class="form-label fw-bold">تاریخ</label>
+                            <label for="from_date" class="form-label fw-bold">
+                                {{ request('user_id') ? 'از تاریخ' : 'تاریخ' }}
+                            </label>
                             <input type="text" id="from_date" name="from_date"
                                 class="form-control persian-date rounded-pill shadow-sm" value="{{ $fromDate }}"
                                 placeholder="مثلاً 1403/04/01">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="to_date" class="form-label fw-bold">تا تاریخ</label>
+                            <input type="text" id="to_date" name="to_date"
+                                class="form-control persian-date rounded-pill shadow-sm" value="{{ $toDate }}"
+                                placeholder="مثلاً 1403/04/30" {{ request('user_id') ? '' : 'disabled' }}>
                         </div>
                         <div class="col-md-3">
                             <label for="user_id" class="form-label fw-bold">پرسنل</label>
@@ -150,6 +158,39 @@
 @section('script')
     <script>
         initial_view()
+        document.addEventListener('DOMContentLoaded', function () {
+            const userSelect = document.getElementById('user_id');
+            const toDateInput = document.getElementById('to_date');
+            const fromDateLabel = document.querySelector('label[for="from_date"]');
+            const fromDateInput = document.getElementById('from_date');
+
+            function toggleDateRange() {
+                if (!userSelect || !toDateInput) {
+                    return;
+                }
+
+                const hasUser = !!userSelect.value;
+                if (hasUser) {
+                    toDateInput.removeAttribute('disabled');
+                    if (fromDateLabel) {
+                        fromDateLabel.textContent = 'از تاریخ';
+                    }
+                } else {
+                    if (fromDateInput) {
+                        toDateInput.value = fromDateInput.value;
+                    }
+                    toDateInput.setAttribute('disabled', 'disabled');
+                    if (fromDateLabel) {
+                        fromDateLabel.textContent = 'تاریخ';
+                    }
+                }
+            }
+
+            toggleDateRange();
+            if (userSelect) {
+                userSelect.addEventListener('change', toggleDateRange);
+            }
+        });
         function showInternal(userId, from = '', to = '') {
             url = "{{ route('simpleWorkflowReport.daily-report.show-internal', ['user_id', 'from', 'to']) }}";
             url = url.replace('user_id', userId)

@@ -49,7 +49,8 @@ class DailyReportController extends Controller
 
         // اگر کاربر مقدار وارد نکرده باشه، تاریخ امروز در نظر گرفته میشه
         $from_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
-        $to_input = convertPersianToEnglish($request->from_date ?? $defaultFrom);
+        $toSource = $request->to_date ?: $request->from_date ?: $defaultTo;
+        $to_input = convertPersianToEnglish($toSource);
 
         // تبدیل تاریخ شمسی به میلادی
         $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon()->startOfDay();
@@ -102,7 +103,7 @@ class DailyReportController extends Controller
     {
         $allowedProcessIds = $this->allowedProcessIds;
         $from = $from ? convertPersianToEnglish($from) : null;
-        $to = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
 
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
@@ -125,7 +126,7 @@ class DailyReportController extends Controller
     {
         $allowedProcessIds = $this->allowedProcessIds;
         $from = $from ? convertPersianToEnglish($from) : null;
-        $to = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
@@ -167,7 +168,7 @@ class DailyReportController extends Controller
     {
         $allowedProcessIds = $this->allowedProcessIds;
         $from = $from ? convertPersianToEnglish($from) : null;
-        $to = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
@@ -189,7 +190,7 @@ class DailyReportController extends Controller
     {
         $allowedProcessIds = $this->allowedProcessIds;
         $from = $from ? convertPersianToEnglish($from) : null;
-        $to = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
@@ -225,7 +226,7 @@ class DailyReportController extends Controller
     {
         $allowedProcessIds = $this->allowedProcessIds;
         $from = $from ? convertPersianToEnglish($from) : null;
-        $to = $from ? convertPersianToEnglish($from) : null;
+        $to = $to ? convertPersianToEnglish($to) : null;
         $from = $from ? Jalalian::fromFormat('Y-m-d', $from)->toCarbon() : null;
         $to = $to ? Jalalian::fromFormat('Y-m-d', $to)->toCarbon()->endOfDay() : null;
 
