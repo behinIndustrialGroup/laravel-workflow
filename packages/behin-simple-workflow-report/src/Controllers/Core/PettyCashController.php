@@ -42,7 +42,7 @@ class PettyCashController extends Controller
             }
         }
 
-        $selectedMonthJalali = Jalalian::fromFormat('Y-m', $selectedMonth);
+        $selectedMonthJalali = Jalalian::fromFormat('Y-m-d', $selectedMonth . '-01');
         $defaultFrom = $selectedMonthJalali->getFirstDayOfMonth()->format('Y-m-d');
         $defaultTo = $selectedMonthJalali->getEndDayOfMonth()->format('Y-m-d');
 
@@ -136,7 +136,7 @@ class PettyCashController extends Controller
             }
         }
 
-        $monthJalali = Jalalian::fromFormat('Y-m', $month);
+        $monthJalali = Jalalian::fromFormat('Y-m-d', $month . '-01');
         $defaultFrom = $monthJalali->getFirstDayOfMonth()->format('Y-m-d');
         $defaultTo = $monthJalali->getEndDayOfMonth()->format('Y-m-d');
 
