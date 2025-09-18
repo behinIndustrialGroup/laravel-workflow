@@ -14,16 +14,51 @@ class PettyCashController extends Controller
     public function index(Request $request)
     {
         $query = PettyCash::query();
-        if ($request->filled('from')) {
-            $from = convertPersianToEnglish($request->input('from'));
+
+        $monthOptions = [];
+        $currentMonth = Jalalian::now();
+        for ($i = 0; $i < 12; $i++) {
+            $month = clone $currentMonth;
+            if ($i > 0) {
+                $month = $month->subMonths($i);
+            }
+
+            $monthOptions[] = [
+                'value' => $month->format('Y-m'),
+                'label' => $month->format('%B %Y'),
+                'from' => $month->getFirstDayOfMonth()->format('Y-m-d'),
+                'to' => $month->getEndDayOfMonth()->format('Y-m-d'),
+            ];
+        }
+
+        $selectedMonthInput = $request->input('month', $monthOptions[0]['value']);
+        $selectedMonth = convertPersianToEnglish($selectedMonthInput);
+        if (!preg_match('/^\d{4}-\d{2}$/', $selectedMonth)) {
+            $selectedMonth = $monthOptions[0]['value'];
+        } else {
+            [, $selectedMonthNumber] = array_map('intval', explode('-', $selectedMonth));
+            if ($selectedMonthNumber < 1 || $selectedMonthNumber > 12) {
+                $selectedMonth = $monthOptions[0]['value'];
+            }
+        }
+
+        $selectedMonthJalali = Jalalian::fromFormat('Y-m-d', $selectedMonth . '-01');
+        $defaultFrom = $selectedMonthJalali->getFirstDayOfMonth()->format('Y-m-d');
+        $defaultTo = $selectedMonthJalali->getEndDayOfMonth()->format('Y-m-d');
+
+        $fromValue = $request->filled('from') ? convertPersianToEnglish($request->input('from')) : $defaultFrom;
+        $toValue = $request->filled('to') ? convertPersianToEnglish($request->input('to')) : $defaultTo;
+
+        if ($fromValue) {
+            $from = convertPersianToEnglish($fromValue);
             $from = Jalalian::fromFormat('Y-m-d', $from)
                 ->toCarbon()
                 ->startOfDay()
                 ->timestamp;
             $query->where('paid_at', '>=', $from);
         }
-        if ($request->filled('to')) {
-            $to = convertPersianToEnglish($request->input('to'));
+        if ($toValue) {
+            $to = convertPersianToEnglish($toValue);
             $to = Jalalian::fromFormat('Y-m-d', $to)
                 ->toCarbon()
                 ->endOfDay()
@@ -31,7 +66,13 @@ class PettyCashController extends Controller
             $query->where('paid_at', '<=', $to);
         }
         $pettyCashes = $query->orderByDesc('paid_at')->get();
-        return view('SimpleWorkflowReportView::Core.PettyCash.index', compact('pettyCashes'));
+        return view('SimpleWorkflowReportView::Core.PettyCash.index', compact(
+            'pettyCashes',
+            'monthOptions',
+            'selectedMonth',
+            'fromValue',
+            'toValue'
+        ));
     }
 
     public function store(Request $request)
@@ -84,7 +125,25 @@ class PettyCashController extends Controller
 
     public function export(Request $request)
     {
-        return Excel::download(new PettyCashExport($request->input('from'), $request->input('to')), 'petty_cash.xlsx');
+        $monthInput = $request->input('month', Jalalian::now()->format('Y-m'));
+        $month = convertPersianToEnglish($monthInput);
+        if (!preg_match('/^\d{4}-\d{2}$/', $month)) {
+            $month = Jalalian::now()->format('Y-m');
+        } else {
+            [, $monthNumber] = array_map('intval', explode('-', $month));
+            if ($monthNumber < 1 || $monthNumber > 12) {
+                $month = Jalalian::now()->format('Y-m');
+            }
+        }
+
+        $monthJalali = Jalalian::fromFormat('Y-m-d', $month . '-01');
+        $defaultFrom = $monthJalali->getFirstDayOfMonth()->format('Y-m-d');
+        $defaultTo = $monthJalali->getEndDayOfMonth()->format('Y-m-d');
+
+        $from = $request->input('from', $defaultFrom);
+        $to = $request->input('to', $defaultTo);
+
+        return Excel::download(new PettyCashExport($from, $to), 'petty_cash.xlsx');
     }
 }
 
