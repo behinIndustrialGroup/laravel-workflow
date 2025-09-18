@@ -13,7 +13,7 @@
         <div class="card-header">
             <form class="row" method="GET">
                 <div class="col-md-3">
-                    <select name="month" id="month-filter" class="form-select">
+                    <select name="month" id="month-filter" class="form-select form-control">
                         @foreach ($monthOptions as $option)
                             <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}" data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
                                 {{ $option['label'] }}
@@ -21,10 +21,10 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 d-none">
                     <input type="text" name="from" class="form-control persian-date" value="{{ $fromValue }}" placeholder="از تاریخ">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 d-none">
                     <input type="text" name="to" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
                 </div>
                 <div class="col-md-3">
