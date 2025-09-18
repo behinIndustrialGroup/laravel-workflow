@@ -9,7 +9,7 @@
 }
 
 @font-face {
-    font-family: Vazir;
+    font-family: Vazir-Bold;
     src: url('../fonts/Vazir-Bold.eot');
     src: url('../fonts/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
     url('../fonts/Vazir-Bold.woff2') format('woff2'),
@@ -19,7 +19,7 @@
 }
 
 @font-face {
-    font-family: Vazir;
+    font-family: Vazir-Light;
     src: url('../fonts/Vazir-Light.eot');
     src: url('../fonts/Vazir-Light.eot?#iefix') format('embedded-opentype'),
     url('../fonts/Vazir-Light.woff2') format('woff2'),
@@ -29,7 +29,7 @@
 }
 
 @font-face {
-    font-family: Vazir;
+    font-family: Vazir-Medium;
     src: url('../fonts/Vazir-Medium.eot');
     src: url('../fonts/Vazir-Medium.eot?#iefix') format('embedded-opentype'),
     url('../fonts/Vazir-Medium.woff2') format('woff2'),
@@ -39,7 +39,7 @@
 }
 
 @font-face {
-    font-family: Vazir;
+    font-family: Vazir-Thin;
     src: url('../fonts/Vazir-Thin.eot');
     src: url('../fonts/Vazir-Thin.eot?#iefix') format('embedded-opentype'),
     url('../fonts/Vazir-Thin.woff2') format('woff2'),
@@ -49,7 +49,7 @@
 }
 
 @font-face {
-    font-family: Vazir;
+    font-family: Vazir-Black;
     src: url('../fonts/Vazir-Black.eot');
     src: url('../fonts/Vazir-Black.eot?#iefix') format('embedded-opentype'),
     url('../fonts/Vazir-Black.woff2') format('woff2'),
@@ -315,4 +315,8 @@ audio{
   }
   .bg-doneByOther{
     background-color: #059f00 !important;
+  }
+
+  .font-vazir-bold{
+    font-family: 'Vazir-Bold', sans-serif !important;
   }

@@ -20,7 +20,7 @@
 
                 </pre> --}}
                 <div class="card">
-                    <div class="card-header bg-success text-center">پذیرش</div>
+                    <div class="card-header bg-success text-center font-vazir-bold" style="font-size: 25px">پذیرش</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="admision">
                             <table class="table table-bordered">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-success text-center">مشتری</div>
+                    <div class="card-header bg-success text-center font-vazir-bold" >مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
                             <table class="table table-bordered">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
+                    <div class="card-header text-center font-vazir-bold {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="devices">
                             <table class="table table-bordered">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند
+                    <div class="card-header text-center font-vazir-bold {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش فرایند
                         خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
@@ -178,7 +178,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center {{ count($parts) ? 'bg-success' : 'bg-primary' }}">گزارش فرایند داخلی</div>
+                    <div class="card-header text-center font-vazir-bold {{ count($parts) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
                             <table class="table table-bordered">
@@ -250,7 +250,7 @@
                             </table>
                         </div>
                         <div class="card">
-                            <div class="card-header text-center" style="background-color: #e2f7a2">
+                            <div class="card-header text-center font-vazir-bold" style="background-color: #e2f7a2">
                                 گزارش تعمیرات روزانه داخلی
                             </div>
                             <div class="card-body table-responsive">
@@ -293,7 +293,7 @@
                     </div>
                     @if (count($mapaCenterReports))
                         <div class="card">
-                            <div class="card-header bg-success text-center">
+                            <div class="card-header bg-success text-center font-vazir-bold" style="font-size: 25px">
                                 گزارشات مپاسنتر
                             </div>
                             <div class="card-body table-responsive">
@@ -350,7 +350,7 @@
                     @endif
                     @if (auth()->user()->access('امور جاری - جزئیات مالی'))
                         <div class="card">
-                            <div class="card-header text-center {{ count($financials) ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div class="card-header text-center font-vazir-bold {{ count($financials) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش
                                 دریافتی مالی
                             </div>
                             <div class="card-body">
@@ -427,7 +427,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header text-center {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
                                 تفکیک هزینه های پرونده
                             </div>
                             <div class="card-body">
@@ -454,7 +454,7 @@
                         </div>
                     @endif
                     <div class="card">
-                        <div class="card-header text-center {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}">تحویل
+                        <div class="card-header text-center font-vazir-bold {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">تحویل
                         </div>
                         <div class="card-body">
                             {{-- تحویل --}}

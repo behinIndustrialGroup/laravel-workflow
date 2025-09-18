@@ -138,6 +138,7 @@ class UserController extends Controller
             $user->is_disabled = false;
         }else{
             $user->is_disabled = true;
+            $this->invalidateSessions($id);
         }
         $user->save();
         return redirect()->route('user.all', ['id' => $user->id])->with('success', 'Update successfully');
