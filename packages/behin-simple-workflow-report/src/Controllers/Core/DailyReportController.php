@@ -22,6 +22,7 @@ use Behin\SimpleWorkflow\Models\Entities\Other_daily_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +55,7 @@ class DailyReportController extends Controller
         $from = Jalalian::fromFormat('Y-m-d', $from_input)->toCarbon()->startOfDay();
         $to = Jalalian::fromFormat('Y-m-d', $to_input)->toCarbon()->endOfDay();
 
-        $query = User::query();
+        $query = User::query()->orderBy('number', 'asc');
         if ($request->filled('user_id')) {
             $query->where('id', $request->user_id);
         }
@@ -115,7 +116,7 @@ class DailyReportController extends Controller
             $query->whereDate('updated_at', '<=', $to);
         }
         $items = $query->where('registered_by', $user_id)->groupBy('case_number')
-            ->get();
+            ->orderBy('case_number', 'desc')->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show', compact('items'));
     }
@@ -137,18 +138,26 @@ class DailyReportController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
         $items = $query->where('mapa_expert', $user_id)->groupBy('case_number')
-            ->get();
+            ->orderBy('case_number', 'desc')->get();
 
         $items->each(function($row){
+            try{
             $startDate = convertPersianToEnglish($row->start_date);
-            $startTime = $row->start_time;
+            $startTime = convertPersianToEnglish($row->start_time);
+            $startTime = str_replace('/', ':', $startTime);
             $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
 
             $endDate = convertPersianToEnglish($row->end_date);
-            $endTime = $row->end_time;
+            $endTime = convertPersianToEnglish($row->end_time);
+            $endTime = str_replace('/', ':', $endTime);
             $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")->toCarbon()->timestamp;
 
             $row->duration = ((int)$row->end - (int)$row->start) / 3600; //به ساعت
+            }catch(Exception $e){
+                $row->start = null;
+                $row->end = null;
+                $row->duration = null;
+            }
         });
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external', compact('items'));
@@ -171,7 +180,7 @@ class DailyReportController extends Controller
             $query->whereDate('updated_at', '<=', $to);
         }
         $items = $query->where('expert', $user_id)->groupBy('case_number')
-            ->get();
+            ->orderBy('case_number', 'desc')->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-mapa-center', compact('items'));
     }
@@ -193,15 +202,17 @@ class DailyReportController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
         $items = $query->where('mapa_expert_companions', 'LIKE', '%"' . $user_id . '"%')->groupBy('case_number')
-            ->get();
+            ->orderBy('case_number', 'desc')->get();
 
         $items->each(function($row){
             $startDate = convertPersianToEnglish($row->start_date);
-            $startTime = $row->start_time;
+            $startTime = convertPersianToEnglish($row->start_time);
+            $startTime = str_replace('/', ':', $startTime);
             $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
 
             $endDate = convertPersianToEnglish($row->end_date);
-            $endTime = $row->end_time;
+            $endTime = convertPersianToEnglish($row->end_time);
+            $endTime = str_replace('/', ':', $endTime);
             $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")->toCarbon()->timestamp;
 
             $row->duration = ((int)$row->end - (int)$row->start) / 3600; //به ساعت
@@ -227,7 +238,7 @@ class DailyReportController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
         $items = $query->where('created_by', $user_id)->groupBy('case_number')
-            ->get();
+            ->orderBy('case_number', 'desc')->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-other-daily-report', compact('items'));
     }

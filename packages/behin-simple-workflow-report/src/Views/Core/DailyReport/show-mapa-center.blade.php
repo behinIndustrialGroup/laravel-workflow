@@ -28,7 +28,7 @@
                     <td>{{ $item->case() ? $item->case()->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
                     <td>{{ $item->case() ? $item->case()->getVariable('device_name') : '' }}</td>
                     <td dir="ltr">{{ toJalali((int) $item->start) }}</td>
-                    <td>{{ ((int)$item->end - (int)$item->start) / 3600 }}</td>
+                    <td>{{ round(((int)$item->end - (int)$item->start) / 3600 , 2) }}</td>
                     <td>{{ $item->report }}</td>
                 </tr>
             @endforeach
