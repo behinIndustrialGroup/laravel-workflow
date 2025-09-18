@@ -22,11 +22,12 @@ class PettyCashController extends Controller
             if ($i > 0) {
                 $month = $month->subMonths($i);
             }
+            $monthCarbon = $month->toCarbon();
             $monthOptions[] = [
                 'value' => $month->format('Y-m'),
                 'label' => $month->format('%B %Y'),
-                'from' => (clone $month)->startOfMonth()->format('Y-m-d'),
-                'to' => (clone $month)->endOfMonth()->format('Y-m-d'),
+                'from' => Jalalian::fromCarbon($monthCarbon->copy()->startOfMonth())->format('Y-m-d'),
+                'to' => Jalalian::fromCarbon($monthCarbon->copy()->endOfMonth())->format('Y-m-d'),
             ];
         }
 
@@ -41,8 +42,10 @@ class PettyCashController extends Controller
             }
         }
 
-        $defaultFrom = Jalalian::fromFormat('Y-m', $selectedMonth)->startOfMonth()->format('Y-m-d');
-        $defaultTo = Jalalian::fromFormat('Y-m', $selectedMonth)->endOfMonth()->format('Y-m-d');
+        $selectedMonthJalali = Jalalian::fromFormat('Y-m', $selectedMonth);
+        $selectedMonthCarbon = $selectedMonthJalali->toCarbon();
+        $defaultFrom = Jalalian::fromCarbon($selectedMonthCarbon->copy()->startOfMonth())->format('Y-m-d');
+        $defaultTo = Jalalian::fromCarbon($selectedMonthCarbon->copy()->endOfMonth())->format('Y-m-d');
 
         $fromValue = $request->filled('from') ? convertPersianToEnglish($request->input('from')) : $defaultFrom;
         $toValue = $request->filled('to') ? convertPersianToEnglish($request->input('to')) : $defaultTo;
@@ -134,8 +137,10 @@ class PettyCashController extends Controller
             }
         }
 
-        $defaultFrom = Jalalian::fromFormat('Y-m', $month)->startOfMonth()->format('Y-m-d');
-        $defaultTo = Jalalian::fromFormat('Y-m', $month)->endOfMonth()->format('Y-m-d');
+        $monthJalali = Jalalian::fromFormat('Y-m', $month);
+        $monthCarbon = $monthJalali->toCarbon();
+        $defaultFrom = Jalalian::fromCarbon($monthCarbon->copy()->startOfMonth())->format('Y-m-d');
+        $defaultTo = Jalalian::fromCarbon($monthCarbon->copy()->endOfMonth())->format('Y-m-d');
 
         $from = $request->input('from', $defaultFrom);
         $to = $request->input('to', $defaultTo);
