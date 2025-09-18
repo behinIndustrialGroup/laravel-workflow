@@ -13,14 +13,23 @@
         <div class="card-header">
             <form class="row" method="GET">
                 <div class="col-md-3">
-                    <input type="text" name="from" class="form-control persian-date" value="{{ request('from') }}" placeholder="از تاریخ">
+                    <select name="month" id="month-filter" class="form-select">
+                        @foreach ($monthOptions as $option)
+                            <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}" data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
+                                {{ $option['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="to" class="form-control persian-date" value="{{ request('to') }}" placeholder="تا تاریخ">
+                    <input type="text" name="from" class="form-control persian-date" value="{{ $fromValue }}" placeholder="از تاریخ">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
+                    <input type="text" name="to" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
+                </div>
+                <div class="col-md-3">
                     <button class="btn btn-secondary" type="submit">فیلتر</button>
-                    <a href="{{ route('simpleWorkflowReport.petty-cash.export', ['from' => request('from'), 'to' => request('to')]) }}" class="btn btn-success">خروجی اکسل</a>
+                    <a href="{{ route('simpleWorkflowReport.petty-cash.export', ['from' => $fromValue, 'to' => $toValue, 'month' => $selectedMonth]) }}" class="btn btn-success">خروجی اکسل</a>
                 </div>
             </form>
         </div>
@@ -124,6 +133,32 @@
                 'صفحه: ' + pageTotal.toLocaleString() +
                 '<br>کل: ' + total.toLocaleString()
             );
+        }
+    });
+
+    $(function() {
+        var monthFilter = document.getElementById('month-filter');
+        var fromInput = document.querySelector('input[name="from"]');
+        var toInput = document.querySelector('input[name="to"]');
+
+        function applySelectedMonth() {
+            if (!monthFilter) {
+                return;
+            }
+            var selectedOption = monthFilter.options[monthFilter.selectedIndex];
+            if (!selectedOption) {
+                return;
+            }
+            if (fromInput && selectedOption.dataset.from) {
+                fromInput.value = selectedOption.dataset.from;
+            }
+            if (toInput && selectedOption.dataset.to) {
+                toInput.value = selectedOption.dataset.to;
+            }
+        }
+
+        if (monthFilter) {
+            monthFilter.addEventListener('change', applySelectedMonth);
         }
     });
 </script>
