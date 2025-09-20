@@ -20,6 +20,7 @@ use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflow\Models\Entities\Other_daily_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
+use Behin\SimpleWorkflowReport\Models\DailyReportReminderLog;
 use Behin\Sms\Controllers\SmsController;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
@@ -95,11 +96,18 @@ class DailyReportController extends Controller
             $row->other_daily_report = $otherDailyReport->where('created_by', $row->id)->distinct('case_number')->count('case_number');
         });
 
-        // return (string)$from;
-        $timeoffItems = TimeoffController::todayItems(clone $from);
-        $hourlyTimeoffItems = TimeoffController::todayHourlyItems($from);
+        $reportDate = $from->copy();
 
-        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users', 'timeoffItems', 'hourlyTimeoffItems'));
+        // return (string)$from;
+        $timeoffItems = TimeoffController::todayItems($reportDate->copy());
+        $hourlyTimeoffItems = TimeoffController::todayHourlyItems($reportDate->copy());
+
+        $reminderLogs = DailyReportReminderLog::query()
+            ->where('report_date', $reportDate->toDateString())
+            ->get()
+            ->keyBy('user_id');
+
+        return view('SimpleWorkflowReportView::Core.DailyReport.index', compact('users', 'timeoffItems', 'hourlyTimeoffItems', 'reminderLogs'));
     }
 
     public function showInternal($user_id, $from = null, $to = null)
@@ -301,6 +309,7 @@ class DailyReportController extends Controller
 
         $sent = [];
         $failed = [];
+        $notifiedUsers = [];
 
         foreach ($usersToNotify as $user) {
             try {
@@ -311,16 +320,60 @@ class DailyReportController extends Controller
 
                 $response = SmsController::sendByTemp($user->email, $templateId, $parameters);
 
+                $log = DailyReportReminderLog::updateOrCreate(
+                    [
+                        'report_date' => $targetDate->toDateString(),
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'mobile' => $user->email,
+                        'status' => DailyReportReminderLog::STATUS_SENT,
+                        'error_message' => null,
+                    ]
+                );
+
                 $sent[] = [
                     'user_id' => $user->id,
+                    'name' => $user->display_name ?: $user->name,
                     'mobile' => $user->email,
                     'response' => $response,
                 ];
+
+                $notifiedUsers[] = [
+                    'user_id' => $user->id,
+                    'name' => $user->display_name ?: $user->name,
+                    'mobile' => $user->email,
+                    'status' => $log->status,
+                    'error' => null,
+                    'logged_at' => $log->updated_at ? $log->updated_at->toDateTimeString() : null,
+                ];
             } catch (Throwable $exception) {
+                $log = DailyReportReminderLog::updateOrCreate(
+                    [
+                        'report_date' => $targetDate->toDateString(),
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'mobile' => $user->email,
+                        'status' => DailyReportReminderLog::STATUS_FAILED,
+                        'error_message' => $exception->getMessage(),
+                    ]
+                );
+
                 $failed[] = [
                     'user_id' => $user->id,
+                    'name' => $user->display_name ?: $user->name,
                     'mobile' => $user->email,
                     'error' => $exception->getMessage(),
+                ];
+
+                $notifiedUsers[] = [
+                    'user_id' => $user->id,
+                    'name' => $user->display_name ?: $user->name,
+                    'mobile' => $user->email,
+                    'status' => $log->status,
+                    'error' => $log->error_message,
+                    'logged_at' => $log->updated_at ? $log->updated_at->toDateTimeString() : null,
                 ];
             }
         }
@@ -334,8 +387,10 @@ class DailyReportController extends Controller
             'daily_leave_user_ids' => $dailyLeaveUsers,
             'notified_user_ids' => $usersToNotify->pluck('id')->values(),
             'sent_count' => count($sent),
+            'sent' => $sent,
             'failed_count' => count($failed),
             'failed' => $failed,
+            'notified_users' => $notifiedUsers,
         ]);
     }
 

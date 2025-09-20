@@ -4,6 +4,7 @@
 @php
     use Morilog\Jalali\Jalalian;
     use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
+    use Behin\SimpleWorkflowReport\Models\DailyReportReminderLog;
     use BehinUserRoles\Models\User;
     use Carbon\Carbon;
 
@@ -16,6 +17,10 @@
         ->toArray();
     $items = new PersonelActivityController();
     $items = $items->filterItems($fromDate, $toDate, request('user_id'));
+
+    if (! isset($reminderLogs)) {
+        $reminderLogs = collect();
+    }
 
 @endphp
 
@@ -74,7 +79,20 @@
                                         @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcab42;" @endif
                                         @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            {{ $user->name }}
+                                            @php
+                                                $reminderLog = $reminderLogs->get($user->id);
+                                            @endphp
+                                            @if ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_SENT)
+                                                <span class="badge badge-success" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">پیامک ارسال شد</span>
+                                            @elseif ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_FAILED)
+                                                <span class="badge badge-danger" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"
+                                                    title="{{ $reminderLog->error_message }}">ارسال ناموفق</span>
+                                            @else
+                                                <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span>
+                                            @endif
+                                        </td>
                                         <td></td>
                                         <td>
                                             @if ($user->mapa_center > 0)
@@ -125,7 +143,20 @@
                                         @if ($timeoffItems->where('type', 'روزانه')->where('user', $user->id)->count() > 0) style="background-color: #fcd895;" @endif    
                                         @if ($hourlyTimeoffItems->where('user', $user->id)->count() > 0) style="background-color: #fffd8a;" @endif>
                                         <td>{{ $user->number }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            {{ $user->name }}
+                                            @php
+                                                $reminderLog = $reminderLogs->get($user->id);
+                                            @endphp
+                                            @if ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_SENT)
+                                                <span class="badge badge-success" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">پیامک ارسال شد</span>
+                                            @elseif ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_FAILED)
+                                                <span class="badge badge-danger" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"
+                                                    title="{{ $reminderLog->error_message }}">ارسال ناموفق</span>
+                                            @else
+                                                <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <i class="fa fa-external-link text-primary"
                                                 onclick="showDones(`{{ $user->id }}`, `{{ $fromDate }}`, `{{ $toDate }}`)"></i>
