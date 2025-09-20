@@ -20,13 +20,17 @@ use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflow\Models\Entities\Other_daily_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
+use Behin\Sms\Controllers\SmsController;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
+use Throwable;
 
 class DailyReportController extends Controller
 {
@@ -241,5 +245,209 @@ class DailyReportController extends Controller
             ->orderBy('case_number', 'desc')->get();
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-other-daily-report', compact('items'));
+    }
+
+    public function sendReminder(Request $request)
+    {
+        $dateInput = $request->input('date');
+        if ($dateInput) {
+            try {
+                $dateInput = convertPersianToEnglish($dateInput);
+                $targetDate = Carbon::createFromFormat('Y-m-d', $dateInput)->startOfDay();
+            } catch (Exception $exception) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'فرمت تاریخ وارد شده نامعتبر است.',
+                ], 422);
+            }
+        } else {
+            $targetDate = Carbon::today();
+        }
+
+        $templateId = config('services.sms.daily_report_reminder_template_id');
+        if (! $templateId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'قالب پیامک یادآوری گزارش روزانه تعریف نشده است.',
+            ], 422);
+        }
+
+        $parameterKey = config('services.sms.daily_report_reminder_parameter_key', 'NAME');
+
+        $reportingUsers = $this->getUsersWithReports($targetDate);
+        $dailyLeaveUsers = TimeoffController::todayItems($targetDate->copy())
+            ->filter(function ($timeoff) {
+                return $timeoff->type === 'روزانه';
+            })
+            ->pluck('user')
+            ->map(function ($id) {
+                return (int) $id;
+            })
+            ->unique()
+            ->values();
+
+        $users = User::query()->orderBy('number', 'asc')->get();
+
+        $usersToNotify = $users->filter(function ($user) use ($reportingUsers, $dailyLeaveUsers) {
+            if (! $user->email) {
+                return false;
+            }
+
+            $userId = (int) $user->id;
+
+            return ! $reportingUsers->contains($userId)
+                && ! $dailyLeaveUsers->contains($userId);
+        })->values();
+
+        $sent = [];
+        $failed = [];
+
+        foreach ($usersToNotify as $user) {
+            try {
+                $parameters = [[
+                    'name' => $parameterKey,
+                    'value' => $user->display_name ?: $user->name,
+                ]];
+
+                $response = SmsController::sendByTemp($user->email, $templateId, $parameters);
+
+                $sent[] = [
+                    'user_id' => $user->id,
+                    'mobile' => $user->email,
+                    'response' => $response,
+                ];
+            } catch (Throwable $exception) {
+                $failed[] = [
+                    'user_id' => $user->id,
+                    'mobile' => $user->email,
+                    'error' => $exception->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'date' => $targetDate->toDateString(),
+            'template_id' => (int) $templateId,
+            'total_users' => $users->count(),
+            'reporting_user_ids' => $reportingUsers->values(),
+            'daily_leave_user_ids' => $dailyLeaveUsers,
+            'notified_user_ids' => $usersToNotify->pluck('id')->values(),
+            'sent_count' => count($sent),
+            'failed_count' => count($failed),
+            'failed' => $failed,
+        ]);
+    }
+
+    private function getUsersWithReports(Carbon $date): Collection
+    {
+        $dateString = $date->toDateString();
+
+        $reportingUsers = collect();
+
+        $reportingUsers = $reportingUsers->merge(
+            Part_reports::query()->whereDate('updated_at', $dateString)->pluck('registered_by')
+        );
+
+        $externalReports = Repair_reports::query()
+            ->whereDate('created_at', $dateString)
+            ->get(['mapa_expert', 'mapa_expert_companions']);
+
+        $reportingUsers = $reportingUsers->merge(
+            $externalReports->pluck('mapa_expert')->filter()
+        );
+
+        $assistantUsers = $externalReports->pluck('mapa_expert_companions')
+            ->filter()
+            ->flatMap(function ($companions) {
+                return $this->extractCompanionIds($companions);
+            });
+
+        $reportingUsers = $reportingUsers->merge($assistantUsers);
+
+        $reportingUsers = $reportingUsers->merge(
+            Mapa_center_fix_report::query()->whereDate('updated_at', $dateString)->pluck('expert')
+        );
+
+        $reportingUsers = $reportingUsers->merge(
+            $this->getOtherDailyReportUserIds($date)
+        );
+
+        return $reportingUsers
+            ->filter()
+            ->map(function ($id) {
+                return (int) $id;
+            })
+            ->unique()
+            ->values();
+    }
+
+    private function extractCompanionIds($companions): array
+    {
+        if ($companions instanceof Collection) {
+            $companions = $companions->all();
+        }
+
+        if (is_array($companions)) {
+            return $this->normalizeCompanionValues($companions);
+        }
+
+        if (is_string($companions)) {
+            $decoded = json_decode($companions, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $this->normalizeCompanionValues($decoded);
+            }
+
+            $cleaned = str_replace(['[', ']', '"', "'"], '', $companions);
+            $parts = preg_split('/[\\s,]+/', $cleaned);
+
+            return $this->normalizeCompanionValues($parts ?: []);
+        }
+
+        return [];
+    }
+
+    private function normalizeCompanionValues(array $values): array
+    {
+        return collect($values)
+            ->map(function ($value) {
+                if (is_array($value) && array_key_exists('id', $value)) {
+                    return $value['id'];
+                }
+
+                if (is_object($value) && isset($value->id)) {
+                    return $value->id;
+                }
+
+                return $value;
+            })
+            ->filter(function ($value) {
+                return is_numeric($value);
+            })
+            ->map(function ($value) {
+                return (int) $value;
+            })
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function getOtherDailyReportUserIds(Carbon $date): Collection
+    {
+        $dateString = $date->toDateString();
+
+        try {
+            return Other_daily_reports::query()
+                ->whereDate('created_at', $dateString)
+                ->pluck('created_by');
+        } catch (Throwable $exception) {
+            try {
+                return DB::table('wf_entity_other_daily_reports')
+                    ->whereDate('created_at', $dateString)
+                    ->pluck('created_by');
+            } catch (Throwable $innerException) {
+                return collect();
+            }
+        }
     }
 }
