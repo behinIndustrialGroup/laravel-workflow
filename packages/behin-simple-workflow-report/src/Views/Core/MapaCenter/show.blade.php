@@ -15,7 +15,7 @@
 
 @php
     if (auth()->user()->access('مپاسنتر: امکان ویرایش اطلاعات مشتری')) {
-        $customerForm = getFormInformation('d6a98160-91aa-4f17-9bb3-f9284b2882b2');
+        $customerForm = getFormInformation('240c03a0-c013-4bae-be3d-5b028e3b0f36');
     } else {
         $customerForm = getFormInformation('ac67f40d-4aa1-417a-9284-6a5c2f571ea1');
     }

@@ -44,7 +44,12 @@ class ReportHelper
         $fins = $inFins->merge($outFins);
         foreach ($fins as $fin) {
             $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum('cost');
-            $fin->total_payment = Financials::where('case_number', $fin->case_number)->get()?->sum('payment');
+            try {
+                $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum(fn($item) => (float) $item->payment);
+            } catch (\Throwable $e) {
+                $fin->total_cost = 'Error '. $fin->case_number;
+                dd('Error in total_cost', $fin->case_number);
+            }
             $fin->in_mapa_experts = Parts::where('case_number', $fin->case_number)->groupBy('mapa_expert')->pluck('mapa_expert')->toArray();
             $fin->out_mapa_experts = Repair_reports::where('case_number', $fin->case_number)->groupBy('mapa_expert')->pluck('mapa_expert')->toArray();
             $fin->customer = Variable::where('case_id', $fin->case_id)->where('key', 'customer_workshop_or_ceo_name')->value('value');

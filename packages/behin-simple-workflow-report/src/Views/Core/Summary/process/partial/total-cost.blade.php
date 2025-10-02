@@ -167,7 +167,7 @@
                                                                     $case_cost->amount,
                                                                 );
                                                             @endphp
-                                                            {{ $case_cost->counterparty()->name }}
+                                                            {{ $case_cost->counterparty()?->name }}
                                                             ({{ $case_cost->amount }})
                                                             <br>
                                                         @endforeach
