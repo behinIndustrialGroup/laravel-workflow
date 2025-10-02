@@ -13,7 +13,7 @@
         <div class="card-header">
             <form class="row" method="GET">
                 <div class="col-md-3">
-                    <select name="month" id="month-filter" class="form-select">
+                    <select name="month" id="month-filter" class="form-select form-control">
                         @foreach ($monthOptions as $option)
                             <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}" data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
                                 {{ $option['label'] }}
@@ -28,7 +28,7 @@
                     <input type="text" name="to" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-secondary" type="submit">فیلتر</button>
+                    <button class="btn btn-warning" type="submit">فیلتر</button>
                     <a href="{{ route('simpleWorkflowReport.petty-cash.export', ['from' => $fromValue, 'to' => $toValue, 'month' => $selectedMonth]) }}" class="btn btn-success">خروجی اکسل</a>
                 </div>
             </form>
