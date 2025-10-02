@@ -87,7 +87,7 @@
             </div>
         </div>
     @else
-        <div class="d-flex justify-content-end bg-white p-2 mt-2">
+        <div class="d-flex justify-content-end bg-white p-2 mt-2 mb-4">
             @if ($inbox->status == 'draft')
                 <button class="btn btn-sm btn-outline-info m-1"
                     onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>

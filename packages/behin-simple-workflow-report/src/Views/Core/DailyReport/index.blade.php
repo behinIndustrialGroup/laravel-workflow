@@ -85,12 +85,12 @@
                                                 $reminderLog = $reminderLogs->get($user->id);
                                             @endphp
                                             @if ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_SENT)
-                                                <span class="badge badge-success" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">پیامک ارسال شد</span>
+                                                <span class="badge" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"><i class="material-icons" style="font-size: 13px;">textsms</i></span>
                                             @elseif ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_FAILED)
                                                 <span class="badge badge-danger" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"
-                                                    title="{{ $reminderLog->error_message }}">ارسال ناموفق</span>
+                                                    title="{{ $reminderLog->error_message }}"><i class="material-icons" style="font-size: 13px;">sms_failed</i></span>
                                             @else
-                                                <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span>
+                                                {{-- <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span> --}}
                                             @endif
                                         </td>
                                         <td></td>
@@ -149,12 +149,12 @@
                                                 $reminderLog = $reminderLogs->get($user->id);
                                             @endphp
                                             @if ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_SENT)
-                                                <span class="badge badge-success" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">پیامک ارسال شد</span>
+                                                <span class="badge badge-success" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"><i class="material-icons" style="font-size: 13px;">sms</i></span>
                                             @elseif ($reminderLog && $reminderLog->status === DailyReportReminderLog::STATUS_FAILED)
                                                 <span class="badge badge-danger" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;"
-                                                    title="{{ $reminderLog->error_message }}">ارسال ناموفق</span>
+                                                    title="{{ $reminderLog->error_message }}"><i class="material-icons" style="font-size: 13px;">sms_failed</i></span>
                                             @else
-                                                <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span>
+                                                {{-- <span class="badge badge-secondary" style="font-size: 0.75rem; margin-inline-start: 0.5rem; margin-left: 0.5rem;">بدون پیامک</span> --}}
                                             @endif
                                         </td>
                                         <td>

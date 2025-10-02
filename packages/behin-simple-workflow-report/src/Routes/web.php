@@ -103,6 +103,4 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie');
     Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab');
     Route::post('creditor/add-talab', [CreditorReportController::class, 'addTalab'])->name('creditor.addTalab');
-
-
 });

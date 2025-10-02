@@ -315,9 +315,8 @@ class DailyReportController extends Controller
             try {
                 $parameters = [[
                     'name' => $parameterKey,
-                    'value' => $user->display_name ?: $user->name,
+                    'value' => $user->name,
                 ]];
-
                 $response = SmsController::sendByTemp($user->email, $templateId, $parameters);
 
                 $log = DailyReportReminderLog::updateOrCreate(

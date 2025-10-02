@@ -36,8 +36,8 @@ return [
     ],
 
     'sms' => [
-        'daily_report_reminder_template_id' => env('SMS_DAILY_REPORT_REMINDER_TEMPLATE_ID'),
-        'daily_report_reminder_parameter_key' => env('SMS_DAILY_REPORT_REMINDER_PARAMETER_KEY', 'NAME'),
+        'daily_report_reminder_template_id' => '217224',
+        'daily_report_reminder_parameter_key' => 'name',
     ],
 
 ];
