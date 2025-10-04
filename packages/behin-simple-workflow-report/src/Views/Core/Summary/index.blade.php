@@ -305,6 +305,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش جرایم پیامک ها'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش جرایم پیامک ها</td>
+                                            <td class="d-none">گزارش کامل</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.daily-report.reminder-summary') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('گزارش لیست طلبکاران'))
                                         <tr>
                                             <td class="d-none"></td>
