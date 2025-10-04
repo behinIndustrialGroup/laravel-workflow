@@ -23,6 +23,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportReminderSummaryController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PettyCashController;
@@ -91,6 +92,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
 
     Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index');
+    Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])
+        ->name('daily-report.reminder-summary');
     Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal');
     Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external');
     Route::get('daily-report/{user_id}/show-mapa-center/{from?}/{to?}', [DailyReportController:: class, 'showMapaCenter'])->name('daily-report.show-mapa-center');
