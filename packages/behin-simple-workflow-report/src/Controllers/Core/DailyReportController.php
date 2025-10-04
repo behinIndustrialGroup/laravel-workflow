@@ -278,6 +278,13 @@ class DailyReportController extends Controller
             $targetDate = Carbon::today();
         }
 
+        if ($targetDate->isFriday()) {
+            return response()->json([
+                'status' => 'skipped',
+                'message' => 'ارسال پیامک یادآوری در روز جمعه انجام نمی‌شود.',
+            ]);
+        }
+
         $templateId = config('services.sms.daily_report_reminder_template_id');
         if (! $templateId) {
             return response()->json([
