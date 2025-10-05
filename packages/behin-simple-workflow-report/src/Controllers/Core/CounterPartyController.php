@@ -50,6 +50,14 @@ class CounterPartyController extends Controller
         return view('SimpleWorkflowReportView::Core.CounterParty.create', compact('users'));
     }
 
+    public function edit(string $counterParty)
+    {
+        $counterParty = Counter_parties::findOrFail($counterParty);
+        $users = User::orderBy('name')->get();
+
+        return view('SimpleWorkflowReportView::Core.CounterParty.edit', compact('counterParty', 'users'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,6 +69,23 @@ class CounterPartyController extends Controller
         ]);
 
         Counter_parties::create($validated);
+        return redirect()->route('simpleWorkflowReport.counter-party.index');
+    }
+
+    public function update(Request $request, string $counterParty)
+    {
+        $counterParty = Counter_parties::findOrFail($counterParty);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'account_number' => ['nullable', 'string', 'max:255'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'description' => ['nullable', 'string'],
+            'state' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $counterParty->update($validated);
+
         return redirect()->route('simpleWorkflowReport.counter-party.index');
     }
 

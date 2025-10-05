@@ -31,7 +31,9 @@
                                 <td>{{ $counterParty->name }}</td>
                                 <td>{{ $counterParty->account_number }}</td>
                                 <td>{{ $counterParty->user?->name ?? '-' }}</td>
-                                <td>
+                                <td class="d-flex gap-1">
+                                    <a href="{{ route('simpleWorkflowReport.counter-party.edit', $counterParty->id) }}"
+                                        class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
                                     <form action="{{ route('simpleWorkflowReport.counter-party.destroy', $counterParty->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
