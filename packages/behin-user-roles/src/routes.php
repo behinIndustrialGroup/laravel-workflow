@@ -32,6 +32,7 @@ Route::prefix('/user')->middleware(['web', 'auth',Access::class])->group(functio
     Route::post('/{id}/change-ip', [UserController::class, 'ChangeIp'])->name('change-user-ip');
 
     Route::post('/{id}/changeShowInReport', [UserController::class, 'changeShowInReport']);
+    Route::post('/{id}/counter-parties', [UserController::class, 'updateCounterParties'])->name('user.updateCounterParties');
     Route::post('/{id}/addToDepartment', [UserController::class, 'addToDepartment'])->name('user.addToDepartment');
     Route::delete('/{user}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
     Route::delete('/{id}/removeFromDepartment', [UserController::class, 'removeFromDepartment'])->name('user.removeFromDepartment');

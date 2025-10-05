@@ -3,6 +3,7 @@
 namespace BehinUserRoles\Controllers;
 
 use App\Http\Controllers\Controller;
+use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use BehinUserRoles\Controllers\GetRoleController;
@@ -25,10 +26,13 @@ class UserController extends Controller
             return view('URPackageView::user.all')->with(['users' => $users]);
         else:
 
+            $user = User::withoutGlobalScopes()->with('counterParties')->find($id);
+
             return view('URPackageView::user.edit')->with([
-                'user' => User::withoutGlobalScopes()->find($id),
+                'user' => $user,
                 'roles' => GetRoleController::getAll(),
-                'departments' => DepartmentController::getAll($id)
+                'departments' => DepartmentController::getAll($id),
+                'counterParties' => Counter_parties::with('user')->orderBy('name')->get(),
             ]);
         endif;
     }
@@ -89,6 +93,34 @@ class UserController extends Controller
             $showInReport = false;
         User::where('id', $id)->update(['showInReport' => $showInReport]);
         return redirect()->back();
+    }
+
+    public function updateCounterParties(Request $request, $id)
+    {
+        $user = User::withoutGlobalScopes()->findOrFail($id);
+
+        $validated = $request->validate([
+            'counterparty_ids' => ['nullable', 'array'],
+            'counterparty_ids.*' => ['string', 'distinct', 'exists:wf_entity_counter_parties,id'],
+        ]);
+
+        $selectedCounterParties = $validated['counterparty_ids'] ?? [];
+
+        DB::transaction(function () use ($user, $selectedCounterParties) {
+            $query = Counter_parties::where('user_id', $user->id);
+
+            if (!empty($selectedCounterParties)) {
+                $query->whereNotIn('id', $selectedCounterParties);
+            }
+
+            $query->update(['user_id' => null]);
+
+            if (!empty($selectedCounterParties)) {
+                Counter_parties::whereIn('id', $selectedCounterParties)->update(['user_id' => $user->id]);
+            }
+        });
+
+        return redirect()->back()->with('success', 'طرف حساب‌های کاربر با موفقیت به‌روزرسانی شد.');
     }
 
     public function addToDepartment(Request $r, $id)
