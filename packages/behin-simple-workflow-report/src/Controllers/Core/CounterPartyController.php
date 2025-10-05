@@ -15,6 +15,7 @@ use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
+use BehinUserRoles\Models\User;
 use Behin\SimpleWorkflow\Models\Entities\Devices;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
@@ -30,7 +31,7 @@ class CounterPartyController extends Controller
 {
     public function index(Request $request)
     {
-        $counterParties = Counter_parties::all();
+        $counterParties = Counter_parties::with('user')->orderBy('name')->get();
         return view('SimpleWorkflowReportView::Core.CounterParty.index', compact('counterParties'));
     }
 
@@ -45,12 +46,21 @@ class CounterPartyController extends Controller
 
     public function create()
     {
-        return view('SimpleWorkflowReportView::Core.CounterParty.create');
+        $users = User::orderBy('name')->get();
+        return view('SimpleWorkflowReportView::Core.CounterParty.create', compact('users'));
     }
 
     public function store(Request $request)
     {
-        $counterParty = Counter_parties::create($request->all());
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'account_number' => ['nullable', 'string', 'max:255'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'description' => ['nullable', 'string'],
+            'state' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        Counter_parties::create($validated);
         return redirect()->route('simpleWorkflowReport.counter-party.index');
     }
 

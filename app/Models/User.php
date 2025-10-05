@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 use BehinInit\App\Http\Controllers\AccessController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,5 +49,10 @@ class User extends Authenticatable
     }
     function access($method_name) {
         return (new AccessController($method_name))->check();
+    }
+
+    public function counterParties()
+    {
+        return $this->hasMany(Counter_parties::class, 'user_id');
     }
 }

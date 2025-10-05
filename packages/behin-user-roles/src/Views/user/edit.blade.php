@@ -135,6 +135,52 @@
             </form>
         </div>
         <div class="card p-2">
+            @php
+                $selectedCounterParties = old('counterparty_ids', $user->counterParties->pluck('id')->toArray());
+            @endphp
+            <form method="post" action="{{ route('user.updateCounterParties', ['id' => $user->id]) }}">
+                @csrf
+                <div class="form-group">
+                    <label for="counterparty_ids">طرف حساب های مرتبط</label>
+                    <select class="form-control" name="counterparty_ids[]" id="counterparty_ids" multiple size="8">
+                        @foreach ($counterParties as $counterParty)
+                            @php
+                                $isSelected = in_array($counterParty->id, $selectedCounterParties, true);
+                                $assignedToOtherUser = $counterParty->user && $counterParty->user->id !== $user->id;
+                            @endphp
+                            <option value="{{ $counterParty->id }}" {{ $isSelected ? 'selected' : '' }}>
+                                {{ $counterParty->name }} - {{ $counterParty->account_number ?? 'بدون شماره حساب' }}
+                                @if ($assignedToOtherUser)
+                                    (اختصاص یافته به {{ $counterParty->user->name }})
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('counterparty_ids')
+                        <span class="text-danger d-block">{{ $message }}</span>
+                    @enderror
+                    @error('counterparty_ids.*')
+                        <span class="text-danger d-block">{{ $message }}</span>
+                    @enderror
+                    <small class="form-text text-muted">برای انتخاب چند گزینه از کلیدهای Ctrl یا Shift استفاده کنید.</small>
+                </div>
+                <button class="btn btn-outline-primary" type="submit">ثبت طرف حساب ها</button>
+            </form>
+            <div class="mt-3">
+                <h5>طرف حساب های کاربر</h5>
+                <ul class="list-group">
+                    @forelse ($user->counterParties as $counterParty)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ $counterParty->name }}</span>
+                            <span class="badge badge-primary badge-pill" dir="ltr">{{ $counterParty->account_number ?? '-' }}</span>
+                        </li>
+                    @empty
+                        <li class="list-group-item text-muted">طرف حسابی برای این کاربر تعریف نشده است.</li>
+                    @endforelse
+                </ul>
+            </div>
+        </div>
+        <div class="card p-2">
             <div class="card-body row">
                 <form action="{{ route('user.disable', $user->id) }}" class="col-sm-4" method="POST" onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید کاربر را از همه دستگاه‌ها خارج کنید؟');">
                     @csrf
