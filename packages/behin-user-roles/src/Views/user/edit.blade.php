@@ -142,7 +142,7 @@
                 @csrf
                 <div class="form-group">
                     <label for="counterparty_ids">طرف حساب های مرتبط</label>
-                    <select class="form-control" name="counterparty_ids[]" id="counterparty_ids" multiple size="8">
+                    <select class="form-control select2" name="counterparty_ids[]" id="counterparty_ids" multiple size="8">
                         @foreach ($counterParties as $counterParty)
                             @php
                                 $isSelected = in_array($counterParty->id, $selectedCounterParties, true);
