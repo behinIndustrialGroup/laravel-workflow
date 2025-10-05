@@ -2,6 +2,7 @@
 
 namespace BehinUserRoles\Models;
 
+use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 use BehinInit\App\Http\Controllers\AccessController;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -91,6 +92,11 @@ class User extends Authenticatable
 
     function departments(){
         return UserDepartment::where('user_id', $this->id)->get();
+    }
+
+    public function counterParties()
+    {
+        return $this->hasMany(Counter_parties::class, 'user_id');
     }
 
 }

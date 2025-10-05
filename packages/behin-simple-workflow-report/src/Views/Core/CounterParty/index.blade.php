@@ -20,6 +20,7 @@
                             <th>#</th>
                             <th>نام</th>
                             <th>شماره حساب</th>
+                            <th>کاربر</th>
                             <th>اقدام</th>
                         </tr>
                     </thead>
@@ -29,6 +30,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $counterParty->name }}</td>
                                 <td>{{ $counterParty->account_number }}</td>
+                                <td>{{ $counterParty->user?->name ?? '-' }}</td>
                                 <td>
                                     <form action="{{ route('simpleWorkflowReport.counter-party.destroy', $counterParty->id) }}" method="POST">
                                         @csrf
