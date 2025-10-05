@@ -55,6 +55,9 @@
                         'mode' => $formMode,
                     ])
                 @else
+                    {{-- <pre>
+                        {{ print_r($variables) }}
+                    </pre> --}}
                     @include('SimpleWorkflowView::Core.Form.preview', [
                         'form' => $form,
                         'task' => $task,

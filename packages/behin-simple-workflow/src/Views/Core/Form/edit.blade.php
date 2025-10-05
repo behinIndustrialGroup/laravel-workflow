@@ -168,7 +168,6 @@
 
 @section('script')
     <script>
-        initial_view();
 
         function deleteField(index) {
             $('#tr_' + index).remove();

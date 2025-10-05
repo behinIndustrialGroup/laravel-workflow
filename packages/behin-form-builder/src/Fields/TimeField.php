@@ -13,7 +13,7 @@ class TimeField extends AbstractField
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label>';
-        $s .= '<input type="text" step="60" name="' . $this->name . '" ';
+        $s .= '<input type="text" name="' . $this->name . '" ';
 
         foreach($this->attributes as $key => $value){
             if($key == 'required'){

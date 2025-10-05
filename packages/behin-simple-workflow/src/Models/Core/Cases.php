@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 
@@ -40,7 +41,7 @@ class Cases extends Model
 
     public function variables()
     {
-        return VariableController::getVariablesByCaseId($this->id, $this->process_id);
+        return VariableController::getVariablesByCaseId($this->id);
     }
 
     public function getVariable($name)

@@ -22,6 +22,7 @@ use MyFormBuilder\Fields\LocationField;
 use MyFormBuilder\Fields\TitleField;
 use MyFormBuilder\Renderers\FormRenderer;
 use MyFormBuilder\Fields\SelectMultipleField;
+use MyFormBuilder\Fields\SimpleSelectField;
 use MyFormBuilder\Fields\SignatureField;
 use MyFormBuilder\Fields\TimeField;
 use MyFormBuilder\Fields\DateTimeField;
@@ -214,6 +215,14 @@ class FormBuilder
         $field = $this->fieldFactory->create('select', $name, $attributes);
         $this->fields[] = new SelectField($name, $field);
         return $this;
+    }
+
+    public function selectSimple($name, $options, $attributes = [])
+    {
+        $attributes = $attributes ?? [];
+        $attributes['options'] = $options;
+
+        return (new SimpleSelectField($name, $attributes))->render();
     }
 
     public function selectMultiple($name, $options, $attributes = [])
