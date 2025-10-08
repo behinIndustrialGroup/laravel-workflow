@@ -69,7 +69,7 @@ class RewardPenaltyController extends Controller
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'type' => ['required', Rule::in([RewardPenalty::TYPE_REWARD, RewardPenalty::TYPE_PENALTY])],
             'description' => ['required', 'string', 'max:65535'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'amount' => ['required', 'min:0'],
             'recorded_at' => ['nullable', 'string'],
         ]);
 

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->enum('type', ['reward', 'penalty']);
             $table->string('description');
-            $table->unsignedDecimal('amount', 15, 2);
+            $table->unsignedInteger('amount');
             $table->timestamps();
         });
     }

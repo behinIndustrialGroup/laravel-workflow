@@ -191,7 +191,7 @@
 
                         <div class="mb-3">
                             <label for="rewardPenaltyFormAmount" class="form-label fw-bold">مبلغ (ریال)</label>
-                            <input type="number" class="form-control" id="rewardPenaltyFormAmount" name="amount" min="0" step="0.01" required>
+                            <input type="text" class="form-control formatted-digit" id="rewardPenaltyFormAmount" name="amount" min="0" step="0.01" required>
                         </div>
 
                         <div class="mb-0">
@@ -211,7 +211,6 @@
 
 @section('script')
     <script>
-        initial_view();
 
         const rewardDetailsState = @json((object) $rewardDetailsByUser);
         const penaltyDetailsState = @json((object) $penaltyDetailsByUser);

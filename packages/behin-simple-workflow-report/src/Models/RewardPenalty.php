@@ -5,6 +5,7 @@ namespace Behin\SimpleWorkflowReport\Models;
 use BehinUserRoles\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class RewardPenalty extends Model
 {
@@ -19,6 +20,13 @@ class RewardPenalty extends Model
         'description',
         'amount',
     ];
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => str_replace(',', '', $value)
+        );
+    }
 
     protected $casts = [
         'amount' => 'float',
