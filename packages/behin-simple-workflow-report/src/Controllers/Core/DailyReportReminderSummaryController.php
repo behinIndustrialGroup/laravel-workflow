@@ -4,6 +4,7 @@ namespace Behin\SimpleWorkflowReport\Controllers\Core;
 
 use App\Http\Controllers\Controller;
 use Behin\SimpleWorkflowReport\Models\DailyReportReminderLog;
+use Behin\SimpleWorkflowReport\Models\RewardPenalty;
 use Behin\SimpleWorkflowReport\Services\DailyReportReminderService;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
@@ -40,6 +41,60 @@ class DailyReportReminderSummaryController extends Controller
         $reminderLogs = $this->reminderService->getReminderLogs($from, $to, $request->integer('user_id'))
             ->groupBy('user_id');
 
+        $rewardPenaltyRecords = RewardPenalty::query()
+            ->select(['id', 'user_id', 'type', 'description', 'amount', 'created_at'])
+            ->whereBetween('created_at', [$from, $to])
+            ->when($request->filled('user_id'), function ($query) use ($request) {
+                $query->where('user_id', $request->integer('user_id'));
+            })
+            ->get()
+            ->groupBy('user_id');
+
+        $rewardCounts = [];
+        $penaltyCounts = [];
+        $rewardDetails = [];
+        $penaltyDetails = [];
+
+        foreach ($rewardPenaltyRecords as $userId => $items) {
+            $rewardItems = $items
+                ->where('type', RewardPenalty::TYPE_REWARD)
+                ->values();
+
+            if ($rewardItems->isNotEmpty()) {
+                $rewardCounts[$userId] = $rewardItems->count();
+                $rewardDetails[$userId] = $rewardItems
+                    ->map(function (RewardPenalty $record) {
+                        return [
+                            'description' => $record->description,
+                            'amount' => $record->amount,
+                            'formatted_amount' => number_format($record->amount),
+                            'recorded_at' => Jalalian::fromCarbon($record->created_at)->format('Y-m-d'),
+                        ];
+                    })
+                    ->values()
+                    ->all();
+            }
+
+            $penaltyItems = $items
+                ->where('type', RewardPenalty::TYPE_PENALTY)
+                ->values();
+
+            if ($penaltyItems->isNotEmpty()) {
+                $penaltyCounts[$userId] = $penaltyItems->count();
+                $penaltyDetails[$userId] = $penaltyItems
+                    ->map(function (RewardPenalty $record) {
+                        return [
+                            'description' => $record->description,
+                            'amount' => $record->amount,
+                            'formatted_amount' => number_format($record->amount),
+                            'recorded_at' => Jalalian::fromCarbon($record->created_at)->format('Y-m-d'),
+                        ];
+                    })
+                    ->values()
+                    ->all();
+            }
+        }
+
         $uniqueDates = $reminderLogs
             ->flatMap(function (Collection $logs) {
                 return $logs->pluck('report_date');
@@ -50,7 +105,7 @@ class DailyReportReminderSummaryController extends Controller
             ? collect()
             : $this->reminderService->getReportingUsersByDate($uniqueDates);
 
-        $users->each(function (User $user) use ($reminderLogs, $reportingUsersByDate) {
+        $users->each(function (User $user) use ($reminderLogs, $reportingUsersByDate, $rewardCounts, $penaltyCounts) {
             /** @var Collection<int, DailyReportReminderLog> $logs */
             $logs = $reminderLogs->get($user->id, collect());
             $user->reminder_count = $logs->count();
@@ -62,6 +117,9 @@ class DailyReportReminderSummaryController extends Controller
 
                 return ! $reportingUsers->contains($userId);
             })->count();
+
+            $user->reward_misc_count = $rewardCounts[$user->id] ?? 0;
+            $user->penalty_misc_count = $penaltyCounts[$user->id] ?? 0;
         });
 
         $fromDate = Jalalian::fromCarbon($from)->format('Y-m-d');
@@ -73,6 +131,8 @@ class DailyReportReminderSummaryController extends Controller
             'fromDate' => $fromDate,
             'toDate' => $toDate,
             'selectedUserId' => $request->input('user_id'),
+            'rewardDetailsByUser' => $rewardDetails,
+            'penaltyDetailsByUser' => $penaltyDetails,
         ]);
     }
 }
