@@ -16,6 +16,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportControl
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\MapaCenterController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
+use Behin\SimpleWorkflowReport\Controllers\Core\RewardPenaltyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
@@ -94,6 +95,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index');
     Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])
         ->name('daily-report.reminder-summary');
+    Route::get('rewards-penalties', [RewardPenaltyController::class, 'index'])->name('rewards-penalties.index');
+    Route::post('rewards-penalties', [RewardPenaltyController::class, 'store'])->name('rewards-penalties.store');
     Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal');
     Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external');
     Route::get('daily-report/{user_id}/show-mapa-center/{from?}/{to?}', [DailyReportController:: class, 'showMapaCenter'])->name('daily-report.show-mapa-center');
