@@ -70,28 +70,50 @@
                                     $penaltyItems = $penaltyDetailsByUser[$user->id] ?? [];
                                 @endphp
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-success">{{ $rewardCount }}</span>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <span class="badge bg-success"
+                                              data-reward-count-for="{{ $user->id }}">{{ $rewardCount }}</span>
                                         <button type="button"
                                                 class="btn btn-outline-success btn-sm js-reward-penalty-modal"
+                                                data-detail-type="reward"
+                                                data-user-id="{{ $user->id }}"
                                                 data-type="پاداش‌های متفرقه برای {{ $user->name }}"
                                                 data-items='@json($rewardItems)'
                                                 title="نمایش جزئیات پاداش‌ها"
                                                 {{ $rewardCount === 0 ? 'disabled' : '' }}>
                                             <i class="material-icons" style="font-size: 16px;">visibility</i>
                                         </button>
+                                        <button type="button"
+                                                class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
+                                                data-type="reward"
+                                                data-user-id="{{ $user->id }}"
+                                                data-user-name="{{ $user->name }}"
+                                                title="افزودن پاداش">
+                                            <i class="material-icons" style="font-size: 16px;">add_circle</i>
+                                        </button>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-danger">{{ $penaltyCount }}</span>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <span class="badge bg-danger"
+                                              data-penalty-count-for="{{ $user->id }}">{{ $penaltyCount }}</span>
                                         <button type="button"
                                                 class="btn btn-outline-danger btn-sm js-reward-penalty-modal"
+                                                data-detail-type="penalty"
+                                                data-user-id="{{ $user->id }}"
                                                 data-type="جرایم متفرقه برای {{ $user->name }}"
                                                 data-items='@json($penaltyItems)'
                                                 title="نمایش جزئیات جرایم"
                                                 {{ $penaltyCount === 0 ? 'disabled' : '' }}>
                                             <i class="material-icons" style="font-size: 16px;">visibility</i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
+                                                data-type="penalty"
+                                                data-user-id="{{ $user->id }}"
+                                                data-user-name="{{ $user->name }}"
+                                                title="افزودن جریمه">
+                                            <i class="material-icons" style="font-size: 16px;">add_circle</i>
                                         </button>
                                     </div>
                                 </td>
@@ -136,11 +158,95 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="rewardPenaltyFormModal" tabindex="-1" aria-labelledby="rewardPenaltyFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rewardPenaltyFormModalLabel">ثبت پاداش/جریمه</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <form id="rewardPenaltyForm">
+                    <div class="modal-body">
+                        <div id="rewardPenaltyFormSuccess" class="alert alert-success d-none"></div>
+                        <div id="rewardPenaltyFormErrors" class="alert alert-danger d-none"></div>
+
+                        <input type="hidden" id="rewardPenaltyFormUserId" name="user_id">
+                        <input type="hidden" id="rewardPenaltyFormType" name="type">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">پرسنل</label>
+                            <input type="text" class="form-control" id="rewardPenaltyFormUserName" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">نوع</label>
+                            <input type="text" class="form-control" id="rewardPenaltyFormTypeLabel" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rewardPenaltyFormDescription" class="form-label fw-bold">توضیحات</label>
+                            <textarea class="form-control" id="rewardPenaltyFormDescription" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rewardPenaltyFormAmount" class="form-label fw-bold">مبلغ (ریال)</label>
+                            <input type="number" class="form-control" id="rewardPenaltyFormAmount" name="amount" min="0" step="0.01" required>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="rewardPenaltyFormRecordedAt" class="form-label fw-bold">تاریخ ثبت (اختیاری)</label>
+                            <input type="text" class="form-control persian-date" id="rewardPenaltyFormRecordedAt" name="recorded_at" placeholder="مثلاً 1403-01-01">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                        <button type="submit" class="btn btn-primary">ثبت</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
     <script>
         initial_view();
+
+        const rewardDetailsState = @json((object) $rewardDetailsByUser);
+        const penaltyDetailsState = @json((object) $penaltyDetailsByUser);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+        const storeRewardPenaltyUrl = '{{ route('simpleWorkflowReport.rewards-penalties.store') }}';
+
+        function ensureArray(state, key) {
+            if (!Array.isArray(state[key])) {
+                state[key] = [];
+            }
+
+            return state[key];
+        }
+
+        function updateRewardPenaltyDisplay(userId, type) {
+            const state = type === 'reward' ? rewardDetailsState : penaltyDetailsState;
+            const details = ensureArray(state, userId);
+            const count = details.length;
+
+            const countSelector = type === 'reward' ? `[data-reward-count-for="${userId}"]` : `[data-penalty-count-for="${userId}"]`;
+            const countBadge = document.querySelector(countSelector);
+            if (countBadge) {
+                countBadge.textContent = count;
+            }
+
+            const detailButton = document.querySelector(`.js-reward-penalty-modal[data-detail-type="${type}"][data-user-id="${userId}"]`);
+            if (detailButton) {
+                detailButton.dataset.items = JSON.stringify(details);
+                if (count === 0) {
+                    detailButton.setAttribute('disabled', 'disabled');
+                } else {
+                    detailButton.removeAttribute('disabled');
+                }
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             const modalElement = document.getElementById('rewardPenaltyModal');
@@ -197,6 +303,146 @@
                     modalInstance.show();
                 });
             });
+
+            const formModalElement = document.getElementById('rewardPenaltyFormModal');
+            const formElement = document.getElementById('rewardPenaltyForm');
+            const formSuccessAlert = document.getElementById('rewardPenaltyFormSuccess');
+            const formErrorsAlert = document.getElementById('rewardPenaltyFormErrors');
+            const descriptionInput = document.getElementById('rewardPenaltyFormDescription');
+            const amountInput = document.getElementById('rewardPenaltyFormAmount');
+            const recordedAtInput = document.getElementById('rewardPenaltyFormRecordedAt');
+            const userIdInput = document.getElementById('rewardPenaltyFormUserId');
+            const userNameInput = document.getElementById('rewardPenaltyFormUserName');
+            const typeInput = document.getElementById('rewardPenaltyFormType');
+            const typeLabelInput = document.getElementById('rewardPenaltyFormTypeLabel');
+
+            const formModalInstance = formModalElement ? new bootstrap.Modal(formModalElement) : null;
+
+            function resetFormAlerts() {
+                if (formSuccessAlert) {
+                    formSuccessAlert.classList.add('d-none');
+                    formSuccessAlert.textContent = '';
+                }
+                if (formErrorsAlert) {
+                    formErrorsAlert.classList.add('d-none');
+                    formErrorsAlert.innerHTML = '';
+                }
+            }
+
+            document.querySelectorAll('.js-open-reward-penalty-form').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (!formModalInstance) {
+                        return;
+                    }
+
+                    resetFormAlerts();
+
+                    descriptionInput.value = '';
+                    amountInput.value = '';
+                    recordedAtInput.value = '';
+
+                    const userId = button.getAttribute('data-user-id') || '';
+                    const userName = button.getAttribute('data-user-name') || '';
+                    const type = button.getAttribute('data-type') || 'reward';
+
+                    userIdInput.value = userId;
+                    userNameInput.value = userName;
+                    typeInput.value = type;
+                    typeLabelInput.value = type === 'reward' ? 'پاداش متفرقه' : 'جریمه متفرقه';
+
+                    const modalTitle = document.getElementById('rewardPenaltyFormModalLabel');
+                    if (modalTitle) {
+                        modalTitle.textContent = type === 'reward' ? 'افزودن پاداش متفرقه' : 'افزودن جریمه متفرقه';
+                    }
+
+                    formModalInstance.show();
+                });
+            });
+
+            if (formElement) {
+                formElement.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    resetFormAlerts();
+
+                    const submitButton = formElement.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+
+                    const payload = {
+                        user_id: userIdInput.value,
+                        type: typeInput.value,
+                        description: descriptionInput.value,
+                        amount: amountInput.value,
+                        recorded_at: recordedAtInput.value,
+                    };
+
+                    try {
+                        const response = await fetch(storeRewardPenaltyUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const data = await response.json().catch(() => ({}));
+
+                        if (!response.ok) {
+                            const errors = data?.errors || {};
+                            const messages = Object.values(errors).flat();
+
+                            if (messages.length && formErrorsAlert) {
+                                formErrorsAlert.innerHTML = messages.map(message => `<div>${message}</div>`).join('');
+                                formErrorsAlert.classList.remove('d-none');
+                            } else if (formErrorsAlert) {
+                                formErrorsAlert.textContent = data?.message || 'خطا در ثبت رکورد رخ داده است.';
+                                formErrorsAlert.classList.remove('d-none');
+                            }
+
+                            return;
+                        }
+
+                        const record = data?.data;
+                        if (record) {
+                            const userKey = String(record.user_id);
+                            const state = record.type === 'reward' ? rewardDetailsState : penaltyDetailsState;
+                            const details = ensureArray(state, userKey);
+
+                            details.push({
+                                description: record.description,
+                                amount: record.amount,
+                                formatted_amount: record.formatted_amount,
+                                recorded_at: record.recorded_at,
+                            });
+
+                            updateRewardPenaltyDisplay(userKey, record.type);
+
+                            descriptionInput.value = '';
+                            amountInput.value = '';
+                            recordedAtInput.value = '';
+
+                            if (formSuccessAlert) {
+                                formSuccessAlert.textContent = data?.message || 'رکورد با موفقیت ثبت شد.';
+                                formSuccessAlert.classList.remove('d-none');
+                            }
+                        }
+                    } catch (error) {
+                        if (formErrorsAlert) {
+                            formErrorsAlert.textContent = 'امکان برقراری ارتباط با سرور وجود ندارد.';
+                            formErrorsAlert.classList.remove('d-none');
+                        }
+                    } finally {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                        }
+                    }
+                });
+            }
         });
     </script>
 @endsection
