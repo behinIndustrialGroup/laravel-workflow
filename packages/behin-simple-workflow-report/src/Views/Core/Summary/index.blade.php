@@ -308,7 +308,7 @@
                                     @if (auth()->user()->access('گزارش جرایم پیامک ها'))
                                         <tr>
                                             <td class="d-none"></td>
-                                            <td>گزارش جرایم پیامک ها</td>
+                                            <td>گزارش جرایم و پاداش ها</td>
                                             <td class="d-none">گزارش کامل</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.daily-report.reminder-summary') }}"
