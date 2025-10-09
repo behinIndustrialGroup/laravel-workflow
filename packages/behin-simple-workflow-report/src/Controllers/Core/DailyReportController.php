@@ -307,7 +307,10 @@ class DailyReportController extends Controller
             ->unique()
             ->values();
 
-        $users = User::query()->orderBy('number', 'asc')->get();
+        $users = User::query()
+            ->where('sms_reminder_enabled', true)
+            ->orderBy('number', 'asc')
+            ->get();
 
         $usersToNotify = $users->filter(function ($user) use ($reportingUsers, $dailyLeaveUsers) {
             if (! $user->email) {
