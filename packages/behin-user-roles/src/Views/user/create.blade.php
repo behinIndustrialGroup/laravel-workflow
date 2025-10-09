@@ -47,6 +47,15 @@
                     </div>
                     <div class="col-6">
                         <div class="form-group">
+                            <label for="sms_reminder_enabled">ارسال پیامک یادآوری</label>
+                            <select class="custom-select" name="sms_reminder_enabled" id="sms_reminder_enabled">
+                                <option value="1" {{ old('sms_reminder_enabled', '1') == '1' ? 'selected' : '' }}>فعال</option>
+                                <option value="0" {{ old('sms_reminder_enabled', '1') == '0' ? 'selected' : '' }}>غیرفعال</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
                             <label for="password">رمز عبور</label>
                             <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}">
                         </div>

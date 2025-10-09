@@ -39,6 +39,7 @@ class User extends Authenticatable
         'pm_username', 'pm_user_password', 'pm_user_access_token', 'pm_user_access_token_exp_date',
         'ext_num',
         'valid_ip',
+        'sms_reminder_enabled',
         'is_disabled'
     ];
 
@@ -59,6 +60,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'sms_reminder_enabled' => 'boolean',
     ];
 
     public function canManageBinshopsBlogPosts()

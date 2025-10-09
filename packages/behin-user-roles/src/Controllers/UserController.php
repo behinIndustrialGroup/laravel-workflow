@@ -49,7 +49,8 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => $request->role_id,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'sms_reminder_enabled' => $request->boolean('sms_reminder_enabled', true),
         ]);
         return redirect()->back()->with('success', 'User created successfully');
     }
@@ -61,7 +62,8 @@ class UserController extends Controller
             'name' => $r->name,
             'email' => $r->email,
             'login_with_ip' => $r->login_with_ip,
-            'valid_ip' => $r->valid_ip
+            'valid_ip' => $r->valid_ip,
+            'sms_reminder_enabled' => $r->boolean('sms_reminder_enabled', true)
         ]);
         return redirect()->back()->with('success', 'User updated successfully');
     }
