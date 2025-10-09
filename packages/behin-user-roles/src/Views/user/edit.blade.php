@@ -58,6 +58,13 @@
                         </div>
                     </div>
                     <div class="col-6">
+                        <div class="form-group">
+                            <label for="sms_reminder_enabled">ارسال پیامک یادآوری</label>
+                            <select name="sms_reminder_enabled" id="sms_reminder_enabled" class="form-control">
+                                <option value="1" {{ $user->sms_reminder_enabled ? 'selected' : '' }}>فعال</option>
+                                <option value="0" {{ $user->sms_reminder_enabled ? '' : 'selected' }}>غیرفعال</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-6">
                         <button type="submit" class="btn btn-primary">{{ __('fields.Update') }}</button>
