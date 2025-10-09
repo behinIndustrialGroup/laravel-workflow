@@ -95,6 +95,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index');
     Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])
         ->name('daily-report.reminder-summary');
+    Route::get('daily-report/reminder-summary/export', [DailyReportReminderSummaryController::class, 'export'])
+        ->name('daily-report.reminder-summary.export');
     Route::get('rewards-penalties', [RewardPenaltyController::class, 'index'])->name('rewards-penalties.index');
     Route::post('rewards-penalties', [RewardPenaltyController::class, 'store'])->name('rewards-penalties.store');
     Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal');

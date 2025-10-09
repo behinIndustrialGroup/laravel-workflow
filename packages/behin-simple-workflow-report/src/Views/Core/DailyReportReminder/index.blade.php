@@ -5,6 +5,7 @@
 @php
     $rewardDetailsByUser = $rewardDetailsByUser ?? [];
     $penaltyDetailsByUser = $penaltyDetailsByUser ?? [];
+    $filterQuery = $filterQuery ?? [];
 @endphp
 
 @section('content')
@@ -44,6 +45,12 @@
             </div>
 
             <div class="card-body">
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="{{ route('simpleWorkflowReport.daily-report.reminder-summary.export', $filterQuery) }}"
+                       class="btn btn-outline-success rounded-pill shadow-sm fw-bold">
+                        خروجی اکسل
+                    </a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead style="background-color: #b8e0d2; color: #1d2d2c;">
