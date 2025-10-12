@@ -184,13 +184,13 @@
                                 <label for="from_date" class="form-label">از تاریخ</label>
                                 <input type="text" name="from_date" id="from_date" class="form-control persian-date"
                                     placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['from_date'] }}">
-                                    <input type="hidden" name="from_date_alt" id="from_date_alt">
+                                    <input type="hidden" name="from_date_alt" id="from_date_alt" value="{{ $filters['from_date_alt'] }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="to_date" class="form-label">تا تاریخ</label>
                                 <input type="text" name="to_date" id="to_date" class="form-control persian-date"
                                     placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['to_date'] }}">
-                                    <input type="hidden" name="to_date_alt" id="to_date_alt">
+                                    <input type="hidden" name="to_date_alt" id="to_date_alt" value="{{ $filters['to_date_alt'] }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="date_column" class="form-label">ستون تاریخ</label>
