@@ -43,9 +43,16 @@ class ReportHelper
         ->get();
         $fins = $inFins->merge($outFins);
         foreach ($fins as $fin) {
-            $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum('cost');
+            // $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum('cost');
+            
             try {
-                $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum(fn($item) => (float) $item->payment);
+                $fin->total_cost = Financials::where('case_number', $fin->case_number)->get()?->sum(fn($item) => (float) $item->cost);
+            } catch (\Throwable $e) {
+                $fin->total_cost = 'Error '. $fin->case_number;
+                dd('Error in total_cost', $fin->case_number);
+            }
+            try {
+                $fin->total_payment = Financials::where('case_number', $fin->case_number)->get()?->sum(fn($item) => (float) $item->payment);
             } catch (\Throwable $e) {
                 $fin->total_cost = 'Error '. $fin->case_number;
                 dd('Error in total_cost', $fin->case_number);

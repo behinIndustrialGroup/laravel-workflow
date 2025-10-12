@@ -17,21 +17,22 @@
                         <div class="col-md-3">
                             <label for="from_date" class="form-label fw-bold">از تاریخ</label>
                             <input type="text" id="from_date" name="from_date"
-                                   class="form-control persian-date rounded-pill shadow-sm" value="{{ $fromDate }}"
-                                   placeholder="مثلاً 1403/01/01">
+                                class="form-control persian-date rounded-pill shadow-sm" value="{{ $fromDate }}"
+                                placeholder="مثلاً 1403/01/01">
                         </div>
                         <div class="col-md-3">
                             <label for="to_date" class="form-label fw-bold">تا تاریخ</label>
                             <input type="text" id="to_date" name="to_date"
-                                   class="form-control persian-date rounded-pill shadow-sm" value="{{ $toDate }}"
-                                   placeholder="مثلاً 1403/01/31">
+                                class="form-control persian-date rounded-pill shadow-sm" value="{{ $toDate }}"
+                                placeholder="مثلاً 1403/01/31">
                         </div>
                         <div class="col-md-3">
                             <label for="user_id" class="form-label fw-bold">پرسنل</label>
                             <select name="user_id" id="user_id" class="form-control select2 rounded-pill shadow-sm">
                                 <option value="">همه پرسنل</option>
                                 @foreach ($allUsers as $user)
-                                    <option value="{{ $user->id }}" {{ (string) $selectedUserId === (string) $user->id ? 'selected' : '' }}>
+                                    <option value="{{ $user->id }}"
+                                        {{ (string) $selectedUserId === (string) $user->id ? 'selected' : '' }}>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach
@@ -47,89 +48,85 @@
             <div class="card-body">
                 <div class="d-flex justify-content-end mb-3">
                     <a href="{{ route('simpleWorkflowReport.daily-report.reminder-summary.export', $filterQuery) }}"
-                       class="btn btn-outline-success rounded-pill shadow-sm fw-bold">
+                        class="btn btn-outline-success rounded-pill shadow-sm fw-bold">
                         خروجی اکسل
                     </a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead style="background-color: #b8e0d2; color: #1d2d2c;">
-                        <tr>
-                            <th>شماره</th>
-                            <th>نام</th>
-                            <th>تعداد پیامک یادآوری ارسال شده</th>
-                            <th>تعداد روزهای بدون گزارش پس از یادآوری</th>
-                            <th>پاداش‌های متفرقه</th>
-                            <th>جرایم متفرقه</th>
-                        </tr>
+                            <tr>
+                                <th>شماره</th>
+                                <th>نام</th>
+                                <th>تعداد پیامک یادآوری ارسال شده</th>
+                                <th>تعداد روزهای بدون گزارش پس از یادآوری</th>
+                                <th>پاداش‌های متفرقه</th>
+                                <th>جرایم متفرقه</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @forelse ($users as $user)
-                            <tr>
-                                <td>{{ $user->number }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->reminder_count ?? 0 }}</td>
-                                <td>{{ $user->missing_report_count ?? 0 }}</td>
-                                @php
-                                    $rewardCount = $user->reward_misc_count ?? 0;
-                                    $penaltyCount = $user->penalty_misc_count ?? 0;
-                                    $rewardItems = $rewardDetailsByUser[$user->id] ?? [];
-                                    $penaltyItems = $penaltyDetailsByUser[$user->id] ?? [];
-                                @endphp
-                                <td>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge bg-success"
-                                              data-reward-count-for="{{ $user->id }}">{{ $rewardCount }}</span>
-                                        <button type="button"
+                            @forelse ($users as $user)
+                                <tr>
+                                    <td>{{ $user->number }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->reminder_count ?? 0 }}</td>
+                                    <td>{{ $user->missing_report_count ?? 0 }}</td>
+                                    @php
+                                        $rewardCount = $user->reward_misc_count ?? 0;
+                                        $penaltyCount = $user->penalty_misc_count ?? 0;
+                                        $rewardItems = $rewardDetailsByUser[$user->id] ?? [];
+                                        $penaltyItems = $penaltyDetailsByUser[$user->id] ?? [];
+                                    @endphp
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <span class="badge bg-success"
+                                                data-reward-count-for="{{ $user->id }}">{{ $rewardCount }}</span>
+                                            <button type="button"
                                                 class="btn btn-outline-success btn-sm js-reward-penalty-modal"
-                                                data-detail-type="reward"
-                                                data-user-id="{{ $user->id }}"
+                                                data-detail-type="reward" data-user-id="{{ $user->id }}"
                                                 data-type="پاداش‌های متفرقه برای {{ $user->name }}"
-                                                data-items='@json($rewardItems)'
-                                                title="نمایش جزئیات پاداش‌ها"
+                                                data-items='@json($rewardItems)' title="نمایش جزئیات پاداش‌ها"
                                                 {{ $rewardCount === 0 ? 'disabled' : '' }}>
-                                            <i class="material-icons" style="font-size: 16px;">visibility</i>
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
-                                                data-type="reward"
-                                                data-user-id="{{ $user->id }}"
-                                                data-user-name="{{ $user->name }}"
-                                                title="افزودن پاداش">
-                                            <i class="material-icons" style="font-size: 16px;">add_circle</i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <span class="badge bg-danger"
-                                              data-penalty-count-for="{{ $user->id }}">{{ $penaltyCount }}</span>
-                                        <button type="button"
+                                                <i class="material-icons" style="font-size: 16px;">visibility</i>
+                                            </button>
+                                            @if (access('افزودن پاداش متفرقه'))
+                                                <button type="button"
+                                                    class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
+                                                    data-type="reward" data-user-id="{{ $user->id }}"
+                                                    data-user-name="{{ $user->name }}" title="افزودن پاداش">
+                                                    <i class="material-icons" style="font-size: 16px;">add_circle</i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <span class="badge bg-danger"
+                                                data-penalty-count-for="{{ $user->id }}">{{ $penaltyCount }}</span>
+                                            <button type="button"
                                                 class="btn btn-outline-danger btn-sm js-reward-penalty-modal"
-                                                data-detail-type="penalty"
-                                                data-user-id="{{ $user->id }}"
+                                                data-detail-type="penalty" data-user-id="{{ $user->id }}"
                                                 data-type="جرایم متفرقه برای {{ $user->name }}"
-                                                data-items='@json($penaltyItems)'
-                                                title="نمایش جزئیات جرایم"
+                                                data-items='@json($penaltyItems)' title="نمایش جزئیات جرایم"
                                                 {{ $penaltyCount === 0 ? 'disabled' : '' }}>
-                                            <i class="material-icons" style="font-size: 16px;">visibility</i>
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
-                                                data-type="penalty"
-                                                data-user-id="{{ $user->id }}"
-                                                data-user-name="{{ $user->name }}"
-                                                title="افزودن جریمه">
-                                            <i class="material-icons" style="font-size: 16px;">add_circle</i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">رکوردی یافت نشد.</td>
-                            </tr>
-                        @endforelse
+                                                <i class="material-icons" style="font-size: 16px;">visibility</i>
+                                            </button>
+                                            @if (access('افزودن جرایم متفرقه'))
+                                                <button type="button"
+                                                    class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
+                                                    data-type="penalty" data-user-id="{{ $user->id }}"
+                                                    data-user-name="{{ $user->name }}" title="افزودن جریمه">
+                                                    <i class="material-icons" style="font-size: 16px;">add_circle</i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">رکوردی یافت نشد.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -137,7 +134,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="rewardPenaltyModal" tabindex="-1" aria-labelledby="rewardPenaltyModalLabel" aria-hidden="true">
+    <div class="modal fade" id="rewardPenaltyModal" tabindex="-1" aria-labelledby="rewardPenaltyModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -148,16 +146,16 @@
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
                             <thead>
-                            <tr>
-                                <th>توضیحات</th>
-                                <th class="text-end">مبلغ (ریال)</th>
-                                <th class="text-center">تاریخ ثبت</th>
-                            </tr>
+                                <tr>
+                                    <th>توضیحات</th>
+                                    <th class="text-end">مبلغ (ریال)</th>
+                                    <th class="text-center">تاریخ ثبت</th>
+                                </tr>
                             </thead>
                             <tbody id="rewardPenaltyModalTableBody">
-                            <tr>
-                                <td colspan="3" class="text-center text-muted">رکوردی ثبت نشده است.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">رکوردی ثبت نشده است.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -166,7 +164,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="rewardPenaltyFormModal" tabindex="-1" aria-labelledby="rewardPenaltyFormModalLabel" aria-hidden="true">
+    <div class="modal fade" id="rewardPenaltyFormModal" tabindex="-1" aria-labelledby="rewardPenaltyFormModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -198,12 +197,15 @@
 
                         <div class="mb-3">
                             <label for="rewardPenaltyFormAmount" class="form-label fw-bold">مبلغ (ریال)</label>
-                            <input type="text" class="form-control formatted-digit" id="rewardPenaltyFormAmount" name="amount" min="0" step="0.01" required>
+                            <input type="text" class="form-control formatted-digit" id="rewardPenaltyFormAmount"
+                                name="amount" min="0" step="0.01" required>
                         </div>
 
                         <div class="mb-0">
-                            <label for="rewardPenaltyFormRecordedAt" class="form-label fw-bold">تاریخ ثبت (اختیاری)</label>
-                            <input type="text" class="form-control persian-date" id="rewardPenaltyFormRecordedAt" name="recorded_at" placeholder="مثلاً 1403-01-01">
+                            <label for="rewardPenaltyFormRecordedAt" class="form-label fw-bold">تاریخ ثبت
+                                (اختیاری)</label>
+                            <input type="text" class="form-control persian-date" id="rewardPenaltyFormRecordedAt"
+                                name="recorded_at" placeholder="مثلاً 1403-01-01">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -218,10 +220,10 @@
 
 @section('script')
     <script>
-
         const rewardDetailsState = @json((object) $rewardDetailsByUser);
         const penaltyDetailsState = @json((object) $penaltyDetailsByUser);
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+            '{{ csrf_token() }}';
         const storeRewardPenaltyUrl = '{{ route('simpleWorkflowReport.rewards-penalties.store') }}';
 
         function ensureArray(state, key) {
@@ -237,13 +239,15 @@
             const details = ensureArray(state, userId);
             const count = details.length;
 
-            const countSelector = type === 'reward' ? `[data-reward-count-for="${userId}"]` : `[data-penalty-count-for="${userId}"]`;
+            const countSelector = type === 'reward' ? `[data-reward-count-for="${userId}"]` :
+                `[data-penalty-count-for="${userId}"]`;
             const countBadge = document.querySelector(countSelector);
             if (countBadge) {
                 countBadge.textContent = count;
             }
 
-            const detailButton = document.querySelector(`.js-reward-penalty-modal[data-detail-type="${type}"][data-user-id="${userId}"]`);
+            const detailButton = document.querySelector(
+                `.js-reward-penalty-modal[data-detail-type="${type}"][data-user-id="${userId}"]`);
             if (detailButton) {
                 detailButton.dataset.items = JSON.stringify(details);
                 if (count === 0) {
@@ -254,7 +258,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const modalElement = document.getElementById('rewardPenaltyModal');
             if (!modalElement || typeof bootstrap === 'undefined' || !bootstrap.Modal) {
                 return;
@@ -264,8 +268,8 @@
             const modalTitle = document.getElementById('rewardPenaltyModalLabel');
             const modalBody = document.getElementById('rewardPenaltyModalTableBody');
 
-            document.querySelectorAll('.js-reward-penalty-modal').forEach(function (button) {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.js-reward-penalty-modal').forEach(function(button) {
+                button.addEventListener('click', function() {
                     let items = [];
                     try {
                         items = JSON.parse(button.getAttribute('data-items') || '[]');
@@ -285,7 +289,7 @@
                         emptyRow.appendChild(emptyCell);
                         modalBody.appendChild(emptyRow);
                     } else {
-                        items.forEach(function (item) {
+                        items.forEach(function(item) {
                             const row = document.createElement('tr');
 
                             const descriptionCell = document.createElement('td');
@@ -294,7 +298,8 @@
 
                             const amountCell = document.createElement('td');
                             amountCell.classList.add('text-end');
-                            amountCell.textContent = item.formatted_amount || item.amount || '0';
+                            amountCell.textContent = item.formatted_amount || item.amount ||
+                                '0';
                             row.appendChild(amountCell);
 
                             const dateCell = document.createElement('td');
@@ -335,8 +340,8 @@
                 }
             }
 
-            document.querySelectorAll('.js-open-reward-penalty-form').forEach(function (button) {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.js-open-reward-penalty-form').forEach(function(button) {
+                button.addEventListener('click', function() {
                     if (!formModalInstance) {
                         return;
                     }
@@ -358,7 +363,8 @@
 
                     const modalTitle = document.getElementById('rewardPenaltyFormModalLabel');
                     if (modalTitle) {
-                        modalTitle.textContent = type === 'reward' ? 'افزودن پاداش متفرقه' : 'افزودن جریمه متفرقه';
+                        modalTitle.textContent = type === 'reward' ? 'افزودن پاداش متفرقه' :
+                            'افزودن جریمه متفرقه';
                     }
 
                     formModalInstance.show();
@@ -366,7 +372,7 @@
             });
 
             if (formElement) {
-                formElement.addEventListener('submit', async function (event) {
+                formElement.addEventListener('submit', async function(event) {
                     event.preventDefault();
 
                     resetFormAlerts();
@@ -403,10 +409,12 @@
                             const messages = Object.values(errors).flat();
 
                             if (messages.length && formErrorsAlert) {
-                                formErrorsAlert.innerHTML = messages.map(message => `<div>${message}</div>`).join('');
+                                formErrorsAlert.innerHTML = messages.map(message =>
+                                    `<div>${message}</div>`).join('');
                                 formErrorsAlert.classList.remove('d-none');
                             } else if (formErrorsAlert) {
-                                formErrorsAlert.textContent = data?.message || 'خطا در ثبت رکورد رخ داده است.';
+                                formErrorsAlert.textContent = data?.message ||
+                                    'خطا در ثبت رکورد رخ داده است.';
                                 formErrorsAlert.classList.remove('d-none');
                             }
 
@@ -416,7 +424,8 @@
                         const record = data?.data;
                         if (record) {
                             const userKey = String(record.user_id);
-                            const state = record.type === 'reward' ? rewardDetailsState : penaltyDetailsState;
+                            const state = record.type === 'reward' ? rewardDetailsState :
+                                penaltyDetailsState;
                             const details = ensureArray(state, userKey);
 
                             details.push({
@@ -433,7 +442,8 @@
                             recordedAtInput.value = '';
 
                             if (formSuccessAlert) {
-                                formSuccessAlert.textContent = data?.message || 'رکورد با موفقیت ثبت شد.';
+                                formSuccessAlert.textContent = data?.message ||
+                                    'رکورد با موفقیت ثبت شد.';
                                 formSuccessAlert.classList.remove('d-none');
                             }
                         }

@@ -50,10 +50,12 @@
             <div class="col-md-12">
 
                 {{-- کل دریافتی ها --}}
-                <button class="btn btn-primary"
-                    onclick="window.location.href='{{ route('simpleWorkflowReport.fin.allPayments') }}'">
+                <div class="card">
+                    <p style="background-color: #fce172;">حساب دفتری</p>
+                    <p style="background-color: #f7fabe;">علی الحساب</p>
+                    <p style="background-color: #d4edda;">تسویه</p>
 
-                </button>
+                </div>
                 {{-- @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments') --}}
 
 
@@ -128,7 +130,14 @@
                                         $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
-                                        <tr @if($row->payment_date) style="background-color: #f7fabe;" @endif>
+                                        <tr 
+                                            @if($row->fix_cost_type == 'حساب دفتری')
+                                                style="background-color: #fce172;"
+                                            @elseif(str_contains($row->fix_cost_type, 'علی الحساب'))
+                                                style="background-color: #f7fabe;"
+                                            @elseif($row->payment_date) 
+                                                style="background-color: #d4edda;"
+                                            @endif>
 
                                             <td>{{ $row->case_number }}
                                                 <a
@@ -195,7 +204,7 @@
                                                     {{ number_format($row->total_cost) }}
                                                 @endif
                                             </td>
-                                            <td style="background-color: #d4edda;">
+                                            <td style="background-color: #9ef0b2;">
                                                 {{-- اگر تفکیک هزینه ها وجود داشت نمایش بده اگر نه همان تعیین هزینه را نمایش بده --}}
                                                 @if (count($row->case_costs))
                                                     @php
