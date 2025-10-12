@@ -55,8 +55,8 @@ class GoodsInReportController extends Controller
 
         $filters = [
             'search' => trim((string) $request->input('search', '')),
-            'from_date' => $request->input('from_date'),
-            'to_date' => $request->input('to_date'),
+            'from_date' => $request->input('from_date_alt'),
+            'to_date' => $request->input('to_date_alt'),
             'per_page' => (int) $request->input('per_page', 25),
         ];
 
@@ -126,7 +126,7 @@ class GoodsInReportController extends Controller
 
         if ($selectedDateColumn) {
             if (! empty($filters['from_date'])) {
-                $fromCarbon = $this->parseJalaliDate($filters['from_date'], $appTimezone);
+                $fromCarbon = Carbon::createFromTimestamp($filters['from_date']);
 
                 if ($fromCarbon) {
                     $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
@@ -136,7 +136,7 @@ class GoodsInReportController extends Controller
             }
 
             if (! empty($filters['to_date'])) {
-                $toCarbon = $this->parseJalaliDate($filters['to_date'], $appTimezone);
+                $toCarbon = Carbon::createFromTimestamp($filters['to_date']);
 
                 if ($toCarbon) {
                     $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));

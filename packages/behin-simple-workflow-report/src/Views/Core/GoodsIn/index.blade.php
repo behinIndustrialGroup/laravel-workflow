@@ -110,7 +110,8 @@
             color: #1f2937;
         }
 
-        .goods-in-report .form-control, .goods-in-report .form-select {
+        .goods-in-report .form-control,
+        .goods-in-report .form-select {
             border-radius: 12px;
             border: 1px solid rgba(55, 65, 81, 0.12);
             padding: 0.6rem 0.85rem;
@@ -118,7 +119,8 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .goods-in-report .form-control:focus, .goods-in-report .form-select:focus {
+        .goods-in-report .form-control:focus,
+        .goods-in-report .form-select:focus {
             border-color: #2196f3;
             box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.15);
         }
@@ -156,13 +158,17 @@
                         @if (!empty($filters['search']) || !empty($filters['from_date']) || !empty($filters['to_date']))
                             <div class="mt-3 mt-lg-0">
                                 @if (!empty($filters['search']))
-                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">search</i> جستجو: {{ $filters['search'] }}</span>
+                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">search</i>
+                                        جستجو: {{ $filters['search'] }}</span>
                                 @endif
                                 @if (!empty($filters['from_date']))
-                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">calendar_month</i> از {{ $filters['from_date'] }}</span>
+                                    <span class="filter-chip"><i class="material-icons"
+                                            style="font-size: 18px;">calendar_month</i> از
+                                        {{ $filters['from_date'] }}</span>
                                 @endif
                                 @if (!empty($filters['to_date']))
-                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">event</i> تا {{ $filters['to_date'] }}</span>
+                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">event</i>
+                                        تا {{ $filters['to_date'] }}</span>
                                 @endif
                             </div>
                         @endif
@@ -171,22 +177,28 @@
                         <form id="goods-in-filter-form" method="GET" class="row g-3 align-items-end">
                             <div class="col-md-3">
                                 <label for="search" class="form-label">جستجوی آزاد</label>
-                                <input type="text" name="search" id="search" class="form-control" placeholder="نام کالا، تأمین‌کننده، کد رهگیری و ..." value="{{ $filters['search'] }}">
+                                <input type="text" name="search" id="search" class="form-control"
+                                    placeholder="نام کالا، تأمین‌کننده، کد رهگیری و ..." value="{{ $filters['search'] }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="from_date" class="form-label">از تاریخ</label>
-                                <input type="text" name="from_date" id="from_date" class="form-control persian-date" placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['from_date'] }}">
+                                <input type="text" name="from_date" id="from_date" class="form-control persian-date"
+                                    placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['from_date'] }}">
+                                    <input type="hidden" name="from_date_alt" id="from_date_alt">
                             </div>
                             <div class="col-md-2">
                                 <label for="to_date" class="form-label">تا تاریخ</label>
-                                <input type="text" name="to_date" id="to_date" class="form-control persian-date" placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['to_date'] }}">
+                                <input type="text" name="to_date" id="to_date" class="form-control persian-date"
+                                    placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['to_date'] }}">
+                                    <input type="hidden" name="to_date_alt" id="to_date_alt">
                             </div>
                             <div class="col-md-2">
                                 <label for="date_column" class="form-label">ستون تاریخ</label>
                                 <select name="date_column" id="date_column" class="form-select">
                                     <option value="">انتخاب ستون</option>
                                     @foreach ($dateColumns as $column)
-                                        <option value="{{ $column }}" {{ $selectedDateColumn === $column ? 'selected' : '' }}>
+                                        <option value="{{ $column }}"
+                                            {{ $selectedDateColumn === $column ? 'selected' : '' }}>
                                             {{ $columnMetadata[$column]['label'] ?? $column }}
                                         </option>
                                     @endforeach
@@ -196,7 +208,9 @@
                                 <label for="per_page" class="form-label">تعداد در هر صفحه</label>
                                 <select name="per_page" id="per_page" class="form-select">
                                     @foreach ($perPageOptions as $option)
-                                        <option value="{{ $option }}" {{ (int) $filters['per_page'] === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                        <option value="{{ $option }}"
+                                            {{ (int) $filters['per_page'] === $option ? 'selected' : '' }}>
+                                            {{ $option }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -204,7 +218,8 @@
                                 <button type="submit" class="btn btn-primary">اعمال</button>
                             </div>
                             <div class="col-md-3 col-lg-1 d-grid">
-                                <a href="{{ route('simpleWorkflowReport.goods-in.index') }}" class="btn btn-outline-secondary">پاک‌سازی</a>
+                                <a href="{{ route('simpleWorkflowReport.goods-in.index') }}"
+                                    class="btn btn-outline-secondary">پاک‌سازی</a>
                             </div>
                         </form>
                         @if (!empty($validationErrors))
@@ -249,14 +264,18 @@
                             <tbody>
                                 @forelse ($paginator as $index => $record)
                                     <tr>
-                                        <td>{{ $paginator->firstItem() ? $paginator->firstItem() + $index : $index + 1 }}</td>
+                                        <td>{{ $paginator->firstItem() ? $paginator->firstItem() + $index : $index + 1 }}
+                                        </td>
                                         @foreach ($columnMetadata as $column => $meta)
                                             @php
                                                 $value = $record[$column] ?? null;
-                                                $display = ($value === null || $value === '') ? '—' : $value;
-                                                $tooltip = $meta['is_date'] ? ($record[$column . '_gregorian'] ?? null) : null;
+                                                $display = $value === null || $value === '' ? '—' : $value;
+                                                $tooltip = $meta['is_date']
+                                                    ? $record[$column . '_gregorian'] ?? null
+                                                    : null;
                                             @endphp
-                                            <td @if ($tooltip) data-toggle="tooltip" title="{{ $tooltip }}" @endif>
+                                            <td
+                                                @if ($tooltip) data-toggle="tooltip" title="{{ $tooltip }}" @endif>
                                                 {{ $display }}
                                             </td>
                                         @endforeach
@@ -293,19 +312,36 @@
 @section('script')
     <script>
         initial_view();
-        $(function () {
-            $('.persian-date').persianDatepicker({
-                format: 'YYYY-MM-DD',
-                autoClose: true,
+        $(function() {
+            $("#from_date").persianDatepicker({
+                viewMode: 'day',
                 initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                altField: '#from_date_alt',
                 calendar: {
                     persian: {
+                        leapYearMode: 'astronomical',
                         locale: 'fa'
                     }
                 }
             });
 
-            $('#per_page').on('change', function () {
+            $("#to_date").persianDatepicker({
+                viewMode: 'day',
+                initialValue: false,
+                format: 'YYYY-MM-DD',
+                initialValueType: 'persian',
+                altField: '#to_date_alt',
+                calendar: {
+                    persian: {
+                        leapYearMode: 'astronomical',
+                        locale: 'fa'
+                    }
+                }
+            });
+
+            $('#per_page').on('change', function() {
                 document.getElementById('goods-in-filter-form').submit();
             });
 
