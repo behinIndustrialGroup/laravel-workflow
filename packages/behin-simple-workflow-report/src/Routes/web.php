@@ -14,6 +14,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\ChequeReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExpiredController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
+use Behin\SimpleWorkflowReport\Controllers\Core\GoodsInReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\MapaCenterController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RewardPenaltyController;
@@ -46,6 +47,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::resource('counter-party', CounterPartyController::class);
     Route::resource('phonebook', PhonebookController::class)->except(['show']);
+
+    Route::get('goods-in', [GoodsInReportController::class, 'index'])->name('goods-in.index');
 
 
     Route::name('fin.')->prefix('fin')->group(function(){
