@@ -51,6 +51,7 @@ class GoodsInReportController extends Controller
     public function index(Request $request)
     {
         $tableName = 'wf_entity_goods_in';
+        $appTimezone = $this->getAppTimezone();
 
         $filters = [
             'search' => trim((string) $request->input('search', '')),
@@ -125,19 +126,21 @@ class GoodsInReportController extends Controller
 
         if ($selectedDateColumn) {
             if (! empty($filters['from_date'])) {
-                try {
-                    $fromCarbon = Jalalian::fromFormat('Y-m-d', $filters['from_date'])->toCarbon()->startOfDay();
-                    $query->where($selectedDateColumn, '>=', $fromCarbon);
-                } catch (\Throwable $exception) {
+                $fromCarbon = $this->parseJalaliDate($filters['from_date'], $appTimezone);
+
+                if ($fromCarbon) {
+                    $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
+                } else {
                     $validationErrors[] = 'فرمت تاریخ شروع معتبر نیست.';
                 }
             }
 
             if (! empty($filters['to_date'])) {
-                try {
-                    $toCarbon = Jalalian::fromFormat('Y-m-d', $filters['to_date'])->toCarbon()->endOfDay();
-                    $query->where($selectedDateColumn, '<=', $toCarbon);
-                } catch (\Throwable $exception) {
+                $toCarbon = $this->parseJalaliDate($filters['to_date'], $appTimezone);
+
+                if ($toCarbon) {
+                    $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));
+                } else {
                     $validationErrors[] = 'فرمت تاریخ پایان معتبر نیست.';
                 }
             }
@@ -162,7 +165,7 @@ class GoodsInReportController extends Controller
         /** @var LengthAwarePaginator $paginator */
         $paginator = $query->paginate($filters['per_page'])->withQueryString();
 
-        $collection = $paginator->getCollection()->map(function ($item) use ($columnMetadata) {
+        $collection = $paginator->getCollection()->map(function ($item) use ($columnMetadata, $appTimezone) {
             $record = (array) $item;
 
             foreach ($columnMetadata as $column => $meta) {
@@ -172,7 +175,7 @@ class GoodsInReportController extends Controller
 
                 if ($meta['is_date'] && ! empty($record[$column])) {
                     try {
-                        $carbon = Carbon::parse($record[$column]);
+                        $carbon = Carbon::parse($record[$column])->setTimezone($appTimezone);
                         $record[$column . '_gregorian'] = $carbon->format('Y-m-d H:i');
                         $record[$column] = Jalalian::fromCarbon($carbon)->format('Y-m-d H:i');
                     } catch (\Throwable $exception) {
@@ -220,7 +223,8 @@ class GoodsInReportController extends Controller
             $latestRecordValue = (clone $baseQuery)->orderByDesc($selectedDateColumn)->value($selectedDateColumn);
             if ($latestRecordValue) {
                 try {
-                    $latestRecordValue = Jalalian::fromCarbon(Carbon::parse($latestRecordValue))->format('Y-m-d H:i');
+                    $latestCarbon = Carbon::parse($latestRecordValue)->setTimezone($appTimezone);
+                    $latestRecordValue = Jalalian::fromCarbon($latestCarbon)->format('Y-m-d H:i');
                 } catch (\Throwable $exception) {
                     // اگر تبدیل ممکن نبود همان مقدار اصلی نمایش داده می‌شود
                 }
@@ -310,5 +314,48 @@ class GoodsInReportController extends Controller
     protected function formatNumber(float|int $value): string
     {
         return number_format($value, 0, '.', ',');
+    }
+
+    protected function getAppTimezone(): string
+    {
+        return config('app.timezone', 'UTC') ?: 'UTC';
+    }
+
+    protected function parseJalaliDate(?string $value, string $appTimezone): ?Carbon
+    {
+        if ($value === null || trim($value) === '') {
+            return null;
+        }
+
+        $value = trim($value);
+        $formats = [
+            'Y-m-d',
+            'Y/m/d',
+            'Y-m-d H:i',
+            'Y/m/d H:i',
+            'Y-m-d\TH:i',
+            'Y/m/d\TH:i',
+        ];
+
+        foreach ($formats as $format) {
+            try {
+                $jalali = Jalalian::fromFormat($format, $value);
+                return $jalali->toCarbon()->setTimezone($appTimezone);
+            } catch (\Throwable $exception) {
+                continue;
+            }
+        }
+
+        try {
+            $jalali = Jalalian::forge($value);
+
+            if ($jalali) {
+                return $jalali->toCarbon()->setTimezone($appTimezone);
+            }
+        } catch (\Throwable $exception) {
+            // مقدار قابل تبدیل نیست
+        }
+
+        return null;
     }
 }
