@@ -101,7 +101,7 @@
                 <button class="btn btn-sm btn-outline-primary m-1" onclick="saveForm()">
                     <i class="fa fa-save"></i> {{ trans('fields.Save') }}
                 </button>
-                <button class="btn btn-sm btn-outline-danger m-1" onclick="saveAndNextForm()">
+                <button class="btn btn-sm btn-outline-danger m-1" onclick="saveAndNextForm()" id="save-and-next">
                     <i class="fa fa-save"></i> <i class="fa fa-arrow-left"></i>{{ trans('fields.Save and next') }}
                 </button>
             @endif
