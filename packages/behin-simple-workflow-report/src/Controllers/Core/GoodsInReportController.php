@@ -347,7 +347,7 @@ class GoodsInReportController extends Controller
 
     protected function convertToCarbon(?string $altValue, ?string $jalaliValue, string $appTimezone): ?Carbon
     {
-        $altValue = $altValue !== null ? trim($altValue) : '';
+        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) : '';
         if ($altValue !== '') {
             if (is_numeric($altValue)) {
                 try {
@@ -377,7 +377,7 @@ class GoodsInReportController extends Controller
             return null;
         }
 
-        $value = trim($value);
+        $value = $this->normalizeDigits(trim($value));
         $formats = [
             'Y-m-d',
             'Y/m/d',
@@ -385,6 +385,16 @@ class GoodsInReportController extends Controller
             'Y/m/d H:i',
             'Y-m-d\TH:i',
             'Y/m/d\TH:i',
+            'Y-m-d H:i:s',
+            'Y/m/d H:i:s',
+            'd-m-Y',
+            'd/m/Y',
+            'd-m-Y H:i',
+            'd/m/Y H:i',
+            'd-m-Y\TH:i',
+            'd/m/Y\TH:i',
+            'd-m-Y H:i:s',
+            'd/m/Y H:i:s',
         ];
 
         foreach ($formats as $format) {
@@ -407,5 +417,17 @@ class GoodsInReportController extends Controller
         }
 
         return null;
+    }
+
+    protected function normalizeDigits(string $value): string
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $arabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        $value = str_replace($persian, $english, $value);
+        $value = str_replace($arabic, $english, $value);
+
+        return $value;
     }
 }
