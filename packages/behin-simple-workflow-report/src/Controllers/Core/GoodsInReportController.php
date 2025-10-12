@@ -55,10 +55,34 @@ class GoodsInReportController extends Controller
 
         $filters = [
             'search' => trim((string) $request->input('search', '')),
-            'from_date' => $request->input('from_date_alt'),
-            'to_date' => $request->input('to_date_alt'),
+            'from_date' => trim((string) $request->input('from_date', '')),
+            'from_date_alt' => trim((string) $request->input('from_date_alt', '')),
+            'to_date' => trim((string) $request->input('to_date', '')),
+            'to_date_alt' => trim((string) $request->input('to_date_alt', '')),
             'per_page' => (int) $request->input('per_page', 25),
         ];
+
+        if ($filters['from_date'] === '' && $filters['from_date_alt'] !== '') {
+            $fromForDisplay = $this->convertToCarbon($filters['from_date_alt'], null, $appTimezone);
+            if ($fromForDisplay) {
+                try {
+                    $filters['from_date'] = Jalalian::fromCarbon($fromForDisplay)->format('Y-m-d');
+                } catch (\Throwable $exception) {
+                    $filters['from_date'] = $fromForDisplay->format('Y-m-d');
+                }
+            }
+        }
+
+        if ($filters['to_date'] === '' && $filters['to_date_alt'] !== '') {
+            $toForDisplay = $this->convertToCarbon($filters['to_date_alt'], null, $appTimezone);
+            if ($toForDisplay) {
+                try {
+                    $filters['to_date'] = Jalalian::fromCarbon($toForDisplay)->format('Y-m-d');
+                } catch (\Throwable $exception) {
+                    $filters['to_date'] = $toForDisplay->format('Y-m-d');
+                }
+            }
+        }
 
         $perPageOptions = [10, 25, 50, 100];
         if (! in_array($filters['per_page'], $perPageOptions, true)) {
@@ -125,8 +149,8 @@ class GoodsInReportController extends Controller
         $toCarbon = null;
 
         if ($selectedDateColumn) {
-            if (! empty($filters['from_date'])) {
-                $fromCarbon = Carbon::createFromTimestamp($filters['from_date']);
+            if ($filters['from_date_alt'] !== '' || $filters['from_date'] !== '') {
+                $fromCarbon = $this->convertToCarbon($filters['from_date_alt'], $filters['from_date'], $appTimezone);
 
                 if ($fromCarbon) {
                     $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
@@ -135,8 +159,8 @@ class GoodsInReportController extends Controller
                 }
             }
 
-            if (! empty($filters['to_date'])) {
-                $toCarbon = Carbon::createFromTimestamp($filters['to_date']);
+            if ($filters['to_date_alt'] !== '' || $filters['to_date'] !== '') {
+                $toCarbon = $this->convertToCarbon($filters['to_date_alt'], $filters['to_date'], $appTimezone);
 
                 if ($toCarbon) {
                     $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));
@@ -321,13 +345,39 @@ class GoodsInReportController extends Controller
         return config('app.timezone', 'UTC') ?: 'UTC';
     }
 
+    protected function convertToCarbon(?string $altValue, ?string $jalaliValue, string $appTimezone): ?Carbon
+    {
+        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) : '';
+        if ($altValue !== '') {
+            if (is_numeric($altValue)) {
+                try {
+                    return Carbon::createFromTimestamp((int) $altValue)->setTimezone($appTimezone);
+                } catch (\Throwable $exception) {
+                    // در صورت عدم امکان تبدیل، مقدار جایگزین بررسی می‌شود
+                }
+            }
+
+            try {
+                return Carbon::parse($altValue, $appTimezone)->setTimezone($appTimezone);
+            } catch (\Throwable $exception) {
+                // مقدار غیر قابل تبدیل است و تلاش بعدی از تاریخ جلالی خواهد بود
+            }
+        }
+
+        if ($jalaliValue !== null && trim($jalaliValue) !== '') {
+            return $this->parseJalaliDate($jalaliValue, $appTimezone);
+        }
+
+        return null;
+    }
+
     protected function parseJalaliDate(?string $value, string $appTimezone): ?Carbon
     {
         if ($value === null || trim($value) === '') {
             return null;
         }
 
-        $value = trim($value);
+        $value = $this->normalizeDigits(trim($value));
         $formats = [
             'Y-m-d',
             'Y/m/d',
@@ -335,6 +385,16 @@ class GoodsInReportController extends Controller
             'Y/m/d H:i',
             'Y-m-d\TH:i',
             'Y/m/d\TH:i',
+            'Y-m-d H:i:s',
+            'Y/m/d H:i:s',
+            'd-m-Y',
+            'd/m/Y',
+            'd-m-Y H:i',
+            'd/m/Y H:i',
+            'd-m-Y\TH:i',
+            'd/m/Y\TH:i',
+            'd-m-Y H:i:s',
+            'd/m/Y H:i:s',
         ];
 
         foreach ($formats as $format) {
@@ -357,5 +417,17 @@ class GoodsInReportController extends Controller
         }
 
         return null;
+    }
+
+    protected function normalizeDigits(string $value): string
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $arabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        $value = str_replace($persian, $english, $value);
+        $value = str_replace($arabic, $english, $value);
+
+        return $value;
     }
 }
