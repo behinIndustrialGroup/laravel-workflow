@@ -115,6 +115,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>{{ trans('fields.script_before_create') }}</td>
+                        <td>
+                            <select name="script_before_create" id="" class="select2">
+                                <option value=""></option>
+                                @foreach ($scripts as $script)
+                                    <option value="{{ $script->id }}"
+                                        {{ $view_model->script_before_create == $script->id ? 'selected' : '' }}>{{ $script->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>{{ trans('fields.script_after_create') }}</td>
                         <td>
                             <select name="script_after_create" id="" class="select2">

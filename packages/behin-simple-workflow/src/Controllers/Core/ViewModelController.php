@@ -264,9 +264,18 @@ class ViewModelController extends Controller
                 if ($row->show_as == 'table') {
                     $s .= "<tr>";
                     foreach ($columns as $column) {
+                        $column = trim($column);
                         try {
                             if (str_contains($column, '()->')) {
                                 $value = $this->resolveColumnPath($row, $column);
+                            } elseif (Str::endsWith($column, '()')) {
+                                $method = Str::beforeLast($column, '()');
+
+                                if ($method && method_exists($row, $method)) {
+                                    $value = $row->$method();
+                                } else {
+                                    $value = 'تابع تعریف نشده است';
+                                }
                             } else {
                                 $value = $row->$column ?? null;
                             }
@@ -343,6 +352,25 @@ class ViewModelController extends Controller
                 }
             }
             // $data[$fieldName] = $savedPaths;
+
+            if ($isNew && $viewModel->script_before_create) {
+                $request->merge(['rowData' => $data]);
+
+                $result = ScriptController::runFromView($request, $viewModel->script_before_create);
+
+                if ($result) {
+                    return $result;
+                }
+
+                $data = $request->all();
+                if (isset($data['rowData']) && is_array($data['rowData'])) {
+                    $data = array_merge($data, $data['rowData']);
+                }
+                unset($data['rowData']);
+                if ($request->has('rowData')) {
+                    $request->request->remove('rowData');
+                }
+            }
 
             $fillable = $row->getFillable();
             foreach ($data as $key => $value) {

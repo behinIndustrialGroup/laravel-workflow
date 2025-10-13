@@ -347,7 +347,7 @@ class GoodsInReportController extends Controller
 
     protected function convertToCarbon(?string $altValue, ?string $jalaliValue, string $appTimezone): ?Carbon
     {
-        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) : '';
+        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) /1000 : '';
         if ($altValue !== '') {
             if (is_numeric($altValue)) {
                 try {

@@ -173,6 +173,29 @@
                 </div>
             </div>
         @endif
+        @if (access('آیکون شروع فرایند ورود و خروج کالا از نگهبانی'))
+            <div class="col-sm-3 "
+            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                'taskId' => '28d862dd-9268-47ad-bf6f-aa0520e6d3d2',
+                'inDraft' => 0,
+                'force' => 1,
+                'redirect' => true,
+            ]) }}'; }"
+            >
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ trans('ورود و خروج کالا') }}</h3>
+
+                        <p>{{ trans('ورود و خروج کالا از نگهبانی') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
+                </div>
+            </div>
+        @endauth
     @endsection
 
     @section('script')

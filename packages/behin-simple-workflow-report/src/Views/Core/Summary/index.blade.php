@@ -338,6 +338,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (access('گزارش ورود کالاها در نگهبانی'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش ورود کالاها در نگهبانی</td>
+                                            <td class="d-none">گزارش کامل ورود کالاها در نگهبانی</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.goods-in.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
 
                                 </tbody>
                             </table>

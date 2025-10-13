@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // $middleware->append(Access::class);
         $middleware->append(Logging::class);
+        $middleware->alias([
+            'access' => Access::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
