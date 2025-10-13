@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Morilog\Jalali\Jalalian;
+use Behin\SimpleWorkflow\Models\Entities\Goods_in;
 
 class GoodsInReportController extends Controller
 {
@@ -83,7 +84,6 @@ class GoodsInReportController extends Controller
                 }
             }
         }
-
         $perPageOptions = [10, 25, 50, 100];
         if (! in_array($filters['per_page'], $perPageOptions, true)) {
             $filters['per_page'] = 25;
@@ -126,7 +126,7 @@ class GoodsInReportController extends Controller
 
         $columnMetadata = $this->buildDisplayColumnMetadata($columns, $baseColumnMetadata);
 
-        $dateColumn = $columnMetadata->filter(fn ($meta) => $meta['is_date'])->keys()->first();
+        $dateColumn = $columnMetadata->filter(fn($meta) => $meta['is_date'])->keys()->first();
         $dateColumns = collect(array_filter([$dateColumn]));
         $selectedDateColumn = $request->input('date_column');
         if ($selectedDateColumn && ! $dateColumns->contains($selectedDateColumn)) {
@@ -142,25 +142,23 @@ class GoodsInReportController extends Controller
         $fromCarbon = null;
         $toCarbon = null;
 
-        if ($selectedDateColumn) {
-            if ($filters['from_date_alt'] !== '' || $filters['from_date'] !== '') {
-                $fromCarbon = $this->convertToCarbon($filters['from_date_alt'], $filters['from_date'], $appTimezone);
-
-                if ($fromCarbon) {
-                    $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
-                } else {
-                    $validationErrors[] = 'فرمت تاریخ شروع معتبر نیست.';
-                }
+        if ($filters['from_date_alt'] !== '' || $filters['from_date'] !== '') {
+            $fromCarbon = $this->convertToCarbon($filters['from_date_alt'], $filters['from_date'], $appTimezone);
+            
+            if ($fromCarbon) {
+                $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
+            } else {
+                $validationErrors[] = 'فرمت تاریخ شروع معتبر نیست.';
             }
+        }
 
-            if ($filters['to_date_alt'] !== '' || $filters['to_date'] !== '') {
-                $toCarbon = $this->convertToCarbon($filters['to_date_alt'], $filters['to_date'], $appTimezone);
+        if ($filters['to_date_alt'] !== '' || $filters['to_date'] !== '') {
+            $toCarbon = $this->convertToCarbon($filters['to_date_alt'], $filters['to_date'], $appTimezone);
 
-                if ($toCarbon) {
-                    $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));
-                } else {
-                    $validationErrors[] = 'فرمت تاریخ پایان معتبر نیست.';
-                }
+            if ($toCarbon) {
+                $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));
+            } else {
+                $validationErrors[] = 'فرمت تاریخ پایان معتبر نیست.';
             }
         }
 
@@ -491,7 +489,7 @@ class GoodsInReportController extends Controller
 
     protected function convertToCarbon(?string $altValue, ?string $jalaliValue, string $appTimezone): ?Carbon
     {
-        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) /1000 : '';
+        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) / 1000 : '';
         if ($altValue !== '') {
             if (is_numeric($altValue)) {
                 try {
