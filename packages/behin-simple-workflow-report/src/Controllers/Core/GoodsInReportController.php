@@ -108,9 +108,9 @@ class GoodsInReportController extends Controller
 
         $columns = collect(Schema::getColumnListing($tableName));
 
-        $columnMetadata = $columns->mapWithKeys(function ($column) {
+        $baseColumnMetadata = $columns->mapWithKeys(function ($column) {
             $lower = Str::lower($column);
-            $isDate = Str::contains($lower, ['date']) || Str::endsWith($lower, '_at');
+            $isDate = Str::contains($lower, ['date', 'time']) || Str::endsWith($lower, '_at');
             $isNumeric = Str::contains($lower, ['quantity', 'qty', 'count', 'amount', 'price', 'total', 'number', 'qty'])
                 && ! $isDate;
 
@@ -124,23 +124,17 @@ class GoodsInReportController extends Controller
             ];
         });
 
-        $dateColumns = $columnMetadata->filter(fn ($meta) => $meta['is_date'])->keys()->values();
+        $columnMetadata = $this->buildDisplayColumnMetadata($columns, $baseColumnMetadata);
+
+        $dateColumn = $columnMetadata->filter(fn ($meta) => $meta['is_date'])->keys()->first();
+        $dateColumns = collect(array_filter([$dateColumn]));
         $selectedDateColumn = $request->input('date_column');
         if ($selectedDateColumn && ! $dateColumns->contains($selectedDateColumn)) {
             $selectedDateColumn = null;
         }
 
-        if (! $selectedDateColumn && $dateColumns->contains('receive_date')) {
-            $selectedDateColumn = 'receive_date';
-        }
-        if (! $selectedDateColumn && $dateColumns->contains('arrival_date')) {
-            $selectedDateColumn = 'arrival_date';
-        }
-        if (! $selectedDateColumn && $dateColumns->contains('created_at')) {
-            $selectedDateColumn = 'created_at';
-        }
-        if (! $selectedDateColumn && $dateColumns->isNotEmpty()) {
-            $selectedDateColumn = $dateColumns->first();
+        if (! $selectedDateColumn && $dateColumn) {
+            $selectedDateColumn = $dateColumn;
         }
 
         $query = DB::table($tableName);
@@ -313,6 +307,156 @@ class GoodsInReportController extends Controller
             'perPageOptions' => $perPageOptions,
             'validationErrors' => $validationErrors,
         ]);
+    }
+
+    protected function buildDisplayColumnMetadata(Collection $columns, Collection $baseMetadata): Collection
+    {
+        $metadata = collect();
+
+        $goodsNameColumn = $this->findFirstColumn($columns, [
+            'goods_name',
+            'good_name',
+            'product_name',
+            'item_name',
+            'goods',
+            'product',
+            'commodity',
+            'kala',
+        ], ['name', 'title']);
+        if ($goodsNameColumn) {
+            $metadata->put($goodsNameColumn, $this->makeDisplayMetadataEntry($goodsNameColumn, 'نام کالا', $baseMetadata));
+        }
+
+        $dateColumn = $this->findFirstColumn($columns, [
+            'receive_date',
+            'arrival_date',
+            'enter_date',
+            'entry_date',
+            'deliver_date',
+            'delivery_date',
+            'exit_date',
+            'send_date',
+            'out_date',
+            'date_in',
+            'date_out',
+            'receive_time',
+            'arrival_time',
+            'enter_time',
+            'entry_time',
+            'delivery_time',
+            'deliver_time',
+            'exit_time',
+            'send_time',
+            'out_time',
+            'admision_date',
+            'admission_date',
+            'admision_time',
+            'admission_time',
+        ]);
+        if ($dateColumn) {
+            $metadata->put($dateColumn, $this->makeDisplayMetadataEntry($dateColumn, 'تاریخ ورود/خروج', $baseMetadata));
+        }
+
+        $senderColumn = $this->findFirstColumn($columns, ['sender', 'deliverer', 'deliver', 'from'], ['name', 'fullname', 'family', 'person']);
+        if (! $senderColumn && $columns->contains('sender')) {
+            $senderColumn = 'sender';
+        }
+
+        $receiverColumn = $this->findFirstColumn($columns, ['receiver', 'recipient', 'consignee', 'to'], ['name', 'fullname', 'family', 'person']);
+        if (! $receiverColumn && $columns->contains('receiver')) {
+            $receiverColumn = 'receiver';
+        }
+        $partyColumn = $senderColumn ?? $receiverColumn;
+        if ($partyColumn) {
+            $metadata->put($partyColumn, $this->makeDisplayMetadataEntry($partyColumn, 'نام فرستنده/گیرنده', $baseMetadata));
+        }
+
+        $driverColumn = $this->findFirstColumn($columns, ['driver'], ['name', 'fullname', 'family', 'person']);
+        if (! $driverColumn && $columns->contains('driver')) {
+            $driverColumn = 'driver';
+        }
+        if ($driverColumn) {
+            $metadata->put($driverColumn, $this->makeDisplayMetadataEntry($driverColumn, 'نام راننده', $baseMetadata));
+        }
+
+        $plateColumn = $this->findFirstColumn($columns, ['plate', 'pelak', 'plaque', 'vehicle_plate', 'car_plate', 'license_plate', 'licence_plate']);
+        if ($plateColumn) {
+            $metadata->put($plateColumn, $this->makeDisplayMetadataEntry($plateColumn, 'شماره پلاک', $baseMetadata));
+        }
+
+        $descriptionColumn = $this->findFirstColumn($columns, ['description', 'desc', 'note', 'notes', 'detail', 'details', 'explanation', 'comment', 'memo', 'remark']);
+        if ($descriptionColumn) {
+            $metadata->put($descriptionColumn, $this->makeDisplayMetadataEntry($descriptionColumn, 'توضیحات', $baseMetadata));
+        }
+
+        return $metadata;
+    }
+
+    protected function makeDisplayMetadataEntry(string $column, string $label, Collection $baseMetadata): array
+    {
+        $base = $baseMetadata->get($column, []);
+
+        return [
+            'key' => $column,
+            'label' => $label,
+            'is_date' => $base['is_date'] ?? false,
+            'is_numeric' => $base['is_numeric'] ?? false,
+        ];
+    }
+
+    protected function findFirstColumn(Collection $columns, array $patterns, array $required = [], array $excludedEndings = ['_id', '_code']): ?string
+    {
+        $matches = $this->findColumns($columns, $patterns, $required, $excludedEndings);
+
+        return $matches[0] ?? null;
+    }
+
+    protected function findColumns(Collection $columns, array $patterns, array $required = [], array $excludedEndings = ['_id', '_code']): array
+    {
+        $matches = [];
+
+        foreach ($columns as $column) {
+            $lower = Str::lower($column);
+
+            $shouldExclude = false;
+            foreach ($excludedEndings as $ending) {
+                if ($ending !== '' && Str::endsWith($lower, $ending)) {
+                    $shouldExclude = true;
+                    break;
+                }
+            }
+            if ($shouldExclude) {
+                continue;
+            }
+
+            $containsPattern = false;
+            foreach ($patterns as $pattern) {
+                if ($pattern !== '' && Str::contains($lower, $pattern)) {
+                    $containsPattern = true;
+                    break;
+                }
+            }
+            if (! $containsPattern) {
+                continue;
+            }
+
+            if ($required !== []) {
+                $containsRequired = false;
+                foreach ($required as $requiredPattern) {
+                    if ($requiredPattern !== '' && Str::contains($lower, $requiredPattern)) {
+                        $containsRequired = true;
+                        break;
+                    }
+                }
+                if (! $containsRequired) {
+                    continue;
+                }
+            }
+
+            $matches[] = $column;
+        }
+
+        return array_values(array_unique($matches));
     }
 
     protected function makeLabel(string $column): string
