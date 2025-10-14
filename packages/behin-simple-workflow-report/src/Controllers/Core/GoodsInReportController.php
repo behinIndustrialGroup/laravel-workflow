@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Morilog\Jalali\Jalalian;
-use Behin\SimpleWorkflow\Models\Entities\Goods_in;
 
 class GoodsInReportController extends Controller
 {
@@ -52,7 +51,7 @@ class GoodsInReportController extends Controller
     public function index(Request $request)
     {
         $tableName = 'wf_entity_goods_in';
-        $appTimezone = $this->getAppTimezone();
+        $timezone = $this->getAppTimezone();
 
         $filters = [
             'search' => trim((string) $request->input('search', '')),
@@ -63,34 +62,12 @@ class GoodsInReportController extends Controller
             'per_page' => (int) $request->input('per_page', 25),
         ];
 
-        if ($filters['from_date'] === '' && $filters['from_date_alt'] !== '') {
-            $fromForDisplay = $this->convertToCarbon($filters['from_date_alt'], null, $appTimezone);
-            if ($fromForDisplay) {
-                try {
-                    $filters['from_date'] = Jalalian::fromCarbon($fromForDisplay)->format('Y-m-d');
-                } catch (\Throwable $exception) {
-                    $filters['from_date'] = $fromForDisplay->format('Y-m-d');
-                }
-            }
-        }
-
-        if ($filters['to_date'] === '' && $filters['to_date_alt'] !== '') {
-            $toForDisplay = $this->convertToCarbon($filters['to_date_alt'], null, $appTimezone);
-            if ($toForDisplay) {
-                try {
-                    $filters['to_date'] = Jalalian::fromCarbon($toForDisplay)->format('Y-m-d');
-                } catch (\Throwable $exception) {
-                    $filters['to_date'] = $toForDisplay->format('Y-m-d');
-                }
-            }
-        }
         $perPageOptions = [10, 25, 50, 100];
         if (! in_array($filters['per_page'], $perPageOptions, true)) {
             $filters['per_page'] = 25;
         }
 
-        $tableExists = Schema::hasTable($tableName);
-        if (! $tableExists) {
+        if (! Schema::hasTable($tableName)) {
             return view('SimpleWorkflowReportView::Core.GoodsIn.index', [
                 'tableExists' => false,
                 'records' => collect(),
@@ -106,60 +83,56 @@ class GoodsInReportController extends Controller
             ]);
         }
 
-        $columns = collect(Schema::getColumnListing($tableName));
+        $columns = collect(Schema::getColumnListing($tableName))->values();
+        $columnMetadata = $this->buildColumnMetadata($columns);
+        $dateColumns = $columnMetadata->filter(fn ($meta) => $meta['is_date'])->keys()->values();
 
-        $baseColumnMetadata = $columns->mapWithKeys(function ($column) {
-            $lower = Str::lower($column);
-            $isDate = Str::contains($lower, ['date', 'time']) || Str::endsWith($lower, '_at');
-            $isNumeric = Str::contains($lower, ['quantity', 'qty', 'count', 'amount', 'price', 'total', 'number', 'qty'])
-                && ! $isDate;
-
-            return [
-                $column => [
-                    'key' => $column,
-                    'label' => $this->customLabels[$column] ?? $this->makeLabel($column),
-                    'is_date' => $isDate,
-                    'is_numeric' => $isNumeric,
-                ],
-            ];
-        });
-
-        $columnMetadata = $this->buildDisplayColumnMetadata($columns, $baseColumnMetadata);
-
-        $dateColumn = $columnMetadata->filter(fn($meta) => $meta['is_date'])->keys()->first();
-        $dateColumns = collect(array_filter([$dateColumn]));
         $selectedDateColumn = $request->input('date_column');
-        if ($selectedDateColumn && ! $dateColumns->contains($selectedDateColumn)) {
+        if ($selectedDateColumn && ! $columns->contains($selectedDateColumn)) {
             $selectedDateColumn = null;
         }
 
-        if (! $selectedDateColumn && $dateColumn) {
-            $selectedDateColumn = $dateColumn;
+        if (! $selectedDateColumn) {
+            $selectedDateColumn = $dateColumns->first();
+
+            if (! $selectedDateColumn && $columns->contains('created_at')) {
+                $selectedDateColumn = 'created_at';
+            }
+        }
+
+        if ($selectedDateColumn && ! $dateColumns->contains($selectedDateColumn)) {
+            $dateColumns = $dateColumns->prepend($selectedDateColumn);
         }
 
         $query = DB::table($tableName);
         $validationErrors = [];
-        $fromCarbon = null;
-        $toCarbon = null;
 
-        if ($filters['from_date_alt'] !== '' || $filters['from_date'] !== '') {
-            $fromCarbon = $this->convertToCarbon($filters['from_date_alt'], $filters['from_date'], $appTimezone);
-            
-            if ($fromCarbon) {
+        $fromCarbon = $this->parseDate($filters['from_date'], $filters['from_date_alt'], $timezone);
+        if ($fromCarbon) {
+            $filters['from_date'] = Jalalian::fromCarbon($fromCarbon)->format('Y-m-d');
+
+            if ($selectedDateColumn) {
                 $query->whereDate($selectedDateColumn, '>=', $fromCarbon->format('Y-m-d'));
-            } else {
-                $validationErrors[] = 'فرمت تاریخ شروع معتبر نیست.';
             }
+        } elseif ($filters['from_date'] !== '' || $filters['from_date_alt'] !== '') {
+            $validationErrors[] = 'فرمت تاریخ شروع معتبر نیست.';
         }
 
-        if ($filters['to_date_alt'] !== '' || $filters['to_date'] !== '') {
-            $toCarbon = $this->convertToCarbon($filters['to_date_alt'], $filters['to_date'], $appTimezone);
+        $toCarbon = $this->parseDate($filters['to_date'], $filters['to_date_alt'], $timezone);
+        if ($toCarbon) {
+            $filters['to_date'] = Jalalian::fromCarbon($toCarbon)->format('Y-m-d');
 
-            if ($toCarbon) {
+            if ($selectedDateColumn) {
                 $query->whereDate($selectedDateColumn, '<=', $toCarbon->format('Y-m-d'));
-            } else {
-                $validationErrors[] = 'فرمت تاریخ پایان معتبر نیست.';
             }
+        } elseif ($filters['to_date'] !== '' || $filters['to_date_alt'] !== '') {
+            $validationErrors[] = 'فرمت تاریخ پایان معتبر نیست.';
+        }
+
+        if (($filters['from_date'] !== '' || $filters['from_date_alt'] !== '' || $filters['to_date'] !== '' || $filters['to_date_alt'] !== '')
+            && ! $selectedDateColumn
+        ) {
+            $validationErrors[] = 'برای فیلتر تاریخ، یک ستون تاریخ معتبر انتخاب کنید.';
         }
 
         if ($filters['search'] !== '') {
@@ -170,7 +143,7 @@ class GoodsInReportController extends Controller
             });
         }
 
-        $baseQuery = clone $query;
+        $metricsQuery = clone $query;
 
         if ($selectedDateColumn) {
             $query->orderByDesc($selectedDateColumn);
@@ -181,65 +154,28 @@ class GoodsInReportController extends Controller
         /** @var LengthAwarePaginator $paginator */
         $paginator = $query->paginate($filters['per_page'])->withQueryString();
 
-        $collection = $paginator->getCollection()->map(function ($item) use ($columnMetadata, $appTimezone) {
-            $record = (array) $item;
-
-            foreach ($columnMetadata as $column => $meta) {
-                if (! array_key_exists($column, $record)) {
-                    continue;
-                }
-
-                if ($meta['is_date'] && ! empty($record[$column])) {
-                    try {
-                        $carbon = Carbon::parse($record[$column])->setTimezone($appTimezone);
-                        $record[$column . '_gregorian'] = $carbon->format('Y-m-d H:i');
-                        $record[$column] = Jalalian::fromCarbon($carbon)->format('Y-m-d H:i');
-                    } catch (\Throwable $exception) {
-                        // اگر تاریخ قابل تبدیل نبود، مقدار اصلی را نگه می‌داریم
-                        $record[$column . '_gregorian'] = $record[$column];
-                    }
-                }
-
-                if ($meta['is_numeric'] && $record[$column] !== null) {
-                    $record[$column] = is_numeric($record[$column])
-                        ? $this->formatNumber((float) $record[$column])
-                        : $record[$column];
-                }
-            }
-
-            return $record;
+        $collection = $paginator->getCollection()->map(function ($item) use ($columnMetadata, $timezone) {
+            return $this->formatRecord((array) $item, $columnMetadata, $timezone);
         });
 
         $paginator->setCollection($collection);
 
-        $totalRecords = (clone $baseQuery)->count();
-
+        $totalRecords = (clone $metricsQuery)->count();
         $quantityColumn = $this->detectColumn($columns, ['quantity', 'qty', 'count', 'tedad', 'number_of_items']);
         $amountColumn = $this->detectColumn($columns, ['total_amount', 'total_price', 'amount', 'price', 'value', 'sum']);
         $supplierColumn = $this->detectColumn($columns, ['supplier', 'vendor', 'provider', 'seller']);
 
-        $totalQuantity = null;
-        $totalAmount = null;
-        $uniqueSuppliers = null;
+        $totalQuantity = $quantityColumn ? (clone $metricsQuery)->sum($quantityColumn) : null;
+        $totalAmount = $amountColumn ? (clone $metricsQuery)->sum($amountColumn) : null;
+        $uniqueSuppliers = $supplierColumn ? (clone $metricsQuery)->distinct()->count($supplierColumn) : null;
+
         $latestRecordValue = null;
-
-        if ($quantityColumn) {
-            $totalQuantity = (clone $baseQuery)->sum($quantityColumn);
-        }
-
-        if ($amountColumn) {
-            $totalAmount = (clone $baseQuery)->sum($amountColumn);
-        }
-
-        if ($supplierColumn) {
-            $uniqueSuppliers = (clone $baseQuery)->distinct()->count($supplierColumn);
-        }
-
         if ($selectedDateColumn) {
-            $latestRecordValue = (clone $baseQuery)->orderByDesc($selectedDateColumn)->value($selectedDateColumn);
+            $latestRecordValue = (clone $metricsQuery)->orderByDesc($selectedDateColumn)->value($selectedDateColumn);
+
             if ($latestRecordValue) {
                 try {
-                    $latestCarbon = Carbon::parse($latestRecordValue)->setTimezone($appTimezone);
+                    $latestCarbon = Carbon::parse($latestRecordValue)->setTimezone($timezone);
                     $latestRecordValue = Jalalian::fromCarbon($latestCarbon)->format('Y-m-d H:i');
                 } catch (\Throwable $exception) {
                     // اگر تبدیل ممکن نبود همان مقدار اصلی نمایش داده می‌شود
@@ -307,168 +243,56 @@ class GoodsInReportController extends Controller
         ]);
     }
 
-    protected function buildDisplayColumnMetadata(Collection $columns, Collection $baseMetadata): Collection
+    protected function buildColumnMetadata(Collection $columns): Collection
     {
-        $metadata = collect();
-
-        $goodsNameColumn = $this->findFirstColumn($columns, [
-            'goods_name',
-            'good_name',
-            'product_name',
-            'item_name',
-            'goods',
-            'product',
-            'commodity',
-            'kala',
-        ], ['name', 'title']);
-        if ($goodsNameColumn) {
-            $metadata->put($goodsNameColumn, $this->makeDisplayMetadataEntry($goodsNameColumn, 'نام کالا', $baseMetadata));
-        }
-
-        $dateColumn = $this->findFirstColumn($columns, [
-            'receive_date',
-            'arrival_date',
-            'enter_date',
-            'entry_date',
-            'deliver_date',
-            'delivery_date',
-            'exit_date',
-            'send_date',
-            'out_date',
-            'date_in',
-            'date_out',
-            'receive_time',
-            'arrival_time',
-            'enter_time',
-            'entry_time',
-            'delivery_time',
-            'deliver_time',
-            'exit_time',
-            'send_time',
-            'out_time',
-            'admision_date',
-            'admission_date',
-            'admision_time',
-            'admission_time',
-        ]);
-        if ($dateColumn) {
-            $metadata->put($dateColumn, $this->makeDisplayMetadataEntry($dateColumn, 'تاریخ ورود/خروج', $baseMetadata));
-        }
-
-        $senderColumn = $this->findFirstColumn($columns, ['sender', 'deliverer', 'deliver', 'from'], ['name', 'fullname', 'family', 'person']);
-        if (! $senderColumn && $columns->contains('sender')) {
-            $senderColumn = 'sender';
-        }
-
-        $receiverColumn = $this->findFirstColumn($columns, ['receiver', 'recipient', 'consignee', 'to'], ['name', 'fullname', 'family', 'person']);
-        if (! $receiverColumn && $columns->contains('receiver')) {
-            $receiverColumn = 'receiver';
-        }
-        $partyColumn = $senderColumn ?? $receiverColumn;
-        if ($partyColumn) {
-            $metadata->put($partyColumn, $this->makeDisplayMetadataEntry($partyColumn, 'نام فرستنده/گیرنده', $baseMetadata));
-        }
-
-        $driverColumn = $this->findFirstColumn($columns, ['driver'], ['name', 'fullname', 'family', 'person']);
-        if (! $driverColumn && $columns->contains('driver')) {
-            $driverColumn = 'driver';
-        }
-        if ($driverColumn) {
-            $metadata->put($driverColumn, $this->makeDisplayMetadataEntry($driverColumn, 'نام راننده', $baseMetadata));
-        }
-
-        $plateColumn = $this->findFirstColumn($columns, ['plate', 'pelak', 'plaque', 'vehicle_plate', 'car_plate', 'license_plate', 'licence_plate']);
-        if ($plateColumn) {
-            $metadata->put($plateColumn, $this->makeDisplayMetadataEntry($plateColumn, 'شماره پلاک', $baseMetadata));
-        }
-
-        $descriptionColumn = $this->findFirstColumn($columns, ['description', 'desc', 'note', 'notes', 'detail', 'details', 'explanation', 'comment', 'memo', 'remark']);
-        if ($descriptionColumn) {
-            $metadata->put($descriptionColumn, $this->makeDisplayMetadataEntry($descriptionColumn, 'توضیحات', $baseMetadata));
-        }
-
-        return $metadata;
-    }
-
-    protected function makeDisplayMetadataEntry(string $column, string $label, Collection $baseMetadata): array
-    {
-        $base = $baseMetadata->get($column, []);
-
-        return [
-            'key' => $column,
-            'label' => $label,
-            'is_date' => $base['is_date'] ?? false,
-            'is_numeric' => $base['is_numeric'] ?? false,
-        ];
-    }
-
-    protected function findFirstColumn(Collection $columns, array $patterns, array $required = [], array $excludedEndings = ['_id', '_code']): ?string
-    {
-        $matches = $this->findColumns($columns, $patterns, $required, $excludedEndings);
-
-        return $matches[0] ?? null;
-    }
-
-    protected function findColumns(Collection $columns, array $patterns, array $required = [], array $excludedEndings = ['_id', '_code']): array
-    {
-        $matches = [];
-
-        foreach ($columns as $column) {
+        return $columns->mapWithKeys(function (string $column) {
             $lower = Str::lower($column);
+            $isDate = Str::contains($lower, ['date', 'time']) || Str::endsWith($lower, '_at');
+            $isNumeric = ! $isDate && Str::contains($lower, ['quantity', 'qty', 'count', 'amount', 'price', 'total', 'number']);
 
-            $shouldExclude = false;
-            foreach ($excludedEndings as $ending) {
-                if ($ending !== '' && Str::endsWith($lower, $ending)) {
-                    $shouldExclude = true;
-                    break;
-                }
-            }
-            if ($shouldExclude) {
-                continue;
-            }
-
-            $containsPattern = false;
-            foreach ($patterns as $pattern) {
-                if ($pattern !== '' && Str::contains($lower, $pattern)) {
-                    $containsPattern = true;
-                    break;
-                }
-            }
-            if (! $containsPattern) {
-                continue;
-            }
-
-            if ($required !== []) {
-                $containsRequired = false;
-                foreach ($required as $requiredPattern) {
-                    if ($requiredPattern !== '' && Str::contains($lower, $requiredPattern)) {
-                        $containsRequired = true;
-                        break;
-                    }
-                }
-                if (! $containsRequired) {
-                    continue;
-                }
-            }
-
-            $matches[] = $column;
-        }
-
-        return array_values(array_unique($matches));
+            return [
+                $column => [
+                    'key' => $column,
+                    'label' => $this->customLabels[$column] ?? $this->makeLabel($column),
+                    'is_date' => $isDate,
+                    'is_numeric' => $isNumeric,
+                ],
+            ];
+        });
     }
 
-    protected function makeLabel(string $column): string
+    protected function formatRecord(array $record, Collection $columnMetadata, string $timezone): array
     {
-        $clean = str_replace(['_', '-'], ' ', $column);
-        $clean = preg_replace('/\s+/', ' ', $clean ?? '');
+        foreach ($columnMetadata as $column => $meta) {
+            if (! array_key_exists($column, $record)) {
+                continue;
+            }
 
-        return trim($clean) !== '' ? trim($clean) : $column;
+            if ($meta['is_date'] && ! empty($record[$column])) {
+                try {
+                    $carbon = Carbon::parse($record[$column])->setTimezone($timezone);
+                    $record[$column . '_gregorian'] = $carbon->format('Y-m-d H:i');
+                    $record[$column] = Jalalian::fromCarbon($carbon)->format('Y-m-d H:i');
+                } catch (\Throwable $exception) {
+                    $record[$column . '_gregorian'] = $record[$column];
+                }
+            }
+
+            if ($meta['is_numeric'] && $record[$column] !== null && $record[$column] !== '') {
+                $record[$column] = is_numeric($record[$column])
+                    ? $this->formatNumber((float) $record[$column])
+                    : $record[$column];
+            }
+        }
+
+        return $record;
     }
 
     protected function detectColumn(Collection $columns, array $needles): ?string
     {
         foreach ($columns as $column) {
             $lower = Str::lower($column);
+
             if (Str::contains($lower, $needles)) {
                 return $column;
             }
@@ -487,89 +311,76 @@ class GoodsInReportController extends Controller
         return config('app.timezone', 'UTC') ?: 'UTC';
     }
 
-    protected function convertToCarbon(?string $altValue, ?string $jalaliValue, string $appTimezone): ?Carbon
+    protected function parseDate(?string $jalaliValue, ?string $altValue, string $timezone): ?Carbon
     {
-        $altValue = $altValue !== null ? $this->normalizeDigits(trim($altValue)) / 1000 : '';
-        if ($altValue !== '') {
-            if (is_numeric($altValue)) {
+        if ($altValue !== null) {
+            $altValue = trim($this->normalizeDigits($altValue));
+
+            if ($altValue !== '') {
+                if (is_numeric($altValue)) {
+                    $timestamp = strlen($altValue) > 10
+                        ? (int) round(((float) $altValue) / 1000)
+                        : (int) $altValue;
+
+                    try {
+                        return Carbon::createFromTimestamp($timestamp, $timezone);
+                    } catch (\Throwable $exception) {
+                        // تلاش بعدی با تاریخ جلالی یا متنی
+                    }
+                }
+
                 try {
-                    return Carbon::createFromTimestamp((int) $altValue)->setTimezone($appTimezone);
+                    return Carbon::parse($altValue, $timezone)->setTimezone($timezone);
                 } catch (\Throwable $exception) {
-                    // در صورت عدم امکان تبدیل، مقدار جایگزین بررسی می‌شود
+                    // مقدار متنی معتبر نبود
                 }
             }
-
-            try {
-                return Carbon::parse($altValue, $appTimezone)->setTimezone($appTimezone);
-            } catch (\Throwable $exception) {
-                // مقدار غیر قابل تبدیل است و تلاش بعدی از تاریخ جلالی خواهد بود
-            }
         }
 
-        if ($jalaliValue !== null && trim($jalaliValue) !== '') {
-            return $this->parseJalaliDate($jalaliValue, $appTimezone);
+        if ($jalaliValue !== null) {
+            $jalaliValue = trim($this->normalizeDigits($jalaliValue));
+
+            if ($jalaliValue !== '') {
+                foreach (['Y-m-d', 'Y/m/d'] as $format) {
+                    try {
+                        return Jalalian::fromFormat($format, $jalaliValue)->toCarbon()->setTimezone($timezone);
+                    } catch (\Throwable $exception) {
+                        continue;
+                    }
+                }
+
+                try {
+                    return Carbon::parse($jalaliValue, $timezone)->setTimezone($timezone);
+                } catch (\Throwable $exception) {
+                    // مقدار قابل تبدیل نبود
+                }
+            }
         }
 
         return null;
     }
 
-    protected function parseJalaliDate(?string $value, string $appTimezone): ?Carbon
+    protected function makeLabel(string $column): string
     {
-        if ($value === null || trim($value) === '') {
-            return null;
-        }
+        $label = str_replace(['_', '-'], ' ', $column);
+        $label = preg_replace('/\s+/', ' ', $label ?? '');
 
-        $value = $this->normalizeDigits(trim($value));
-        $formats = [
-            'Y-m-d',
-            'Y/m/d',
-            'Y-m-d H:i',
-            'Y/m/d H:i',
-            'Y-m-d\TH:i',
-            'Y/m/d\TH:i',
-            'Y-m-d H:i:s',
-            'Y/m/d H:i:s',
-            'd-m-Y',
-            'd/m/Y',
-            'd-m-Y H:i',
-            'd/m/Y H:i',
-            'd-m-Y\TH:i',
-            'd/m/Y\TH:i',
-            'd-m-Y H:i:s',
-            'd/m/Y H:i:s',
-        ];
-
-        foreach ($formats as $format) {
-            try {
-                $jalali = Jalalian::fromFormat($format, $value);
-                return $jalali->toCarbon()->setTimezone($appTimezone);
-            } catch (\Throwable $exception) {
-                continue;
-            }
-        }
-
-        try {
-            $jalali = Jalalian::forge($value);
-
-            if ($jalali) {
-                return $jalali->toCarbon()->setTimezone($appTimezone);
-            }
-        } catch (\Throwable $exception) {
-            // مقدار قابل تبدیل نیست
-        }
-
-        return null;
+        return trim($label) !== '' ? trim($label) : $column;
     }
 
-    protected function normalizeDigits(string $value): string
+    protected function normalizeDigits(?string $value): string
     {
+        if ($value === null) {
+            return '';
+        }
+
         $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
         $arabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
         $value = str_replace($persian, $english, $value);
-        $value = str_replace($arabic, $english, $value);
 
-        return $value;
+        return str_replace($arabic, $english, $value);
     }
 }
+
