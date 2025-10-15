@@ -43,6 +43,13 @@ class GoodsInReportController extends Controller
         'amount' => 'مبلغ',
         'price' => 'قیمت',
         'warehouse' => 'انبار',
+        'sender_name' => 'فرستنده',
+        'vehicle_plate' => 'شماره پلاک',
+        'driver_name' => 'نام راننده',
+        'notes' => 'یادداشت',
+        'created_by' => 'ایجاد کننده',
+        'in_or_out' => 'ورود یا خروج',
+        'sender_or_receiver_name' => 'نام فرستنده یا گیرنده',
     ];
 
     /**
@@ -66,7 +73,6 @@ class GoodsInReportController extends Controller
         if (! in_array($filters['per_page'], $perPageOptions, true)) {
             $filters['per_page'] = 25;
         }
-
         if (! Schema::hasTable($tableName)) {
             return view('SimpleWorkflowReportView::Core.GoodsIn.index', [
                 'tableExists' => false,

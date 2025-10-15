@@ -5,6 +5,18 @@
 @php
     use Morilog\Jalali\Jalalian;
     $todayJalali = Jalalian::now()->format('Y-m-d');
+
+    $showInTable = [
+        'goods_name',
+        'sender_name',
+        'sender_or_receiver_name',
+        'in_or_out',
+        'created_by',
+        'notes',
+        'driver_name',
+        'vehicle_plate',
+        'created_at',
+    ];
 @endphp
 
 @section('style')
@@ -152,7 +164,7 @@
                 <div class="card filter-card shadow-sm">
                     <div class="card-header d-flex flex-column flex-lg-row align-items-lg-center justify-content-between">
                         <div>
-                            <h5 class="mb-1 fw-bold">مرور کالاهای ورودی</h5>
+                            <h5 class="mb-1 fw-bold">مرور کالاهای ورودی یا خروجی</h5>
                             <p class="mb-0 text-muted">گزارش جامع بر اساس داده‌های ثبت شده در موجودیت Goods_in</p>
                         </div>
                         @if (!empty($filters['search']) || !empty($filters['from_date']) || !empty($filters['to_date']))
@@ -177,24 +189,27 @@
                         <form id="goods-in-filter-form" method="GET" class="row g-3 align-items-end">
                             <div class="col-md-3">
                                 <label for="search" class="form-label">جستجوی آزاد</label>
-                                <input type="text" name="search" id="search" class="form-control"
-                                    placeholder="نام کالا، تأمین‌کننده، کد رهگیری و ..." value="{{ $filters['search'] }}">
+                                <input type="text" name="search" id="search" class="form-control" placeholder=""
+                                    value="{{ $filters['search'] }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="from_date" class="form-label">از تاریخ</label>
                                 <input type="text" name="from_date" id="from_date" class="form-control persian-date"
-                                    placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['from_date'] }}">
-                                    <input type="hidden" name="from_date_alt" id="from_date_alt" value="{{ $filters['from_date_alt'] }}">
+                                    placeholder="" value="{{ $filters['from_date'] }}">
+                                <input type="hidden" name="from_date_alt" id="from_date_alt"
+                                    value="{{ $filters['from_date_alt'] }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="to_date" class="form-label">تا تاریخ</label>
                                 <input type="text" name="to_date" id="to_date" class="form-control persian-date"
-                                    placeholder="مثلاً {{ $todayJalali }}" value="{{ $filters['to_date'] }}">
-                                    <input type="hidden" name="to_date_alt" id="to_date_alt" value="{{ $filters['to_date_alt'] }}">
+                                    placeholder="" value="{{ $filters['to_date'] }}">
+                                <input type="hidden" name="to_date_alt" id="to_date_alt"
+                                    value="{{ $filters['to_date_alt'] }}">
                             </div>
-                            <div class="col-md-2">
-                                <label for="date_column" class="form-label">ستون تاریخ</label>
-                                <select name="date_column" id="date_column" class="form-select">
+                            {{-- <div class="col-md-2">
+                                <label for="date_column" class="form-label">ستون تاریخ</label> --}}
+                            <input type="hidden" name="date_column" id="date_column" value="created_at">
+                            {{-- <select name="date_column" id="date_column" class="form-select">
                                     <option value="">انتخاب ستون</option>
                                     @foreach ($dateColumns as $column)
                                         <option value="{{ $column }}"
@@ -203,7 +218,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-md-2">
                                 <label for="per_page" class="form-label">تعداد در هر صفحه</label>
                                 <select name="per_page" id="per_page" class="form-select">
@@ -215,7 +230,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3 col-lg-1 d-grid">
-                                <button type="submit" class="btn btn-primary">اعمال</button>
+                                <button type="submit" class="btn btn-primary">فیلتر</button>
                             </div>
                             <div class="col-md-3 col-lg-1 d-grid">
                                 <a href="{{ route('simpleWorkflowReport.goods-in.index') }}"
@@ -235,7 +250,7 @@
         </div>
 
         @if ($tableExists)
-            <div class="row g-3 mb-4">
+            {{-- <div class="row g-3 mb-4">
                 @foreach ($metrics as $metric)
                     <div class="col-12 col-md-6 col-lg-3">
                         <div class="card metric-card" style="background: {{ $metric['background'] }};">
@@ -247,7 +262,7 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
+            </div> --}}
 
             <div class="card table-card">
                 <div class="card-body p-0">
@@ -257,7 +272,9 @@
                                 <tr>
                                     <th style="width: 70px;">#</th>
                                     @foreach ($columnMetadata as $column => $meta)
-                                        <th>{{ $meta['label'] }}</th>
+                                        @if (in_array($column, $showInTable))
+                                            <th>{{ $meta['label'] }}</th>
+                                        @endif
                                     @endforeach
                                 </tr>
                             </thead>
@@ -267,17 +284,22 @@
                                         <td>{{ $paginator->firstItem() ? $paginator->firstItem() + $index : $index + 1 }}
                                         </td>
                                         @foreach ($columnMetadata as $column => $meta)
-                                            @php
-                                                $value = $record[$column] ?? null;
-                                                $display = $value === null || $value === '' ? '—' : $value;
-                                                $tooltip = $meta['is_date']
-                                                    ? $record[$column . '_gregorian'] ?? null
-                                                    : null;
-                                            @endphp
-                                            <td
-                                                @if ($tooltip) data-toggle="tooltip" title="{{ $tooltip }}" @endif>
-                                                {{ $display }}
-                                            </td>
+                                            @if (in_array($column, $showInTable))
+                                                @php
+                                                    $value = $record[$column] ?? null;
+                                                    $display = $value === null || $value === '' ? '—' : $value;
+                                                    if($column == 'created_by'){
+                                                        $display = getUserInfo($value)->name;
+                                                    }
+                                                    $tooltip = $meta['is_date']
+                                                        ? $record[$column . '_gregorian'] ?? null
+                                                        : null;
+                                                @endphp
+                                                <td
+                                                    @if ($tooltip) data-toggle="tooltip" title="{{ $tooltip }}" @endif>
+                                                    {{ $display }}
+                                                </td>
+                                            @endif
                                         @endforeach
                                     </tr>
                                 @empty
