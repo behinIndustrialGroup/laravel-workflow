@@ -14,11 +14,11 @@ class FileField extends AbstractField
         }
         $s .= '</label><br>';
         if(isset($this->attributes['value']) && is_string($this->attributes['value'])){
-            $s .= '<a href="' . url('public/' . $this->attributes['value']) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+            $s .= '<a href="' . url($this->attributes['value']) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
         }
         if(isset($this->attributes['value']) && is_array($this->attributes['value']) && count($this->attributes['value']) > 0){
             foreach($this->attributes['value'] as $value){
-                $s .= '<a href="' . url('public/' . $value) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+                $s .= '<a href="' . url($value) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
             }
         }
         if($this->attributes['readonly'] == 'on'){
