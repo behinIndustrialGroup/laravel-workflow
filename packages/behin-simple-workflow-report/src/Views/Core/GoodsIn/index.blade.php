@@ -7,15 +7,12 @@
     $todayJalali = Jalalian::now()->format('Y-m-d');
 
     $showInTable = [
-        'goods_name',
-        'sender_name',
-        'sender_or_receiver_name',
-        'in_or_out',
-        'created_by',
-        'notes',
-        'driver_name',
-        'vehicle_plate',
         'created_at',
+        'notes',
+        'in_or_out',
+        'sender_or_receiver_name',
+        'sender_name',
+        'vehicle_plate',
     ];
 @endphp
 
@@ -271,9 +268,9 @@
                             <thead>
                                 <tr>
                                     <th style="width: 70px;">#</th>
-                                    @foreach ($columnMetadata as $column => $meta)
-                                        @if (in_array($column, $showInTable))
-                                            <th>{{ $meta['label'] }}</th>
+                                    @foreach ($showInTable as $column)
+                                        @if (isset($columnMetadata[$column]))
+                                            <th>{{ $columnMetadata[$column]['label'] }}</th>
                                         @endif
                                     @endforeach
                                 </tr>
@@ -283,12 +280,13 @@
                                     <tr>
                                         <td>{{ $paginator->firstItem() ? $paginator->firstItem() + $index : $index + 1 }}
                                         </td>
-                                        @foreach ($columnMetadata as $column => $meta)
-                                            @if (in_array($column, $showInTable))
+                                        @foreach ($showInTable as $column)
+                                            @if (isset($columnMetadata[$column]))
                                                 @php
+                                                    $meta = $columnMetadata[$column];
                                                     $value = $record[$column] ?? null;
                                                     $display = $value === null || $value === '' ? '—' : $value;
-                                                    if($column == 'created_by'){
+                                                    if ($column == 'created_by') {
                                                         $display = getUserInfo($value)->name;
                                                     }
                                                     $tooltip = $meta['is_date']
