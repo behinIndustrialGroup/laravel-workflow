@@ -24,6 +24,7 @@
     $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
     $to = isset($_GET['to']) ? $_GET['to'] : (string) $to;
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
+    $quserInfo = isset($_GET['quser']) ? getUserInfo($_GET['quser']) : null;
 
     // دریافت جدول اصلی
     $finTable = ReportHelper::getFilteredFinTable($from, $to, $quser);
@@ -235,6 +236,8 @@
                                                     {{-- @if ($totalCaseCost)
                                                         مجموع ({{ number_format($totalCaseCost) }})
                                                     @endif --}}
+                                                @elseif(isset($row->all_case_costs) && count($row->all_case_costs))
+                                                    {{ $quserInfo->name }} در تفکیک هزینه ها نیست
                                                 @else
                                                     @php
                                                         $totalCaseCosts += (int) str_replace(',', '', $row->total_cost);
