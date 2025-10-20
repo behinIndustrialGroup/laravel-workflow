@@ -16,6 +16,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\ExternalAndInternalReportControl
 use Behin\SimpleWorkflowReport\Controllers\Core\FinReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\GoodsInReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\MapaCenterController;
+use Behin\SimpleWorkflowReport\Controllers\Core\MissionsReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ProcessController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RewardPenaltyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
@@ -116,4 +117,6 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 });
 
 Route::get('workflow-report/daily-report/send-reminder', [DailyReportController:: class, 'sendReminder'])->middleware(['web'])->name('simpleWorkflowReport.daily-report.send-reminder');
+
+Route::middleware(['web', 'auth'])->get('/reports/missions', [MissionsReportController::class, 'index'])->name('simpleWorkflowReport.reports.missions');
 
