@@ -11,7 +11,8 @@
         'notes',
         'in_or_out',
         'sender_or_receiver_name',
-        'sender_name',
+        'created_by',
+        'driver_name',
         'vehicle_plate',
     ];
 @endphp
