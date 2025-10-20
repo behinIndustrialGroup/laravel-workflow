@@ -73,7 +73,7 @@ class MissionsReportController extends Controller
             $query->where('start_datetime_alt', '<=', $toCarbon->valueOf());
         }
 
-        $missions = $query->orderByDesc('start_datetime')
+        $missions = $query->orderByDesc('start_datetime_alt')
             ->get()
             ->map(function ($mission) {
                 $startAlt = $mission->start_datetime_alt ? (int) $mission->start_datetime_alt : null;
@@ -87,8 +87,12 @@ class MissionsReportController extends Controller
                     $mission->duration_hours = null;
                 }
 
-                $mission->start_datetime_carbon = $mission->start_datetime ? Carbon::parse($mission->start_datetime) : null;
-                $mission->end_datetime_carbon = $mission->end_datetime ? Carbon::parse($mission->end_datetime) : null;
+                $mission->start_datetime_carbon = $startAlt !== null
+                    ? Carbon::createFromTimestampMs($startAlt, config('app.timezone'))
+                    : null;
+                $mission->end_datetime_carbon = $endAlt !== null
+                    ? Carbon::createFromTimestampMs($endAlt, config('app.timezone'))
+                    : null;
 
                 return $mission;
             });
