@@ -69,6 +69,18 @@ class GoodsInReportController extends Controller
             'per_page' => (int) $request->input('per_page', 25),
         ];
 
+        $requestedSortBy = $request->input('sort_by');
+        $requestedSortDirection = Str::lower((string) $request->input('sort_direction', 'desc'));
+
+        $filters['sort_by'] = is_string($requestedSortBy) ? trim($requestedSortBy) : null;
+        if ($filters['sort_by'] === '') {
+            $filters['sort_by'] = null;
+        }
+
+        $filters['sort_direction'] = in_array($requestedSortDirection, ['asc', 'desc'], true)
+            ? $requestedSortDirection
+            : 'desc';
+
         $perPageOptions = [10, 25, 50, 100];
         if (! in_array($filters['per_page'], $perPageOptions, true)) {
             $filters['per_page'] = 25;
@@ -92,6 +104,10 @@ class GoodsInReportController extends Controller
         $columns = collect(Schema::getColumnListing($tableName))->values();
         $columnMetadata = $this->buildColumnMetadata($columns);
         $dateColumns = $columnMetadata->filter(fn ($meta) => $meta['is_date'])->keys()->values();
+
+        if ($filters['sort_by'] && ! $columns->contains($filters['sort_by'])) {
+            $filters['sort_by'] = null;
+        }
 
         $selectedDateColumn = $request->input('date_column');
         if ($selectedDateColumn && ! $columns->contains($selectedDateColumn)) {
@@ -151,7 +167,9 @@ class GoodsInReportController extends Controller
 
         $metricsQuery = clone $query;
 
-        if ($selectedDateColumn) {
+        if ($filters['sort_by']) {
+            $query->orderBy($filters['sort_by'], $filters['sort_direction']);
+        } elseif ($selectedDateColumn) {
             $query->orderByDesc($selectedDateColumn);
         } elseif ($columns->contains('id')) {
             $query->orderByDesc('id');

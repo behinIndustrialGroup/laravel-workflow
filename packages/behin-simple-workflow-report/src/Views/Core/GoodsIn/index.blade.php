@@ -82,6 +82,41 @@
             font-weight: 600;
             color: #374151;
             padding-block: 1rem;
+            white-space: nowrap;
+        }
+
+        .goods-in-report .table thead th .sortable-column {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .goods-in-report .table thead th .sortable-column .sort-icon {
+            font-size: 18px;
+            line-height: 1;
+            opacity: 0.45;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .goods-in-report .table thead th .sortable-column.sorted {
+            color: #0d47a1;
+        }
+
+        .goods-in-report .table thead th .sortable-column.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        .goods-in-report .table thead th .sortable-column:hover,
+        .goods-in-report .table thead th .sortable-column:focus {
+            color: #1976d2;
+        }
+
+        .goods-in-report .table thead th .sortable-column:hover .sort-icon,
+        .goods-in-report .table thead th .sortable-column:focus .sort-icon {
+            opacity: 1;
         }
 
         .goods-in-report .table tbody td {
@@ -145,6 +180,46 @@
 
         .goods-in-report .btn-outline-secondary {
             border-radius: 12px;
+        }
+
+        .goods-in-report .card-footer {
+            border-top: 1px solid rgba(55, 65, 81, 0.08);
+            border-radius: 0 0 18px 18px;
+        }
+
+        .goods-in-report .pagination-wrapper {
+            width: 100%;
+        }
+
+        .goods-in-report .pagination-wrapper .pagination {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0;
+        }
+
+        .goods-in-report .pagination .page-link {
+            border-radius: 10px !important;
+            color: #1f2937;
+            min-width: 2.25rem;
+            text-align: center;
+        }
+
+        .goods-in-report .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            border-color: #1976d2;
+            color: #fff;
+            box-shadow: 0 6px 12px rgba(33, 150, 243, 0.25);
+        }
+
+        .goods-in-report .pagination .page-link:focus {
+            box-shadow: none;
+        }
+
+        @media (min-width: 992px) {
+            .goods-in-report .pagination-wrapper {
+                width: auto;
+            }
         }
 
         @media (max-width: 768px) {
@@ -227,6 +302,9 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <input type="hidden" name="sort_by" id="sort_by" value="{{ $filters['sort_by'] ?? '' }}">
+                            <input type="hidden" name="sort_direction" id="sort_direction"
+                                value="{{ $filters['sort_direction'] ?? 'desc' }}">
                             <div class="col-md-3 col-lg-1 d-grid">
                                 <button type="submit" class="btn btn-primary">فیلتر</button>
                             </div>
@@ -271,7 +349,29 @@
                                     <th style="width: 70px;">#</th>
                                     @foreach ($showInTable as $column)
                                         @if (isset($columnMetadata[$column]))
-                                            <th>{{ $columnMetadata[$column]['label'] }}</th>
+                                            @php
+                                                $meta = $columnMetadata[$column];
+                                                $isSorted = ($filters['sort_by'] ?? null) === $column;
+                                                $currentDirection = $filters['sort_direction'] ?? 'desc';
+                                                $nextDirection = $isSorted && $currentDirection === 'asc' ? 'desc' : 'asc';
+                                                $sortIcon = $isSorted
+                                                    ? ($currentDirection === 'asc'
+                                                        ? 'expand_less'
+                                                        : 'expand_more')
+                                                    : 'unfold_more';
+                                                $sortUrl = request()->fullUrlWithQuery([
+                                                    'sort_by' => $column,
+                                                    'sort_direction' => $nextDirection,
+                                                    'page' => 1,
+                                                ]);
+                                            @endphp
+                                            <th>
+                                                <a href="{{ $sortUrl }}" class="sortable-column {{ $isSorted ? 'sorted' : '' }}"
+                                                    title="مرتب‌سازی بر اساس {{ $meta['label'] }}">
+                                                    <span>{{ $meta['label'] }}</span>
+                                                    <span class="material-icons sort-icon">{{ $sortIcon }}</span>
+                                                </a>
+                                            </th>
                                         @endif
                                     @endforeach
                                 </tr>
@@ -317,7 +417,20 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white">
-                    {{ $paginator->links() }}
+                    <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3">
+                        <p class="text-muted small mb-0">
+                            @if ($paginator->total())
+                                نمایش {{ number_format($paginator->firstItem()) }} تا
+                                {{ number_format($paginator->lastItem()) }} از
+                                {{ number_format($paginator->total()) }} رکورد
+                            @else
+                                رکوردی برای نمایش وجود ندارد
+                            @endif
+                        </p>
+                        <div class="pagination-wrapper">
+                            {{ $paginator->onEachSide(1)->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
                 </div>
             </div>
         @else
