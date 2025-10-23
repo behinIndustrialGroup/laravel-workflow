@@ -97,7 +97,7 @@ class MissionsReportController extends Controller
                 return $mission;
             });
 
-        return view('SimpleWorkflowReportView::reports.missions', [
+        return view('SimpleWorkflowReportView::Core.Missions.index', [
             'missions' => $missions,
             'monthOptions' => $monthOptions,
             'selectedMonth' => $selectedMonth,

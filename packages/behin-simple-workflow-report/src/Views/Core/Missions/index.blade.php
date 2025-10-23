@@ -51,7 +51,7 @@
                                 <td dir="ltr">
                                     {{ $mission->end_datetime_carbon ? toJalali($mission->end_datetime_carbon)->format('Y-m-d H:i') : '' }}
                                 </td>
-                                <td>{{ $mission->created_by }}</td>
+                                <td>{{ getUserInfo($mission->created_by)->name ?? '-' }}</td>
                                 <td dir="ltr">
                                     {{ $mission->duration_hours !== null ? number_format($mission->duration_hours, 2) : '-' }}
                                 </td>

@@ -173,6 +173,11 @@
                                         <td>{{ $report->job_rank }}</td>
                                     </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td >مجموع: {{ $totalDuration }} ساعت</td>
+                                    <td colspan="20"></td>
+                                </tr>
                             </table>
                         </div>
                     </div>

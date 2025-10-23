@@ -349,6 +349,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (access('گزارش ماموریت'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش ماموریت</td>
+                                            <td class="d-none">گزارش کامل ماموریت</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.missions.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
 
                                 </tbody>
                             </table>

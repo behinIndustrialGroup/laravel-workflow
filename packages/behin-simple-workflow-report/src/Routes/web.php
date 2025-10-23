@@ -50,6 +50,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('phonebook', PhonebookController::class)->except(['show']);
 
     Route::get('goods-in', [GoodsInReportController::class, 'index'])->name('goods-in.index')->middleware('access:گزارش ورود کالاها در نگهبانی');
+    Route::get('missions', [MissionsReportController::class, 'index'])->name('missions.index')->middleware('access:گزارش ماموریت');
 
 
     Route::name('fin.')->prefix('fin')->group(function(){
@@ -118,5 +119,4 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
 Route::get('workflow-report/daily-report/send-reminder', [DailyReportController:: class, 'sendReminder'])->middleware(['web'])->name('simpleWorkflowReport.daily-report.send-reminder');
 
-Route::middleware(['web', 'auth'])->get('/reports/missions', [MissionsReportController::class, 'index'])->name('simpleWorkflowReport.reports.missions');
 

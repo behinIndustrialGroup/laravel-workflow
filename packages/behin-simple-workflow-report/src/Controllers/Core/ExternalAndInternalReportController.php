@@ -59,7 +59,8 @@ class ExternalAndInternalReportController extends Controller
         ];
 
         $devices = Devices::where('case_number', $caseNumber)->get();
-        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get()->each(function($row) {
+        $totalDuration = 0;
+        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get()->each(function($row) use (&$totalDuration) {
             try {
                 $startDate = convertPersianToEnglish($row->start_date);
                 $startTime = $row->start_time;
@@ -74,6 +75,7 @@ class ExternalAndInternalReportController extends Controller
                     ->timestamp;
         
                 $row->duration = round((($row->end ?? 0) - ($row->start ?? 0)) / 3600, 2); // به ساعت
+                $totalDuration += $row->duration;
             } catch (\Throwable $e) {
                 $row->duration = null; // یا ""
             }
@@ -142,7 +144,7 @@ class ExternalAndInternalReportController extends Controller
         ];
         return view(
             'SimpleWorkflowReportView::Core.ExternalInternal.show',
-            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'parts', 'financials', 'caseCosts', 'delivery', 'mapaCenterReports')
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'totalDuration', 'parts', 'financials', 'caseCosts', 'delivery', 'mapaCenterReports')
         );
     }
 

@@ -196,6 +196,29 @@
                 </div>
             </div>
         @endauth
+        @if (access('آیکون شروع فرایند ماموریت'))
+            <div class="col-sm-3 "
+            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                'taskId' => 'cf07ec23-686f-4a08-9cb5-5ea258c4b1a0',
+                'inDraft' => 0,
+                'force' => 1,
+                'redirect' => true,
+            ]) }}'; }"
+            >
+                <!-- small box -->
+                <div class="small-box bg-secondary">
+                    <div class="inner">
+                        <h3>{{ trans('مأموریت') }}</h3>
+
+                        <p>{{ trans('مأموریت') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
+                </div>
+            </div>
+        @endauth
     @endsection
 
     @section('script')
