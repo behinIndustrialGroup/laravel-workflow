@@ -39,6 +39,7 @@
                             <th>تاریخ پایان</th>
                             <th>ایجادکننده</th>
                             <th>مدت (ساعت)</th>
+                            <th>پرونده ها</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,6 +55,12 @@
                                 <td>{{ getUserInfo($mission->created_by)->name ?? '-' }}</td>
                                 <td dir="ltr">
                                     {{ $mission->duration_hours !== null ? number_format($mission->duration_hours, 2) : '-' }}
+                                </td>
+                                <td>
+                                    @foreach ($mission->cases as $case)
+                                        <i class="fa fa-external-link text-primary" onclick="window.open('{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->related_case_number]) }}', '_blank')"></i>
+                                        {{ $case->related_case_number ?? '-' }}<br>
+                                    @endforeach
                                 </td>
                             </tr>
                         @endforeach

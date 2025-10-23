@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Models\Entities\Missions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Morilog\Jalali\Jalalian;
+use Behin\SimpleWorkflow\Models\Entities\Case_misson;
 
 class MissionsReportController extends Controller
 {
@@ -93,6 +94,8 @@ class MissionsReportController extends Controller
                 $mission->end_datetime_carbon = $endAlt !== null
                     ? Carbon::createFromTimestampMs($endAlt, config('app.timezone'))
                     : null;
+
+                $mission->cases = Case_misson::where('case_number', $mission->case_number)->get();
 
                 return $mission;
             });
