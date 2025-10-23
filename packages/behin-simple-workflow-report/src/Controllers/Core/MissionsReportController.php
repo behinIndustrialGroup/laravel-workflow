@@ -3,15 +3,50 @@
 namespace Behin\SimpleWorkflowReport\Controllers\Core;
 
 use App\Http\Controllers\Controller;
+use Behin\SimpleWorkflow\Models\Entities\Case_misson;
 use Behin\SimpleWorkflow\Models\Entities\Missions;
+use Behin\SimpleWorkflowReport\Exports\MissionsReportExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Morilog\Jalali\Jalalian;
-use Behin\SimpleWorkflow\Models\Entities\Case_misson;
 
 class MissionsReportController extends Controller
 {
     public function index(Request $request)
+    {
+        $data = $this->prepareMissionsData($request);
+
+        return view('SimpleWorkflowReportView::Core.Missions.index', $data);
+    }
+
+    public function export(Request $request)
+    {
+        $data = $this->prepareMissionsData($request);
+
+        /** @var Collection $missions */
+        $missions = $data['missions'];
+
+        $from = str_replace('-', '', $data['fromValue'] ?? '');
+        $to = str_replace('-', '', $data['toValue'] ?? '');
+        $fileName = 'missions-report.xlsx';
+        if ($from || $to) {
+            $fileName = sprintf('missions-report-%s-%s.xlsx', $from, $to);
+        }
+
+        return (new MissionsReportExport($missions))->download($fileName);
+    }
+
+    /**
+     * @return array{
+     *     missions: Collection<int, mixed>,
+     *     monthOptions: array<int, array<string, string>>,
+     *     selectedMonth: string,
+     *     fromValue: string,
+     *     toValue: string
+     * }
+     */
+    private function prepareMissionsData(Request $request): array
     {
         $query = Missions::query();
 
@@ -100,13 +135,13 @@ class MissionsReportController extends Controller
                 return $mission;
             });
 
-        return view('SimpleWorkflowReportView::Core.Missions.index', [
+        return [
             'missions' => $missions,
             'monthOptions' => $monthOptions,
             'selectedMonth' => $selectedMonth,
             'fromValue' => $fromValue,
             'toValue' => $toValue,
-        ]);
+        ];
     }
 
     private function jalaliToCarbonStartOfDay(?string $date): ?Carbon
