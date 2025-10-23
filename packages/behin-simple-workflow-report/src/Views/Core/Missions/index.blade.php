@@ -25,7 +25,12 @@
                     <input type="text" name="to_date" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-warning" type="submit">فیلتر</button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-warning" type="submit">فیلتر</button>
+                        <a class="btn btn-success" href="{{ route('simpleWorkflowReport.missions.export', request()->query()) }}">
+                            دریافت اکسل
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
