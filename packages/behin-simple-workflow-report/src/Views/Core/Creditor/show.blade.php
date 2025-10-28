@@ -43,7 +43,7 @@
                     >
                         <td>{{ $creditor->type }}</td>
                         <td>{{ $creditor->counterparty }}</td>
-                        <td dir="ltr">{{ number_format($creditor->amount) }}</td>
+                        <td dir="ltr">{{ number_format((int)$creditor->amount) }}</td>
                         <td>{{ $creditor->settlement_type }}</td>
                         <td>{{ $creditor->invoice_number }}</td>
                         <td>{{ $creditor->invoice_date }}</td>

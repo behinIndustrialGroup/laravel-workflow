@@ -40,9 +40,9 @@
                     <thead>
                         <tr>
                             <th>عنوان مأموریت</th>
+                            <th>ایجادکننده</th>
                             <th>تاریخ شروع</th>
                             <th>تاریخ پایان</th>
-                            <th>ایجادکننده</th>
                             <th>مدت (ساعت)</th>
                             <th>پرونده ها</th>
                         </tr>
@@ -51,13 +51,13 @@
                         @foreach ($missions as $mission)
                             <tr>
                                 <td>{{ $mission->title }}</td>
+                                <td>{{ getUserInfo($mission->created_by)->name ?? '-' }}</td>
                                 <td dir="ltr">
                                     {{ $mission->start_datetime_carbon ? toJalali($mission->start_datetime_carbon)->format('Y-m-d H:i') : '' }}
                                 </td>
                                 <td dir="ltr">
                                     {{ $mission->end_datetime_carbon ? toJalali($mission->end_datetime_carbon)->format('Y-m-d H:i') : '' }}
                                 </td>
-                                <td>{{ getUserInfo($mission->created_by)->name ?? '-' }}</td>
                                 <td dir="ltr">
                                     {{ $mission->duration_hours !== null ? number_format($mission->duration_hours, 2) : '-' }}
                                 </td>

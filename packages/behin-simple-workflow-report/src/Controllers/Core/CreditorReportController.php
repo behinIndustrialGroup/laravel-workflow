@@ -46,11 +46,13 @@ class CreditorReportController extends Controller
 
     public function addTasvie(Request $request)
     {
-        Creditor::create([
+        $amount = str_replace(',', '', $request->amount);
+        $amount = -1 * abs($amount);
+        return Creditor::create([
             'type' => 'تسویه',
             'description' => $request->description,
             'counterparty' => $request->counterparty,
-            'amount' => -1 * (int)$request->amount,
+            'amount' => (string)$amount,
             'invoice_number' => $request->invoice_number,
             'invoice_date' => $request->invoice_date,
             'invoice_date_alt' => $request->invoice_date_alt,
@@ -66,11 +68,13 @@ class CreditorReportController extends Controller
 
     public function addTalab(Request $request)
     {
+        $amount = str_replace(',', '', $request->amount);
+        $amount = abs($amount);
         Creditor::create([
             'type' => 'طلب',
             'description' => $request->description,
             'counterparty' => $request->counterparty,
-            'amount' => (int)$request->amount,
+            'amount' => (string)$amount,
             'invoice_number' => $request->invoice_number,
             'invoice_date' => $request->invoice_date,
             'invoice_date_alt' => $request->invoice_date_alt,

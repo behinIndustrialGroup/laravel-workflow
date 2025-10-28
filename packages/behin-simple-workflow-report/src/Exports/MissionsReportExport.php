@@ -26,9 +26,9 @@ class MissionsReportExport implements FromCollection, WithHeadings, WithMapping,
     {
         return [
             'عنوان مأموریت',
+            'ایجادکننده',
             'تاریخ شروع',
             'تاریخ پایان',
-            'ایجادکننده',
             'مدت (ساعت)',
             'پرونده‌ها',
         ];
@@ -59,13 +59,13 @@ class MissionsReportExport implements FromCollection, WithHeadings, WithMapping,
         $cases = collect($mission->cases ?? [])
             ->pluck('related_case_number')
             ->filter()
-            ->implode(PHP_EOL);
+            ->implode(' - ');
 
         return [
             $title,
+            $creator,
             $start,
             $end,
-            $creator,
             $duration,
             $cases,
         ];

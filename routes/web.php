@@ -99,74 +99,20 @@ Route::get('build-app', function(){
     return redirect()->back();
 });
 
-Route::get('test', function(){
-    $cases = Variable::where('key', 'timeoff_request_type')->where('value', 'ساعتی')->pluck('case_id');
-    foreach($cases as $caseId){
-        $case = CaseController::getById($caseId);
-        if($case){
-            $type = $case->getVariable('timeoff_request_type');
-            if($type == 'ساعتی'){
-                $startDate = $case->getVariable('timeoff_hourly_request_start_date');
-                $startDate = convertPersianToEnglish($startDate);
-                if(strlen($startDate) == 10){
-                    $startTime = $case->getVariable('timeoff_start_time');
-                    $startTime = str_pad($startTime, 5, '0', STR_PAD_LEFT);
-                    $gregorianStartDate = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")->toCarbon()->timestamp;
-                    $endTime = $case->getVariable('timeoff_end_time');
-                    $endTime = str_pad($endTime, 5, '0', STR_PAD_LEFT);
-                    $gregorianEndDate = Jalalian::fromFormat('Y-m-d H:i', "$startDate $endTime")->toCarbon()->timestamp;
-                    echo Carbon::createFromTimestamp($gregorianEndDate, 'Asia/Tehran') . "\t $endTime <br>";
-                    $case->saveVariable('start_timestamp', $gregorianStartDate);
-                    $case->saveVariable('end_timestamp', $gregorianEndDate);
-                }
-            }
-        }
-    }
-});
-Route::get('test2', function () {
-    $collection = Excel::toCollection(null, public_path('123.xlsx'));
+Route::get('test', function () {
+    $financials = Financials::all()->map(function ($financial) {
+        $customerVar = Variable::where('case_id', $financial->case_id)
+            ->where('key', 'customer_workshop_or_ceo_name')
+            ->first();
 
-    foreach ($collection as $sheet) {
-        foreach ($sheet as $row) {
-            $mobile  = strval($row[1]); // تبدیل به رشته
-            $name    = isset($row[0]) ? trim($row[0]) : '';
-            $address = isset($row[2]) ? trim($row[2]) : '';
+        $financial->customer = $customerVar ? $customerVar->value : null;
+        return $financial;
+    });
 
-            Customers::updateOrCreate(
-                ['mobile' => $mobile],
-                [
-                    'name'    => $name,
-                    'address' => $address,
-                ]
-            );
-        }
-    }
-
-    return "Imported successfully!";
-});
-
-Route::get('test3', function(){
-    $cases = Cases::whereIn('process_id', [
-        '35a5c023-5e85-409e-8ba4-a8c00291561c',
-        '4bb6287b-9ddc-4737-9573-72071654b9de',
-        '1763ab09-1b90-4609-af45-ef5b68cf10d0',
-    ])
-        ->whereNull('parent_id')
-        ->whereNotNull('number')
-        ->groupBy('number')
-        ->get()
-        ->filter(function ($case) {
-            $whereIsResult = $case->whereIs();
-            return !($whereIsResult[0]?->archive == 'yes');
-        });
-
-    foreach($cases as $case){
-        try{
-            ExternalAndInternalReportController::show($case->number);
-        }catch(Exception $e){
-            echo $case->number . ' ### ' . $e->getMessage() . '<br>';
-        }
-    }
+    // گروه‌بندی بر اساس customer
+    $grouped = $financials->groupBy('customer');
+    dd($grouped);
+    return response()->json($grouped);
 });
 
 
