@@ -30,6 +30,10 @@ class FormController extends Controller
             $fieldDetails = getFieldDetailsByName($field->fieldName);
             if($fieldDetails){
                 $ar[] = $field->fieldName;
+                if($fieldDetails->type == 'location'){
+                    $ar[] = $field->fieldName . '_lng';
+                    $ar[] = $field->fieldName . '_lat';
+                }
             }else{
                 $childAr = self::getFormFields($field->fieldName);
                 $ar = array_merge($ar, $childAr);

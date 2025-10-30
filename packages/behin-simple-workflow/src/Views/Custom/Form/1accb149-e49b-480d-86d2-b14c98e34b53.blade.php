@@ -59,7 +59,7 @@
                     <div class="form-group">
                         <label for="name">تصویر اولیه</label>
                         @if ($part->initial_part_pic)
-                            <a href="{{ url('public/' . $part->initial_part_pic) }}" alt="{{ $part->name }}"
+                            <a href="{{ url($part->initial_part_pic) }}" alt="{{ $part->name }}"
                                 width="100" download><i class="fa fa-download"></i></a>
                         @endif
                     </div>

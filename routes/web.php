@@ -29,14 +29,14 @@ use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
 
-Route::get('', function(){
+Route::get('', function () {
     return view('auth.login');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class])->group(function(){
-    Route::get('', function(){
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class])->group(function () {
+    Route::get('', function () {
         return view('admin.dashboard');
     })->name('dashboard');
 });
@@ -47,7 +47,7 @@ Route::get('/pusher/beams-auth', function (Request $request) {
         'secretKey' => config('broadcasting.pusher.secretKey')
     ]);
     $userId = auth()->user()->id;
-    $beamsToken = $beamsClient->generateToken('user-mobile-'.$userId);
+    $beamsToken = $beamsClient->generateToken('user-mobile-' . $userId);
     // $user = User::find($userId);
     return response()->json($beamsToken);
 })->middleware('auth');
@@ -91,7 +91,7 @@ Route::get('queue-work', function () {
     }
 });
 
-Route::get('build-app', function(){
+Route::get('build-app', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('view:clear');
@@ -116,3 +116,24 @@ Route::get('test', function () {
 });
 
 
+Route::get('test2', function () {
+    $creditors = Creditor::get();
+    foreach ($creditors as $creditor) {
+        if ($creditor->type == 'طلب') {
+            $data = [
+                // 'case_number' => $creditor->case_number,
+                'financial_type' => 'بستانکار',
+                'financial_method' => $creditor->settlement_type,
+                'description' => $creditor->description,
+                'counterparty_id' => $creditor->counterparty_id,
+                'amount' => (string)$creditor->amount,
+                'invoice_or_cheque_number' => $creditor->invoice_number,
+                'transaction_or_cheque_due_date' => $creditor->settlement_date,
+            ];
+        }
+    }
+    // گروه‌بندی بر اساس customer
+    $grouped = $financials->groupBy('customer');
+    dd($grouped);
+    return response()->json($grouped);
+});

@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_devices'; 
-    protected $fillable = ['case_id', 'case_number', 'name', 'model', 'control_system', 'control_system_model', 'serial', 'has_electrical_map', 'mapa_serial', 'mapa_expert_head', 'repair_is_approved', 'dispatched_expert_needed', 'dispatched_expert', 'mapa_expert_companions', ]; 
+    protected $fillable = ['request_id', 'name', 'model', 'control_system', 'control_system_model', 'has_electrical_map', 'mapa_serial', 'serial', ]; 
 protected static function boot()
         {
             parent::boot();

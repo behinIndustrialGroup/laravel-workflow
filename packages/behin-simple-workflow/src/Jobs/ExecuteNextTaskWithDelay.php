@@ -30,7 +30,8 @@ class ExecuteNextTaskWithDelay implements ShouldQueue
         Log::info('Executing next task with delay for case: ' . $this->caseId);
         if ($this->task) {
             Log::info('done');
-            RoutingController::executeNextTask($this->task, $this->caseId);
+            $executedTaskIds = [];
+            RoutingController::executeNextTask($this->task, $this->caseId, $executedTaskIds);
         }
     }
 }

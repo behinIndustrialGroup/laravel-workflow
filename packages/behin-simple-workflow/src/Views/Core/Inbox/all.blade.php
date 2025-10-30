@@ -39,10 +39,8 @@
                             <td>
                                 @if ($row->status == 'new')
                                     <span class="badge bg-primary">{{ trans('fields.New') }}</span>
-                                @elseif($row->status == 'opened')
-                                    <span class="badge bg-secondary">{{ trans('fields.opened') }}</span>
-                                @elseif($row->status == 'inProgress')
-                                    <span class="badge bg-warning">{{ trans('fields.inProgress') }}</span>
+                                @elseif($row->status == 'in_progress')
+                                    <span class="badge bg-warning">{{ trans('fields.In Progress') }}</span>
                                 @else
                                     <span class="badge bg-success">{{ trans('fields.Completed') }}</span>
                                 @endif

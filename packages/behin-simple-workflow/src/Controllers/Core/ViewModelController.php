@@ -287,11 +287,11 @@ class ViewModelController extends Controller
                     }
                     $s .= "<td>";
                     if ($row->alllow_update) {
-                        $s .= "<i class='fa fa-edit btn btn-sm btn-success p-1 m-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                        $s .= "<i class='material-icons btn btn-success ml-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'>edit</i>";
                     }
 
                     if ($row->alllow_delete) {
-                        $s .= "<i class='fa fa-trash btn-sm btn-danger p-1 m-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                        $s .= "<i class='material-icons btn btn-danger ml-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'>delete</i>";
                     }
                     $s .= "</td>";
                     $s .= "</tr>";

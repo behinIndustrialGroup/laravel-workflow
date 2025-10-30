@@ -23,7 +23,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::get('{processId}/edit', [ ProcessController::class, 'edit' ])->name('edit');
         Route::put('{processId}', [ ProcessController::class, 'update' ])->name('update');
         Route::get('start-list', [ ProcessController::class, 'startListView' ])->name('startListView');
-        Route::get('start/{taskId}/{force?}/{redirect?}/{inDraft}', [ ProcessController::class, 'start' ])->name('start');
+
         Route::get('check-error/{processId}', [ ProcessController::class, 'processHasError' ])->name('processHasError');
         Route::get('{processId}/export-view', [ ProcessController::class, 'exportView' ])->name('exportView');
         Route::get('import-view', [ ProcessController::class, 'importView' ])->name('importView');
@@ -75,15 +75,18 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::get('fields/{field}/copy', [FieldController::class, 'copy'])->name('fields.copy');
 
     Route::name('inbox.')->prefix('inbox')->group(function(){
+        Route::get('categorized', [ InboxController::class, 'categorized' ])->name('categorized');
         Route::get('', [ InboxController::class, 'index' ])->name('index');
         Route::get('done-inbox', [ DoneInboxController::class, 'index' ])->name('done');
         // Route::get('all-inbox', [ InboxController::class, 'getAllInbox' ])->name('getAllInbox');
         Route::get('cases', [ InboxController::class, 'showCases' ])->name('cases.list');
         Route::get('cases/{caseId}/inboxes', [ InboxController::class, 'showInboxes' ])->name('cases.inboxes');
+        Route::post('{inbox}/reminders', [ InboxController::class, 'storeReminder' ])->name('reminders.store');
 
         Route::get('edit/{inboxId}', [ InboxController::class, 'edit' ])->name('edit');
         Route::put('update/{inboxId}', [ InboxController::class, 'update' ])->name('update');
         Route::get('change-status/{inboxId}', [ InboxController::class, 'changeStatus' ])->name('changeStatus');
+        Route::get('cancel/{inboxId}', [ InboxController::class, 'cancel' ])->name('cancel');
         Route::get('delete/{inboxId}', [ InboxController::class, 'delete' ])->name('delete');
         Route::get('case-history/{caseNumber?}', [InboxController::class, 'caseHistory'])->name('caseHistoryView');
     });
@@ -96,7 +99,6 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
         Route::post('jump-to', [ RoutingController::class, 'jumpTo' ])->name('jumpTo');
         Route::get('view/{inboxId}', [ InboxController::class, 'view' ])->name('view');
     });
-
 
     Route::resource('entities', EntityController::class);
     Route::post('entities/export', [EntityController::class, 'export'])->name('entities.export');
@@ -121,8 +123,8 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::post('get-view-model-rows', [ViewModelController::class, 'getRows'])->name('view-model.get-rows');
     Route::post('update-view-model-record', [ViewModelController::class, 'updateRecord'])->name('view-model.update-record');
     Route::post('delete-view-model-record', [ViewModelController::class, 'deleteRecord'])->name('view-model.delete-record');
-
-
 });
 
+Route::get('workflow/process/start/{taskId}/{force?}/{redirect?}/{inDraft?}', [ ProcessController::class, 'start' ])->name('simpleWorkflow.process.start')->middleware('web');
 Route::get('workflow/inbox/view/{inboxId}', [ InboxController::class, 'view' ])->name('simpleWorkflow.inbox.view')->middleware(['web']);
+

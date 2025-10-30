@@ -27,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
+use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
+
 
 class ExternalAndInternalReportController extends Controller
 {
@@ -136,6 +138,7 @@ class ExternalAndInternalReportController extends Controller
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
         $financials = Financials::where('case_number', $caseNumber)->get();
+        $financialTransactions = Financial_transactions::where('case_number', $caseNumber)->get();
         $caseCosts = Case_costs::where('case_number', $caseNumber)->get();
         $delivery = [
             'delivery_date' => $mainCase->getVariable('delivery_date'),
@@ -144,7 +147,7 @@ class ExternalAndInternalReportController extends Controller
         ];
         return view(
             'SimpleWorkflowReportView::Core.ExternalInternal.show',
-            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'totalDuration', 'parts', 'financials', 'caseCosts', 'delivery', 'mapaCenterReports')
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'totalDuration', 'parts', 'financials', 'financialTransactions', 'caseCosts', 'delivery', 'mapaCenterReports')
         );
     }
 

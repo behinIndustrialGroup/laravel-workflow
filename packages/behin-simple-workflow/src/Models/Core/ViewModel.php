@@ -39,7 +39,6 @@ class ViewModel extends Model
         'create_form',
         'create_form_fields',
         'show_create_form_at_the_end',
-        'script_before_create',
         'allow_update_row',
         'update_form',
         'update_form_fields',

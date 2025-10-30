@@ -144,7 +144,11 @@
                     <select name="parent_id" id="parent_id" class="form-select select2">
                         <option value="">{{ trans('None') }}</option>
                         @foreach ($process->tasks() as $task)
-                            <option value="{{ $task->id }}">{{ $task->name }}</option>
+                            <option value="{{ $task->id }}">{{ $task->name }}
+                                @if ($task->is_preview)
+                                    ({{ trans('fields.Preview') }})
+                                @endif
+                            </option>
                         @endforeach
                     </select>
                 </div>

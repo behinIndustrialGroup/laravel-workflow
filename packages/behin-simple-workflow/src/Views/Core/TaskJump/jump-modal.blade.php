@@ -1,5 +1,4 @@
 <div class="">
-    <h2 class="text-center">{{ trans('fields.Jump To Task') }}</h2>
     @foreach ($task->jumps as $jump)
         <form action="{{ route('simpleWorkflow.routing.jumpTo') }}" class="m-1" method="POST"
         onsubmit="return confirm('{{ trans('fileds.Are you sure you want to jump to this task?') }}')">
@@ -17,8 +16,7 @@
         <h4 class="text-center">{{ trans('fields.Back to previous step') }}</h4>
         @foreach ($previousInboxes as $prev)
             @if ($prev->id != $inbox_id)
-                <form action="{{ route('simpleWorkflow.routing.jumpBack') }}" class="m-1" method="POST"
-                onsubmit="return confirm('{{ trans('fileds.Are you sure you want to jump back?') }}')">
+                <form action="{{ route('simpleWorkflow.routing.jumpBack') }}" class="m-1" method="POST">
                     @csrf
                     <input type="hidden" name="inboxId" value="{{ $inbox_id }}">
                     <input type="hidden" name="caseId" value="{{ $case_id }}">

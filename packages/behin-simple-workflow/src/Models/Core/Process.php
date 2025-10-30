@@ -38,11 +38,11 @@ class Process extends Model
         return $this->hasMany(Cases::class);
     }
 
-    function tasks(){
-        return TaskController::getProcessTasks($this->id);
+    function tasks($includePreview = true){
+        return TaskController::getProcessTasks($this->id, $includePreview);
     }
 
-    function startTasks(){
-        return TaskController::getProcessStartTasks($this->id);
+    function startTasks($includePreview = true){
+        return TaskController::getProcessStartTasks($this->id, $includePreview);
     }
 }

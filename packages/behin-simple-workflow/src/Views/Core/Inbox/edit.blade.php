@@ -65,6 +65,14 @@
                     </button>
                 </form>
             </div>
+            <div>
+                <form action="{{ route('simpleWorkflow.inbox.delete', $inbox->id) }}" method="get">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">
+                        {{ trans('fields.Delete') }}
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

@@ -18,7 +18,7 @@
 
     @endphp
     {{ $task->id }} --> {{ $child->id }}["<a type='submit' class="{{ $taskClass }} task-edit-link"
-        href='{{ route('simpleWorkflow.task.edit', $child->id) }}'>{{ $child->name }}</a>"]:::{{ $taskClass }}
+        href='{{ route('simpleWorkflow.task.edit', $child->id) }}'>{{ $child->name }}@if ($child->is_preview) ({{ trans('fields.Preview') }})@endif</a>"]:::{{ $taskClass }}
     @php
         $children = $child->children();
     @endphp

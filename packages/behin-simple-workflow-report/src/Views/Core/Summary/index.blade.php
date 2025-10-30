@@ -327,6 +327,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش دفتر معین'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش لیست بدهکاران</td>
+                                            <td class="d-none">گزارش کامل دفتر معین</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.financial-transactions.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (auth()->user()->access('گزارش تنخواه'))
                                         <tr>
                                             <td class="d-none"></td>

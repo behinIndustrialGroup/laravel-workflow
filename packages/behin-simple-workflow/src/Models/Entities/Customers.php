@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_customers'; 
-    protected $fillable = ['name', 'national_id', 'mobile', 'city', 'address', ]; 
+    protected $fillable = ['customer_workshop_or_ceo_name', 'mobile', 'national_id', 'province', 'address', ]; 
 protected static function boot()
         {
             parent::boot();

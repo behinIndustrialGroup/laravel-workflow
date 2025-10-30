@@ -10,11 +10,14 @@ use Behin\SimpleWorkflow\Models\Core\TaskJump;
 use Behin\SimpleWorkflow\Models\Core\Form;
 use Behin\SimpleWorkflow\Models\Core\Script;
 use Behin\SimpleWorkflow\Models\Core\Condition;
+use BehinUserRoles\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ProcessController extends Controller
 {
@@ -64,7 +67,7 @@ class ProcessController extends Controller
         $ar = [];
         foreach($processes as $process)
         {
-            $startTasks = TaskController::getProcessStartTasks($process->id);
+            $startTasks = TaskController::getProcessStartTasks($process->id, false);
             foreach($startTasks as $startTask)
             {
                 $result = TaskActorController::userIsAssignToTask($startTask->id, $userId);
@@ -89,6 +92,16 @@ class ProcessController extends Controller
     public static function start($taskId, $force = false, $redirect = true, $inDraft = false, $caseNumber = null, $creator = null, $parentId = null)
     {
         $task = TaskController::getById($taskId);
+        if (!$task) {
+            return response()->json([
+                'msg' => trans('fields.Task not found')
+            ], 404);
+        }
+        if ($task->is_preview) {
+            return response()->json([
+                'msg' => trans('fields.Task is in preview mode and cannot be started')
+            ], 403);
+        }
         if(!$force)
         {
             $listOfProcessThatUserCanStart = collect(self::listOfProcessThatUserCanStart(Auth::id()))->pluck('id')->toArray();
@@ -99,7 +112,21 @@ class ProcessController extends Controller
                 ], 403);
             }
         }
-        $creator = $creator ? $creator : Auth::user()->id;
+        if($creator){
+            
+        }elseif(Auth::check()){
+            $creator = Auth::user()->id;
+        }else{
+            $ip = request()->ip();
+            $tempUser = User::create([
+                'name' => $ip,
+                'email' => $ip.'-'.Str::random(5).'@temp.local',
+                'password' => Hash::make(Str::random(16)),
+            ]);
+            $creator = $tempUser->id;
+            Auth::login($tempUser);
+        }
+
         $case = CaseController::create($task->process_id, $creator, null, $inDraft, $caseNumber, $parentId);
         $status = $inDraft ? 'draft' : 'new';
         $inbox = InboxController::create($taskId, $case->id, $creator, $status);
@@ -115,6 +142,9 @@ class ProcessController extends Controller
         $process = ProcessController::getById($processId);
         $hasError = 0;
         foreach($process->tasks() as $task){
+            if ($task->is_preview) {
+                continue;
+            }
             if(TaskController::TaskHasError($task->id)){
                 $hasError++;
             }

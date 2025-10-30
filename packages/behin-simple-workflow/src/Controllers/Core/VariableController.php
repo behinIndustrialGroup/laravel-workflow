@@ -26,7 +26,7 @@ class VariableController extends Controller
 
     public static function getVariable($processId, $caseId, $key)
     {
-        $variable = Variable::where('case_id', $caseId)->where('key', $key)->first();
+        $variable = Variable::where('process_id', $processId)->where('case_id', $caseId)->where('key', $key)->first();
         return $variable;
     }
 

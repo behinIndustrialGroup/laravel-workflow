@@ -38,6 +38,9 @@ class Task extends Model
         'parent_id',
         'next_element_id',
         'assignment_type',
+        'is_preview',
+        'show_save_button',
+        'show_reminder_button',
         'case_name',
         'color',
         'background',
@@ -47,6 +50,14 @@ class Task extends Model
         'timing_value',
         'timing_key_name',
         'number_of_task_to_back',
+        'script_before_open',
+        'allow_cancel',
+    ];
+
+    protected $casts = [
+        'is_preview' => 'boolean',
+        'show_save_button' => 'boolean',
+        'show_reminder_button' => 'boolean',
     ];
 
     public function getStyledNameAttribute()

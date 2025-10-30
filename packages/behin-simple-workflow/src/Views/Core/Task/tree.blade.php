@@ -15,6 +15,9 @@
                     href="{{ route('simpleWorkflow.task.edit', $child->id) }}"><i class="fa fa-edit"></i></a>
             <strong class="">
                 <a data-toggle="collapse" href="#{{ $child->id }}">{{ $child->name }}</a>
+                @if ($child->is_preview)
+                    <span class="badge bg-secondary text-dark">{{ trans('fields.Preview') }}</span>
+                @endif
                 <span class="badge {{ $bgColor }}">
                     {{ ucfirst($child->type) }}
                 </span>

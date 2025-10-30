@@ -14,10 +14,6 @@ return new class extends Migration
             $columnsToAdd[] = 'script_after_create';
         }
 
-        if (!Schema::hasColumn('wf_view_models', 'script_before_create')) {
-            $columnsToAdd[] = 'script_before_create';
-        }
-
         if (!Schema::hasColumn('wf_view_models', 'script_after_update')) {
             $columnsToAdd[] = 'script_after_update';
         }
@@ -44,7 +40,6 @@ return new class extends Migration
         Schema::table('wf_view_models', function (Blueprint $table) {
             $table->dropColumn([
                 'script_after_create',
-                'script_before_create',
                 'script_after_update',
                 'script_after_delete',
                 'script_before_show_rows',

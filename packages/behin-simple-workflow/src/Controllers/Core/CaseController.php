@@ -26,7 +26,8 @@ class CaseController extends Controller
                 'number' => null,
                 'name' => $name,
                 'creator' => $creator,
-                'parent_id' => $parentId
+                'parent_id' => $parentId,
+                'status' => 'inProgress'
             ]);
         }
         $newNumber = $caseNumber? $caseNumber : self::getNewCaseNumber($processId);
@@ -35,7 +36,8 @@ class CaseController extends Controller
             'number' => $newNumber,
             'name' => $name,
             'creator' => $creator,
-            'parent_id' => $parentId
+            'parent_id' => $parentId,
+            'status' => 'inProgress'
         ]);
     }
 

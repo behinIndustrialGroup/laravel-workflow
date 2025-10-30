@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header bg-success text-center font-vazir-bold" >مشتری</div>
+                    <div class="card-header bg-success text-center font-vazir-bold">مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
                             <table class="table table-bordered">
@@ -63,7 +63,9 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center font-vazir-bold {{ count($devices) ? 'bg-success' : 'bg-primary' }}">دستگاه</div>
+                    <div
+                        class="card-header text-center font-vazir-bold {{ count($devices) ? 'bg-success' : 'bg-primary' }}">
+                        دستگاه</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="devices">
                             <table class="table table-bordered">
@@ -96,7 +98,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center font-vazir-bold {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش فرایند
+                    <div class="card-header text-center font-vazir-bold {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}"
+                        style="font-size: 25px">گزارش فرایند
                         خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
@@ -175,7 +178,7 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td >مجموع تعمیرات: {{ $totalDuration }} ساعت</td>
+                                    <td>مجموع تعمیرات: {{ $totalDuration }} ساعت</td>
                                     <td colspan="20"></td>
                                 </tr>
                             </table>
@@ -183,7 +186,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header text-center font-vazir-bold {{ count($parts) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش فرایند داخلی</div>
+                    <div class="card-header text-center font-vazir-bold {{ count($parts) ? 'bg-success' : 'bg-primary' }}"
+                        style="font-size: 25px">گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
                             <table class="table table-bordered">
@@ -227,8 +231,7 @@
                                             <td>{{ $part->repair_is_approved }}</td>
                                             <td>
                                                 @if ($part->initial_part_pic)
-                                                    <a href="{{ url("$part->initial_part_pic") }}"
-                                                        download>دانلود</a>
+                                                    <a href="{{ url("$part->initial_part_pic") }}" download>دانلود</a>
                                                 @endif
                                             </td>
                                             <td>{{ $part->dispatched_expert_needed }}</td>
@@ -245,8 +248,7 @@
                                             <td>{{ $part->has_attachment }}</td>
                                             <td>
                                                 @if ($part->attachment_image)
-                                                    <a href="{{ url("$part->attachment_image") }}"
-                                                        download>دانلود</a>
+                                                    <a href="{{ url("$part->attachment_image") }}" download>دانلود</a>
                                                 @endif
                                             </td>
                                         </tr>
@@ -355,7 +357,8 @@
                     @endif
                     @if (auth()->user()->access('امور جاری - جزئیات مالی'))
                         <div class="card">
-                            <div class="card-header text-center font-vazir-bold {{ count($financials) ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">گزارش
+                            <div class="card-header text-center font-vazir-bold {{ count($financials) ? 'bg-success' : 'bg-primary' }}"
+                                style="font-size: 25px">گزارش
                                 دریافتی مالی
                             </div>
                             <div class="card-body">
@@ -431,8 +434,15 @@
                                 </div>
                             </div>
                         </div>
+                        @if (count($financialTransactions))
+                            @include('SimpleWorkflowReportView::Core.FinancialTransaction.show', [
+                                'creditors' => $financialTransactions,
+                            ]);
+                        @endif
                         <div class="card">
-                            <div class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">گزارش
+                            <div
+                                class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">
+                                گزارش
                                 تفکیک هزینه های پرونده
                             </div>
                             <div class="card-body">
@@ -459,7 +469,8 @@
                         </div>
                     @endif
                     <div class="card">
-                        <div class="card-header text-center font-vazir-bold {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}" style="font-size: 25px">تحویل
+                        <div class="card-header text-center font-vazir-bold {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}"
+                            style="font-size: 25px">تحویل
                         </div>
                         <div class="card-body">
                             {{-- تحویل --}}

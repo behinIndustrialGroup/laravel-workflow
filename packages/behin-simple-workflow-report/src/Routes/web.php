@@ -27,6 +27,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportReminderSummaryController;
+use Behin\SimpleWorkflowReport\Controllers\Core\FinancialTransactionController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PettyCashController;
@@ -54,12 +55,12 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('missions/export', [MissionsReportController::class, 'export'])->name('missions.export')->middleware('access:گزارش ماموریت');
 
 
-    Route::name('fin.')->prefix('fin')->group(function(){
+    Route::name('fin.')->prefix('fin')->middleware('access:گزارش درآمد تقریبی')->group(function(){
         Route::get('', [FinReportController::class, 'index'])->name('index');
         Route::get('total-cost', [FinReportController::class, 'totalCost'])->name('totalCost');
         Route::get('all-payments/{year?}/{month?}/{user?}', [FinReportController::class, 'allPayments'])->name('allPayments');
     });
-    Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment');
+    Route::get('total-payment', [FinReportController::class, 'totalPayment'])->name('totalPayment')->middleware('access:گزارش درآمد تقریبی');
     Route::get('total-timeoff', function(){
         return Excel::download(new TotalTimeoff, 'total_timeoff.xlsx');
     })->name('totalTimeoff');
@@ -88,34 +89,39 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('mapa-center/delete-install-part/{id}', [MapaCenterController::class, 'deleteInstallPart'])->name('mapa-center.delete-install-part');
     Route::get('mapa-center-archive', [MapaCenterController::class, 'archive'])->name('mapa-center-archive');
 
-    Route::resource('cheque-report', ChequeReportController::class);
-    Route::patch('cheque-report/{id}/update-from-on-credit', [ChequeReportController::class, 'updateFromOnCredit'])->name('cheque-report.updateFromOnCredit');
-    Route::resource('on-credit-report', OnCreditReportController::class);
-    Route::get('on-credit-report-show-all', [OnCreditReportController::class, 'showAll'])->name('on-credit-report.showAll');
-    Route::resource('petty-cash', PettyCashController::class)->except(['show', 'create']);
-    Route::get('petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export');
-    Route::resource('personel-activity', PersonelActivityController::class);
-    Route::get('personel-activity/{user_id}/show-inboxes/{from?}/{to?}', [PersonelActivityController::class, 'showInboxes'])->name('personel-activity.showInboxes');
-    Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones');
+    Route::resource('cheque-report', ChequeReportController::class)->middleware('access:گزارش چک ها');
+    Route::patch('cheque-report/{id}/update-from-on-credit', [ChequeReportController::class, 'updateFromOnCredit'])->name('cheque-report.updateFromOnCredit')->middleware('access:گزارش چک ها');
+    Route::resource('on-credit-report', OnCreditReportController::class)->middleware('access:گزارش حساب دفتری');
+    Route::get('on-credit-report-show-all', [OnCreditReportController::class, 'showAll'])->name('on-credit-report.showAll')->middleware('access:گزارش حساب دفتری');
+    Route::resource('petty-cash', PettyCashController::class)->except(['show', 'create'])->middleware('access:گزارش تنخواه');
+    Route::get('petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export')->middleware('access:گزارش تنخواه');
+    Route::resource('personel-activity', PersonelActivityController::class)->middleware('access:گزارش اقدامات پرسنل');
+    Route::get('personel-activity/{user_id}/show-inboxes/{from?}/{to?}', [PersonelActivityController::class, 'showInboxes'])->name('personel-activity.showInboxes')->middleware('access:گزارش اقدامات پرسنل');
+    Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones')->middleware('access:گزارش اقدامات پرسنل');
 
-    Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index');
-    Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])
-        ->name('daily-report.reminder-summary');
-    Route::get('daily-report/reminder-summary/export', [DailyReportReminderSummaryController::class, 'export'])
-        ->name('daily-report.reminder-summary.export');
-    Route::get('rewards-penalties', [RewardPenaltyController::class, 'index'])->name('rewards-penalties.index');
-    Route::post('rewards-penalties', [RewardPenaltyController::class, 'store'])->name('rewards-penalties.store');
-    Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal');
-    Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external');
-    Route::get('daily-report/{user_id}/show-mapa-center/{from?}/{to?}', [DailyReportController:: class, 'showMapaCenter'])->name('daily-report.show-mapa-center');
-    Route::get('daily-report/{user_id}/show-external-as-assistant/{from?}/{to?}', [DailyReportController:: class, 'showExternalAsAssistant'])->name('daily-report.show-external-as-assistant');
-    Route::get('daily-report/{user_id}/show-other-daily-report/{from?}/{to?}', [DailyReportController:: class, 'showOtherDailyReport'])->name('daily-report.show-other-daily-report');
+    Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])->name('daily-report.reminder-summary')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/reminder-summary/export', [DailyReportReminderSummaryController::class, 'export'])->name('daily-report.reminder-summary.export')->middleware('access:گزارش روزانه');
+    Route::get('rewards-penalties', [RewardPenaltyController::class, 'index'])->name('rewards-penalties.index')->middleware('access:گزارش جرایم پیامک ها');
+    Route::post('rewards-penalties', [RewardPenaltyController::class, 'store'])->name('rewards-penalties.store')->middleware('access:گزارش جرایم پیامک ها');
+    Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/{user_id}/show-external/{from?}/{to?}', [DailyReportController:: class, 'showExternal'])->name('daily-report.show-external')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/{user_id}/show-mapa-center/{from?}/{to?}', [DailyReportController:: class, 'showMapaCenter'])->name('daily-report.show-mapa-center')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/{user_id}/show-external-as-assistant/{from?}/{to?}', [DailyReportController:: class, 'showExternalAsAssistant'])->name('daily-report.show-external-as-assistant')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/{user_id}/show-other-daily-report/{from?}/{to?}', [DailyReportController:: class, 'showOtherDailyReport'])->name('daily-report.show-other-daily-report')->middleware('access:گزارش روزانه');
 
-    Route::resource('creditor', CreditorReportController::class);
-    Route::get('creditor/{counterparty}/show-add-tasvie', [CreditorReportController::class, 'showAddTasvie'])->name('creditor.showAddTasvie');
-    Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie');
-    Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab');
-    Route::post('creditor/add-talab', [CreditorReportController::class, 'addTalab'])->name('creditor.addTalab');
+    Route::resource('creditor', CreditorReportController::class)->middleware('access:گزارش لیست طلبکاران');
+    Route::get('creditor/{counterparty}/show-add-tasvie', [CreditorReportController::class, 'showAddTasvie'])->name('creditor.showAddTasvie')->middleware('access:گزارش لیست طلبکاران');
+    Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab')->middleware('access:گزارش لیست طلبکاران');
+    Route::post('creditor/add-talab', [CreditorReportController::class, 'addTalab'])->name('creditor.addTalab')->middleware('access:گزارش لیست طلبکاران');
+
+    Route::resource('financial-transactions', FinancialTransactionController::class)->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/{counterparty}/show-add-credit', [FinancialTransactionController::class, 'showAddCredit'])->name('financial-transactions.showAddCredit')->middleware('access:گزارش لیست طلبکاران');
+    Route::post('financial-transactions/add-credit', [FinancialTransactionController::class, 'addCredit'])->name('financial-transactions.addCredit')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/{counterparty}/show-add-debit', [FinancialTransactionController::class, 'showAddDebit'])->name('financial-transactions.showAddDebit')->middleware('access:گزارش لیست طلبکاران');
+    Route::post('financial-transactions/add-debit', [FinancialTransactionController::class, 'addDebit'])->name('financial-transactions.addDebit')->middleware('access:گزارش لیست طلبکاران');
+
 });
 
 Route::get('workflow-report/daily-report/send-reminder', [DailyReportController:: class, 'sendReminder'])->middleware(['web'])->name('simpleWorkflowReport.daily-report.send-reminder');
