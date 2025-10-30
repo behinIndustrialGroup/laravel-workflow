@@ -57,13 +57,6 @@
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
                         <td class="d-flex flex-wrap" style="gap: 4px;">
-                            @if ($creditor->financial_type == 'بستانکار')
-                                <button class="btn btn-sm btn-primary mb-1"
-                                    onclick="open_view_model_form(`{{ $viewModelUpdateForm }}`, `{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">ویرایش</button>
-                            @elseif ($creditor->financial_type == 'بدهکار')
-                                <button class="btn btn-sm btn-primary mb-1"
-                                    onclick="open_view_model_form(`{{ $addTasvieViewModelUpdateForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $creditor->id }}`, `{{ $addTasvieViewModelApikey }}`)">ویرایش</button>
-                            @endif
                             <button class="btn btn-sm btn-danger mb-1"
                                 onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>
                         </td>
