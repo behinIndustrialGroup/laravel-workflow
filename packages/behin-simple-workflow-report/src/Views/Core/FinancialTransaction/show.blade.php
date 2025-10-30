@@ -36,7 +36,8 @@
             </thead>
             <tbody>
                 @foreach ($creditors as $creditor)
-                    <tr @if ($creditor->financial_type == 'بدهکار') style="background: #f56c6c" @endif
+                    <tr id="financial-transaction-row-{{ $creditor->id }}"
+                        @if ($creditor->financial_type == 'بدهکار') style="background: #f56c6c" @endif
                         @if ($creditor->financial_type == 'بستانکار') class="bg-success" @endif>
                         <td>{{ $creditor->financial_type }}</td>
                         <td>{{ $creditor->counterparty()->name ?? '' }}</td>
@@ -55,14 +56,16 @@
                         <td>{{ $creditor->destination_account_name }}</td>
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
-                        <td>
+                        <td class="d-flex flex-wrap" style="gap: 4px;">
                             @if ($creditor->financial_type == 'بستانکار')
-                                <button class="btn btn-sm btn-primary"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">ویرایش</button>
+                                <button class="btn btn-sm btn-primary mb-1"
+                                    onclick="open_view_model_form(`{{ $viewModelUpdateForm }}`, `{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">ویرایش</button>
                             @elseif ($creditor->financial_type == 'بدهکار')
-                                <button class="btn btn-sm btn-primary"
-                                    onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">ویرایش</button>
+                                <button class="btn btn-sm btn-primary mb-1"
+                                    onclick="open_view_model_form(`{{ $addTasvieViewModelUpdateForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $creditor->id }}`, `{{ $addTasvieViewModelApikey }}`)">ویرایش</button>
                             @endif
+                            <button class="btn btn-sm btn-danger mb-1"
+                                onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>
                         </td>
                     </tr>
                 @endforeach
@@ -79,7 +82,10 @@
 </div>
 
 <script>
-    $('#more-details').DataTable({
+    const destroyUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
+    const csrfToken = '{{ csrf_token() }}';
+
+    const moreDetailsTable = $('#more-details').DataTable({
         "pageLength": 25,
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
@@ -117,4 +123,41 @@
             );
         }
     });
+
+    window.deleteFinancialTransaction = function(id) {
+        if (!confirm('آیا از حذف این تراکنش اطمینان دارید؟')) {
+            return;
+        }
+
+        const url = destroyUrlTemplate.replace('__id__', id);
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _method: 'DELETE',
+                _token: csrfToken,
+            },
+            success: function(response) {
+                const row = $('#financial-transaction-row-' + id);
+                if (row.length) {
+                    moreDetailsTable.row(row).remove().draw();
+                }
+
+                const message = response.message ?? 'تراکنش با موفقیت حذف شد.';
+                if (typeof show_message === 'function') {
+                    show_message(message);
+                } else {
+                    alert(message);
+                }
+            },
+            error: function(xhr) {
+                if (typeof show_error === 'function') {
+                    show_error(xhr);
+                } else {
+                    alert('خطا در حذف تراکنش');
+                }
+            }
+        });
+    }
 </script>

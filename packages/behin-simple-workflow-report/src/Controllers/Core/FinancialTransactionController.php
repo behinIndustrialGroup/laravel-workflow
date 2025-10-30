@@ -17,6 +17,7 @@ use Behin\SimpleWorkflow\Models\Entities\Financials;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -99,5 +100,14 @@ class FinancialTransactionController extends Controller
             'destination_account_number' => $request->destination_account_number,
         ]);
         return redirect()->route('simpleWorkflowReport.financial-transactions.index');
+    }
+
+    public function destroy(Financial_transactions $financialTransaction): JsonResponse
+    {
+        $financialTransaction->delete();
+
+        return response()->json([
+            'message' => 'تراکنش با موفقیت حذف شد.',
+        ]);
     }
 }
