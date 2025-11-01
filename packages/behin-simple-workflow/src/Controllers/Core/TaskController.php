@@ -29,6 +29,9 @@ class TaskController extends Controller
         $data['is_preview'] = true;
         $data['show_save_button'] = $request->boolean('show_save_button');
         $data['show_reminder_button'] = $request->boolean('show_reminder_button');
+        $data['show_cancel_button'] = $request->has('show_cancel_button')
+            ? $request->boolean('show_cancel_button')
+            : true;
         $task = Task::create($data);
         if (!$request->parent_id) {
             $task->parent_id = $task->id;
@@ -45,10 +48,11 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
-        $data = $request->only('name', 'executive_element_id', 'parent_id', 'next_element_id', 'assignment_type', 'case_name', 'color', 'background', 'duration', 'order', 'timing_type', 'timing_value', 'timing_key_name', 'number_of_task_to_back', 'script_before_open', 'allow_cancel', 'is_preview', 'show_save_button', 'show_reminder_button');
+        $data = $request->only('name', 'executive_element_id', 'parent_id', 'next_element_id', 'assignment_type', 'case_name', 'color', 'background', 'duration', 'order', 'timing_type', 'timing_value', 'timing_key_name', 'number_of_task_to_back', 'script_before_open', 'allow_cancel', 'is_preview', 'show_save_button', 'show_reminder_button', 'show_cancel_button');
         $data['is_preview'] = $request->boolean('is_preview');
         $data['show_save_button'] = $request->boolean('show_save_button');
         $data['show_reminder_button'] = $request->boolean('show_reminder_button');
+        $data['show_cancel_button'] = $request->boolean('show_cancel_button');
         $task->update($data);
         // self::getById($request->id)->update($request->all());
         return redirect()->back()->with('success', trans('Updated Successfully'));

@@ -46,8 +46,8 @@
                             <td>
                                 <a href="{{ route('simpleWorkflow.inbox.view', $row->id) }}" class=""><i
                                     class="material-icons">open_in_new</i></a>
-                                @if ($row->task->allow_cancel)
-                                    <a href="{{ route('simpleWorkflow.inbox.cancel', $row->id) }}" title="{{ trans('fields.Cancel') }}" onclick="return confirm('آیا از لغو درخواست مطمئن هستید؟')" class="text-danger"><i class="material-icons">cancel</i></a>
+                                @if ($row->task && $row->task->allow_cancel && $row->task->show_cancel_button)
+                                    <a href="{{ route('simpleWorkflow.inbox.cancel', $row->id) }}" title="{{ trans('fields.Cancel') }}" onclick="return confirm('{{ trans('fields.Are you sure?') }}')" class="text-danger"><i class="material-icons">cancel</i></a>
                                 @endif
                             </td>
                             <td>

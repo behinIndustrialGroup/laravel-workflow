@@ -123,6 +123,15 @@
                     <i class="material-icons">save</i>
                     {{ trans('fields.Save and next') }}
                 </button>
+
+                @if ($task->allow_cancel && $task->show_cancel_button)
+                    <a class="md-btn md-btn-danger"
+                        href="{{ route('simpleWorkflow.inbox.cancel', $inbox->id) }}"
+                        onclick="return confirm('{{ trans('fields.Are you sure?') }}');">
+                        <i class="material-icons">cancel</i>
+                        {{ trans('fields.Cancel Request') }}
+                    </a>
+                @endif
             @endif
         </div>
 

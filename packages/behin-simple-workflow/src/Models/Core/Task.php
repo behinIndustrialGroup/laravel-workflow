@@ -41,6 +41,7 @@ class Task extends Model
         'is_preview',
         'show_save_button',
         'show_reminder_button',
+        'show_cancel_button',
         'case_name',
         'color',
         'background',
@@ -58,6 +59,11 @@ class Task extends Model
         'is_preview' => 'boolean',
         'show_save_button' => 'boolean',
         'show_reminder_button' => 'boolean',
+        'show_cancel_button' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'show_cancel_button' => true,
     ];
 
     public function getStyledNameAttribute()
