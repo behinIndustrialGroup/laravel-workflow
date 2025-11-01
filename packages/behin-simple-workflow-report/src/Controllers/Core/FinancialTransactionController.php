@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
+use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
 {
@@ -48,6 +49,16 @@ class FinancialTransactionController extends Controller
     {
         $creditors = Financial_transactions::where('counterparty_id', $counterparty)->get();
         return view('SimpleWorkflowReportView::Core.FinancialTransaction.show', compact('creditors'));
+    }
+
+    public function edit(Financial_transactions $financialTransaction)
+    {
+        $counterParties = Counter_parties::all();
+
+        return view(
+            'SimpleWorkflowReportView::Core.FinancialTransaction.edit',
+            compact('financialTransaction', 'counterParties')
+        );
     }
 
     public function showAddCredit($counterparty = null)
@@ -100,6 +111,43 @@ class FinancialTransactionController extends Controller
             'destination_account_number' => $request->destination_account_number,
         ]);
         return redirect()->route('simpleWorkflowReport.financial-transactions.index');
+    }
+
+    public function update(Request $request, Financial_transactions $financialTransaction)
+    {
+        $validated = $request->validate([
+            'financial_type' => ['required', Rule::in(['بدهکار', 'بستانکار'])],
+            'counterparty_id' => ['required', 'exists:counter_parties,id'],
+            'case_number' => ['nullable', 'string'],
+            'amount' => ['required', 'string'],
+            'financial_method' => ['nullable', 'string'],
+            'invoice_or_cheque_number' => ['nullable', 'string'],
+            'transaction_or_cheque_due_date' => ['nullable', 'string'],
+            'transaction_or_cheque_due_date_alt' => ['nullable', 'string'],
+            'destination_account_name' => ['nullable', 'string'],
+            'destination_account_number' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $amount = str_replace(',', '', $validated['amount']);
+
+        $financialTransaction->update([
+            'financial_type' => $validated['financial_type'],
+            'counterparty_id' => $validated['counterparty_id'],
+            'case_number' => $validated['case_number'] ?? null,
+            'amount' => (string) $amount,
+            'financial_method' => $validated['financial_method'] ?? null,
+            'invoice_or_cheque_number' => $validated['invoice_or_cheque_number'] ?? null,
+            'transaction_or_cheque_due_date' => $validated['transaction_or_cheque_due_date'] ?? null,
+            'transaction_or_cheque_due_date_alt' => $validated['transaction_or_cheque_due_date_alt'] ?? null,
+            'destination_account_name' => $validated['destination_account_name'] ?? null,
+            'destination_account_number' => $validated['destination_account_number'] ?? null,
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('simpleWorkflowReport.financial-transactions.show', $financialTransaction->counterparty_id)
+            ->with('success', 'تراکنش با موفقیت ویرایش شد.');
     }
 
     public function destroy(Financial_transactions $financialTransaction): JsonResponse
