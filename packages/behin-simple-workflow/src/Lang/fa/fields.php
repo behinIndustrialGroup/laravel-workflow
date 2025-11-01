@@ -100,6 +100,9 @@ return [
     'Task not found' => 'تسک یافت نشد',
     'Show Save Button' => 'نمایش دکمه ذخیره',
     'Show Reminder Button' => 'نمایش دکمه یادآوری',
+    'Show Cancel Button' => 'نمایش دکمه کنسلی',
+    'Cancel Request' => 'لغو درخواست',
+    'Are you sure?' => 'آیا مطمئن هستید؟',
     'Yes' => 'بله',
     'No' => 'خیر',
 
