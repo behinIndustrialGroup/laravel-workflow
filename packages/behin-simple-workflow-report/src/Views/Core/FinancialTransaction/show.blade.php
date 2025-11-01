@@ -57,6 +57,8 @@
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
                         <td class="d-flex flex-wrap" style="gap: 4px;">
+                            <button class="btn btn-sm btn-warning mb-1"
+                                onclick="editFinancialTransaction(`{{ $creditor->id }}`)">ویرایش</button>
                             <button class="btn btn-sm btn-danger mb-1"
                                 onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>
                         </td>
@@ -75,6 +77,7 @@
 </div>
 
 <script>
+    const editUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.edit', ['financial_transaction' => '__id__']) }}";
     const destroyUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
     const csrfToken = '{{ csrf_token() }}';
 
@@ -116,6 +119,11 @@
             );
         }
     });
+
+    window.editFinancialTransaction = function(id) {
+        const url = editUrlTemplate.replace('__id__', id);
+        open_admin_modal(url, 'ویرایش تراکنش مالی');
+    }
 
     window.deleteFinancialTransaction = function(id) {
         if (!confirm('آیا از حذف این تراکنش اطمینان دارید؟')) {
