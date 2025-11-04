@@ -89,6 +89,17 @@
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td>{{ trans('fields.script_after_create') }}</td>
+                <td>
+                    <select name="script_after_create" id="" class="select2">
+                        <option value=""></option>
+                        @foreach ($scripts as $script)
+                            <option value="{{ $script->id }}">{{ $script->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
         </table>
         <table class="table table-info">
             <tr>
@@ -118,6 +129,17 @@
                         <option value="user-created-it">{{ trans('fields.user created it') }}</option>
                         <option value="user-contributed-it">{{ trans('fields.user contributed it') }}</option>
                         <option value="user-updated-it">{{ trans('fields.user updated it') }}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ trans('fields.script_after_update') }}</td>
+                <td>
+                    <select name="script_after_update" id="" class="select2">
+                        <option value=""></option>
+                        @foreach ($scripts as $script)
+                            <option value="{{ $script->id }}">{{ $script->name }}</option>
+                        @endforeach
                     </select>
                 </td>
             </tr>

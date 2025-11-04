@@ -174,6 +174,18 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td>{{ trans('fields.script_after_update') }}</td>
+                        <td>
+                            <select name="script_after_update" id="" class="select2">
+                                <option value=""></option>
+                                @foreach ($scripts as $script)
+                                    <option value="{{ $script->id }}"
+                                        {{ $view_model->script_after_update == $script->id ? 'selected' : '' }}>{{ $script->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
                 </table>
                 <table class="table table-danger">
                     <tr>
