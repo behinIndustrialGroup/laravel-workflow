@@ -27,7 +27,8 @@ class ViewModelController extends Controller
     {
         $entities = EntityController::getAll();
         $forms = FormController::getAll();
-        return view('SimpleWorkflowView::Core.ViewModel.create', compact('entities', 'forms'));
+        $scripts = ScriptController::getAll();
+        return view('SimpleWorkflowView::Core.ViewModel.create', compact('entities', 'forms', 'scripts'));
     }
 
     public function store(Request $request)
@@ -400,10 +401,20 @@ class ViewModelController extends Controller
 
             $row->save();
 
-            if ($viewModel->script_after_create) {
+            if ($isNew && $viewModel->script_after_create) {
                 $request->merge(['rowId' => $row->id]);
 
                 $result = ScriptController::runFromView($request, $viewModel->script_after_create);
+
+                if ($result) {
+                    return $result;
+                }
+            }
+
+            if (!$isNew && $viewModel->script_after_update) {
+                $request->merge(['rowId' => $row->id]);
+
+                $result = ScriptController::runFromView($request, $viewModel->script_after_update);
 
                 if ($result) {
                     return $result;

@@ -91,6 +91,8 @@ return [
     'Transfer cases to task' => 'انتقال کیس ها به تسک',
     'Task deleted successfully' => 'تسک با موفقیت حذف شد',
     'script_before_open' => 'اسکریپت قبل از باز شدن',
+    'script_after_create' => 'اسکریپت پس از ایجاد رکورد',
+    'script_after_update' => 'اسکریپت پس از به‌روزرسانی رکورد',
     'Preview' => 'پیش‌نمایش',
     'Preview Mode' => 'حالت پیش‌نمایش',
     'Published' => 'منتشر شده',
