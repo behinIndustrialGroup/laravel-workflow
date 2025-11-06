@@ -126,6 +126,22 @@ class GoodsInReportController extends Controller
             $dateColumns = $dateColumns->prepend($selectedDateColumn);
         }
 
+        $shouldApplyDefaultDateRange =
+            $filters['from_date'] === ''
+            && $filters['from_date_alt'] === ''
+            && $filters['to_date'] === ''
+            && $filters['to_date_alt'] === '';
+
+        if ($shouldApplyDefaultDateRange && $selectedDateColumn) {
+            $defaultTo = Carbon::now($timezone)->endOfDay();
+            $defaultFrom = (clone $defaultTo)->subDays(2)->startOfDay();
+
+            $filters['from_date'] = Jalalian::fromCarbon($defaultFrom)->format('Y-m-d');
+            $filters['from_date_alt'] = (string) $defaultFrom->timestamp;
+            $filters['to_date'] = Jalalian::fromCarbon($defaultTo)->format('Y-m-d');
+            $filters['to_date_alt'] = (string) $defaultTo->timestamp;
+        }
+
         $query = DB::table($tableName);
         $validationErrors = [];
 
