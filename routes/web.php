@@ -28,6 +28,9 @@ use UserProfile\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
+use Behin\SimpleWorkflow\Models\Entities\OnCreditPayment;
+use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
+
 
 Route::get('', function () {
     return view('auth.login');
@@ -117,23 +120,66 @@ Route::get('test', function () {
 
 
 Route::get('test2', function () {
-    $creditors = Creditor::get();
-    foreach ($creditors as $creditor) {
-        if ($creditor->type == 'طلب') {
-            $data = [
-                // 'case_number' => $creditor->case_number,
-                'financial_type' => 'بستانکار',
-                'financial_method' => $creditor->settlement_type,
-                'description' => $creditor->description,
-                'counterparty_id' => $creditor->counterparty_id,
-                'amount' => (string)$creditor->amount,
-                'invoice_or_cheque_number' => $creditor->invoice_number,
-                'transaction_or_cheque_due_date' => $creditor->settlement_date,
-            ];
+    $onCredits = DB::table('wf_entity_financials')
+        ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+        ->leftJoin('wf_variables as v_customer', function ($join) {
+            $join->on('v_customer.case_id', '=', 'wf_cases.id')
+                ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+        })
+        ->whereNotNull('wf_entity_financials.case_number')
+        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+        ->whereNull('wf_entity_financials.is_passed')
+        ->whereNull('wf_entity_financials.deleted_at')
+        ->whereNull('wf_entity_financials.counter_party_id')
+        ->select(
+            'wf_entity_financials.id',
+            'wf_entity_financials.case_number',
+            'wf_entity_financials.fix_cost_type',
+            'wf_entity_financials.cost',
+            'wf_entity_financials.counter_party_id',
+            'v_customer.value as customer_name'
+        )
+        ->groupBy('customer_name')->get();
+    $counterParties = Counter_parties::all();
+    return view('test', compact('onCredits','counterParties'));
+    foreach($onCredits as $onCredit){
+        echo"<form action='/test3' method='post'>";
+        echo csrf_field();
+        echo "<input type='text' name='customer_name' value='".$onCredit->customer_name."'>";
+        echo "<select name='counter_party_id'>";
+        echo "<option value=''></option>";
+        foreach($counterParties as $counterParty){
+            $select = $counterParty->id == $onCredit->counter_party_id ? 'selected' : '';
+            echo "<option value='".$counterParty->id."' $select>".$counterParty->name."</option>";
         }
+        echo "</select>";
+        echo "<input type='submit'>";
+        echo"</form><br>";
     }
-    // گروه‌بندی بر اساس customer
-    $grouped = $financials->groupBy('customer');
-    dd($grouped);
-    return response()->json($grouped);
+    return ;
+    return response()->json($onCredits);
 });
+
+Route::post('test3', function (Request $request) {
+    $customerName = $request->customer_name;
+    $counterPartyId = $request->counter_party_id;
+
+    // مرحله ۱: پیدا کردن case_id های مربوط به این مشتری
+    $caseIds = DB::table('wf_variables')
+        ->where('key', 'customer_workshop_or_ceo_name')
+        ->where('value', $customerName)
+        ->pluck('case_id');
+
+    // dd($caseIds);
+
+    if ($caseIds->isEmpty()) {
+        return "موردی برای '{$customerName}' پیدا نشد.";
+    }
+
+    // مرحله ۲: آپدیت همه رکوردهای مالی مرتبط
+    $fins = DB::table('wf_entity_financials')
+        ->whereIn('case_id', $caseIds)
+        ->update(['counter_party_id' => $counterPartyId]);
+    return redirect()->back()->with('success', "طرف حساب مشتری '{$customerName}' با موفقیت به‌روزرسانی شد.");
+});
+

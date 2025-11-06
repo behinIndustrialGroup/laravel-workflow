@@ -117,7 +117,7 @@ class FinancialTransactionController extends Controller
     {
         $validated = $request->validate([
             'financial_type' => ['required', Rule::in(['بدهکار', 'بستانکار'])],
-            'counterparty_id' => ['required', 'exists:counter_parties,id'],
+            'counterparty_id' => ['required'],
             'case_number' => ['nullable', 'string'],
             'amount' => ['required', 'string'],
             'financial_method' => ['nullable', 'string'],

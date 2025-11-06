@@ -1,5 +1,5 @@
 <!-- Bottom Navbar (only mobile) -->
-<nav class="navbar navbar-light bg-white border-top shadow d-md-none fixed-bottom">
+<nav class="navbar navbar-light bg-white border-top shadow d-md-none fixed-bottom" id="mobile-navigation">
     <div class="container-fluid d-flex justify-content-around">
   
         <!-- Profile -->

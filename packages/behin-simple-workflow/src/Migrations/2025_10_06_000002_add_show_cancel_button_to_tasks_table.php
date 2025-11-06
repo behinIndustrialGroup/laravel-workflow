@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\\Database\\Migrations\\Migration;
-use Illuminate\\Database\\Schema\\Blueprint;
-use Illuminate\\Support\\Facades\\Schema;
-use Illuminate\\Support\\Facades\\DB;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::table('wf_task', function (Blueprint $table) {
             if (!Schema::hasColumn('wf_task', 'show_cancel_button')) {
-                $table->boolean('show_cancel_button')->default(true)->after('allow_cancel');
+                $table->boolean('show_cancel_button')->default(true);
             }
         });
 

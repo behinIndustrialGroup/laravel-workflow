@@ -418,7 +418,7 @@
                                                         @endif
                                                     @endif
                                                 </td>
-                                                <td>{{ number_format($fin->payment) }}
+                                                <td>{{ number_format((int)$fin->payment) }}
                                                 </td>
                                                 <td>
                                                     @if ($fin->fix_cost_type == 'علی الحساب - چک' || $fin->fix_cost_type == 'تسویه کامل - چک')

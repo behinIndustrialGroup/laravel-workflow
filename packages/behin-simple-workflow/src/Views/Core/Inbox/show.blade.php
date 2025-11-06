@@ -9,7 +9,7 @@
 @section('title', $form->name)
 
 @section('content')
-    <div class="d-none">
+    <div class="card shadow-sm mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">{{ $task->name }} - {{ $inbox->case_name }}</h6>
         </div>
@@ -74,7 +74,7 @@
             </form>
         </div>
     </div>
-
+    <div class='card shadow-sm mb-4' style='height: 30px'></div>
     @if (in_array($inbox->status, ['done', 'doneByOther']))
         <div class="card shadow-sm mb-2">
             <div class="card-body">
@@ -119,12 +119,12 @@
                     </button>
                 @endif
 
-                <button class="md-btn md-btn-danger" onclick="saveAndNextForm()">
+                <button class="md-btn md-btn-info" onclick="saveAndNextForm()">
                     <i class="material-icons">save</i>
                     {{ trans('fields.Save and next') }}
                 </button>
 
-                @if ($task->allow_cancel && $task->show_cancel_button)
+                @if ($task->show_cancel_button)
                     <a class="md-btn md-btn-danger"
                         href="{{ route('simpleWorkflow.inbox.cancel', $inbox->id) }}"
                         onclick="return confirm('{{ trans('fields.Are you sure?') }}');">
