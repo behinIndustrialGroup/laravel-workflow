@@ -29,7 +29,7 @@
             {{ session('error') }}
         </div>
     @endif
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
@@ -41,6 +41,22 @@
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
                 سند</button> --}}
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body d-flex gap-2 flex-wrap">
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'negative']) }}"
+                class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
+                نمایش بدهکارها
+            </a>
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'all']) }}"
+                class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
+                نمایش همه طرف حساب‌ها
+            </a>
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'positive']) }}"
+                class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
+                نمایش فقط مثبت‌ها
+            </a>
         </div>
     </div>
     <div class="card table-responsive">
