@@ -126,8 +126,6 @@ class GoodsInReportController extends Controller
             $dateColumns = $dateColumns->prepend($selectedDateColumn);
         }
 
-        $filters['date_column'] = $selectedDateColumn;
-
         $shouldApplyDefaultDateRange =
             $filters['from_date'] === ''
             && $filters['from_date_alt'] === ''
@@ -138,23 +136,10 @@ class GoodsInReportController extends Controller
             $defaultTo = Carbon::now($timezone)->endOfDay();
             $defaultFrom = (clone $defaultTo)->subDays(2)->startOfDay();
 
-            $redirectQuery = array_merge($request->query(), [
-                'from_date' => Jalalian::fromCarbon($defaultFrom)->format('Y-m-d'),
-                'from_date_alt' => (string) $defaultFrom->valueOf(),
-                'to_date' => Jalalian::fromCarbon($defaultTo)->format('Y-m-d'),
-                'to_date_alt' => (string) $defaultTo->valueOf(),
-                'date_column' => $selectedDateColumn,
-            ]);
-
-            if (! isset($redirectQuery['per_page'])) {
-                $redirectQuery['per_page'] = $filters['per_page'];
-            }
-
-            if (! isset($redirectQuery['sort_direction'])) {
-                $redirectQuery['sort_direction'] = $filters['sort_direction'];
-            }
-
-            return redirect()->route('simpleWorkflowReport.goods-in.index', $redirectQuery);
+            $filters['from_date'] = Jalalian::fromCarbon($defaultFrom)->format('Y-m-d');
+            $filters['from_date_alt'] = (string) $defaultFrom->timestamp;
+            $filters['to_date'] = Jalalian::fromCarbon($defaultTo)->format('Y-m-d');
+            $filters['to_date_alt'] = (string) $defaultTo->timestamp;
         }
 
         $query = DB::table($tableName);

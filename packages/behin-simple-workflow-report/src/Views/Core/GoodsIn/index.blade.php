@@ -281,7 +281,7 @@
                             </div>
                             {{-- <div class="col-md-2">
                                 <label for="date_column" class="form-label">ستون تاریخ</label> --}}
-                            <input type="hidden" name="date_column" id="date_column" value="{{ $filters['date_column'] ?? $selectedDateColumn ?? 'created_at' }}">
+                            <input type="hidden" name="date_column" id="date_column" value="created_at">
                             {{-- <select name="date_column" id="date_column" class="form-select">
                                     <option value="">انتخاب ستون</option>
                                     @foreach ($dateColumns as $column)
