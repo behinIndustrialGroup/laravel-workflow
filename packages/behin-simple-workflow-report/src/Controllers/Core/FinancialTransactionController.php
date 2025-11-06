@@ -28,20 +28,37 @@ use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $creditors = Financial_transactions::select(
-            'counterparty_id',
-            DB::raw("SUM(CASE 
-                WHEN financial_type = 'بدهکار' THEN -amount 
-                WHEN financial_type = 'بستانکار' THEN amount 
-                ELSE 0 
-            END) as total_amount")
-        )
-            ->groupBy('counterparty_id')
-            ->get();
+        $filter = $request->query('filter', 'negative');
 
-        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors'));
+        $totalAmountExpression = "SUM(CASE
+                WHEN financial_type = 'بدهکار' THEN -amount
+                WHEN financial_type = 'بستانکار' THEN amount
+                ELSE 0
+            END)";
+
+        $creditorsQuery = Financial_transactions::select(
+            'counterparty_id',
+            DB::raw("{$totalAmountExpression} as total_amount")
+        )
+            ->groupBy('counterparty_id');
+
+        switch ($filter) {
+            case 'positive':
+                $creditorsQuery->havingRaw("{$totalAmountExpression} > 0");
+                break;
+            case 'all':
+                break;
+            default:
+                $filter = 'negative';
+                $creditorsQuery->havingRaw("{$totalAmountExpression} < 0");
+                break;
+        }
+
+        $creditors = $creditorsQuery->get();
+
+        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter'));
     }
 
 
