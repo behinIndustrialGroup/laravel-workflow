@@ -77,73 +77,75 @@
 </div>
 
 <script>
-    const editUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.edit', ['financial_transaction' => '__id__']) }}";
-    const destroyUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
-    const csrfToken = '{{ csrf_token() }}';
+    (function() {
+        const editUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.edit', ['financial_transaction' => '__id__']) }}";
+        const destroyUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
+        const csrfToken = '{{ csrf_token() }}';
 
-    // اگر DataTable از قبل وجود دارد، ابتدا آن را نابود کن
-    if ($.fn.DataTable.isDataTable('#more-details')) {
-        $('#more-details').DataTable().destroy();
-    }
-
-    const moreDetailsTable = $('#more-details').DataTable({
-        "pageLength": 25,
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-        },
-        "order": [
-            [6, "desc"]
-        ],
-        "footerCallback": function(row, data, start, end, display) {
-            var api = this.api();
-
-            function calculateTotal(selector) {
-                return api.rows(selector).data().reduce(function(a, b) {
-                    var type = b[0]; // ستون اول: بدهکار یا بستانکار
-                    var amount = parseInt(b[2].toString().replace(/,/g, '')) || 0;
-                    if (type === 'بدهکار') amount = -amount;
-                    return a + amount;
-                }, 0);
-            }
-
-            var pageTotal = calculateTotal({ page: 'current' });
-            var total = calculateTotal({});
-
-            $('#sum-amount').html(
-                total.toLocaleString() + ' (این صفحه: ' + pageTotal.toLocaleString() + ')'
-            );
+        // اگر DataTable از قبل وجود دارد، ابتدا آن را نابود کن
+        if ($.fn.DataTable.isDataTable('#more-details')) {
+            $('#more-details').DataTable().destroy();
         }
-    });
 
-    window.editFinancialTransaction = function(id) {
-        const url = editUrlTemplate.replace('__id__', id);
-        open_admin_modal(url, 'ویرایش تراکنش مالی');
-    }
+        const moreDetailsTable = $('#more-details').DataTable({
+            "pageLength": 25,
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            },
+            "order": [
+                [6, "desc"]
+            ],
+            "footerCallback": function(row, data, start, end, display) {
+                var api = this.api();
 
-    window.deleteFinancialTransaction = function(id) {
-        if (!confirm('آیا از حذف این تراکنش اطمینان دارید؟')) return;
-
-        const url = destroyUrlTemplate.replace('__id__', id);
-
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: { _method: 'DELETE', _token: csrfToken },
-            success: function(response) {
-                const row = $('#financial-transaction-row-' + id);
-                if (row.length) {
-                    moreDetailsTable.row(row).remove().draw();
+                function calculateTotal(selector) {
+                    return api.rows(selector).data().reduce(function(a, b) {
+                        var type = b[0]; // ستون اول: بدهکار یا بستانکار
+                        var amount = parseInt(b[2].toString().replace(/,/g, '')) || 0;
+                        if (type === 'بدهکار') amount = -amount;
+                        return a + amount;
+                    }, 0);
                 }
 
-                const message = response.message ?? 'تراکنش با موفقیت حذف شد.';
-                if (typeof show_message === 'function') show_message(message);
-                else alert(message);
-            },
-            error: function(xhr) {
-                if (typeof show_error === 'function') show_error(xhr);
-                else alert('خطا در حذف تراکنش');
+                var pageTotal = calculateTotal({ page: 'current' });
+                var total = calculateTotal({});
+
+                $('#sum-amount').html(
+                    total.toLocaleString() + ' (این صفحه: ' + pageTotal.toLocaleString() + ')'
+                );
             }
         });
-    }
+
+        window.editFinancialTransaction = function(id) {
+            const url = editUrlTemplate.replace('__id__', id);
+            open_admin_modal(url, 'ویرایش تراکنش مالی');
+        }
+
+        window.deleteFinancialTransaction = function(id) {
+            if (!confirm('آیا از حذف این تراکنش اطمینان دارید؟')) return;
+
+            const url = destroyUrlTemplate.replace('__id__', id);
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: { _method: 'DELETE', _token: csrfToken },
+                success: function(response) {
+                    const row = $('#financial-transaction-row-' + id);
+                    if (row.length) {
+                        moreDetailsTable.row(row).remove().draw();
+                    }
+
+                    const message = response.message ?? 'تراکنش با موفقیت حذف شد.';
+                    if (typeof show_message === 'function') show_message(message);
+                    else alert(message);
+                },
+                error: function(xhr) {
+                    if (typeof show_error === 'function') show_error(xhr);
+                    else alert('خطا در حذف تراکنش');
+                }
+            });
+        }
+    })();
 </script>
 
