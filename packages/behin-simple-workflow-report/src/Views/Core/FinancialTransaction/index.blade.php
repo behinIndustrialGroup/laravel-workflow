@@ -44,21 +44,54 @@
         </div>
     </div>
     <div class="card mb-3">
+        <div class="card-body">
+            <form action="{{ route('simpleWorkflowReport.financial-transactions.index') }}" method="GET"
+                class="row align-items-end">
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <label class="form-label">جستجو بر اساس شماره پرونده</label>
+                    <input type="text" class="form-control" name="case_number"
+                        value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
+                </div>
+                <input type="hidden" name="filter" value="{{ $filter }}">
+                <div class="col-auto mb-2">
+                    <button type="submit" class="btn btn-primary">جستجو</button>
+                </div>
+                @if (filled($caseNumber ?? null))
+                    <div class="col-auto mb-2">
+                        <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => $filter]) }}"
+                            class="btn btn-outline-secondary">حذف جستجو</a>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
+    <div class="card mb-3">
         <div class="card-body d-flex gap-2 flex-wrap">
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'negative']) }}"
+            @php
+                $caseNumberQuery = [];
+                if (filled($caseNumber ?? null)) {
+                    $caseNumberQuery['case_number'] = $caseNumber;
+                }
+            @endphp
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش بدهکارها
             </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'all']) }}"
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش همه طرف حساب‌ها
             </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => 'positive']) }}"
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش فقط مثبت‌ها
             </a>
         </div>
     </div>
+    @if (filled($caseNumber ?? null))
+        <div class="alert alert-info">
+            نمایش نتایج برای پرونده شماره <span class="font-weight-bold">{{ $caseNumber }}</span>
+        </div>
+    @endif
     <div class="card table-responsive">
         <div class="card-header bg-secondary text-center">
             <h3 class="card-title">دفتر معین</h3>
