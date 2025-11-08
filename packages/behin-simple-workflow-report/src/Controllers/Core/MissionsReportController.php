@@ -9,6 +9,7 @@ use Behin\SimpleWorkflowReport\Exports\MissionsReportExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Morilog\Jalali\Jalalian;
 
 class MissionsReportController extends Controller
@@ -43,7 +44,9 @@ class MissionsReportController extends Controller
      *     monthOptions: array<int, array<string, string>>,
      *     selectedMonth: string,
      *     fromValue: string,
-     *     toValue: string
+     *     toValue: string,
+     *     statusOptions: array<string, string>,
+     *     selectedStatus: string
      * }
      */
     private function prepareMissionsData(Request $request): array
@@ -109,6 +112,67 @@ class MissionsReportController extends Controller
             $query->where('start_datetime_alt', '<=', $toCarbon->valueOf());
         }
 
+        $statusOptions = [
+            'approved' => 'تایید',
+            'rejected' => 'عدم تایید',
+            'undetermined' => 'تعیین وضعیت نشده',
+        ];
+
+        $selectedStatus = $request->input('status', '');
+        if (!is_string($selectedStatus) || !array_key_exists($selectedStatus, $statusOptions)) {
+            $selectedStatus = '';
+        }
+
+        if ($selectedStatus !== '') {
+            $statusColumn = null;
+            $statusType = 'string';
+
+            if (Schema::hasColumn('missions', 'status')) {
+                $statusColumn = 'status';
+                $statusType = 'string';
+            } elseif (Schema::hasColumn('missions', 'is_confirmed')) {
+                $statusColumn = 'is_confirmed';
+                $statusType = 'boolean';
+            } elseif (Schema::hasColumn('missions', 'is_approved')) {
+                $statusColumn = 'is_approved';
+                $statusType = 'boolean';
+            }
+
+            if ($statusColumn) {
+                switch ($selectedStatus) {
+                    case 'approved':
+                        if ($statusType === 'boolean') {
+                            $query->where($statusColumn, true);
+                        } else {
+                            $query->where($statusColumn, 'approved');
+                        }
+
+                        break;
+                    case 'rejected':
+                        if ($statusType === 'boolean') {
+                            $query->where($statusColumn, false);
+                        } else {
+                            $query->where($statusColumn, 'rejected');
+                        }
+
+                        break;
+                    case 'undetermined':
+                        if ($statusType === 'boolean') {
+                            $query->whereNull($statusColumn);
+                        } else {
+                            $query->where(function ($builder) use ($statusColumn) {
+                                $builder
+                                    ->whereNull($statusColumn)
+                                    ->orWhere($statusColumn, '')
+                                    ->orWhereIn($statusColumn, ['pending', 'undetermined']);
+                            });
+                        }
+
+                        break;
+                }
+            }
+        }
+
         $missions = $query->orderByDesc('start_datetime_alt')
             ->get()
             ->map(function ($mission) {
@@ -141,6 +205,8 @@ class MissionsReportController extends Controller
             'selectedMonth' => $selectedMonth,
             'fromValue' => $fromValue,
             'toValue' => $toValue,
+            'statusOptions' => $statusOptions,
+            'selectedStatus' => $selectedStatus,
         ];
     }
 
