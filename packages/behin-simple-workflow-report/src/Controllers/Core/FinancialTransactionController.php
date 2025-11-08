@@ -31,6 +31,7 @@ class FinancialTransactionController extends Controller
     public function index(Request $request)
     {
         $filter = $request->query('filter', 'negative');
+        $caseNumber = $request->query('case_number');
 
         $totalAmountExpression = "SUM(CASE
                 WHEN financial_type = 'بدهکار' THEN -amount
@@ -42,6 +43,9 @@ class FinancialTransactionController extends Controller
             'counterparty_id',
             DB::raw("{$totalAmountExpression} as total_amount")
         )
+            ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
+                $query->where('case_number', $caseNumber);
+            })
             ->groupBy('counterparty_id');
 
         switch ($filter) {
@@ -58,7 +62,7 @@ class FinancialTransactionController extends Controller
 
         $creditors = $creditorsQuery->get();
 
-        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter'));
+        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
     }
 
 
