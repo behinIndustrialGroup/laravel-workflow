@@ -8,8 +8,8 @@
 @section('content')
     <div class="card mb-3">
         <div class="card-header">
-            <form class="row" method="GET">
-                <div class="col-md-3">
+            <form class="row g-2 align-items-end" method="GET">
+                <div class="col-md-2">
                     <select name="month" id="month-filter" class="form-select form-control">
                         @foreach ($monthOptions as $option)
                             <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}" data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
@@ -24,7 +24,15 @@
                 <div class="col-md-3">
                     <input type="text" name="to_date" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <select name="status" class="form-select form-control">
+                        <option value="">همه وضعیت‌ها</option>
+                        @foreach ($statusOptions as $value => $label)
+                            <option value="{{ $value }}" {{ $selectedStatus === $value ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 col-lg-2">
                     <div class="d-flex gap-2">
                         <button class="btn btn-warning" type="submit">فیلتر</button>
                         <a class="btn btn-success" href="{{ route('simpleWorkflowReport.missions.export', request()->query()) }}">
