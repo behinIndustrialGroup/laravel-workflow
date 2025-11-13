@@ -329,6 +329,10 @@ class InboxController extends Controller
             if($inbox->actor != Auth::id()){
                 return abort(403, trans("fields.Sorry you don't have permission to see this page"));
             }
+            if($inbox->status == 'new'){
+                $inbox->status = 'opened';
+                $inbox->save();
+            }
             return view('SimpleWorkflowView::Core.Inbox.show')->with([
                 'inbox' => $inbox,
                 'case' => $case,

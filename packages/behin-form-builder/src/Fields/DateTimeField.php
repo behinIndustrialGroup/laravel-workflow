@@ -30,7 +30,7 @@ class DateTimeField extends AbstractField
             }
         }
         $s .= '>';
-        $s .= "<input type='hidden' name='". $this->name ."_alt' id='". $this->name ."_alt'>";
+        $s .= "<input type='hidden' name='". $this->name ."_alt' id='". $this->name ."_alt' value='". $this->attributes['altValue'] ."'>";
         $s .= "<script>$('#$this->name').persianDatepicker({
                 viewMode: 'day',
                 initialValue: false,

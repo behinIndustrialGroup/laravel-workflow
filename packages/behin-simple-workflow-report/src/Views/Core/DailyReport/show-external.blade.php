@@ -28,7 +28,7 @@
                     <td>{{ $item->case() ? $item->case()->getVariable('customer_workshop_or_ceo_name') : '' }}</td>
                     <td>{{ $item->device() ? $item->device()->name : '' }}</td>
                     <td>{{ toJalali($item->created_at)->format('Y-m-d H:i') ?? '' }}</td>
-                    <td>{{ $item->duration }}</td> 
+                    <td>{{ round($item->duration, 2) }}</td> 
                     <td>{{ $item->report }}</td>
                 </tr>
             @endforeach

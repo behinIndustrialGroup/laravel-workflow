@@ -26,7 +26,6 @@
                 </div>
                 <div class="col-md-2">
                     <select name="status" class="form-select form-control">
-                        <option value="">همه وضعیت‌ها</option>
                         @foreach ($statusOptions as $value => $label)
                             <option value="{{ $value }}" {{ $selectedStatus === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
@@ -52,6 +51,7 @@
                             <th>تاریخ شروع</th>
                             <th>تاریخ پایان</th>
                             <th>مدت (ساعت)</th>
+                            <th>وضعیت</th>
                             <th>پرونده ها</th>
                         </tr>
                     </thead>
@@ -68,6 +68,9 @@
                                 </td>
                                 <td dir="ltr">
                                     {{ $mission->duration_hours !== null ? number_format($mission->duration_hours, 2) : '-' }}
+                                </td>
+                                <td>
+                                    {{ $mission->status }}
                                 </td>
                                 <td>
                                     @foreach ($mission->cases as $case)

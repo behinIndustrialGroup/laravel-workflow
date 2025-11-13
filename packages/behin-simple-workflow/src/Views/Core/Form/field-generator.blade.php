@@ -116,6 +116,7 @@
 @if ($fieldDetails->type == 'datetime')
     {!! Form::datetime($fieldId, [
         'value' => $fieldValue,
+        'altValue' => $fieldValueAlt ?? '',
         'class' => 'form-control',
         'id' => $fieldId,
         'placeholder' => $fieldAttributes?->placeholder,

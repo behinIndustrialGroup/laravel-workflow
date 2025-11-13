@@ -115,6 +115,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie')->middleware('access:گزارش لیست طلبکاران');
     Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab')->middleware('access:گزارش لیست طلبکاران');
     Route::post('creditor/add-talab', [CreditorReportController::class, 'addTalab'])->name('creditor.addTalab')->middleware('access:گزارش لیست طلبکاران');
+    Route::delete('creditor/delete/{id}', [CreditorReportController::class, 'delete'])->name('creditor.delete')->middleware('access:گزارش لیست طلبکاران');
 
     Route::resource('financial-transactions', FinancialTransactionController::class)->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-credit', [FinancialTransactionController::class, 'showAddCredit'])->name('financial-transactions.showAddCredit')->middleware('access:گزارش لیست طلبکاران');

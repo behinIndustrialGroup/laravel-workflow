@@ -31,6 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Morilog\Jalali\Jalalian;
 use Throwable;
 
@@ -223,6 +224,7 @@ class DailyReportController extends Controller
             ->orderBy('case_number', 'desc')->get();
 
         $items->each(function($row){
+            try{
             $startDate = convertPersianToEnglish($row->start_date);
             $startTime = convertPersianToEnglish($row->start_time);
             $startTime = str_replace('/', ':', $startTime);
@@ -234,6 +236,12 @@ class DailyReportController extends Controller
             $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")->toCarbon()->timestamp;
 
             $row->duration = ((int)$row->end - (int)$row->start) / 3600; //به ساعت
+            }catch(Exception $e){
+                $row->start = null;
+                $row->end = null;
+                $row->duration = null;
+                Log::error($e);
+            }
         });
 
         return view('SimpleWorkflowReportView::Core.DailyReport.show-external-as-assistant', compact('items'));

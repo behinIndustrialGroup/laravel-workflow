@@ -41,7 +41,7 @@
                         @if ($creditor->financial_type == 'بستانکار') class="bg-success" @endif>
                         <td>{{ $creditor->financial_type }}</td>
                         <td>{{ $creditor->counterparty()->name ?? '' }}</td>
-                        <td dir="ltr">{{ number_format((int) $creditor->amount) }}</td>
+                        <td dir="ltr">{{ str_contains($creditor->amount, ',') ? $creditor->amount : number_format((int)$creditor->amount) }}</td>
                         <td>
                             @if (!empty($creditor->case_number))
                                 <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $creditor->case_number]) }}"
@@ -56,8 +56,8 @@
                         <td>{{ $creditor->destination_account_name }}</td>
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
-                        <td class="d-flex flex-wrap" style="gap: 4px;">
-                            <button class="btn btn-sm btn-warning mb-1"
+                        <td>
+                            <button class="btn btn-sm btn-{{ $creditor->financial_type == 'بستانکار' ? 'primary' : 'warning' }} mb-1"
                                 onclick="editFinancialTransaction(`{{ $creditor->id }}`)">ویرایش</button>
                             <button class="btn btn-sm btn-danger mb-1"
                                 onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>

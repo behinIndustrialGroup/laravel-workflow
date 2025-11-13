@@ -49,6 +49,8 @@ class TextField extends AbstractField
                 $s .= "<option value='$option->value'>$option->label</option>";
             }
             $s .= '</datalist>';
+        }else{
+            $s .= '<datalist id="' . $this->name . '_list"></datalist>';
         }
         $s .= '</div>';
         return $s;

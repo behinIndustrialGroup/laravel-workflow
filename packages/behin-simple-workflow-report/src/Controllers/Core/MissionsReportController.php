@@ -118,56 +118,25 @@ class MissionsReportController extends Controller
             'undetermined' => 'تعیین وضعیت نشده',
         ];
 
-        $selectedStatus = $request->input('status', '');
+        $selectedStatus = $request->input('status');
         if (!is_string($selectedStatus) || !array_key_exists($selectedStatus, $statusOptions)) {
-            $selectedStatus = '';
+            $selectedStatus = 'approved';
         }
 
-        if ($selectedStatus !== '') {
-            $statusColumn = null;
+        if ($selectedStatus != '') {
+            $statusColumn = 'status';
             $statusType = 'string';
-
-            if (Schema::hasColumn('missions', 'status')) {
-                $statusColumn = 'status';
-                $statusType = 'string';
-            } elseif (Schema::hasColumn('missions', 'is_confirmed')) {
-                $statusColumn = 'is_confirmed';
-                $statusType = 'boolean';
-            } elseif (Schema::hasColumn('missions', 'is_approved')) {
-                $statusColumn = 'is_approved';
-                $statusType = 'boolean';
-            }
 
             if ($statusColumn) {
                 switch ($selectedStatus) {
                     case 'approved':
-                        if ($statusType === 'boolean') {
-                            $query->where($statusColumn, true);
-                        } else {
-                            $query->where($statusColumn, 'approved');
-                        }
-
+                        $query->where($statusColumn, $statusOptions['approved']);
                         break;
                     case 'rejected':
-                        if ($statusType === 'boolean') {
-                            $query->where($statusColumn, false);
-                        } else {
-                            $query->where($statusColumn, 'rejected');
-                        }
-
+                        $query->where($statusColumn, $statusOptions['rejected']);
                         break;
                     case 'undetermined':
-                        if ($statusType === 'boolean') {
-                            $query->whereNull($statusColumn);
-                        } else {
-                            $query->where(function ($builder) use ($statusColumn) {
-                                $builder
-                                    ->whereNull($statusColumn)
-                                    ->orWhere($statusColumn, '')
-                                    ->orWhereIn($statusColumn, ['pending', 'undetermined']);
-                            });
-                        }
-
+                        $query->where($statusColumn, $statusOptions['undetermined']);
                         break;
                 }
             }

@@ -106,15 +106,20 @@ if (!function_exists('runScript')) {
 
 if(!function_exists('toJalali')){
     function toJalali($date){
-        if (is_string($date)) {
-            $date = Carbon::parse($date);
+        try{
+            if (is_string($date)) {
+                $date = Carbon::parse($date);
+            }
+            if (is_int($date)) {
+                $date = Carbon::createFromTimestamp($date, 'Asia/Tehran');
+            }
+            // Log::info("function toJalali Used By user". Auth::user()->name);
+            $jDate = Jalalian::fromCarbon($date);
+            return $jDate;
+        }catch(Exception $e){
+            return $date;
         }
-        if (is_int($date)) {
-            $date = Carbon::createFromTimestamp($date, 'Asia/Tehran');
-        }
-        // Log::info("function toJalali Used By user". Auth::user()->name);
-        $jDate = Jalalian::fromCarbon($date);
-        return $jDate;
+        
     }
 }
 

@@ -28,7 +28,7 @@ class OnCreditReportController extends Controller
     {
         $onCredits = Financials::whereNotNull('case_number')
             ->whereIn('fix_cost_type', ['حساب دفتری'])
-            // ->whereNull('is_passed')
+            ->whereNull('converted')
             ->get()->each(function ($row) {
                 $row->payments = OnCreditPayment::where('case_number', $row->case_number)->get();
             });

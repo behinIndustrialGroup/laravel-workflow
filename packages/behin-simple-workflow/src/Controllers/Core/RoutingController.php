@@ -121,6 +121,7 @@ class RoutingController extends Controller
             $taskChildren = $task->children();
 
             if ($task->next_element_id) {
+                // Log::info('Task: ' . $task->name);
                 $nextTask = TaskController::getById($task->next_element_id);
                 $executedTaskIds = [];
                 $result = self::executeNextTask($nextTask, $caseId, $executedTaskIds);
@@ -164,7 +165,7 @@ class RoutingController extends Controller
                 }
                 if ($task->assignment_type == 'public') {
                     $inbox->status = 'done';
-                    $inbox->actor = Auth::check() ? Auth::id() : $request->ip();
+                    $inbox->actor = null;
                     $inbox->save();
                 }
             }

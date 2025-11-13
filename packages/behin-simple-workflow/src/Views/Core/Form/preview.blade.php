@@ -17,6 +17,7 @@
             if ($fieldDetails) {
                 $fieldAttributes = json_decode($fieldDetails->attributes);
                 $fieldValue = isset($case) ? $case->getVariable($field->fieldName) : null;
+                $fieldValueAlt = (isset($case) and $fieldDetails->type == 'datetime') ? $case->getVariable($field->fieldName . '_alt') : null;
             } else {
                 if ($field->fieldName != $form->id) {
                     $childForm = getFormInformation($field->fieldName);
@@ -33,6 +34,7 @@
                     'readOnly' => $readOnly,
                     'required' => $required,
                     'fieldValue' => $fieldValue,
+                    'fieldValueAlt' => $fieldValueAlt ?? '',
                 ])
             </div>
         @else

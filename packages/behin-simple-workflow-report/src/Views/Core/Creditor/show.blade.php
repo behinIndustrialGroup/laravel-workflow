@@ -58,8 +58,11 @@
                                     onclick="open_view_model_form(`{{ $addTasvieViewModelUpdateForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $creditor->id }}`, `{{ $addTasvieViewModelApikey }}`)">ویرایش</button>
                             @endif
                             @if(auth()->user()->access('حذف رکورد طلب/تسویه در گزارش لیست طلبکاران'))
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="delete_view_model_row(`{{ $viewModelId }}`, `{{ $creditor->id }}`, `{{ $viewModelApikey }}`)">حذف</button>
+                                <form action="{{ route('simpleWorkflowReport.creditor.delete', $creditor->id) }}" method="POST" style="display: inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </form>
                             @endif
                         </td>
                     </tr>
