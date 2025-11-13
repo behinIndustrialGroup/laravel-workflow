@@ -53,6 +53,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('goods-in', [GoodsInReportController::class, 'index'])->name('goods-in.index')->middleware('access:گزارش ورود کالاها در نگهبانی');
     Route::get('missions', [MissionsReportController::class, 'index'])->name('missions.index')->middleware('access:گزارش ماموریت');
     Route::get('missions/export', [MissionsReportController::class, 'export'])->name('missions.export')->middleware('access:گزارش ماموریت');
+    Route::delete('missions/{mission}', [MissionsReportController::class, 'destroy'])->name('missions.destroy')->middleware('access:حذف ماموریت');
 
 
     Route::name('fin.')->prefix('fin')->middleware('access:گزارش درآمد تقریبی')->group(function(){

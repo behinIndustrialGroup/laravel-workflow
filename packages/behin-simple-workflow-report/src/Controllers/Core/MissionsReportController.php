@@ -9,8 +9,10 @@ use Behin\SimpleWorkflowReport\Exports\MissionsReportExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Morilog\Jalali\Jalalian;
+use Throwable;
 
 class MissionsReportController extends Controller
 {
@@ -118,28 +120,20 @@ class MissionsReportController extends Controller
             'undetermined' => 'تعیین وضعیت نشده',
         ];
 
+        $statusFilters = [
+            'approved' => ['approved', 'تایید'],
+            'rejected' => ['rejected', 'عدم تایید'],
+            'undetermined' => ['undetermined', 'تعیین وضعیت نشده'],
+        ];
+
         $selectedStatus = $request->input('status');
         if (!is_string($selectedStatus) || !array_key_exists($selectedStatus, $statusOptions)) {
             $selectedStatus = 'approved';
         }
 
-        if ($selectedStatus != '') {
+        if ($selectedStatus !== '' && isset($statusFilters[$selectedStatus])) {
             $statusColumn = 'status';
-            $statusType = 'string';
-
-            if ($statusColumn) {
-                switch ($selectedStatus) {
-                    case 'approved':
-                        $query->where($statusColumn, $statusOptions['approved']);
-                        break;
-                    case 'rejected':
-                        $query->where($statusColumn, $statusOptions['rejected']);
-                        break;
-                    case 'undetermined':
-                        $query->where($statusColumn, $statusOptions['undetermined']);
-                        break;
-                }
-            }
+            $query->whereIn($statusColumn, $statusFilters[$selectedStatus]);
         }
 
         $missions = $query->orderByDesc('start_datetime_alt')
@@ -177,6 +171,22 @@ class MissionsReportController extends Controller
             'statusOptions' => $statusOptions,
             'selectedStatus' => $selectedStatus,
         ];
+    }
+
+    public function destroy(Missions $mission)
+    {
+        try {
+            DB::transaction(function () use ($mission) {
+                Case_misson::where('case_number', $mission->case_number)->delete();
+                $mission->delete();
+            });
+
+            return redirect()->back()->with('success', 'ماموریت با موفقیت حذف شد.');
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return redirect()->back()->with('error', 'حذف ماموریت با خطا مواجه شد.');
+        }
     }
 
     private function jalaliToCarbonStartOfDay(?string $date): ?Carbon
