@@ -42,6 +42,12 @@
             </form>
         </div>
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
             <div class="table-responsive">
                 <table class="table table-bordered" id="missions-table">
                     <thead>
@@ -53,6 +59,7 @@
                             <th>مدت (ساعت)</th>
                             <th>وضعیت</th>
                             <th>پرونده ها</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +84,17 @@
                                         <i class="fa fa-external-link text-primary" onclick="window.open('{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->related_case_number]) }}', '_blank')"></i>
                                         {{ $case->related_case_number ?? '-' }}<br>
                                     @endforeach
+                                </td>
+                                <td>
+                                    @if (auth()->user()->access('حذف ماموریت'))
+                                        <form method="POST" action="{{ route('simpleWorkflowReport.missions.destroy', $mission) }}" onsubmit="return confirm('آیا از حذف این ماموریت مطمئن هستید؟');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                        </form>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
