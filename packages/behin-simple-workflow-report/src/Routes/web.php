@@ -27,6 +27,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportReminderSummaryController;
+use Behin\SimpleWorkflowReport\Controllers\Core\EmployeeSalaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\FinancialTransactionController;
 use Behin\SimpleWorkflowReport\Controllers\Core\OnCreditReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\PersonelActivityController;
@@ -71,6 +72,9 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     })->name('userTimeoffs');
 
     Route::post('timeoff/update', [TimeoffController::class, 'update'])->name('timeoff.update');
+
+    Route::get('employee-salaries', [EmployeeSalaryReportController::class, 'index'])->name('employee-salaries.index');
+    Route::post('employee-salaries', [EmployeeSalaryReportController::class, 'update'])->name('employee-salaries.update');
 
     Route::resource('expired-tasks', ExpiredController::class);
 
