@@ -15,6 +15,9 @@
     $addTasvieViewModelUpdateForm = $addTasvieViewModel->update_form;
     $addTasvieViewModelApikey = $addTasvieViewModel->api_key;
     $addTasvieViewModelCreateNewForm = $addTasvieViewModel->create_form;
+
+    $onlyAssignedUsers = $onlyAssignedUsers ?? false;
+    $indexRoute = $onlyAssignedUsers ? route('simpleWorkflowReport.financial-transactions.user') : route('simpleWorkflowReport.financial-transactions.index');
 @endphp
 
 
@@ -30,7 +33,7 @@
         </div>
     @endif
     <div class="card mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex flex-wrap gap-2 align-items-center">
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
@@ -39,13 +42,23 @@
             </button>
 
             {{-- <button class="btn btn-sm btn-primary"
-                onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
+                onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`
+, `{{ $addTasvieViewModelApikey }}`)">افزودن
                 سند</button> --}}
+
+            @if (!$onlyAssignedUsers)
+                <a class="btn btn-outline-primary ms-auto"
+                    href="{{ route('simpleWorkflowReport.financial-transactions.user', array_filter(['case_number' => $caseNumber, 'filter' => $filter !== 'negative' ? $filter : null])) }}">
+                    نمایش فقط طرف حساب‌های متصل به کاربر
+                </a>
+            @else
+                <span class="badge bg-info text-dark ms-auto">فقط طرف حساب‌های متصل به کاربر نمایش داده می‌شوند.</span>
+            @endif
         </div>
     </div>
     <div class="card mb-3">
         <div class="card-body">
-            <form action="{{ route('simpleWorkflowReport.financial-transactions.index') }}" method="GET"
+            <form action="{{ $indexRoute }}" method="GET"
                 class="row align-items-end">
                 <div class="col-sm-6 col-md-4 mb-2">
                     <label class="form-label">جستجو بر اساس شماره پرونده</label>
@@ -53,13 +66,15 @@
                         value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
                 </div>
                 <input type="hidden" name="filter" value="{{ $filter }}">
+                @if ($onlyAssignedUsers)
+                    <input type="hidden" name="only_assigned" value="1">
+                @endif
                 <div class="col-auto mb-2">
                     <button type="submit" class="btn btn-primary">جستجو</button>
                 </div>
                 @if (filled($caseNumber ?? null))
                     <div class="col-auto mb-2">
-                        <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => $filter]) }}"
-                            class="btn btn-outline-secondary">حذف جستجو</a>
+                        <a href="{{ $indexRoute }}" class="btn btn-outline-secondary">حذف جستجو</a>
                     </div>
                 @endif
             </form>
@@ -72,16 +87,19 @@
                 if (filled($caseNumber ?? null)) {
                     $caseNumberQuery['case_number'] = $caseNumber;
                 }
+                if ($onlyAssignedUsers) {
+                    $caseNumberQuery['only_assigned'] = 1;
+                }
             @endphp
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
+            <a href="{{ $indexRoute }}?{{ http_build_query(array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش بدهکارها
             </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
+            <a href="{{ $indexRoute }}?{{ http_build_query(array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش همه طرف حساب‌ها
             </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
+            <a href="{{ $indexRoute }}?{{ http_build_query(array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
                 نمایش فقط مثبت‌ها
             </a>
@@ -115,7 +133,7 @@
                                 <button class="btn btn-sm btn-primary"
                                     onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
                                 <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی 
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی
                                 <button class="btn btn-sm btn-warning"
                                     onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
                             </td>
@@ -199,20 +217,16 @@
         function showAddNewCredit(counterparty = null) {
             var fd = new FormData();
             fd.append('counterparty', counterparty);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddCredit', 'counterparty') }}";
-            url = url.replace('counterparty', counterparty);
-            open_admin_modal(url, 'افزودن بستانکاری');
-        }
-
-        function showAddDebit(counterparty) {
-            var fd = new FormData();
-            fd.append('counterparty', counterparty);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', 'counterparty') }}";
-            url = url.replace('counterparty', counterparty);
-            open_admin_modal(url, 'افزودن بدهکاری');
+            open_admin_modal("{{ route('simpleWorkflowReport.financial-transactions.create') }}", 'افزودن بدهی');
         }
 
         function showAddNewDebit(counterparty = null) {
+            var fd = new FormData();
+            fd.append('counterparty', counterparty);
+            open_admin_modal("{{ route('simpleWorkflowReport.financial-transactions.create') }}", 'افزودن طلب');
+        }
+
+        function showAddDebit(counterparty) {
             var fd = new FormData();
             fd.append('counterparty', counterparty);
             var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', 'counterparty') }}";
