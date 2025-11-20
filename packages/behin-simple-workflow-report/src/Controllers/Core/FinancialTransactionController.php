@@ -32,7 +32,6 @@ class FinancialTransactionController extends Controller
     {
         $filter = $request->query('filter', 'negative');
         $caseNumber = $request->query('case_number');
-        $onlyAssignedUsers = $request->boolean('only_assigned', false);
 
         $totalAmountExpression = "SUM(CASE
                 WHEN financial_type = 'بدهکار' THEN -amount
@@ -40,23 +39,12 @@ class FinancialTransactionController extends Controller
                 ELSE 0
             END)";
 
-        $financialTransactionsTable = (new Financial_transactions())->getTable();
-        $counterPartiesTable = (new Counter_parties())->getTable();
-
         $creditorsQuery = Financial_transactions::select(
             'counterparty_id',
             DB::raw("{$totalAmountExpression} as total_amount")
         )
             ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
                 $query->where('case_number', $caseNumber);
-            })
-            ->when($onlyAssignedUsers, function ($query) use ($counterPartiesTable, $financialTransactionsTable) {
-                $query->join(
-                    $counterPartiesTable,
-                    "{$counterPartiesTable}.id",
-                    '=',
-                    "{$financialTransactionsTable}.counterparty_id"
-                )->whereNotNull("{$counterPartiesTable}.user_id");
             })
             ->groupBy('counterparty_id');
 
@@ -74,17 +62,7 @@ class FinancialTransactionController extends Controller
 
         $creditors = $creditorsQuery->get();
 
-        return view(
-            'SimpleWorkflowReportView::Core.FinancialTransaction.index',
-            compact('creditors', 'filter', 'caseNumber', 'onlyAssignedUsers')
-        );
-    }
-
-    public function userIndex(Request $request)
-    {
-        $request->merge(['only_assigned' => true]);
-
-        return $this->index($request);
+        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
     }
 
 
