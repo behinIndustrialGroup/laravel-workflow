@@ -28,10 +28,10 @@ use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
 {
-    public function index(Request $request)
-    {
+    public function prepareData($request){
         $filter = $request->query('filter', 'negative');
         $caseNumber = $request->query('case_number');
+        $onlyAssignedUsers = $request->boolean('only_assigned', false);
 
         $totalAmountExpression = "SUM(CASE
                 WHEN financial_type = 'بدهکار' THEN -amount
@@ -45,6 +45,10 @@ class FinancialTransactionController extends Controller
         )
             ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
                 $query->where('case_number', $caseNumber);
+            })
+            ->when($onlyAssignedUsers, function ($query){
+                $assignCounterParties = Counter_parties::whereNotNull('user_id')->pluck('id');
+                $query->whereIn('counterparty_id', $assignCounterParties);
             })
             ->groupBy('counterparty_id');
 
@@ -60,9 +64,28 @@ class FinancialTransactionController extends Controller
                 break;
         }
 
-        $creditors = $creditorsQuery->get();
+        return $creditorsQuery->get();
+    }
+    public function index(Request $request)
+    {
+        $filter = $request->query('filter', 'negative');
+        $caseNumber = $request->query('case_number');
+        $onlyAssignedUsers = $request->boolean('only_assigned', false);
+        $creditors = $this->prepareData($request);
 
         return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
+    }
+
+    public function userIndex(Request $request)
+    {
+        $filter = $request->query('filter', 'negative');
+        $caseNumber = $request->query('case_number');
+        $onlyAssignedUsers = $request->boolean('only_assigned', false);
+        $request->merge(['only_assigned' => true]);
+
+        $creditors = $this->prepareData($request);
+        return view('SimpleWorkflowReportView::Core.UserFinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
+
     }
 
 
@@ -105,13 +128,15 @@ class FinancialTransactionController extends Controller
             'destination_account_name' => $request->destination_account_name,
             'destination_account_number' => $request->destination_account_number,
         ]);
-        return redirect()->route('simpleWorkflowReport.financial-transactions.index');
+        return redirect()->back();//->route('simpleWorkflowReport.financial-transactions.index');
     }
 
-    public function showAddDebit($counterparty = null)
+    public function showAddDebit($counterparty = null, $onlyAssignedUsers = false)
     {
         $counterparty = Counter_parties::find($counterparty);
-        $counterParties = Counter_parties::all();
+        $counterParties = Counter_parties::when($onlyAssignedUsers, function ($query){
+            $query->whereNotNull('user_id');
+        })->get();
         return view('SimpleWorkflowReportView::Core.FinancialTransaction.add-debit', compact('counterparty', 'counterParties'));
     }
 
@@ -131,7 +156,7 @@ class FinancialTransactionController extends Controller
             'destination_account_name' => $request->destination_account_name,
             'destination_account_number' => $request->destination_account_number,
         ]);
-        return redirect()->route('simpleWorkflowReport.financial-transactions.index');
+        return redirect()->back();//->route('simpleWorkflowReport.financial-transactions.index');
     }
 
     public function update(Request $request, Financial_transactions $financialTransaction)
