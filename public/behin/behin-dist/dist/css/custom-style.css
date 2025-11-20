@@ -320,3 +320,54 @@ audio{
   .font-vazir-bold{
     font-family: 'Vazir-Bold', sans-serif !important;
   }
+
+  nav[aria-label="Pagination Navigation"] {
+    margin-top: 20px;
+}
+
+nav[aria-label="Pagination Navigation"] .inline-flex {
+    align-items: center;
+}
+
+nav[aria-label="Pagination Navigation"] a,
+nav[aria-label="Pagination Navigation"] span {
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 38px;
+    height: 38px;
+
+    font-size: 13px;
+    border-radius: 6px;
+    margin: 0 2px;
+
+    white-space: nowrap;
+}
+
+nav[aria-label="Pagination Navigation"] a:hover {
+    background: #f3f4f6;
+}
+
+/* دکمه قبلی و بعدی */
+nav[aria-label="Pagination Navigation"] svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* فاصله بخش پایین */
+nav[aria-label="Pagination Navigation"] .shadow-sm {
+    gap: 3px;
+}
+
+/* بهبود نمایش در موبایل */
+@media (max-width: 640px) {
+    nav[aria-label="Pagination Navigation"] {
+        display: flex;
+        justify-content: center;
+    }
+    nav[aria-label="Pagination Navigation"] .flex-1.sm\\:hidden {
+        justify-content: center !important;
+    }
+}
+

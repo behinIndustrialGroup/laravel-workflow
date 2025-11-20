@@ -57,7 +57,7 @@
                                 $fieldAttributes = json_decode($fieldDetails->attributes);
                                 $fieldValue = $row->$fieldName ?? '';
                                 $fieldNameAlt = $fieldName . '_alt';
-                                $fieldValueAlt = (isset($case) and $fieldDetails->type == 'datetime') ? $row->$fieldNameAlt : null;
+                                $fieldValueAlt = (isset($case) and $fieldDetails->type == 'datetime' and isset($row)) ? $row->$fieldNameAlt : null;
                             } else {
                                 if ($field->fieldName != $form->id) {
                                     $childForm = getFormInformation($field->fieldName);

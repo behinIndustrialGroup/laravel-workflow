@@ -363,19 +363,19 @@ class RoutingController extends Controller
                     }
                 }
                 if ($task->assignment_type == 'public') {
-                    $taskActors = TaskActorController::getActorsByTaskId($task->id);
-                    foreach ($taskActors as $ta) {
-                        $actors = collect();
-                        if ($ta->role_id) {
-                            $actors = User::where('role_id', $ta->role_id)->pluck('id');
-                        } else {
-                            $actors->push($ta->actor);
-                        }
-                        foreach ($actors as $actor) {
-                            $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
-                        }
-                    }
-                    $inbox = InboxController::create($task->id, $caseId, Auth::id(), 'new');
+                    // $taskActors = TaskActorController::getActorsByTaskId($task->id);
+                    // foreach ($taskActors as $ta) {
+                    //     $actors = collect();
+                    //     if ($ta->role_id) {
+                    //         $actors = User::where('role_id', $ta->role_id)->pluck('id');
+                    //     } else {
+                    //         $actors->push($ta->actor);
+                    //     }
+                    //     foreach ($actors as $actor) {
+                    //         $inbox = InboxController::create($task->id, $caseId, $actor, 'new');
+                    //     }
+                    // }
+                    $inbox = InboxController::create($task->id, $caseId, null, 'new');
                 }
             }
             if ($task->type == 'script') {
@@ -411,7 +411,7 @@ class RoutingController extends Controller
             if ($task->type == 'condition') {
                 $condition = ConditionController::getById($task->executive_element_id);
                 $result = ConditionController::runCondition($task->executive_element_id, $caseId);
-                // print($result);
+                Log::info('condition: ' . $condition->name . ' result: ' . $result);
 
                 if ($result) {
                     $nextTask = $condition->nextIfTrue();

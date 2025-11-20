@@ -57,9 +57,11 @@
                                 <td>{{ getUserInfo($case->creator)->name }}</td>
                                 <td>
                                     @foreach ($case->whereIs() as $inbox)
-                                        {!! $inbox->task->styled_name !!}
-                                        <span
-                                            class="text-muted small">({{ getUserInfo($inbox->actor)->name ?? '' }})</span><br>
+                                        @if (!in_array($inbox->task->id, ['a8bf3dce-7b97-4b0d-ae69-50816b79cc2e', 'a36a1866-7af8-48a6-9c68-47fba7aab8a5']))
+                                            {!! $inbox->task->styled_name !!}
+                                            <span
+                                                class="text-muted small">({{ getUserInfo($inbox->actor)->name ?? '' }})</span><br>
+                                        @endif
                                     @endforeach
                                 </td>
                                 <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>

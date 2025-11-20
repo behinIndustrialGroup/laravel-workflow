@@ -92,7 +92,7 @@ class FinancialTransactionController extends Controller
     public function addCredit(Request $request)
     {
         $amount = str_replace(',', '', $request->amount);
-        return Financial_transactions::create([
+        Financial_transactions::create([
             'case_number' => $request->case_number,
             'financial_type' => 'بستانکار',
             'financial_method' => $request->financial_method,

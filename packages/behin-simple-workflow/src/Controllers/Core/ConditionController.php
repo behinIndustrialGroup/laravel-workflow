@@ -75,13 +75,16 @@ class ConditionController extends Controller
         $variables = collect($case->variables());
         foreach($conditions as $condition){
             $value = mb_convert_encoding($condition->value, 'UTF-8');
-            // print($value);
-            $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
-            // Log::info($condition->fieldName . " " . $condition->operation . " " . $value . " " . $c);
-            // print($c);
-            // Log::info($Condition->name . ": " .$c);
+            $variable = $case->getVariable($condition->fieldName);
+            $field = getFieldDetailsByName($condition->fieldName);
+            if($field){
+                $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
+            }else{
+                return 'true';
+                $s = $condition->fieldName . " " . $condition->operation . " " . $value;
+                $c = eval($s);
+            }
             if(!$c){
-                // print($value);
                 return false;
             }
         }
@@ -100,13 +103,16 @@ class ConditionController extends Controller
         $variables = collect($case->variables());
         foreach($conditions as $condition){
             $value = mb_convert_encoding($condition->value, 'UTF-8');
-            // print($value);
-            $c = $variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
-            // Log::info($condition->fieldName . " " . $condition->operation . " " . $value . " " . $c);
-            print($c);
-            // Log::info($Condition->name . ": " .$c);
+            $variable = $case->getVariable($condition->fieldName);
+            $field = getFieldDetailsByName($condition->fieldName);
+            if($field){
+                $c = (bool)$variables->where('key', $condition->fieldName)->where('value', $condition->operation, $value)->first();
+            }else{
+                return 'true';
+                $s = $condition->fieldName . " " . $condition->operation . " " . $value;
+                $c = eval($s);
+            }
             if(!$c){
-                // print($value);
                 return 'false';
             }
         }

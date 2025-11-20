@@ -16,6 +16,7 @@
 <div class="card table-responsive">
     <div class="card-header bg-secondary text-center">
         <h3 class="card-title">جزئیات حساب: {{ $creditors[0]->counterparty()->name ?? '' }}</h3>
+        <a href="{{ route('simpleWorkflowReport.creditor.index') }}" target="_blank" class="btn btn-sm btn-danger">نمایش لیست طلبکاران</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="more-details">

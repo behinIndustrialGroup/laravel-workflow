@@ -29,7 +29,7 @@
         <div class="col-sm-4">
             <div class="form-group"><label>بابت پرونده</label>
                 <input type="text" name="case_number" list="case_number_list"
-                    class="form-control formatted-digit" inputmode="numeric" id="case_number" placeholder=""
+                    class="form-control" inputmode="numeric" id="case_number" placeholder=""
                     style="">
             </div>
         </div>
@@ -89,7 +89,9 @@
         <div class="col-sm-4">
             <div class="form-group"><label>نام مقصد حساب</label><input type="text" name="destination_account_name"
                     list="destination_account_name_list" value="" class="form-control"
-                    id="destination_account_name" placeholder="" style=""></div>
+                    id="destination_account_name" placeholder="" style="">
+                <datalist id="destination_account_name_list"></datalist>
+            </div>
 
         </div>
 
@@ -108,4 +110,48 @@
 
 <script>
     initial_view()
+</script>
+
+<script>
+    let counterPartyDataMap = {};
+
+    function getCounterParty(q, input_id) {
+        var scriptId = "0fa291ce-6b0a-4e0b-b9aa-e6b65337f97c";
+        var fd = new FormData();
+        fd.append('q', q);
+        runScript(scriptId, fd, function(response) {
+            console.log(response);
+            var list = $(`#${input_id}_list`);
+            counterPartyDataMap = {}; // ریست آبجکت
+
+            if (list.length) {
+                list.html('');
+                response.forEach(function(item) {
+                    counterPartyDataMap[item.name] = item; // ذخیره اطلاعات هر مشتری بر اساس fullname
+                    list.append(`<option value="${item.name}"></option>`);
+                });
+            } else {
+                $('#account_number').after(`<datalist id="${input_id}_list"></datalist>`);
+                list = $(`#${input_id}_list`);
+                response.forEach(function(item) {
+                    counterPartyDataMap[item.name] = item; // ذخیره اطلاعات هر مشتری بر اساس fullname
+                    list.append(`<option value="${item.name}"></option>`);
+                });
+            }
+        });
+    }
+
+    $('#destination_account_name').on('input', function() {
+        var q = $(this).val();
+        var selected = counterPartyDataMap[q];
+        if (selected) {
+            $('#destination_account_number').val(selected.account_number || '');
+        }
+    });
+
+    $('#destination_account_name').keyup(function() {
+        if ($(this).val().length >= 3) {
+            getCounterParty($(this).val(), $(this).attr('id'));
+        }
+    });
 </script>
