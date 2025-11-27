@@ -14,6 +14,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Creditor;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
+use Behin\SimpleWorkflowReport\Exports\UserFinancialTransactionExport;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -21,6 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
@@ -86,6 +88,15 @@ class FinancialTransactionController extends Controller
         $creditors = $this->prepareData($request);
         return view('SimpleWorkflowReportView::Core.UserFinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
 
+    }
+
+    public function userExport(Request $request)
+    {
+        $request->merge(['only_assigned' => true]);
+
+        $creditors = $this->prepareData($request);
+
+        return Excel::download(new UserFinancialTransactionExport($creditors), 'user_financial_transactions.xlsx');
     }
 
 
