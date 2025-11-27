@@ -123,6 +123,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::delete('creditor/delete/{id}', [CreditorReportController::class, 'delete'])->name('creditor.delete')->middleware('access:گزارش لیست طلبکاران');
 
     Route::get('financial-transactions/user', [FinancialTransactionController::class, 'userIndex'])->name('financial-transactions.user')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/user/export', [FinancialTransactionController::class, 'userExport'])->name('financial-transactions.user.export')->middleware('access:گزارش لیست طلبکاران');
     Route::resource('financial-transactions', FinancialTransactionController::class)->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-credit', [FinancialTransactionController::class, 'showAddCredit'])->name('financial-transactions.showAddCredit')->middleware('access:گزارش لیست طلبکاران');
     Route::post('financial-transactions/add-credit', [FinancialTransactionController::class, 'addCredit'])->name('financial-transactions.addCredit')->middleware('access:گزارش لیست طلبکاران');

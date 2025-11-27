@@ -34,6 +34,8 @@
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
+                class="btn btn-sm btn-success">خروجی اکسل</a>
             <button class="btn btn-sm btn-warning" onclick="showAddNewDebit(null,true)">افزودن
                 بدهکاری <br>(مدارپرداز به پرسنل پرداخت کرده)
             </button>
@@ -109,13 +111,13 @@
                     @foreach ($creditors as $creditor)
                         <tr @if ($creditor->total_amount < 0) style="background: #f56c6c" @endif
                             @if ($creditor->total_amount > 0) class="bg-success" @endif>
-                            <td>{{ $creditor->counterparty()->name ?? '' }}</td>
+                            <td>{{ $creditor->name ?? '' }}</td>
                             <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
                             <td>
                                 <button class="btn btn-sm btn-primary"
                                     onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
                                 <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی 
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی
                                 <button class="btn btn-sm btn-warning"
                                     onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
                             </td>

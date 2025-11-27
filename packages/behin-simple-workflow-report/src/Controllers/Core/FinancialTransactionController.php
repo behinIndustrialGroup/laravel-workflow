@@ -14,6 +14,7 @@ use Behin\SimpleWorkflow\Models\Core\TaskActor;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Creditor;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
+use Behin\SimpleWorkflowReport\Exports\UserFinancialTransactionExport;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -21,6 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
@@ -39,28 +41,35 @@ class FinancialTransactionController extends Controller
                 ELSE 0
             END)";
 
-        $creditorsQuery = Financial_transactions::select(
+        $totalsQuery = Financial_transactions::select(
             'counterparty_id',
             DB::raw("{$totalAmountExpression} as total_amount")
         )
             ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
                 $query->where('case_number', $caseNumber);
             })
-            ->when($onlyAssignedUsers, function ($query){
-                $assignCounterParties = Counter_parties::whereNotNull('user_id')->pluck('id');
-                $query->whereIn('counterparty_id', $assignCounterParties);
-            })
             ->groupBy('counterparty_id');
+
+        $creditorsQuery = Counter_parties::query()
+            ->when($onlyAssignedUsers, function ($query){
+                $query->whereNotNull('user_id');
+            })
+            ->select(
+                'counter_parties.*',
+                DB::raw('counter_parties.id as counterparty_id'),
+                DB::raw('COALESCE(totals.total_amount, 0) as total_amount')
+            )
+            ->leftJoinSub($totalsQuery, 'totals', 'totals.counterparty_id', '=', 'counter_parties.id');
 
         switch ($filter) {
             case 'positive':
-                $creditorsQuery->havingRaw("{$totalAmountExpression} > 0");
+                $creditorsQuery->having('total_amount', '>', 0);
                 break;
             case 'all':
                 break;
             default:
                 $filter = 'negative';
-                $creditorsQuery->havingRaw("{$totalAmountExpression} < 0");
+                $creditorsQuery->having('total_amount', '<=', 0);
                 break;
         }
 
@@ -86,6 +95,15 @@ class FinancialTransactionController extends Controller
         $creditors = $this->prepareData($request);
         return view('SimpleWorkflowReportView::Core.UserFinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
 
+    }
+
+    public function userExport(Request $request)
+    {
+        $request->merge(['only_assigned' => true]);
+
+        $creditors = $this->prepareData($request);
+
+        return Excel::download(new UserFinancialTransactionExport($creditors), 'user_financial_transactions.xlsx');
     }
 
 
