@@ -34,9 +34,6 @@
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
-            <button class="btn btn-sm btn-warning" onclick="showAddNewDebit(null,true)">افزودن
-                بدهکاری <br>(مدارپرداز به پرسنل پرداخت کرده)
-            </button>
 
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
@@ -49,8 +46,8 @@
                 class="row align-items-end">
                 <div class="col-sm-6 col-md-4 mb-2">
                     <label class="form-label">جستجو بر اساس شماره پرونده</label>
-                    <input type="text" class="form-control" name="case_number"
-                        value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
+                    <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
+                        placeholder="شماره پرونده را وارد کنید">
                 </div>
                 <input type="hidden" name="filter" value="{{ $filter }}">
                 <div class="col-auto mb-2">
@@ -65,28 +62,7 @@
             </form>
         </div>
     </div>
-    <div class="card mb-3">
-        <div class="card-body d-flex gap-2 flex-wrap">
-            @php
-                $caseNumberQuery = [];
-                if (filled($caseNumber ?? null)) {
-                    $caseNumberQuery['case_number'] = $caseNumber;
-                }
-            @endphp
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش بدهکارها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش همه طرف حساب‌ها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش فقط مثبت‌ها
-            </a>
-        </div>
-    </div>
+    
     @if (filled($caseNumber ?? null))
         <div class="alert alert-info">
             نمایش نتایج برای پرونده شماره <span class="font-weight-bold">{{ $caseNumber }}</span>
@@ -106,18 +82,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($creditors as $creditor)
-                        <tr @if ($creditor->total_amount < 0) style="background: #f56c6c" @endif
-                            @if ($creditor->total_amount > 0) class="bg-success" @endif>
-                            <td>{{ $creditor->counterparty()->name ?? '' }}</td>
-                            <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
+                    @foreach ($counterParties as $counterParty)
+                        @php
+                            $creditorInfo = $creditors->where('counterparty_id', $counterParty->id);
+                            $totalAmount = $creditorInfo->first() ? $creditorInfo->first()->total_amount : 0;
+                            $rest = $counterParty->user_max_advance - $totalAmount;
+                        @endphp
+                        <tr  
+                            @if($counterParty->user_max_advance and $rest / $counterParty->user_max_advance > 0.5 and $rest / $counterParty->user_max_advance < 1)
+                                class="bg-warning"
+                            @elseif($totalAmount > 0)
+                                class="bg-success"
+                            @elseif($totalAmount < 0)
+                                class="bg-danger"
+                            @endif
+                        >
+                            <td>{{ $counterParty->name ?? '' }}<br>
+                                <small class="text-muted">سقف: {{ number_format($counterParty->user_max_advance) }}</small>
+                            </td>
+                            <td dir="ltr">
+                                {{ number_format($totalAmount) }}
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-primary"
-                                    onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
-                                <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی 
-                                <button class="btn btn-sm btn-warning"
-                                    onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
+                                    onclick="showDetails(`{{ $counterParty->id }}`)">جزئیات بیشتر</button>
+                                
+                                @if ($totalAmount == 0)
+                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', $counterParty->id) }}"
+                                        class="btn btn-sm btn-danger">باز کردن حساب مساعده جدید</a>
+                                @else
+                                    <button class="btn btn-sm btn-warning"
+                                        onclick="showAddDebit(`{{ $counterParty->id }}`)">افزودن سند پرداختنی</button>
+                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.closeUserSalaryAdvances', $counterParty->id) }}"
+                                        class="btn btn-sm btn-success">تسویه</a> 
+                                @endif
+                                
+                                
+                                {{--    <button class="btn btn-sm btn-success"
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی --}}
+                                
                             </td>
                         </tr>
                     @endforeach
@@ -216,7 +219,8 @@
             var fd = new FormData();
             fd.append('counterparty', counterparty);
             fd.append('onlyAssignedUsers', onlyAssignedUsers);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', ['counterparty', 'onlyAssignedUsers']) }}";
+            var url =
+                "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', ['counterparty', 'onlyAssignedUsers']) }}";
             url = url.replace('counterparty', counterparty);
             url = url.replace('onlyAssignedUsers', onlyAssignedUsers);
             open_admin_modal(url, 'افزودن بدهکاری');

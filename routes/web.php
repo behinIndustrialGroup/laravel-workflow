@@ -105,128 +105,128 @@ Route::get('build-app', function () {
     return redirect()->back();
 });
 
-Route::get('test', function () {
-    $financials = Financials::all()->map(function ($financial) {
-        $customerVar = Variable::where('case_id', $financial->case_id)
-            ->where('key', 'customer_workshop_or_ceo_name')
-            ->first();
+// Route::get('test', function () {
+//     $financials = Financials::all()->map(function ($financial) {
+//         $customerVar = Variable::where('case_id', $financial->case_id)
+//             ->where('key', 'customer_workshop_or_ceo_name')
+//             ->first();
 
-        $financial->customer = $customerVar ? $customerVar->value : null;
-        return $financial;
-    });
+//         $financial->customer = $customerVar ? $customerVar->value : null;
+//         return $financial;
+//     });
 
-    // گروه‌بندی بر اساس customer
-    $grouped = $financials->groupBy('customer');
-    dd($grouped);
-    return response()->json($grouped);
-});
+//     // گروه‌بندی بر اساس customer
+//     $grouped = $financials->groupBy('customer');
+//     dd($grouped);
+//     return response()->json($grouped);
+// });
 
 
-Route::get('test2', function () {
-    $onCredits = DB::table('wf_entity_financials')
-        // ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
-        // ->leftJoin('wf_variables as v_customer', function ($join) {
-        //     $join->on('v_customer.case_id', '=', 'wf_cases.id')
-        //         ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
-        // })
-        ->whereNotNull('wf_entity_financials.case_number')
-        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
-        // ->whereNull('wf_entity_financials.is_passed')
-        ->whereNull('wf_entity_financials.deleted_at')
-        ->select(
-            'wf_entity_financials.id',
-            'wf_entity_financials.case_number',
-            'wf_entity_financials.case_id',
-            'wf_entity_financials.fix_cost_type',
-            'wf_entity_financials.cost',
-            'wf_entity_financials.is_passed',
-            'wf_entity_financials.counter_party_id',
-            // 'v_customer.value as customer_name',
-            'wf_entity_financials.destination_account',
-            'wf_entity_financials.destination_account_name',
-            'wf_entity_financials.description',
-            'wf_entity_financials.invoice_number',
-            'wf_entity_financials.cheque_number',
-            'wf_entity_financials.cheque_due_date',
-            'wf_entity_financials.payment_date',
-            'wf_entity_financials.payment',
-        )
-        ->get();
-    foreach($onCredits as $onCredit){
-        $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
-    }
+// Route::get('test2', function () {
+//     $onCredits = DB::table('wf_entity_financials')
+//         // ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+//         // ->leftJoin('wf_variables as v_customer', function ($join) {
+//         //     $join->on('v_customer.case_id', '=', 'wf_cases.id')
+//         //         ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+//         // })
+//         ->whereNotNull('wf_entity_financials.case_number')
+//         ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+//         // ->whereNull('wf_entity_financials.is_passed')
+//         ->whereNull('wf_entity_financials.deleted_at')
+//         ->select(
+//             'wf_entity_financials.id',
+//             'wf_entity_financials.case_number',
+//             'wf_entity_financials.case_id',
+//             'wf_entity_financials.fix_cost_type',
+//             'wf_entity_financials.cost',
+//             'wf_entity_financials.is_passed',
+//             'wf_entity_financials.counter_party_id',
+//             // 'v_customer.value as customer_name',
+//             'wf_entity_financials.destination_account',
+//             'wf_entity_financials.destination_account_name',
+//             'wf_entity_financials.description',
+//             'wf_entity_financials.invoice_number',
+//             'wf_entity_financials.cheque_number',
+//             'wf_entity_financials.cheque_due_date',
+//             'wf_entity_financials.payment_date',
+//             'wf_entity_financials.payment',
+//         )
+//         ->get();
+//     foreach($onCredits as $onCredit){
+//         $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
+//     }
 
-    echo "<table>";
-    $loop = 1;
-    foreach($onCredits as $onCredit){
-        if($onCredit->counter_party_id and $onCredit->payments->count() > 0 and $onCredit->is_passed){
-            if($onCredit->cost == $onCredit->payments->sum('amount')){
-                // $ft1 = Financial_transactions::create([
-                //     'case_number' => $onCredit->case_number,
-                //     'case_id' => $onCredit->case_id,
-                //     'financial_type' => 'بدهکار',
-                //     'counterparty_id' => $onCredit->counter_party_id,
-                //     'amount' => $onCredit->cost,
-                //     'description' => 'از حساب دفتری '.  $onCredit->description,
-                // ]);
-                // $ft2 = Financial_transactions::create([
-                //     'case_number' => $onCredit->case_number,
-                //     'case_id' => $onCredit->case_id,
-                //     'financial_type' => 'بستانکار',
-                //     'financial_method' => $onCredit->fix_cost_type,
-                //     'counterparty_id' => $onCredit->counter_party_id,
-                //     'amount' => $onCredit->payments->sum('amount'),
-                //     'description' => 'از حساب دفتری '.  $onCredit->description,
-                //     'invoice_or_cheque_number' => $onCredit->cheque_number ? $onCredit->cheque_number : $onCredit->invoice_number,
-                //     'transaction_or_cheque_due_date' => $onCredit->cheque_due_date ? $onCredit->cheque_due_date : $onCredit->payment_date,
-                //     'destination_account_name' => $onCredit->destination_account_name,
-                //     'destination_account_number' => $onCredit->destination_account,
-                // ]);
-                echo "<tr>";
-                echo "<td>".$loop."</td>";
-                echo "<td>".$onCredit->case_number."</td>";
-                echo "<td>".$onCredit->cost."</td>";
-                echo "<td>";
-                if($onCredit->is_passed){
-                    echo "بله";
-                }else{
-                    echo "نه";
-                }
-                echo "</td>";
-                echo "<td>" . $onCredit->counter_party_id . "</td>";
-                foreach($onCredit->payments as $payment){
-                    echo "<td>".$payment->amount."</td>";
-                }
-                echo "<td>converted";
-                echo "</td>";
-                echo "</tr>";
-                DB::table('wf_entity_financials')->where('id', $onCredit->id)->update(['converted' => 1]);
-                $loop++;
-            }
-        }
-    }
-    echo "</table>";
-    return ;
-    $counterParties = Counter_parties::all();
+//     echo "<table>";
+//     $loop = 1;
+//     foreach($onCredits as $onCredit){
+//         if($onCredit->counter_party_id and $onCredit->payments->count() > 0 and $onCredit->is_passed){
+//             if($onCredit->cost == $onCredit->payments->sum('amount')){
+//                 // $ft1 = Financial_transactions::create([
+//                 //     'case_number' => $onCredit->case_number,
+//                 //     'case_id' => $onCredit->case_id,
+//                 //     'financial_type' => 'بدهکار',
+//                 //     'counterparty_id' => $onCredit->counter_party_id,
+//                 //     'amount' => $onCredit->cost,
+//                 //     'description' => 'از حساب دفتری '.  $onCredit->description,
+//                 // ]);
+//                 // $ft2 = Financial_transactions::create([
+//                 //     'case_number' => $onCredit->case_number,
+//                 //     'case_id' => $onCredit->case_id,
+//                 //     'financial_type' => 'بستانکار',
+//                 //     'financial_method' => $onCredit->fix_cost_type,
+//                 //     'counterparty_id' => $onCredit->counter_party_id,
+//                 //     'amount' => $onCredit->payments->sum('amount'),
+//                 //     'description' => 'از حساب دفتری '.  $onCredit->description,
+//                 //     'invoice_or_cheque_number' => $onCredit->cheque_number ? $onCredit->cheque_number : $onCredit->invoice_number,
+//                 //     'transaction_or_cheque_due_date' => $onCredit->cheque_due_date ? $onCredit->cheque_due_date : $onCredit->payment_date,
+//                 //     'destination_account_name' => $onCredit->destination_account_name,
+//                 //     'destination_account_number' => $onCredit->destination_account,
+//                 // ]);
+//                 echo "<tr>";
+//                 echo "<td>".$loop."</td>";
+//                 echo "<td>".$onCredit->case_number."</td>";
+//                 echo "<td>".$onCredit->cost."</td>";
+//                 echo "<td>";
+//                 if($onCredit->is_passed){
+//                     echo "بله";
+//                 }else{
+//                     echo "نه";
+//                 }
+//                 echo "</td>";
+//                 echo "<td>" . $onCredit->counter_party_id . "</td>";
+//                 foreach($onCredit->payments as $payment){
+//                     echo "<td>".$payment->amount."</td>";
+//                 }
+//                 echo "<td>converted";
+//                 echo "</td>";
+//                 echo "</tr>";
+//                 DB::table('wf_entity_financials')->where('id', $onCredit->id)->update(['converted' => 1]);
+//                 $loop++;
+//             }
+//         }
+//     }
+//     echo "</table>";
+//     return ;
+//     $counterParties = Counter_parties::all();
 
-    return view('test', compact('onCredits','counterParties'));
-    foreach($onCredits as $onCredit){
-        echo"<form action='/test3' method='post'>";
-        echo csrf_field();
-        echo "<input type='text' name='customer_name' value='".$onCredit->customer_name."'>";
-        echo "<select name='counter_party_id'>";
-        echo "<option value=''></option>";
-        foreach($counterParties as $counterParty){
-            $select = $counterParty->id == $onCredit->counter_party_id ? 'selected' : '';
-            echo "<option value='".$counterParty->id."' $select>".$counterParty->name."</option>";
-        }
-        echo "</select>";
-        echo "<input type='submit'>";
-        echo"</form><br>";
-    }
-    return ;
-    return response()->json($onCredits);
-});
+//     return view('test', compact('onCredits','counterParties'));
+//     foreach($onCredits as $onCredit){
+//         echo"<form action='/test3' method='post'>";
+//         echo csrf_field();
+//         echo "<input type='text' name='customer_name' value='".$onCredit->customer_name."'>";
+//         echo "<select name='counter_party_id'>";
+//         echo "<option value=''></option>";
+//         foreach($counterParties as $counterParty){
+//             $select = $counterParty->id == $onCredit->counter_party_id ? 'selected' : '';
+//             echo "<option value='".$counterParty->id."' $select>".$counterParty->name."</option>";
+//         }
+//         echo "</select>";
+//         echo "<input type='submit'>";
+//         echo"</form><br>";
+//     }
+//     return ;
+//     return response()->json($onCredits);
+// });
 
 Route::post('test3', function (Request $request) {
     $customerName = $request->customer_name;
@@ -252,241 +252,261 @@ Route::post('test3', function (Request $request) {
 });
 
 
-Route::get('test4', function () {
-    $onCredits = DB::table('wf_entity_financials')
-        // ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
-        // ->leftJoin('wf_variables as v_customer', function ($join) {
-        //     $join->on('v_customer.case_id', '=', 'wf_cases.id')
-        //         ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
-        // })
-        ->whereNotNull('wf_entity_financials.case_number')
-        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
-        // ->whereNull('wf_entity_financials.is_passed')
-        ->whereNull('wf_entity_financials.deleted_at')
-        ->select(
-            'wf_entity_financials.id',
-            'wf_entity_financials.case_number',
-            'wf_entity_financials.case_id',
-            'wf_entity_financials.fix_cost_type',
-            'wf_entity_financials.cost',
-            'wf_entity_financials.is_passed',
-            'wf_entity_financials.counter_party_id',
-            'wf_entity_financials.destination_account',
-            'wf_entity_financials.destination_account_name',
-            'wf_entity_financials.description',
-            'wf_entity_financials.invoice_number',
-            'wf_entity_financials.cheque_number',
-            'wf_entity_financials.cheque_due_date',
-            'wf_entity_financials.payment_date',
-            'wf_entity_financials.payment',
-        )
-        ->get();
-    foreach($onCredits as $onCredit){
-        $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
-    }
+// Route::get('test4', function () {
+//     $onCredits = DB::table('wf_entity_financials')
+//         // ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+//         // ->leftJoin('wf_variables as v_customer', function ($join) {
+//         //     $join->on('v_customer.case_id', '=', 'wf_cases.id')
+//         //         ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+//         // })
+//         ->whereNotNull('wf_entity_financials.case_number')
+//         ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+//         // ->whereNull('wf_entity_financials.is_passed')
+//         ->whereNull('wf_entity_financials.deleted_at')
+//         ->select(
+//             'wf_entity_financials.id',
+//             'wf_entity_financials.case_number',
+//             'wf_entity_financials.case_id',
+//             'wf_entity_financials.fix_cost_type',
+//             'wf_entity_financials.cost',
+//             'wf_entity_financials.is_passed',
+//             'wf_entity_financials.counter_party_id',
+//             'wf_entity_financials.destination_account',
+//             'wf_entity_financials.destination_account_name',
+//             'wf_entity_financials.description',
+//             'wf_entity_financials.invoice_number',
+//             'wf_entity_financials.cheque_number',
+//             'wf_entity_financials.cheque_due_date',
+//             'wf_entity_financials.payment_date',
+//             'wf_entity_financials.payment',
+//         )
+//         ->get();
+//     foreach($onCredits as $onCredit){
+//         $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
+//     }
 
-    echo "<table>";
-    $loop = 1;
-    foreach($onCredits as $onCredit){
-        if($onCredit->counter_party_id and $onCredit->payments->count() == 0 and !$onCredit->is_passed){
-                // $ft1 = Financial_transactions::create([
-                //     'case_number' => $onCredit->case_number,
-                //     'case_id' => $onCredit->case_id,
-                //     'financial_type' => 'بدهکار',
-                //     'counterparty_id' => $onCredit->counter_party_id,
-                //     'amount' => $onCredit->cost,
-                //     'description' => 'از حساب دفتری '.  $onCredit->description,
-                // ]);
-                echo "<tr>";
-                echo "<td>".$loop."</td>";
-                echo "<td>".$onCredit->case_number."</td>";
-                echo "<td>".$onCredit->cost."</td>";
-                echo "<td>";
-                if($onCredit->is_passed){
-                    echo "بله";
-                }else{
-                    echo "نه";
-                }
-                echo "</td>";
-                echo "<td>" . $onCredit->counter_party_id . "</td>";
-                foreach($onCredit->payments as $payment){
-                    echo "<td>".$payment->amount."</td>";
-                }
-                echo "</tr>";
-                DB::table('wf_entity_financials')->where('id', $onCredit->id)->update(['converted' => 1]);
-                $loop++;
-        }
-    }
-    echo "</table>";
-    return ;
-});
+//     echo "<table>";
+//     $loop = 1;
+//     foreach($onCredits as $onCredit){
+//         if($onCredit->counter_party_id and $onCredit->payments->count() == 0 and !$onCredit->is_passed){
+//                 // $ft1 = Financial_transactions::create([
+//                 //     'case_number' => $onCredit->case_number,
+//                 //     'case_id' => $onCredit->case_id,
+//                 //     'financial_type' => 'بدهکار',
+//                 //     'counterparty_id' => $onCredit->counter_party_id,
+//                 //     'amount' => $onCredit->cost,
+//                 //     'description' => 'از حساب دفتری '.  $onCredit->description,
+//                 // ]);
+//                 echo "<tr>";
+//                 echo "<td>".$loop."</td>";
+//                 echo "<td>".$onCredit->case_number."</td>";
+//                 echo "<td>".$onCredit->cost."</td>";
+//                 echo "<td>";
+//                 if($onCredit->is_passed){
+//                     echo "بله";
+//                 }else{
+//                     echo "نه";
+//                 }
+//                 echo "</td>";
+//                 echo "<td>" . $onCredit->counter_party_id . "</td>";
+//                 foreach($onCredit->payments as $payment){
+//                     echo "<td>".$payment->amount."</td>";
+//                 }
+//                 echo "</tr>";
+//                 DB::table('wf_entity_financials')->where('id', $onCredit->id)->update(['converted' => 1]);
+//                 $loop++;
+//         }
+//     }
+//     echo "</table>";
+//     return ;
+// });
 
-Route::get('test5', function () {
-    $onCredits = DB::table('wf_entity_financials')
-        ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
-        ->leftJoin('wf_variables as v_customer', function ($join) {
-            $join->on('v_customer.case_id', '=', 'wf_cases.id')
-                ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
-        })
-        ->whereNotNull('wf_entity_financials.case_number')
-        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
-        // ->whereNull('wf_entity_financials.is_passed')
-        ->whereNull('wf_entity_financials.deleted_at')
-        ->select(
-            'wf_entity_financials.id',
-            'wf_entity_financials.case_number',
-            'wf_entity_financials.fix_cost_type',
-            'wf_entity_financials.cost',
-            'wf_entity_financials.is_passed',
-            'wf_entity_financials.counter_party_id',
-            'v_customer.value as customer_name'
-        )
-        ->get();
-    foreach($onCredits as $onCredit){
-        $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
-    }
+// Route::get('test5', function () {
+//     $onCredits = DB::table('wf_entity_financials')
+//         ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+//         ->leftJoin('wf_variables as v_customer', function ($join) {
+//             $join->on('v_customer.case_id', '=', 'wf_cases.id')
+//                 ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+//         })
+//         ->whereNotNull('wf_entity_financials.case_number')
+//         ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+//         // ->whereNull('wf_entity_financials.is_passed')
+//         ->whereNull('wf_entity_financials.deleted_at')
+//         ->select(
+//             'wf_entity_financials.id',
+//             'wf_entity_financials.case_number',
+//             'wf_entity_financials.fix_cost_type',
+//             'wf_entity_financials.cost',
+//             'wf_entity_financials.is_passed',
+//             'wf_entity_financials.counter_party_id',
+//             'v_customer.value as customer_name'
+//         )
+//         ->get();
+//     foreach($onCredits as $onCredit){
+//         $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
+//     }
 
-    echo "<table>";
-    $loop = 1;
-    foreach($onCredits as $onCredit){
-        if($onCredit->counter_party_id and $onCredit->payments->count() == 0 and $onCredit->is_passed){
-                echo "<tr>";
-                echo "<td>".$loop."</td>";
-                echo "<td>".$onCredit->case_number."</td>";
-                echo "<td>".$onCredit->cost."</td>";
-                echo "<td>";
-                if($onCredit->is_passed){
-                    echo "بله";
-                }else{
-                    echo "نه";
-                }
-                echo "</td>";
-                echo "<td>" . $onCredit->counter_party_id . "</td>";
-                foreach($onCredit->payments as $payment){
-                    echo "<td>".$payment->amount."</td>";
-                }
-                echo "</tr>";
-                $loop++;
-        }
-    }
-    echo "</table>";
-    return ;
-});
+//     echo "<table>";
+//     $loop = 1;
+//     foreach($onCredits as $onCredit){
+//         if($onCredit->counter_party_id and $onCredit->payments->count() == 0 and $onCredit->is_passed){
+//                 echo "<tr>";
+//                 echo "<td>".$loop."</td>";
+//                 echo "<td>".$onCredit->case_number."</td>";
+//                 echo "<td>".$onCredit->cost."</td>";
+//                 echo "<td>";
+//                 if($onCredit->is_passed){
+//                     echo "بله";
+//                 }else{
+//                     echo "نه";
+//                 }
+//                 echo "</td>";
+//                 echo "<td>" . $onCredit->counter_party_id . "</td>";
+//                 foreach($onCredit->payments as $payment){
+//                     echo "<td>".$payment->amount."</td>";
+//                 }
+//                 echo "</tr>";
+//                 $loop++;
+//         }
+//     }
+//     echo "</table>";
+//     return ;
+// });
 
-Route::get('test6', function () {
-    $onCredits = DB::table('wf_entity_financials')
-        ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
-        ->leftJoin('wf_variables as v_customer', function ($join) {
-            $join->on('v_customer.case_id', '=', 'wf_cases.id')
-                ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
-        })
-        ->whereNotNull('wf_entity_financials.case_number')
-        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
-        // ->whereNull('wf_entity_financials.is_passed')
-        ->whereNull('wf_entity_financials.deleted_at')
-        ->select(
-            'wf_entity_financials.id',
-            'wf_entity_financials.case_number',
-            'wf_entity_financials.fix_cost_type',
-            'wf_entity_financials.cost',
-            'wf_entity_financials.is_passed',
-            'wf_entity_financials.counter_party_id',
-            'v_customer.value as customer_name'
-        )
-        ->get();
-    foreach($onCredits as $onCredit){
-        $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
-    }
+// Route::get('test6', function () {
+//     $onCredits = DB::table('wf_entity_financials')
+//         ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+//         ->leftJoin('wf_variables as v_customer', function ($join) {
+//             $join->on('v_customer.case_id', '=', 'wf_cases.id')
+//                 ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+//         })
+//         ->whereNotNull('wf_entity_financials.case_number')
+//         ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+//         // ->whereNull('wf_entity_financials.is_passed')
+//         ->whereNull('wf_entity_financials.deleted_at')
+//         ->select(
+//             'wf_entity_financials.id',
+//             'wf_entity_financials.case_number',
+//             'wf_entity_financials.fix_cost_type',
+//             'wf_entity_financials.cost',
+//             'wf_entity_financials.is_passed',
+//             'wf_entity_financials.counter_party_id',
+//             'v_customer.value as customer_name'
+//         )
+//         ->get();
+//     foreach($onCredits as $onCredit){
+//         $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
+//     }
 
-    echo "<table>";
-    $loop = 1;
-    foreach($onCredits as $onCredit){
-        if($onCredit->counter_party_id and $onCredit->payments->count() > 0 and !$onCredit->is_passed){
-                echo "<tr>";
-                echo "<td>".$loop."</td>";
-                echo "<td>".$onCredit->case_number."</td>";
-                echo "<td>".$onCredit->cost."</td>";
-                echo "<td>";
-                if($onCredit->is_passed){
-                    echo "بله";
-                }else{
-                    echo "نه";
-                }
-                echo "</td>";
-                echo "<td>" . $onCredit->counter_party_id . "</td>";
-                foreach($onCredit->payments as $payment){
-                    echo "<td>".$payment->amount."</td>";
-                }
-                echo "</tr>";
-                $loop++;
-        }
-    }
-    echo "</table>";
-    return ;
-});
+//     echo "<table>";
+//     $loop = 1;
+//     foreach($onCredits as $onCredit){
+//         if($onCredit->counter_party_id and $onCredit->payments->count() > 0 and !$onCredit->is_passed){
+//                 echo "<tr>";
+//                 echo "<td>".$loop."</td>";
+//                 echo "<td>".$onCredit->case_number."</td>";
+//                 echo "<td>".$onCredit->cost."</td>";
+//                 echo "<td>";
+//                 if($onCredit->is_passed){
+//                     echo "بله";
+//                 }else{
+//                     echo "نه";
+//                 }
+//                 echo "</td>";
+//                 echo "<td>" . $onCredit->counter_party_id . "</td>";
+//                 foreach($onCredit->payments as $payment){
+//                     echo "<td>".$payment->amount."</td>";
+//                 }
+//                 echo "</tr>";
+//                 $loop++;
+//         }
+//     }
+//     echo "</table>";
+//     return ;
+// });
 
-Route::get('test7', function () {
-    $onCredits = DB::table('wf_entity_financials')
-        ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
-        ->leftJoin('wf_variables as v_customer', function ($join) {
-            $join->on('v_customer.case_id', '=', 'wf_cases.id')
-                ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
-        })
-        ->whereNotNull('wf_entity_financials.case_number')
-        ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
-        // ->whereNull('wf_entity_financials.is_passed')
-        ->whereNull('wf_entity_financials.deleted_at')
-        ->select(
-            'wf_entity_financials.id',
-            'wf_entity_financials.case_number',
-            'wf_entity_financials.fix_cost_type',
-            'wf_entity_financials.cost',
-            'wf_entity_financials.is_passed',
-            'wf_entity_financials.counter_party_id',
-            'v_customer.value as customer_name'
-        )
-        ->get();
-    foreach($onCredits as $onCredit){
-        $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
-    }
+// Route::get('test7', function () {
+//     $onCredits = DB::table('wf_entity_financials')
+//         ->join('wf_cases', 'wf_cases.id', '=', 'wf_entity_financials.case_id')
+//         ->leftJoin('wf_variables as v_customer', function ($join) {
+//             $join->on('v_customer.case_id', '=', 'wf_cases.id')
+//                 ->where('v_customer.key', '=', 'customer_workshop_or_ceo_name');
+//         })
+//         ->whereNotNull('wf_entity_financials.case_number')
+//         ->whereIn('wf_entity_financials.fix_cost_type', ['حساب دفتری'])
+//         // ->whereNull('wf_entity_financials.is_passed')
+//         ->whereNull('wf_entity_financials.deleted_at')
+//         ->select(
+//             'wf_entity_financials.id',
+//             'wf_entity_financials.case_number',
+//             'wf_entity_financials.fix_cost_type',
+//             'wf_entity_financials.cost',
+//             'wf_entity_financials.is_passed',
+//             'wf_entity_financials.counter_party_id',
+//             'v_customer.value as customer_name'
+//         )
+//         ->get();
+//     foreach($onCredits as $onCredit){
+//         $onCredit->payments = OnCreditPayment::where('case_number', $onCredit->case_number)->get();
+//     }
 
-    echo "<table>";
-    $loop = 1;
-    foreach($onCredits as $onCredit){
-        if(!$onCredit->counter_party_id){
-                echo "<tr>";
-                echo "<td>".$loop."</td>";
-                echo "<td>".$onCredit->case_number."</td>";
-                echo "<td>".$onCredit->cost."</td>";
-                echo "<td>";
-                if($onCredit->is_passed){
-                    echo "بله";
-                }else{
-                    echo "نه";
-                }
-                echo "</td>";
-                echo "<td>" . $onCredit->counter_party_id . "</td>";
-                foreach($onCredit->payments as $payment){
-                    echo "<td>".$payment->amount."</td>";
-                }
-                echo "</tr>";
-                $loop++;
-        }
-    }
-    echo "</table>";
-    return ;
-});
+//     echo "<table>";
+//     $loop = 1;
+//     foreach($onCredits as $onCredit){
+//         if(!$onCredit->counter_party_id){
+//                 echo "<tr>";
+//                 echo "<td>".$loop."</td>";
+//                 echo "<td>".$onCredit->case_number."</td>";
+//                 echo "<td>".$onCredit->cost."</td>";
+//                 echo "<td>";
+//                 if($onCredit->is_passed){
+//                     echo "بله";
+//                 }else{
+//                     echo "نه";
+//                 }
+//                 echo "</td>";
+//                 echo "<td>" . $onCredit->counter_party_id . "</td>";
+//                 foreach($onCredit->payments as $payment){
+//                     echo "<td>".$payment->amount."</td>";
+//                 }
+//                 echo "</tr>";
+//                 $loop++;
+//         }
+//     }
+//     echo "</table>";
+//     return ;
+// });
 
 Route::get('test8', function () {
-    $missions = Missions::all();
-    foreach($missions as $mission){
-        $alt = convertPersianToEnglish($mission->start_datetime);
-        echo $alt . '|';
-        $mission->start_datetime_alt = $alt ? (string)Jalalian::fromFormat('Y-m-d H:i', $alt)->toCarbon()->timestamp . '000' : null;
-        $alt = convertPersianToEnglish($mission->end_datetime);
-        echo $alt . '<br>';
-        $mission->end_datetime_alt = $alt ? (string)Jalalian::fromFormat('Y-m-d H:i', $alt)->toCarbon()->timestamp . '000' : null;
-        $mission->save();
+    $fins = Financials::query();
+    $fins->where('counter_party_id', '!=', null);
+    $fins->where('fix_cost_type', '!=', 'حساب دفتری');
+    $fins->get();
+    return $fins->count();
+});
+
+Route::get('test9', function () {
+    $fins = Financials::query();
+    $fins->where('counter_party_id', null);
+    $fins->where('fix_cost_type', '!=', 'حساب دفتری');
+    $fins = $fins->paginate(25);
+    foreach($fins as $fin){
+        $fin->case = Cases::find($fin->case_id);
     }
+    $counterParties = Counter_parties::all();
+    return view('test', compact('fins', 'counterParties'));
+});
+
+Route::get('test10', function () {
+    $vars = Variable::where('key', 'customer_id')->whereNull('value')->get();
+    foreach($vars as $var){
+        $case = Cases::find($var->case_id);
+        if($case and $case->getVariable('customer_workshop_or_ceo_name')){
+            $customer = $case->getVariable('customer_workshop_or_ceo_name');
+            $customer = Customers::where('name', $customer)->first();
+            echo $case->number . ' | ' . $case->id . ' | ' . $customer?->name . ' | ' . $customer?->city . ' | ' . $customer?->id . '<br>';
+        }
+    }
+    return $vars->count();
 });
 

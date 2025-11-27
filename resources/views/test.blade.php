@@ -7,7 +7,7 @@
         {{ session('success') }}
     </div>
 @endif
-@foreach($onCredits as $onCredit)
+@foreach($fins as $fin)
     <form action="{{ url('/test3') }}" method="POST" class="row align-items-center mb-3 border rounded p-3 bg-light">
         @csrf
 
@@ -18,9 +18,10 @@
                 type="text" 
                 name="customer_name" 
                 class="form-control" 
-                value="{{ $onCredit->customer_name }}" 
+                value="{{ $fin->case->getVariable('customer_workshop_or_ceo_name') }}" 
                 readonly
             >
+            <small>{{ $fin->case_number }}</small>
         </div>
 
         {{-- طرف حساب --}}
@@ -31,7 +32,7 @@
                 @foreach($counterParties as $counterParty)
                     <option 
                         value="{{ $counterParty->id }}" 
-                        {{ $counterParty->id == $onCredit->counter_party_id ? 'selected' : '' }}
+                        {{ $counterParty->id == $fin->counter_party_id ? 'selected' : '' }}
                     >
                         {{ $counterParty->name }}
                     </option>
@@ -47,5 +48,9 @@
         </div>
     </form>
 @endforeach
+
+<div>
+    {{ $fins->links('pagination::bootstrap-4') }}
+</div>
 
 @endsection
