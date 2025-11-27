@@ -73,8 +73,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::post('timeoff/update', [TimeoffController::class, 'update'])->name('timeoff.update');
 
-    Route::get('employee-salaries', [EmployeeSalaryReportController::class, 'index'])->name('employee-salaries.index');
-    Route::post('employee-salaries', [EmployeeSalaryReportController::class, 'update'])->name('employee-salaries.update');
+    Route::get('employee-salaries', [EmployeeSalaryReportController::class, 'index'])->name('employee-salaries.index')->middleware('access:گزارش لیست حقوق پرسنل');
+    Route::post('employee-salaries', [EmployeeSalaryReportController::class, 'update'])->name('employee-salaries.update')->middleware('access:گزارش لیست حقوق پرسنل');
 
     Route::resource('expired-tasks', ExpiredController::class);
 
@@ -105,8 +105,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('personel-activity/{user_id}/show-dones/{from?}/{to?}', [PersonelActivityController::class, 'showDones'])->name('personel-activity.showDones')->middleware('access:گزارش اقدامات پرسنل');
 
     Route::get('daily-report', [DailyReportController:: class, 'index'])->name('daily-report.index')->middleware('access:گزارش روزانه');
-    Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])->name('daily-report.reminder-summary')->middleware('access:گزارش روزانه');
-    Route::get('daily-report/reminder-summary/export', [DailyReportReminderSummaryController::class, 'export'])->name('daily-report.reminder-summary.export')->middleware('access:گزارش روزانه');
+    Route::get('daily-report/reminder-summary', [DailyReportReminderSummaryController::class, 'index'])->name('daily-report.reminder-summary')->middleware('access:گزارش جرایم پیامک ها');
+    Route::get('daily-report/reminder-summary/export', [DailyReportReminderSummaryController::class, 'export'])->name('daily-report.reminder-summary.export')->middleware('access:گزارش جرایم پیامک ها');
     Route::get('rewards-penalties', [RewardPenaltyController::class, 'index'])->name('rewards-penalties.index')->middleware('access:گزارش جرایم پیامک ها');
     Route::post('rewards-penalties', [RewardPenaltyController::class, 'store'])->name('rewards-penalties.store')->middleware('access:گزارش جرایم پیامک ها');
     Route::get('daily-report/{user_id}/show-internal/{from?}/{to?}', [DailyReportController:: class, 'showInternal'])->name('daily-report.show-internal')->middleware('access:گزارش روزانه');
@@ -123,6 +123,8 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::delete('creditor/delete/{id}', [CreditorReportController::class, 'delete'])->name('creditor.delete')->middleware('access:گزارش لیست طلبکاران');
 
     Route::get('financial-transactions/user', [FinancialTransactionController::class, 'userIndex'])->name('financial-transactions.user')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/open-user-salary-advances/{counterparty}', [FinancialTransactionController::class, 'openUserSalaryAdvances'])->name('financial-transactions.openUserSalaryAdvances')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/close-user-salary-advances/{counterparty}', [FinancialTransactionController::class, 'closeUserSalaryAdvances'])->name('financial-transactions.closeUserSalaryAdvances')->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/user/export', [FinancialTransactionController::class, 'userExport'])->name('financial-transactions.user.export')->middleware('access:گزارش لیست طلبکاران');
     Route::resource('financial-transactions', FinancialTransactionController::class)->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-credit', [FinancialTransactionController::class, 'showAddCredit'])->name('financial-transactions.showAddCredit')->middleware('access:گزارش لیست طلبکاران');

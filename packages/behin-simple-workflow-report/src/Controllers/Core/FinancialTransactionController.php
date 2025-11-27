@@ -30,7 +30,8 @@ use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
 {
-    public function prepareData($request){
+    public function prepareData($request)
+    {
         $filter = $request->query('filter', 'negative');
         $caseNumber = $request->query('case_number');
         $onlyAssignedUsers = $request->boolean('only_assigned', false);
@@ -87,14 +88,78 @@ class FinancialTransactionController extends Controller
 
     public function userIndex(Request $request)
     {
-        $filter = $request->query('filter', 'negative');
+        $filter = $request->query('filter', 'all');
         $caseNumber = $request->query('case_number');
-        $onlyAssignedUsers = $request->boolean('only_assigned', false);
+        $onlyAssignedUsers = $request->boolean('only_assigned', true);
+        $request->merge(['only_assigned' => true]);
+        $request->merge(['filter' => 'all']);
+        $counterParties = Counter_parties::whereNotNull('user_id')->get()->each(function ($row) {
+            $row->user_max_advance = EmployeeSalaryReportController::userMaxAdvances($row->user_id);
+        });
+
+        $creditors = $this->prepareData($request);
+        return view('SimpleWorkflowReportView::Core.UserFinancialTransaction.index', compact('creditors', 'filter', 'caseNumber', 'counterParties'));
+    }
+
+    public function openUserSalaryAdvances($counterparty)
+    {
+        $counterparty = Counter_parties::find($counterparty);
+        if (!$counterparty->user_id) {
+            return "برای این طرف حساب نمیتوانید حساب مساعده باز کنید";
+        }
+        $userMaxAdvances = EmployeeSalaryReportController::userMaxAdvances($counterparty->user_id);
+        $request = new Request([
+            'financial_method' => 'نقدی',
+            'description' => 'بازکردن مساعده',
+            'counterparty_id' => $counterparty->id,
+            'amount' => $userMaxAdvances
+        ]);
+        $this->addCredit($request);
+        return redirect()->back();
+
+    }
+
+    public function closeUserSalaryAdvances($counterparty)
+    {
+        $counterparty = Counter_parties::find($counterparty);
+        if (!$counterparty->user_id) {
+            return "برای این طرف حساب نمیتوانید حساب مساعده باز کنید";
+        }
+        $request = new Request([
+            'filter' => 'all'
+        ]);
+        $creditors = $this->prepareData($request);
+        $creditor = $creditors->where('counterparty_id', $counterparty->id);
+        $totalAmount = $creditor->first() ? $creditor->first()->total_amount : 0;
+        if ($totalAmount > 0) {
+            $request = new Request([
+                'financial_method' => 'نقدی',
+                'description' => 'بستن مساعده',
+                'counterparty_id' => $counterparty->id,
+                'amount' => $totalAmount
+            ]);
+            $this->addDebit($request);
+        }
+
+        if ($totalAmount < 0) {
+            $request = new Request([
+                'financial_method' => 'نقدی',
+                'description' => 'بستن مساعده',
+                'counterparty_id' => $counterparty->id,
+                'amount' => $totalAmount
+            ]);
+            $this->addCredit($request);
+        }
+        return redirect()->back();
+    }
+
+    public function userExport(Request $request)
+    {
         $request->merge(['only_assigned' => true]);
 
         $creditors = $this->prepareData($request);
-        return view('SimpleWorkflowReportView::Core.UserFinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
 
+        return Excel::download(new UserFinancialTransactionExport($creditors), 'user_financial_transactions.xlsx');
     }
 
     public function userExport(Request $request)
@@ -146,13 +211,13 @@ class FinancialTransactionController extends Controller
             'destination_account_name' => $request->destination_account_name,
             'destination_account_number' => $request->destination_account_number,
         ]);
-        return redirect()->back();//->route('simpleWorkflowReport.financial-transactions.index');
+        return redirect()->back(); //->route('simpleWorkflowReport.financial-transactions.index');
     }
 
     public function showAddDebit($counterparty = null, $onlyAssignedUsers = false)
     {
         $counterparty = Counter_parties::find($counterparty);
-        $counterParties = Counter_parties::when($onlyAssignedUsers, function ($query){
+        $counterParties = Counter_parties::when($onlyAssignedUsers, function ($query) {
             $query->whereNotNull('user_id');
         })->get();
         return view('SimpleWorkflowReportView::Core.FinancialTransaction.add-debit', compact('counterparty', 'counterParties'));
@@ -174,7 +239,7 @@ class FinancialTransactionController extends Controller
             'destination_account_name' => $request->destination_account_name,
             'destination_account_number' => $request->destination_account_number,
         ]);
-        return redirect()->back();//->route('simpleWorkflowReport.financial-transactions.index');
+        return redirect()->back(); //->route('simpleWorkflowReport.financial-transactions.index');
     }
 
     public function update(Request $request, Financial_transactions $financialTransaction)

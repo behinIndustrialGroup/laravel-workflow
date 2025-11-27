@@ -36,9 +36,6 @@
             </button> --}}
             <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
                 class="btn btn-sm btn-success">خروجی اکسل</a>
-            <button class="btn btn-sm btn-warning" onclick="showAddNewDebit(null,true)">افزودن
-                بدهکاری <br>(مدارپرداز به پرسنل پرداخت کرده)
-            </button>
 
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
@@ -51,8 +48,8 @@
                 class="row align-items-end">
                 <div class="col-sm-6 col-md-4 mb-2">
                     <label class="form-label">جستجو بر اساس شماره پرونده</label>
-                    <input type="text" class="form-control" name="case_number"
-                        value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
+                    <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
+                        placeholder="شماره پرونده را وارد کنید">
                 </div>
                 <input type="hidden" name="filter" value="{{ $filter }}">
                 <div class="col-auto mb-2">
@@ -67,28 +64,7 @@
             </form>
         </div>
     </div>
-    <div class="card mb-3">
-        <div class="card-body d-flex gap-2 flex-wrap">
-            @php
-                $caseNumberQuery = [];
-                if (filled($caseNumber ?? null)) {
-                    $caseNumberQuery['case_number'] = $caseNumber;
-                }
-            @endphp
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش بدهکارها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش همه طرف حساب‌ها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش فقط مثبت‌ها
-            </a>
-        </div>
-    </div>
+
     @if (filled($caseNumber ?? null))
         <div class="alert alert-info">
             نمایش نتایج برای پرونده شماره <span class="font-weight-bold">{{ $caseNumber }}</span>
@@ -218,7 +194,8 @@
             var fd = new FormData();
             fd.append('counterparty', counterparty);
             fd.append('onlyAssignedUsers', onlyAssignedUsers);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', ['counterparty', 'onlyAssignedUsers']) }}";
+            var url =
+                "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', ['counterparty', 'onlyAssignedUsers']) }}";
             url = url.replace('counterparty', counterparty);
             url = url.replace('onlyAssignedUsers', onlyAssignedUsers);
             open_admin_modal(url, 'افزودن بدهکاری');

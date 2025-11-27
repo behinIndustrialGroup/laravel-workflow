@@ -45,4 +45,9 @@ class EmployeeSalaryReportController extends Controller
             ->route('simpleWorkflowReport.employee-salaries.index')
             ->with('success', 'حقوق کاربر با موفقیت به‌روزرسانی شد.');
     }
+
+    public static function userMaxAdvances($userId){
+        $salary = Employee_salaries::where('user_id', $userId)->first();
+        return $salary ? $salary->real_salary - $salary->insurance_salary : 0;
+    }
 }

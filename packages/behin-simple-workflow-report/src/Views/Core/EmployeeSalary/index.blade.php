@@ -16,7 +16,8 @@
                         <tr>
                             <th>نام کاربر</th>
                             <th>حقوق تأمین اجتماعی</th>
-                            <th>حقوق واقعی</th>
+                            <th>حقوق توافقی</th>
+                            <th>max سقف مساعده</th>
                             <th>اقدامات</th>
                         </tr>
                     </thead>
@@ -26,11 +27,11 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->insurance_salary ? number_format($user->insurance_salary) : '-' }}</td>
                                 <td>{{ $user->real_salary ? number_format($user->real_salary) : '-' }}</td>
+                                <td>{{ number_format($user->real_salary - $user->insurance_salary) ?? ''}}</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#employeeSalaryModal" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->name }}"
-                                        data-insurance="{{ $user->insurance_salary }}"
+                                        data-user-name="{{ $user->name }}" data-insurance="{{ $user->insurance_salary }}"
                                         data-real="{{ $user->real_salary }}">
                                         ویرایش
                                     </button>
@@ -61,16 +62,17 @@
                         </div>
                         <div class="mb-3">
                             <label for="employee-salary-insurance" class="form-label">حقوق تأمین اجتماعی</label>
-                            <input type="number" step="any" name="insurance_salary" class="form-control"
+                            <input type="number" step="any" name="insurance_salary" class="form-control formated-digit"
                                 id="employee-salary-insurance">
                         </div>
                         <div class="mb-3">
-                            <label for="employee-salary-real" class="form-label">حقوق واقعی</label>
-                            <input type="number" step="any" name="real_salary" class="form-control" id="employee-salary-real">
+                            <label for="employee-salary-real" class="form-label">حقوق توافقی</label>
+                            <input type="number" step="any" name="real_salary" class="form-control"
+                                id="employee-salary-real">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()" data-bs-dismiss="modal">بستن</button>
                         <button type="submit" class="btn btn-primary">ذخیره</button>
                     </div>
                 </form>
@@ -81,26 +83,35 @@
 
 @section('script')
     <script>
-        const employeeSalaryModal = document.getElementById('employeeSalaryModal');
-        employeeSalaryModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            const userId = button.getAttribute('data-user-id');
-            const userName = button.getAttribute('data-user-name');
-            const insuranceSalary = button.getAttribute('data-insurance');
-            const realSalary = button.getAttribute('data-real');
-
-            document.getElementById('employee-salary-user-id').value = userId;
-            document.getElementById('employee-salary-user-name').textContent = userName;
-            document.getElementById('employee-salary-insurance').value = insuranceSalary || '';
-            document.getElementById('employee-salary-real').value = realSalary || '';
-        });
-
         $(document).ready(function() {
+
             $('#employee-salaries-table').DataTable({
                 language: {
-                    url: 'https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json'
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/fa.json'
                 }
             });
+
+            // Event delegation for dynamic rows
+            $(document).on('click', 'button[data-user-id]', function() {
+
+                const modal = new bootstrap.Modal(document.getElementById('employeeSalaryModal'));
+
+                document.getElementById('employee-salary-user-id').value = this.getAttribute(
+                'data-user-id');
+                document.getElementById('employee-salary-user-name').textContent = this.getAttribute(
+                    'data-user-name');
+                document.getElementById('employee-salary-insurance').value = this.getAttribute(
+                    'data-insurance');
+                document.getElementById('employee-salary-real').value = this.getAttribute('data-real');
+
+                modal.show(); // <-- این مدال را باز می‌کند
+            });
+
+            function closeModal(){
+                const modal = new bootstrap.Modal(document.getElementById('employeeSalaryModal'));
+                modal.close(); // <-- این مدال را باز می‌کند
+            }
+
         });
     </script>
 @endsection

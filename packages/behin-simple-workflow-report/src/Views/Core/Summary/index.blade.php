@@ -349,6 +349,17 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (auth()->user()->access('گزارش لیست مساعده پرسنل'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>گزارش لیست مساعده پرسنل</td>
+                                            <td class="d-none">گزارش کامل لیست مساعده پرسنل</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.financial-transactions.user') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
                                     @if (access('گزارش ورود کالاها در نگهبانی'))
                                         <tr>
                                             <td class="d-none"></td>
@@ -367,6 +378,17 @@
                                             <td class="d-none">گزارش کامل ماموریت</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.missions.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (auth()->user()->access('گزارش لیست حقوق پرسنل'))
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td>لیست حقوق پرسنل</td>
+                                            <td class="d-none">گزارش کامل بدهکاران</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.employee-salaries.index') }}"
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>
