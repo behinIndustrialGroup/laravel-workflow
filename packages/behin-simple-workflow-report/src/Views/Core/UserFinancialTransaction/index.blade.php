@@ -34,6 +34,8 @@
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
+                class="btn btn-sm btn-success">خروجی اکسل</a>
             <button class="btn btn-sm btn-warning" onclick="showAddNewDebit(null,true)">افزودن
                 بدهکاری <br>(مدارپرداز به پرسنل پرداخت کرده)
             </button>
