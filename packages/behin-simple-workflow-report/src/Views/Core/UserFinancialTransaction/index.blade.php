@@ -84,45 +84,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($counterParties as $counterParty)
-                        @php
-                            $creditorInfo = $creditors->where('counterparty_id', $counterParty->id);
-                            $totalAmount = $creditorInfo->first() ? $creditorInfo->first()->total_amount : 0;
-                            $rest = $counterParty->user_max_advance - $totalAmount;
-                        @endphp
-                        <tr
-                            @if($counterParty->user_max_advance and $rest / $counterParty->user_max_advance > 0.5 and $rest / $counterParty->user_max_advance < 1)
-                                class="bg-warning"
-                            @elseif($totalAmount > 0)
-                                class="bg-success"
-                            @elseif($totalAmount < 0)
-                                class="bg-danger"
-                            @endif
-                        >
-                            <td>{{ $counterParty->name ?? '' }}<br>
-                                <small class="text-muted">سقف: {{ number_format($counterParty->user_max_advance) }}</small>
-                            </td>
-                            <td dir="ltr">
-                                {{ number_format($totalAmount) }}
-                            </td>
+                    @foreach ($creditors as $creditor)
+                        <tr @if ($creditor->total_amount < 0) style="background: #f56c6c" @endif
+                            @if ($creditor->total_amount > 0) class="bg-success" @endif>
+                            <td>{{ $creditor->name ?? '' }}</td>
+                            <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
                             <td>
                                 <button class="btn btn-sm btn-primary"
-                                    onclick="showDetails(`{{ $counterParty->id }}`)">جزئیات بیشتر</button>
-
-                                @if ($totalAmount == 0)
-                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', $counterParty->id) }}"
-                                        class="btn btn-sm btn-danger">باز کردن حساب مساعده جدید</a>
-                                @else
-                                    <button class="btn btn-sm btn-warning"
-                                        onclick="showAddDebit(`{{ $counterParty->id }}`)">افزودن سند پرداختنی</button>
-                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.closeUserSalaryAdvances', $counterParty->id) }}"
-                                        class="btn btn-sm btn-success">تسویه</a>
-                                @endif
-
-
-                                {{--    <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی --}}
-
+                                    onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
+                                <button class="btn btn-sm btn-success"
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی
+                                <button class="btn btn-sm btn-warning"
+                                    onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
                             </td>
                         </tr>
                     @endforeach

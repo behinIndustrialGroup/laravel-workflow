@@ -32,7 +32,7 @@ class UserFinancialTransactionExport implements FromCollection, WithHeadings, Wi
 
     public function map($creditor): array
     {
-        $name = $creditor?->counterparty()?->name ?? '';
+        $name = $creditor?->name ?? '';
         $balance = $creditor?->total_amount ?? 0;
 
         return [
