@@ -34,6 +34,8 @@
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
+                class="btn btn-sm btn-success">خروجی اکسل</a>
 
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
@@ -62,7 +64,7 @@
             </form>
         </div>
     </div>
-    
+
     @if (filled($caseNumber ?? null))
         <div class="alert alert-info">
             نمایش نتایج برای پرونده شماره <span class="font-weight-bold">{{ $caseNumber }}</span>
@@ -88,7 +90,7 @@
                             $totalAmount = $creditorInfo->first() ? $creditorInfo->first()->total_amount : 0;
                             $rest = $counterParty->user_max_advance - $totalAmount;
                         @endphp
-                        <tr  
+                        <tr
                             @if($counterParty->user_max_advance and $rest / $counterParty->user_max_advance > 0.5 and $rest / $counterParty->user_max_advance < 1)
                                 class="bg-warning"
                             @elseif($totalAmount > 0)
@@ -106,7 +108,7 @@
                             <td>
                                 <button class="btn btn-sm btn-primary"
                                     onclick="showDetails(`{{ $counterParty->id }}`)">جزئیات بیشتر</button>
-                                
+
                                 @if ($totalAmount == 0)
                                     <a href="{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', $counterParty->id) }}"
                                         class="btn btn-sm btn-danger">باز کردن حساب مساعده جدید</a>
@@ -114,13 +116,13 @@
                                     <button class="btn btn-sm btn-warning"
                                         onclick="showAddDebit(`{{ $counterParty->id }}`)">افزودن سند پرداختنی</button>
                                     <a href="{{ route('simpleWorkflowReport.financial-transactions.closeUserSalaryAdvances', $counterParty->id) }}"
-                                        class="btn btn-sm btn-success">تسویه</a> 
+                                        class="btn btn-sm btn-success">تسویه</a>
                                 @endif
-                                
-                                
+
+
                                 {{--    <button class="btn btn-sm btn-success"
                                     onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی --}}
-                                
+
                             </td>
                         </tr>
                     @endforeach
