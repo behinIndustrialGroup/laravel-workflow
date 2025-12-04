@@ -37,6 +37,10 @@
             <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
                 class="btn btn-sm btn-success">خروجی اکسل</a>
 
+            <button class="btn btn-sm btn-primary" type="button" id="open-user-salary-advances">
+                بازکردن حساب مساعده جدید
+            </button>
+
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
                 سند</button> --}}
@@ -78,6 +82,9 @@
             <table class="table table-bordered" id="cheque-list">
                 <thead>
                     <tr>
+                        <th style="width: 40px">
+                            <input type="checkbox" id="select-all-counterparties">
+                        </th>
                         <th>پرسنل</th>
                         <th>مانده حساب</th>
                         <th>اقدامات</th>
@@ -87,6 +94,10 @@
                     @foreach ($creditors as $creditor)
                         <tr @if ($creditor->total_amount < 0) style="background: #f56c6c" @endif
                             @if ($creditor->total_amount > 0) class="bg-success" @endif>
+                            <td class="text-center">
+                                <input type="checkbox" class="counterparty-checkbox"
+                                    value="{{ $creditor->counterparty_id }}">
+                            </td>
                             <td>{{ $creditor->name ?? '' }}</td>
                             <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
                             <td>
@@ -102,6 +113,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th></th>
                         <th style="text-align:right">جمع:</th>
                         <th></th> <!-- اینجا جمع ستون مانده حساب -->
                         <th></th>
@@ -130,9 +142,9 @@
                         i : 0;
                 };
 
-                // جمع کل جدول (ستون دوم = index 1)
+                // جمع کل جدول (ستون سوم = index 2)
                 var total = api
-                    .column(1, {
+                    .column(2, {
                         search: 'applied'
                     })
                     .data()
@@ -142,7 +154,7 @@
 
                 // جمع صفحه جاری
                 var pageTotal = api
-                    .column(1, {
+                    .column(2, {
                         page: 'current'
                     })
                     .data()
@@ -155,6 +167,47 @@
                     'صفحه: ' + pageTotal.toLocaleString() + '<br>کل: ' + total.toLocaleString()
                 );
             }
+        });
+
+        const salaryAdvanceUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', ['counterparty' => '__counterparty__']) }}";
+
+        function getSelectedCounterparties() {
+            return Array.from(document.querySelectorAll('.counterparty-checkbox:checked')).map((checkbox) => checkbox.value);
+        }
+
+        function openSalaryAdvancesForSelected() {
+            const selected = getSelectedCounterparties();
+            if (!selected.length) {
+                alert('هیچ ردیفی انتخاب نشده است.');
+                return;
+            }
+
+            selected.forEach((counterpartyId) => {
+                const url = salaryAdvanceUrlTemplate.replace('__counterparty__', counterpartyId);
+                window.open(url, '_blank');
+            });
+        }
+
+        document.getElementById('open-user-salary-advances').addEventListener('click', openSalaryAdvancesForSelected);
+
+        const selectAllCheckbox = document.getElementById('select-all-counterparties');
+        selectAllCheckbox.addEventListener('change', function() {
+            document.querySelectorAll('.counterparty-checkbox').forEach((checkbox) => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        document.querySelectorAll('.counterparty-checkbox').forEach((checkbox) => {
+            checkbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    selectAllCheckbox.checked = false;
+                    return;
+                }
+
+                const allSelected = Array.from(document.querySelectorAll('.counterparty-checkbox')).every(
+                    (item) => item.checked);
+                selectAllCheckbox.checked = allSelected;
+            });
         });
 
 
