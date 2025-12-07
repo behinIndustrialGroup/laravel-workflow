@@ -54,8 +54,11 @@ class CounterPartyController extends Controller
     {
         $counterParty = Counter_parties::findOrFail($counterParty);
         $users = User::orderBy('name')->get();
+        $counterParties = Counter_parties::where('id', '<>', $counterParty->id)
+            ->orderBy('name')
+            ->get();
 
-        return view('SimpleWorkflowReportView::Core.CounterParty.edit', compact('counterParty', 'users'));
+        return view('SimpleWorkflowReportView::Core.CounterParty.edit', compact('counterParty', 'users', 'counterParties'));
     }
 
     public function store(Request $request)
@@ -70,6 +73,28 @@ class CounterPartyController extends Controller
 
         Counter_parties::create($validated);
         return redirect()->route('simpleWorkflowReport.counter-party.index');
+    }
+
+    public function merge(Request $request)
+    {
+        $validated = $request->validate([
+            'from_counterparty_id' => ['required', 'string', 'exists:wf_entity_counter_parties,id'],
+            'to_counterparty_id' => ['required', 'string', 'different:from_counterparty_id', 'exists:wf_entity_counter_parties,id'],
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            DB::table('wf_entity_financials')
+                ->where('counter_party_id', $validated['from_counterparty_id'])
+                ->update(['counter_party_id' => $validated['to_counterparty_id']]);
+
+            DB::table('wf_entity_financial_transactions')
+                ->where('counterparty_id', $validated['from_counterparty_id'])
+                ->update(['counterparty_id' => $validated['to_counterparty_id']]);
+        });
+
+        return redirect()
+            ->route('simpleWorkflowReport.counter-party.edit', $validated['to_counterparty_id'])
+            ->with('status', 'طرف حساب با موفقیت مرج شد');
     }
 
     public function update(Request $request, string $counterParty)
