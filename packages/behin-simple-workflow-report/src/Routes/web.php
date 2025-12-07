@@ -48,6 +48,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::post('external-internal/search', [ExternalAndInternalReportController::class, 'search'])->name('external-internal.search');
     Route::get('external-internal-archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal-archive');
 
+    Route::post('counter-party/merge', [CounterPartyController::class, 'merge'])->name('counter-party.merge');
     Route::resource('counter-party', CounterPartyController::class);
     Route::resource('phonebook', PhonebookController::class)->except(['show']);
 
