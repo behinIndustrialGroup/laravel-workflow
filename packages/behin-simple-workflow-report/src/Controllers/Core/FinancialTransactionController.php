@@ -26,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
+use Behin\SimpleWorkflowReport\Exports\CounterpartyFinancialTransactionExport;
 use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
@@ -42,35 +43,28 @@ class FinancialTransactionController extends Controller
                 ELSE 0
             END)";
 
-        $totalsQuery = Financial_transactions::select(
+        $creditorsQuery = Financial_transactions::select(
             'counterparty_id',
             DB::raw("{$totalAmountExpression} as total_amount")
         )
             ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
                 $query->where('case_number', $caseNumber);
             })
-            ->groupBy('counterparty_id');
-
-        $creditorsQuery = Counter_parties::query()
-            ->when($onlyAssignedUsers, function ($query){
-                $query->whereNotNull('user_id');
+            ->when($onlyAssignedUsers, function ($query) {
+                $assignCounterParties = Counter_parties::whereNotNull('user_id')->pluck('id');
+                $query->whereIn('counterparty_id', $assignCounterParties);
             })
-            ->select(
-                'counter_parties.*',
-                DB::raw('counter_parties.id as counterparty_id'),
-                DB::raw('COALESCE(totals.total_amount, 0) as total_amount')
-            )
-            ->leftJoinSub($totalsQuery, 'totals', 'totals.counterparty_id', '=', 'counter_parties.id');
+            ->groupBy('counterparty_id');
 
         switch ($filter) {
             case 'positive':
-                $creditorsQuery->having('total_amount', '>', 0);
+                $creditorsQuery->havingRaw("{$totalAmountExpression} > 0");
                 break;
             case 'all':
                 break;
             default:
                 $filter = 'negative';
-                $creditorsQuery->having('total_amount', '<=', 0);
+                $creditorsQuery->havingRaw("{$totalAmountExpression} < 0");
                 break;
         }
 
@@ -107,6 +101,22 @@ class FinancialTransactionController extends Controller
         if (!$counterparty->user_id) {
             return "برای این طرف حساب نمیتوانید حساب مساعده باز کنید";
         }
+
+        // گرفتن مجموع تراکنش‌ها برای این طرف حساب
+        $request = new Request([
+            'filter' => 'all'
+        ]);
+        $creditors = $this->prepareData($request);
+
+        // پیدا کردن رکورد این کاربر
+        $creditor = $creditors->where('counterparty_id', $counterparty->id)->first();
+        $totalAmount = $creditor ? $creditor->total_amount : 0;
+
+        // اگر total_amount صفر نبود، عملیات انجام نشود
+        if ($totalAmount != 0) {
+            return redirect()->back()->with('error', 'برای این کاربر به دلیل داشتن مانده حساب، امکان باز کردن مساعده وجود ندارد.');
+        }
+        
         $userMaxAdvances = EmployeeSalaryReportController::userMaxAdvances($counterparty->user_id);
         $request = new Request([
             'financial_method' => 'نقدی',
@@ -116,8 +126,27 @@ class FinancialTransactionController extends Controller
         ]);
         $this->addCredit($request);
         return redirect()->back();
-
     }
+
+    public function openUserSalaryAdvancesBulk(Request $request)
+    {
+        $userIds = $request->users ?? [];
+
+        if (empty($userIds)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'هیچ کاربری ارسال نشده است'
+            ]);
+        }
+
+        foreach ($userIds as $id) {
+            // فرض می‌کنیم روت تکی از یک تابع داخلی استفاده می‌کند
+            $this->openUserSalaryAdvances($id);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
 
     public function closeUserSalaryAdvances($counterparty)
     {
@@ -156,26 +185,56 @@ class FinancialTransactionController extends Controller
     public function userExport(Request $request)
     {
         $request->merge(['only_assigned' => true]);
-
+        $request->merge(['filter' => 'all']);
+        $counterParties = Counter_parties::whereNotNull('user_id')->get()->each(function ($row) {
+            $row->user_max_advance = EmployeeSalaryReportController::userMaxAdvances($row->user_id);
+        });
         $creditors = $this->prepareData($request);
+        $data = [];
+        foreach ($counterParties as $counterParty) {
+            $creditorInfo = $creditors->where('counterparty_id', $counterParty->id);
+            $totalAmount = $creditorInfo->first() ? $creditorInfo->first()->total_amount : 0;
+            $rest = $counterParty->user_max_advance - $totalAmount;
+            $data[] = [
+                'user_number' => getUserInfo($counterParty->user_id)->number,
+                'user_name' => $counterParty->name ?? '',
+                'user_max_advance' => number_format($counterParty->user_max_advance),
+                'total_amount' => number_format($totalAmount),
+            ];
+        }
 
-        return Excel::download(new UserFinancialTransactionExport($creditors), 'user_financial_transactions.xlsx');
+        return Excel::download(new UserFinancialTransactionExport(collect($data)), 'user_financial_transactions.xlsx');
     }
 
-    public function userExport(Request $request)
+
+    public function show(Request $request, $counterparty)
     {
-        $request->merge(['only_assigned' => true]);
-
-        $creditors = $this->prepareData($request);
-
-        return Excel::download(new UserFinancialTransactionExport($creditors), 'user_financial_transactions.xlsx');
-    }
-
-
-    public function show($counterparty)
-    {
+        $showHeaderBtn = $request->input('showHeaderBtn', '1') == '1';
         $creditors = Financial_transactions::where('counterparty_id', $counterparty)->get();
-        return view('SimpleWorkflowReportView::Core.FinancialTransaction.show', compact('creditors'));
+        return view('SimpleWorkflowReportView::Core.FinancialTransaction.show', compact('creditors', 'showHeaderBtn'));
+    }
+
+    public function export($counterparty)
+    {
+        $counterparty = Counter_parties::find($counterparty);
+        $creditors = Financial_transactions::where('counterparty_id', $counterparty->id)->get();
+        $data = [];
+        foreach ($creditors as $creditor) {
+            $data[] = [
+                'financial_type' => $creditor->financial_type,
+                'counterparty_id' => $creditor->counterparty()->name,
+                'amount' => $creditor->amount,
+                'case_number' => $creditor->case_number,
+                'financial_method' => $creditor->financial_method,
+                'invoice_or_cheque_number' => $creditor->invoice_or_cheque_number,
+                'transaction_or_cheque_due_date' => $creditor->transaction_or_cheque_due_date,
+                'destination_account_name' => $creditor->destination_account_name,
+                'destination_account_number' => $creditor->destination_account_number,
+                'description' => $creditor->description,
+
+            ];
+        }
+        return Excel::download(new CounterpartyFinancialTransactionExport(collect($data)), 'گزارش تراکنش های ' . $counterparty->name . '.xlsx');
     }
 
     public function edit(Financial_transactions $financialTransaction)

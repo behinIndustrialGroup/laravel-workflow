@@ -97,9 +97,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header text-center font-vazir-bold {{ count($deviceRepairReports) ? 'bg-success' : 'bg-primary' }}"
-                        style="font-size: 25px">گزارش فرایند
+                <div class="card" style="border: 1px solid #edeb58">
+                    <div class="card-header text-center font-vazir-bold" style="font-size: 25px; background: #edeb58;">گزارش
+                        فرایند
                         خارجی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="repair-reports">
@@ -185,9 +185,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header text-center font-vazir-bold {{ count($parts) ? 'bg-success' : 'bg-primary' }}"
-                        style="font-size: 25px">گزارش فرایند داخلی</div>
+                <div class="card" style="border: 1px solid orange">
+                    <div class="card-header text-center font-vazir-bold" style="font-size: 25px; background-color: orange">
+                        گزارش فرایند داخلی</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="parts">
                             <table class="table table-bordered">
@@ -298,72 +298,73 @@
                             </div>
                         </div>
                     </div>
-                    @if (count($mapaCenterReports))
-                        <div class="card">
-                            <div class="card-header bg-success text-center font-vazir-bold" style="font-size: 25px">
-                                گزارشات مپاسنتر
-                            </div>
-                            <div class="card-body table-responsive">
-                                <table class="table table-stripped" id="mapa-center-reports">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>تاریخ</th>
-                                            <th>ساعت شروع</th>
-                                            <th>ساعت پایان</th>
-                                            <th>مدت زمان صرف شده(ساعت)</th>
-                                            <th>تکنسین</th>
-                                            <th>گزارش</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{ $totalDuration = 0 }}
-                                        @foreach ($mapaCenterReports as $report)
-                                            @php
-                                                $duration = round(
-                                                    ((int) $report->end - (int) $report->start) / 3600,
-                                                    2,
-                                                );
-                                                $totalDuration += $duration;
-                                            @endphp
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td dir="ltr">
-                                                    {{ toJalali((int) $report->start)->format('Y-m-d') }}</td>
-                                                <td dir="ltr">{{ toJalali((int) $report->start)->format('H:i') }}
-                                                </td>
-                                                <td dir="ltr">{{ toJalali((int) $report->end)->format('H:i') }}
-                                                </td>
-                                                <td>{{ $duration }}</td>
-                                                <td>{{ getUserInfo($report->expert)?->name }}</td>
-                                                <td>{{ $report->report }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="bg-success">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>مجموع</td>
-                                            <td>{{ $totalDuration }}</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                </div>
+                @if (count($mapaCenterReports))
+                    <div class="card" style="border:1px solid #34a814">
+                        <div class="card-header bg-success text-center font-vazir-bold" style="font-size: 25px">
+                            گزارشات مپاسنتر
                         </div>
-                    @endif
-                    @if (auth()->user()->access('امور جاری - جزئیات مالی'))
-                        <div class="card">
-                            <div class="card-header text-center font-vazir-bold {{ count($financials) ? 'bg-success' : 'bg-primary' }}"
-                                style="font-size: 25px">گزارش
-                                دریافتی مالی
-                            </div>
-                            <div class="card-body">
-                                {{-- مالی --}}
-                                <div class="row table-responsive" id="financials">
+                        <div class="card-body table-responsive">
+                            <table class="table table-stripped" id="mapa-center-reports">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>تاریخ</th>
+                                        <th>ساعت شروع</th>
+                                        <th>ساعت پایان</th>
+                                        <th>مدت زمان صرف شده(ساعت)</th>
+                                        <th>تکنسین</th>
+                                        <th>گزارش</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ $totalDuration = 0 }}
+                                    @foreach ($mapaCenterReports as $report)
+                                        @php
+                                            $duration = round(((int) $report->end - (int) $report->start) / 3600, 2);
+                                            $totalDuration += $duration;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td dir="ltr">
+                                                {{ toJalali((int) $report->start)->format('Y-m-d') }}</td>
+                                            <td dir="ltr">{{ toJalali((int) $report->start)->format('H:i') }}
+                                            </td>
+                                            <td dir="ltr">{{ toJalali((int) $report->end)->format('H:i') }}
+                                            </td>
+                                            <td>{{ $duration }}</td>
+                                            <td>{{ getUserInfo($report->expert)?->name }}</td>
+                                            <td>{{ $report->report }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-success">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>مجموع</td>
+                                        <td>{{ $totalDuration }}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                @endif
+                @if (auth()->user()->access('امور جاری - جزئیات مالی'))
+                    <div class="card">
+                        <div class="card-header text-center font-vazir-bold bg-primary" style="font-size: 25px">گزارش
+                            دریافتی مالی
+                            <br>
+                            <a class="btn btn-sm btn-warning" style="color: black !important" target="_blank"
+                                href="{{ route('simpleWorkflowReport.financial-transactions.index') . '?filter=all&case_number=' . $mainCase->number }}">گزارش
+                                وضعیت حساب</a>
+                        </div>
+                        {{-- <div class="card-body"> --}}
+                        {{-- مالی --}}
+                        {{-- <div class="row table-responsive" id="financials">
                                     <table class="table table-bordered">
                                         <tr>
                                             <th>{{ trans('fields.process_name') }}</th>
@@ -431,69 +432,69 @@
                                             </tr>
                                         @endforeach
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                        @if (count($financialTransactions))
-                            @include('SimpleWorkflowReportView::Core.FinancialTransaction.show', [
+                                </div> --}}
+                        {{-- </div> --}}
+                    </div>
+                    @if (count($financialTransactions))
+                        {{-- @include('SimpleWorkflowReportView::Core.FinancialTransaction.show', [
                                 'creditors' => $financialTransactions,
-                            ]);
-                        @endif
-                        <div class="card">
-                            <div
-                                class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">
-                                گزارش
-                                تفکیک هزینه های پرونده
-                            </div>
-                            <div class="card-body">
-                                {{-- تفکیک هزینه های پرونده --}}
-                                <div class="row table-responsive" id="financials">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th>{{ trans('fields.type') }}</th>
-                                            <th>{{ trans('fields.description') }}</th>
-                                            <th>{{ trans('fields.counterparty') }}</th>
-                                            <th>{{ trans('fields.amount') }}</th>
-                                        </tr>
-                                        @foreach ($caseCosts as $cost)
-                                            <tr>
-                                                <td>{{ $cost->type }}</td>
-                                                <td>{{ $cost->description }}</td>
-                                                <td>{{ $cost->counterparty()?->name ?? '' }}</td>
-                                                <td>{{ $cost->amount }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                            ]); --}}
                     @endif
                     <div class="card">
-                        <div class="card-header text-center font-vazir-bold {{ $delivery['delivery_date'] ? 'bg-success' : 'bg-primary' }}"
-                            style="font-size: 25px">تحویل
+                        <div
+                            class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">
+                            گزارش
+                            تفکیک هزینه های پرونده
                         </div>
                         <div class="card-body">
-                            {{-- تحویل --}}
-                            <div class="row table-responsive" id="delivery">
+                            {{-- تفکیک هزینه های پرونده --}}
+                            <div class="row table-responsive" id="financials">
                                 <table class="table table-bordered">
                                     <tr>
-                                        <th>{{ trans('fields.delivery_date') }}</th>
-                                        <th>{{ trans('fields.delivered_to') }}</th>
-                                        <th>{{ trans('fields.delivery_description') }}</th>
+                                        <th>{{ trans('fields.type') }}</th>
+                                        <th>{{ trans('fields.description') }}</th>
+                                        <th>{{ trans('fields.counterparty') }}</th>
+                                        <th>{{ trans('fields.amount') }}</th>
                                     </tr>
-                                    <tr>
-                                        <td>{{ $delivery['delivery_date'] ?? '' }}
-                                        </td>
-                                        <td>{{ $delivery['delivered_to'] }}</td>
-                                        <td>{{ $delivery['delivery_description'] }}</td>
-                                    </tr>
+                                    @foreach ($caseCosts as $cost)
+                                        <tr>
+                                            <td>{{ $cost->type }}</td>
+                                            <td>{{ $cost->description }}</td>
+                                            <td>{{ $cost->counterparty()?->name ?? '' }}</td>
+                                            <td>{{ $cost->amount }}</td>
+                                        </tr>
+                                    @endforeach
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="card" style="border: 1px solid #ee00ff">
+                    <div class="card-header text-center font-vazir-bold" style="font-size: 25px; background-color: #ee00ff">
+                        تحویل
+                    </div>
+                    <div class="card-body">
+                        {{-- تحویل --}}
+                        <div class="row table-responsive" id="delivery">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>{{ trans('fields.delivery_date') }}</th>
+                                    <th>{{ trans('fields.delivered_to') }}</th>
+                                    <th>{{ trans('fields.delivery_description') }}</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ $delivery['delivery_date'] ?? '' }}
+                                    </td>
+                                    <td>{{ $delivery['delivered_to'] }}</td>
+                                    <td>{{ $delivery['delivery_description'] }}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 

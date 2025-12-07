@@ -1,6 +1,6 @@
 @extends('behin-layouts.app')
 
-@section('title', 'دفتر معین')
+@section('title', 'مساعده ها پرسنل')
 
 @php
     use Behin\SimpleWorkflow\Controllers\Core\ViewModelController;
@@ -34,9 +34,13 @@
             {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
             </button> --}}
-            <button class="btn btn-sm btn-warning" onclick="showAddNewDebit()">افزودن
-                بدهکاری <br>(مدارپرداز از مشتری طلب دارد)
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user.export', ['filter' => $filter ?? null, 'case_number' => $caseNumber ?? null]) }}"
+                class="btn btn-sm btn-success">خروجی اکسل</a>
+
+            <button class="btn btn-sm btn-danger" onclick="openMultiSalaryAccounts()">
+                باز کردن حساب مساعده برای انتخاب‌شده‌ها
             </button>
+
 
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
@@ -49,8 +53,8 @@
                 class="row align-items-end">
                 <div class="col-sm-6 col-md-4 mb-2">
                     <label class="form-label">جستجو بر اساس شماره پرونده</label>
-                    <input type="text" class="form-control" name="case_number"
-                        value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
+                    <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
+                        placeholder="شماره پرونده را وارد کنید">
                 </div>
                 <input type="hidden" name="filter" value="{{ $filter }}">
                 <div class="col-auto mb-2">
@@ -65,28 +69,7 @@
             </form>
         </div>
     </div>
-    <div class="card mb-3">
-        <div class="card-body d-flex gap-2 flex-wrap">
-            @php
-                $caseNumberQuery = [];
-                if (filled($caseNumber ?? null)) {
-                    $caseNumberQuery['case_number'] = $caseNumber;
-                }
-            @endphp
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش بدهکارها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش همه طرف حساب‌ها
-            </a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
-                class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش فقط مثبت‌ها
-            </a>
-        </div>
-    </div>
+
     @if (filled($caseNumber ?? null))
         <div class="alert alert-info">
             نمایش نتایج برای پرونده شماره <span class="font-weight-bold">{{ $caseNumber }}</span>
@@ -94,33 +77,63 @@
     @endif
     <div class="card table-responsive">
         <div class="card-header bg-secondary text-center">
-            <h3 class="card-title">دفتر معین</h3>
+            <h3 class="card-title">مساعده ها پرسنل</h3>
         </div>
         <div class="card-body">
             <table class="table table-bordered" id="cheque-list">
                 <thead>
                     <tr>
-                        <th>طرف حساب</th>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>شماره پرسنلی</th>
+                        <th>پرسنل</th>
                         <th>مانده حساب</th>
                         <th>اقدامات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($creditors as $creditor)
-                        <tr @if ($creditor->total_amount < 0) style="background: #f56c6c" @endif
-                            @if ($creditor->total_amount > 0) class="bg-success" @endif>
-                            <td>{{ $creditor->counterparty()->name ?? '' }}</td>
-                            <td dir="ltr">{{ number_format($creditor->total_amount) }}</td>
+                    @foreach ($counterParties as $counterParty)
+                        @php
+                            $creditorInfo = $creditors->where('counterparty_id', $counterParty->id);
+                            $totalAmount = $creditorInfo->first() ? $creditorInfo->first()->total_amount : 0;
+                            $rest = $counterParty->user_max_advance - $totalAmount;
+                        @endphp
+                        <tr
+                            @if (
+                                $counterParty->user_max_advance and
+                                    $rest / $counterParty->user_max_advance > 0.5 and
+                                    $rest / $counterParty->user_max_advance < 1) class="bg-warning"
+                            @elseif($totalAmount > 0)
+                                class="bg-success"
+                            @elseif($totalAmount < 0)
+                                class="bg-danger" @endif>
+                            <td><input type="checkbox" class="row-check" value="{{ $counterParty->id }}"></td>
+                            <td>{{ getUserInfo($counterParty->user_id)->number ?? '' }}</td>
+                            <td>{{ $counterParty->name ?? '' }}<br>
+                                <small class="text-muted">سقف: {{ number_format($counterParty->user_max_advance) }}</small>
+                            </td>
+                            <td dir="ltr">
+                                {{ number_format($totalAmount) }}
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-primary"
-                                    onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
-                                <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی 
-                                <button class="btn btn-sm btn-warning"
-                                    onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
-                                    @if($creditor->counterparty_id)
-                                <a href="{{ route('simpleWorkflowReport.financial-transactions.export', $creditor->counterparty_id) }}" class="btn btn-sm btn-info" download="گزارش تراکنش های {{ $creditor->counterparty()->name }}.xlsx">اکسل</a>
-                                    @endif
+                                    onclick="showDetails(`{{ $counterParty->id }}`)">جزئیات بیشتر</button>
+
+                                @if ($totalAmount == 0)
+                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', $counterParty->id) }}"
+                                        class="btn btn-sm btn-danger">باز کردن حساب مساعده جدید</a>
+                                @else
+                                    <button class="btn btn-sm btn-warning"
+                                        onclick="showAddDebit(`{{ $counterParty->id }}`)">افزودن سند پرداختنی</button>
+                                    <button class="btn btn-sm btn-secondary"
+                                        onclick="showAddCredit(`{{ $counterParty->id }}`)">افزودن بستانکاری</button>
+                                    <a href="{{ route('simpleWorkflowReport.financial-transactions.closeUserSalaryAdvances', $counterParty->id) }}"
+                                        class="btn btn-sm btn-success">تسویه</a>
+                                @endif
+
+
+                                {{--    <button class="btn btn-sm btn-success"
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی --}}
+
                             </td>
                         </tr>
                     @endforeach
@@ -144,6 +157,7 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
+            "order": [[1, "asc"]],
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api();
 
@@ -155,9 +169,9 @@
                         i : 0;
                 };
 
-                // جمع کل جدول (ستون دوم = index 1)
+                // جمع کل جدول (ستون سوم = index 1)
                 var total = api
-                    .column(1, {
+                    .column(2, {
                         search: 'applied'
                     })
                     .data()
@@ -167,7 +181,7 @@
 
                 // جمع صفحه جاری
                 var pageTotal = api
-                    .column(1, {
+                    .column(2, {
                         page: 'current'
                     })
                     .data()
@@ -176,7 +190,7 @@
                     }, 0);
 
                 // نمایش در فوتر
-                $(api.column(1).footer()).html(
+                $(api.column(2).footer()).html(
                     'صفحه: ' + pageTotal.toLocaleString() + '<br>کل: ' + total.toLocaleString()
                 );
             }
@@ -186,7 +200,7 @@
         function showDetails(counterparty) {
             var fd = new FormData();
             fd.append('counterparty', counterparty);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.show', 'counterparty') }}";
+            var url = "{{ route('simpleWorkflowReport.financial-transactions.show', ['financial_transaction' => 'counterparty', 'showHeaderBtn' => '0']) }}";
             url = url.replace('counterparty', counterparty);
             open_admin_modal(url, 'جزئیات بیشتر');
         }
@@ -215,12 +229,65 @@
             open_admin_modal(url, 'افزودن بدهکاری');
         }
 
-        function showAddNewDebit(counterparty = null) {
+        function showAddNewDebit(counterparty = null, onlyAssignedUsers = true) {
             var fd = new FormData();
             fd.append('counterparty', counterparty);
-            var url = "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', 'counterparty') }}";
+            fd.append('onlyAssignedUsers', onlyAssignedUsers);
+            var url =
+                "{{ route('simpleWorkflowReport.financial-transactions.showAddDebit', ['counterparty', 'onlyAssignedUsers']) }}";
             url = url.replace('counterparty', counterparty);
+            url = url.replace('onlyAssignedUsers', onlyAssignedUsers);
             open_admin_modal(url, 'افزودن بدهکاری');
         }
+
+        function openMultiSalaryAccounts() {
+            let selected = [];
+
+            document.querySelectorAll(".row-check:checked").forEach(el => {
+                selected.push(el.value);
+            });
+
+            if (selected.length === 0) {
+                alert("هیچ ردیفی انتخاب نشده است");
+                return;
+            }
+
+            if (!confirm(selected.length + " حساب برای پرسنل انتخاب‌شده باز شود؟")) return;
+
+            // ارسال با AJAX
+            fetch("{{ route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvancesBulk') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        users: selected
+                    })
+                })
+                .then(res => {
+                    console.log(res);
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.status === "ok") {
+                        alert("با موفقیت انجام شد");
+                        location.reload();
+                    } else {
+                        alert("خطا: " + data.message);
+                    }
+                })
+                .catch(e => alert("خطا در ارسال درخواست"));
+        }
+
+        $('#select-all').on('click', function() {
+            // وضعیت تیک خوردن چک‌باکس هدر
+            let checked = $(this).is(':checked');
+
+            // اعمال روی تمام سطرها (سازگار با DataTables)
+            $('#cheque-list').DataTable().rows().every(function() {
+                $(this.node()).find('.row-check').prop('checked', checked);
+            });
+        });
     </script>
 @endsection

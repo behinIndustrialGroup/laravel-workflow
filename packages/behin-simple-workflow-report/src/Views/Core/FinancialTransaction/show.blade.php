@@ -16,9 +16,11 @@
 <div class="card table-responsive">
     <div class="card-header bg-secondary text-center">
         <h3 class="card-title">جزئیات حساب: {{ $creditors[0]->counterparty()->name ?? '' }}</h3>
-        <a href="{{ route('simpleWorkflowReport.creditor.index') }}" target="_blank" class="btn btn-sm btn-danger">نمایش لیست طلبکاران</a>
-        <a href="{{ route('simpleWorkflowReport.petty-cash.index') }}" target="_blank" class="btn btn-sm btn-warning">نمایش لیست ریز خرج کرد</a>
-        <a href="{{ route('simpleWorkflowReport.financial-transactions.user') }}" target="_blank" class="btn btn-sm btn-info">نمایش لیست مساعده</a>
+        @if($showHeaderBtn)
+            <a href="{{ route('simpleWorkflowReport.creditor.index') }}" target="_blank" class="btn btn-sm btn-danger">نمایش لیست طلبکاران</a>
+            <a href="{{ route('simpleWorkflowReport.petty-cash.index') }}" target="_blank" class="btn btn-sm btn-warning">نمایش لیست ریز خرج کرد</a>
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user') }}" target="_blank" class="btn btn-sm btn-info">نمایش لیست مساعده</a>
+        @endif
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="more-details">

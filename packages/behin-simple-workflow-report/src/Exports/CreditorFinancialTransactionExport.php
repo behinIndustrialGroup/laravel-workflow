@@ -9,26 +9,29 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class UserFinancialTransactionExport implements FromCollection, WithHeadings, ShouldAutoSize
+class CreditorFinancialTransactionExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     use Exportable;
 
-    public function __construct(private readonly Collection $creditors)
+    public function __construct(private readonly Collection $financialTransaction)
     {
     }
 
     public function collection(): Collection
     {
-        return $this->creditors;
+        return $this->financialTransaction;
     }
 
     public function headings(): array
     {
         return [
-            'شماره پرسنلی',
-            'نام پرسنل',
-            'سقف',
-            'مانده حساب',
+           'نوع',
+            'طرف حساب',
+            'مبلغ',
+            'نوع پرداختی',
+            'شماره فاکتور/چک',
+            'تاریخ فاکتور/واریزی/سررسید چک',
+            'توضیحات',
         ];
     }
 

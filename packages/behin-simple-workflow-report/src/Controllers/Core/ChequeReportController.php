@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Morilog\Jalali\Jalalian;
+use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 
 class ChequeReportController extends Controller
 {
@@ -26,8 +27,18 @@ class ChequeReportController extends Controller
             return $item->cheque_number ?: 'unique_' . $item->id;
         });
 
+        $chequeFromFinancialTransaction = Financial_transactions::where('financial_method', 'چک')
+        ->get()
+        ->map(function($item){
+            $item->cheque_number = $item->invoice_or_cheque_number;
+            return $item;
+        })
+        ->groupBy(function($item){
+            return $item->invoice_or_cheque_number ?: 'unique_' . $item->id;
+        });
+
         $counterParties = CounterPartyController::getAll();
-        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit', 'counterParties'));
+        return view('SimpleWorkflowReportView::Core.Cheque.index', compact('cheques', 'chequeFromOnCredit', 'chequeFromFinancialTransaction', 'counterParties'));
     }
 
     public function updateFromOnCredit(Request $request, $id)
@@ -49,6 +60,13 @@ class ChequeReportController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(isset($request->table) and $request->table == 'financial_transaction'){
+            $cheque = Financial_transactions::findOrFail($id);
+            $cheque->is_passed = 1;
+            $cheque->save();
+            return redirect()->back()->with('success', 'با موفقیت ذخیره شد.');
+
+        }
         $cheque = Financials::findOrFail($id);
 
         // اگر کاربر خواسته چک را پاس کند، ولی شماره چک ثبت نشده باشد، ارور بده

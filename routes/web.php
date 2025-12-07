@@ -487,7 +487,7 @@ Route::get('test8', function () {
 
 Route::get('test9', function () {
     $fins = Financials::query();
-    $fins->where('counter_party_id', null);
+    $fins->where('counter_party_id', 'cya5xKXLoJ');
     $fins->where('fix_cost_type', '!=', 'حساب دفتری');
     $fins = $fins->paginate(25);
     foreach($fins as $fin){

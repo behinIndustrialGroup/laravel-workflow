@@ -117,6 +117,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::get('daily-report/{user_id}/show-other-daily-report/{from?}/{to?}', [DailyReportController:: class, 'showOtherDailyReport'])->name('daily-report.show-other-daily-report')->middleware('access:گزارش روزانه');
 
     Route::resource('creditor', CreditorReportController::class)->middleware('access:گزارش لیست طلبکاران');
+    Route::get('creditor/{counterparty}/export', [CreditorReportController::class, 'export'])->name('creditor.export')->middleware('access:گزارش لیست طلبکاران');
     Route::get('creditor/{counterparty}/show-add-tasvie', [CreditorReportController::class, 'showAddTasvie'])->name('creditor.showAddTasvie')->middleware('access:گزارش لیست طلبکاران');
     Route::post('creditor/add-tasvie', [CreditorReportController::class, 'addTasvie'])->name('creditor.addTasvie')->middleware('access:گزارش لیست طلبکاران');
     Route::get('creditor/{counterparty}/show-add-talab', [CreditorReportController::class, 'showAddTalab'])->name('creditor.showAddTalab')->middleware('access:گزارش لیست طلبکاران');
@@ -125,10 +126,13 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
 
     Route::get('financial-transactions/user', [FinancialTransactionController::class, 'userIndex'])->name('financial-transactions.user')->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/open-user-salary-advances/{counterparty}', [FinancialTransactionController::class, 'openUserSalaryAdvances'])->name('financial-transactions.openUserSalaryAdvances')->middleware('access:گزارش لیست طلبکاران');
+    Route::post('/financial-transactions/openUserSalaryAdvances/bulk',[FinancialTransactionController::class, 'openUserSalaryAdvancesBulk'])->name('financial-transactions.openUserSalaryAdvancesBulk');
+
     Route::get('financial-transactions/close-user-salary-advances/{counterparty}', [FinancialTransactionController::class, 'closeUserSalaryAdvances'])->name('financial-transactions.closeUserSalaryAdvances')->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/user/export', [FinancialTransactionController::class, 'userExport'])->name('financial-transactions.user.export')->middleware('access:گزارش لیست طلبکاران');
     Route::resource('financial-transactions', FinancialTransactionController::class)->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-credit', [FinancialTransactionController::class, 'showAddCredit'])->name('financial-transactions.showAddCredit')->middleware('access:گزارش لیست طلبکاران');
+    Route::get('financial-transactions/{counterparty?}/export', [FinancialTransactionController::class, 'export'])->name('financial-transactions.export')->middleware('access:گزارش لیست طلبکاران');
     Route::post('financial-transactions/add-credit', [FinancialTransactionController::class, 'addCredit'])->name('financial-transactions.addCredit')->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-debit/{onlyAssignedUsers?}', [FinancialTransactionController::class, 'showAddDebit'])->name('financial-transactions.showAddDebit')->middleware('access:گزارش لیست طلبکاران');
     Route::post('financial-transactions/add-debit', [FinancialTransactionController::class, 'addDebit'])->name('financial-transactions.addDebit')->middleware('access:گزارش لیست طلبکاران');

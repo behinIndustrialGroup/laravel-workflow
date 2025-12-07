@@ -36,12 +36,25 @@ class CounterPartyController extends Controller
     }
 
 
-    public static function getAll(){
+    public static function getAll()
+    {
         return Counter_parties::all();
     }
 
-    public static function getByName($name){
-        return Counter_parties::where('name', $name)->first();
+    public static function getById($id)
+    {
+        return Counter_parties::find($id);
+    }
+
+    public static function getByName($name)
+    {
+        $counterparty = Counter_parties::where('name', $name)->first();
+        if (!$counterparty) {
+            return Counter_parties::create([
+                'name' => $name
+            ]);
+        }
+        return $counterparty;
     }
 
     public function create()
@@ -57,6 +70,7 @@ class CounterPartyController extends Controller
         $counterParties = Counter_parties::where('id', '<>', $counterParty->id)
             ->orderBy('name')
             ->get();
+
 
         return view('SimpleWorkflowReportView::Core.CounterParty.edit', compact('counterParty', 'users', 'counterParties'));
     }
@@ -127,6 +141,4 @@ class CounterPartyController extends Controller
         Counter_parties::destroy($id);
         return redirect()->route('simpleWorkflowReport.counter-party.index');
     }
-
-    
 }

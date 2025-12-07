@@ -66,6 +66,9 @@
                                     onclick="showAddTasvie(`{{ $creditor->counterparty }}`)">افزودن سند پرداختی</button>
                                 <button class="btn btn-sm btn-warning"
                                     onclick="showAddTalab(`{{ $creditor->counterparty }}`)">افزودن طلب</button>
+                                @if ($creditor->counterpartyInfo)
+                                    <a href="{{ route('simpleWorkflowReport.creditor.export', $creditor->counterpartyInfo->id) }}" class="btn btn-sm btn-info" download="گزارش تراکنش های {{ $creditor->counterpartyInfo->name }}.xlsx">اکسل</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
