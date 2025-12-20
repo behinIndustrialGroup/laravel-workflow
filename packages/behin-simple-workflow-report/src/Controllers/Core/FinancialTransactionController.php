@@ -80,6 +80,10 @@ class FinancialTransactionController extends Controller
         $caseNumber = $request->query('case_number');
         $onlyAssignedUsers = $request->boolean('only_assigned', false);
         $creditors = $this->prepareData($request);
+        $counterpartyDebit = $creditors->where('total_amount', '<', 0)->sum(function ($item) {
+            return abs($item->total_amount);
+        });
+        $counterpartyCredit = $creditors->where('total_amount', '>', 0)->sum('total_amount');
         $balance = Financial_transactions::select(
             DB::raw("
             SUM(
@@ -110,7 +114,10 @@ class FinancialTransactionController extends Controller
         ")
         )->first();
 
-        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber', 'balance'));
+        return view(
+            'SimpleWorkflowReportView::Core.FinancialTransaction.index',
+            compact('creditors', 'filter', 'caseNumber', 'balance', 'counterpartyDebit', 'counterpartyCredit')
+        );
     }
 
     public function userIndex(Request $request)
