@@ -21,6 +21,7 @@ use Behin\SimpleWorkflow\Models\Entities\Part_reports;
 use Behin\SimpleWorkflow\Models\Entities\Parts;
 use Behin\SimpleWorkflow\Models\Entities\Repair_reports;
 use Behin\SimpleWorkflow\Models\Entities\Case_costs;
+use Behin\SimpleWorkflow\Models\Entities\Customers;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -62,20 +63,20 @@ class ExternalAndInternalReportController extends Controller
 
         $devices = Devices::where('case_number', $caseNumber)->get();
         $totalDuration = 0;
-        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get()->each(function($row) use (&$totalDuration) {
+        $deviceRepairReports = Repair_reports::where('case_number', $caseNumber)->get()->each(function ($row) use (&$totalDuration) {
             try {
                 $startDate = convertPersianToEnglish($row->start_date);
                 $startTime = $row->start_time;
                 $row->start = Jalalian::fromFormat('Y-m-d H:i', "$startDate $startTime")
                     ->toCarbon()
                     ->timestamp;
-        
+
                 $endDate = convertPersianToEnglish($row->end_date);
                 $endTime = $row->end_time;
                 $row->end = Jalalian::fromFormat('Y-m-d H:i', "$endDate $endTime")
                     ->toCarbon()
                     ->timestamp;
-        
+
                 $row->duration = round((($row->end ?? 0) - ($row->start ?? 0)) / 3600, 2); // به ساعت
                 $totalDuration += $row->duration;
             } catch (\Throwable $e) {
@@ -83,7 +84,7 @@ class ExternalAndInternalReportController extends Controller
             }
         });
         $parts = Parts::where('case_number', $caseNumber)->get();
-        if(count($parts) == 0 and $mainCase->getVariable('part_name')){
+        if (count($parts) == 0 and $mainCase->getVariable('part_name')) {
             Parts::create([
                 'case_id' => $mainCase->id,
                 'case_number' => $mainCase->number,
@@ -118,9 +119,9 @@ class ExternalAndInternalReportController extends Controller
             $parts = Parts::where('case_number', $caseNumber)->get();
         }
         $partReports = Part_reports::where('case_number', $caseNumber)->count();
-        if($partReports == 0 and $parts->count() > 0){
+        if ($partReports == 0 and $parts->count() > 0) {
             foreach ($parts as $part) {
-                if($part->fix_report and $part->mapa_expert){
+                if ($part->fix_report and $part->mapa_expert) {
                     Part_reports::create([
                         'part_id' => $part->id,
                         'case_number' => $caseNumber,
@@ -191,11 +192,11 @@ class ExternalAndInternalReportController extends Controller
 
         if ($request->number) {
             $numberCases = Cases::whereIn('process_id', [
-                    '35a5c023-5e85-409e-8ba4-a8c00291561c',
-                    '4bb6287b-9ddc-4737-9573-72071654b9de',
-                    '1763ab09-1b90-4609-af45-ef5b68cf10d0',
-                    'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50'
-                ])
+                '35a5c023-5e85-409e-8ba4-a8c00291561c',
+                '4bb6287b-9ddc-4737-9573-72071654b9de',
+                '1763ab09-1b90-4609-af45-ef5b68cf10d0',
+                'ab17ef68-6ec7-4dc8-83b0-5fb6ffcedc50'
+            ])
                 ->where('number', 'like', "%$request->number%")
                 ->pluck('number')
                 ->unique()
@@ -217,7 +218,7 @@ class ExternalAndInternalReportController extends Controller
                 ->toArray();
         }
 
-        if($request->device_name){
+        if ($request->device_name) {
             $deviceCases = Devices::where('name', 'like', "%$request->device_name%")->get();
             $deviceCaseNumbers = $deviceCases->pluck('case_number')->unique()->toArray();
         }
@@ -287,5 +288,48 @@ class ExternalAndInternalReportController extends Controller
                 return ($whereIsResult->first()?->task->type == 'end');
             });
         return view('SimpleWorkflowReportView::Core.ExternalInternal.archive', compact('cases'));
+    }
+
+    public function update(Request $request, $number)
+    {
+        // Find the case by ID
+        $cases = Cases::where('number', $number)->get();
+
+        if ($cases->isEmpty()) {
+            return response()->json(['error' => 'Case not found'], 404);
+        }
+
+        if ($request->input('form') == 'customer_info') {
+            foreach ($cases as $case) {
+                $case->saveVariable('customer_workshop_or_ceo_name', $request->customer_name);
+                $case->saveVariable('customer_mobile', $request->mobile);
+                $case->saveVariable('customer_city', $request->city);
+                $case->saveVariable('customer_address', $request->address);
+                if($request->has('initial_description')){
+                    $case->saveVariable('initial_description', $request->initial_description);
+                }
+                if($request->has('customer_init_description')){
+                    $case->saveVariable('customer_init_description', $request->customer_init_description);
+                }
+                $customerId = $case->getVariable('customer_id');
+                if($customerId){
+                    // Update customer information if customer ID exists
+                    $customer = Customers::find($customerId);
+                    if ($customer) {
+                        $customer->update([
+                            'name' => $request->customer_name,
+                            'mobile' => $request->mobile,
+                            'city' => $request->city,
+                            'address' => $request->address
+                        ]);
+                    }
+                }
+            }
+        }
+
+
+        // Update logic would go here
+        // For now, just return success
+        return redirect()->back()->with(['success' => 'ویرایش شد']);
     }
 }

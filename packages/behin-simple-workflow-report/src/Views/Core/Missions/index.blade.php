@@ -12,29 +12,34 @@
                 <div class="col-md-2">
                     <select name="month" id="month-filter" class="form-select form-control">
                         @foreach ($monthOptions as $option)
-                            <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}" data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
+                            <option value="{{ $option['value'] }}" data-from="{{ $option['from'] }}"
+                                data-to="{{ $option['to'] }}" {{ $selectedMonth === $option['value'] ? 'selected' : '' }}>
                                 {{ $option['label'] }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="from_date" class="form-control persian-date" value="{{ $fromValue }}" placeholder="از تاریخ">
+                    <input type="text" name="from_date" class="form-control persian-date" value="{{ $fromValue }}"
+                        placeholder="از تاریخ">
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="to_date" class="form-control persian-date" value="{{ $toValue }}" placeholder="تا تاریخ">
+                    <input type="text" name="to_date" class="form-control persian-date" value="{{ $toValue }}"
+                        placeholder="تا تاریخ">
                 </div>
                 <div class="col-md-2">
                     <select name="status" class="form-select form-control">
                         @foreach ($statusOptions as $value => $label)
-                            <option value="{{ $value }}" {{ $selectedStatus === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            <option value="{{ $value }}" {{ $selectedStatus === $value ? 'selected' : '' }}>
+                                {{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-2 col-lg-2">
                     <div class="d-flex gap-2">
                         <button class="btn btn-warning" type="submit">فیلتر</button>
-                        <a class="btn btn-success" href="{{ route('simpleWorkflowReport.missions.export', request()->query()) }}">
+                        <a class="btn btn-success"
+                            href="{{ route('simpleWorkflowReport.missions.export', request()->query()) }}">
                             دریافت اکسل
                         </a>
                     </div>
@@ -81,13 +86,18 @@
                                 </td>
                                 <td>
                                     @foreach ($mission->cases as $case)
-                                        <i class="fa fa-external-link text-primary" onclick="window.open('{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->related_case_number]) }}', '_blank')"></i>
-                                        {{ $case->related_case_number ?? '-' }}<br>
+                                        @if ($case->related_case_number)
+                                            <i class="fa fa-external-link text-primary"
+                                                onclick="window.open('{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->related_case_number]) }}', '_blank')"></i>
+                                            {{ $case->related_case_number ?? '-' }}<br>
+                                        @endif
                                     @endforeach
                                 </td>
                                 <td>
                                     @if (auth()->user()->access('حذف ماموریت'))
-                                        <form method="POST" action="{{ route('simpleWorkflowReport.missions.destroy', $mission) }}" onsubmit="return confirm('آیا از حذف این ماموریت مطمئن هستید؟');">
+                                        <form method="POST"
+                                            action="{{ route('simpleWorkflowReport.missions.destroy', $mission) }}"
+                                            onsubmit="return confirm('آیا از حذف این ماموریت مطمئن هستید؟');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger">حذف</button>
@@ -111,7 +121,9 @@
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'
             },
-            order: [[1, 'desc']],
+            order: [
+                [1, 'desc']
+            ],
             pageLength: 25
         });
 

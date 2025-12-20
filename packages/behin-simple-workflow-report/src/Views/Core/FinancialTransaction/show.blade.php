@@ -16,10 +16,12 @@
 <div class="card table-responsive">
     <div class="card-header bg-secondary text-center">
         <h3 class="card-title">جزئیات حساب: {{ $creditors[0]->counterparty()->name ?? '' }}</h3>
-        @if($showHeaderBtn)
-            <a href="{{ route('simpleWorkflowReport.creditor.index') }}" target="_blank" class="btn btn-sm btn-danger">نمایش لیست طلبکاران</a>
-            <a href="{{ route('simpleWorkflowReport.petty-cash.index') }}" target="_blank" class="btn btn-sm btn-warning">نمایش لیست ریز خرج کرد</a>
-            <a href="{{ route('simpleWorkflowReport.financial-transactions.user') }}" target="_blank" class="btn btn-sm btn-info">نمایش لیست مساعده</a>
+        @if ($showHeaderBtn)
+            {{-- <a href="{{ route('simpleWorkflowReport.creditor.index') }}" target="_blank" class="btn btn-sm btn-danger">نمایش لیست طلبکاران</a> --}}
+            <a href="{{ route('simpleWorkflowReport.petty-cash.index') }}" target="_blank"
+                class="btn btn-sm btn-warning">نمایش لیست ریز خرج کرد</a>
+            <a href="{{ route('simpleWorkflowReport.financial-transactions.user') }}" target="_blank"
+                class="btn btn-sm btn-info">نمایش لیست مساعده</a>
         @endif
     </div>
     <div class="card-body">
@@ -46,7 +48,9 @@
                         @if ($creditor->financial_type == 'بستانکار') class="bg-success" @endif>
                         <td>{{ $creditor->financial_type }}</td>
                         <td>{{ $creditor->counterparty()->name ?? '' }}</td>
-                        <td dir="ltr">{{ str_contains($creditor->amount, ',') ? $creditor->amount : number_format((int)$creditor->amount) }}</td>
+                        <td dir="ltr">
+                            {{ str_contains($creditor->amount, ',') ? $creditor->amount : number_format((int) $creditor->amount) }}
+                        </td>
                         <td>
                             @if (!empty($creditor->case_number))
                                 <a href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $creditor->case_number]) }}"
@@ -54,7 +58,8 @@
                                     <i class="fa fa-external-link text-primary"></i>
                                 </a>
                             @endif
-                            {{ $creditor->case_number }}</td>
+                            {{ $creditor->case_number }}
+                        </td>
                         <td>{{ $creditor->financial_method }}</td>
                         <td>{{ $creditor->invoice_or_cheque_number }}</td>
                         <td>{{ $creditor->transaction_or_cheque_due_date }}</td>
@@ -62,10 +67,13 @@
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
                         <td>
-                            <button class="btn btn-sm btn-{{ $creditor->financial_type == 'بستانکار' ? 'primary' : 'warning' }} mb-1"
-                                onclick="editFinancialTransaction(`{{ $creditor->id }}`)">ویرایش</button>
-                            <button class="btn btn-sm btn-danger mb-1"
-                                onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>
+                            @if (access('اصلاح یا حذف تراکنش مالی'))
+                                <button
+                                    class="btn btn-sm btn-{{ $creditor->financial_type == 'بستانکار' ? 'primary' : 'warning' }} mb-1"
+                                    onclick="editFinancialTransaction(`{{ $creditor->id }}`)">ویرایش</button>
+                                <button class="btn btn-sm btn-danger mb-1"
+                                    onclick="deleteFinancialTransaction(`{{ $creditor->id }}`)">حذف</button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -83,8 +91,10 @@
 
 <script>
     (function() {
-        const editUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.edit', ['financial_transaction' => '__id__']) }}";
-        const destroyUrlTemplate = "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
+        const editUrlTemplate =
+            "{{ route('simpleWorkflowReport.financial-transactions.edit', ['financial_transaction' => '__id__']) }}";
+        const destroyUrlTemplate =
+            "{{ route('simpleWorkflowReport.financial-transactions.destroy', ['financial_transaction' => '__id__']) }}";
         const csrfToken = '{{ csrf_token() }}';
 
         // اگر DataTable از قبل وجود دارد، ابتدا آن را نابود کن
@@ -112,7 +122,9 @@
                     }, 0);
                 }
 
-                var pageTotal = calculateTotal({ page: 'current' });
+                var pageTotal = calculateTotal({
+                    page: 'current'
+                });
                 var total = calculateTotal({});
 
                 $('#sum-amount').html(
@@ -134,7 +146,10 @@
             $.ajax({
                 url: url,
                 method: 'POST',
-                data: { _method: 'DELETE', _token: csrfToken },
+                data: {
+                    _method: 'DELETE',
+                    _token: csrfToken
+                },
                 success: function(response) {
                     const row = $('#financial-transaction-row-' + id);
                     if (row.length) {
@@ -153,4 +168,3 @@
         }
     })();
 </script>
-

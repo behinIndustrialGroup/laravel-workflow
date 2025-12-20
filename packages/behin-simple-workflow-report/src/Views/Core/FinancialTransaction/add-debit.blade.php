@@ -86,7 +86,7 @@
 
         </div>
         <div class="col-sm-4"></div>
-        <div class="col-sm-4">
+        {{-- <div class="col-sm-4">
             <div class="form-group"><label>نام مقصد حساب</label><input type="text" name="destination_account_name"
                     list="destination_account_name_list" value="" class="form-control"
                     id="destination_account_name" placeholder="" style="">
@@ -100,7 +100,7 @@
                     name="destination_account_number" list="destination_account_number_list" value=""
                     class="form-control" id="destination_account_number" placeholder="" style=""></div>
 
-        </div>
+        </div> --}}
 
 
     </div>

@@ -38,7 +38,7 @@ class CounterPartyController extends Controller
 
     public static function getAll()
     {
-        return Counter_parties::all();
+        return Counter_parties::orderBy('name')->get();
     }
 
     public static function getById($id)

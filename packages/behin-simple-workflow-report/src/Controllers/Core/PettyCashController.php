@@ -75,7 +75,7 @@ class PettyCashController extends Controller
         ));
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         $data = $request->validate([
             'title' => 'required|string',

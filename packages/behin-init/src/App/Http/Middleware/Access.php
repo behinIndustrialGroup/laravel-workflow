@@ -28,6 +28,9 @@ class Access
                 return abort(403, "آیپی شما معتبر نیست");
             }
         }
+        if(Auth::id() != 1){
+            // return abort(403, "در حال آپدیت . چند لحظه منتظر بمانید");
+        }
         $target = $method ?? $request->route()->uri();
         $a = new AccessController($target);
         if(!$a->check()){

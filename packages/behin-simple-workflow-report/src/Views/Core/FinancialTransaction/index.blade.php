@@ -29,14 +29,32 @@
             {{ session('error') }}
         </div>
     @endif
+    @if (isset($errors) && $errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-danger">
+                {{ $error }}
+            </div>
+        @endforeach
+    @endif
+    <div class="card">
+        <div class="card-header">
+            راهنما<br>
+            افزودن طلبکاری: یعنی مشتری از مدار پرداز طلب دارد. مانند مشتری به مدار پرداز کالایی فروخته، خدماتی ارائه داده یا مبلغی به مدار پرداز پرداخت کرده<br>
+            افزودن بدهکاری: یعنی مشتری به مدار پرداز بدهکار است. مانند مشتری از مدارپرداز خدماتی دریافت کرده یا کالایی از مدار پرداز خریده یا مدارپرداز مبلغی به مشتری پرداخت کرده است.
+        </div>
+    </div>
     <div class="card mb-3">
         <div class="card-header">
-            {{-- <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
+            <button class="btn btn-sm btn-success" onclick="showAddNewCredit()">افزودن
                 طلبکار <br>(مدارپرداز به مشتری بدهکار است)
-            </button> --}}
+            </button>
             <button class="btn btn-sm btn-warning" onclick="showAddNewDebit()">افزودن
                 بدهکاری <br>(مدارپرداز از مشتری طلب دارد)
             </button>
+            <a href="{{ route('simpleWorkflowReport.counter-party.create') }}" class="btn btn-sm btn-primary">
+                افزودن طرف حساب جدید
+            </a>
+
 
             {{-- <button class="btn btn-sm btn-primary"
                 onclick="open_view_model_create_new_form(`{{ $addTasvieViewModelCreateNewForm }}`, `{{ $addTasvieViewModelId }}`, `{{ $addTasvieViewModelApikey }}`)">افزودن
@@ -49,8 +67,8 @@
                 class="row align-items-end">
                 <div class="col-sm-6 col-md-4 mb-2">
                     <label class="form-label">جستجو بر اساس شماره پرونده</label>
-                    <input type="text" class="form-control" name="case_number"
-                        value="{{ $caseNumber ?? '' }}" placeholder="شماره پرونده را وارد کنید">
+                    <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
+                        placeholder="شماره پرونده را وارد کنید">
                 </div>
                 <input type="hidden" name="filter" value="{{ $filter }}">
                 <div class="col-auto mb-2">
@@ -75,7 +93,7 @@
             @endphp
             <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'negative'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'negative' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش بدهکارها
+                نمایش بدهکاران
             </a>
             <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'all'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
@@ -83,7 +101,7 @@
             </a>
             <a href="{{ route('simpleWorkflowReport.financial-transactions.index', array_merge(['filter' => 'positive'], $caseNumberQuery)) }}"
                 class="btn btn-sm {{ ($filter ?? 'negative') === 'positive' ? 'btn-primary' : 'btn-outline-primary' }}">
-                نمایش فقط مثبت‌ها
+                نمایش طلبکاران
             </a>
         </div>
     </div>
@@ -115,11 +133,13 @@
                                 <button class="btn btn-sm btn-primary"
                                     onclick="showDetails(`{{ $creditor->counterparty_id }}`)">جزئیات بیشتر</button>
                                 <button class="btn btn-sm btn-success"
-                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن سند دریافتنی 
-                                <button class="btn btn-sm btn-warning"
-                                    onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
-                                    @if($creditor->counterparty_id)
-                                <a href="{{ route('simpleWorkflowReport.financial-transactions.export', $creditor->counterparty_id) }}" class="btn btn-sm btn-info" download="گزارش تراکنش های {{ $creditor->counterparty()->name }}.xlsx">اکسل</a>
+                                    onclick="showAddCredit(`{{ $creditor->counterparty_id }}`)">افزودن طلبکاری
+                                    <button class="btn btn-sm btn-warning"
+                                        onclick="showAddDebit(`{{ $creditor->counterparty_id }}`)">افزودن بدهکاری</button>
+                                    @if ($creditor->counterparty_id)
+                                        <a href="{{ route('simpleWorkflowReport.financial-transactions.export', $creditor->counterparty_id) }}"
+                                            class="btn btn-sm btn-info"
+                                            download="گزارش تراکنش های {{ $creditor->counterparty()->name ?? '' }}.xlsx">اکسل</a>
                                     @endif
                             </td>
                         </tr>
@@ -134,53 +154,90 @@
                 </tfoot>
             </table>
         </div>
+        <div class="card-body">
+            بدهکاری (مدارپرداز طلب دارد): {{ number_format($balance->total_debit) }} <br>
+            بستانکاری (مدارپرداز بدهکار است): {{ number_format($balance->total_credit) }} <br>
+            مانده کل: {{ number_format($balance->total_amount) }}
+            @if ($balance->total_amount < 0)
+                <span class="text-danger">طلب دارد</span>
+            @elseif($balance->total_amount > 0)
+                <span class="text-success">بدهکار است</span>
+            @endif
+        </div>
     </div>
 @endsection
 
 @section('script')
     <script>
         $('#cheque-list').DataTable({
-            "pageLength": 25,
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
+            pageLength: 25,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
-            "footerCallback": function(row, data, start, end, display) {
+            footerCallback: function(row, data, start, end, display) {
+
                 var api = this.api();
 
-                // تابع برای حذف جداکننده هزارگان یا علامت‌های غیرعددی
+                // تبدیل مقدار به عدد
                 var intVal = function(i) {
                     return typeof i === 'string' ?
                         i.replace(/[\$,٬,]/g, '') * 1 :
                         typeof i === 'number' ?
-                        i : 0;
+                        i :
+                        0;
                 };
 
-                // جمع کل جدول (ستون دوم = index 1)
-                var total = api
-                    .column(1, {
-                        search: 'applied'
-                    })
-                    .data()
-                    .reduce(function(a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
+                /** =========================
+                 *  داده‌ها
+                 *  ========================= */
+                var totalDebit = 0;
+                var totalCredit = 0;
+                var pageDebit = 0;
+                var pageCredit = 0;
 
-                // جمع صفحه جاری
-                var pageTotal = api
-                    .column(1, {
-                        page: 'current'
-                    })
-                    .data()
-                    .reduce(function(a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
+                // کل جدول (با فیلتر)
+                api.column(1, {
+                    search: 'applied'
+                }).data().each(function(value) {
+                    var amount = intVal(value);
+                    if (amount < 0) {
+                        totalDebit += Math.abs(amount);
+                    } else {
+                        totalCredit += amount;
+                    }
+                });
 
-                // نمایش در فوتر
-                $(api.column(1).footer()).html(
-                    'صفحه: ' + pageTotal.toLocaleString() + '<br>کل: ' + total.toLocaleString()
-                );
+                // صفحه جاری
+                api.column(1, {
+                    page: 'current'
+                }).data().each(function(value) {
+                    var amount = intVal(value);
+                    if (amount < 0) {
+                        pageDebit += Math.abs(amount);
+                    } else {
+                        pageCredit += amount;
+                    }
+                });
+
+                var pageBalance = pageCredit - pageDebit;
+                var totalBalance = totalCredit - totalDebit;
+
+                /** =========================
+                 *  نمایش در فوتر
+                 *  ========================= */
+                $(api.column(1).footer()).html(`
+                    <div style="line-height:1.8">
+                        <strong>جمع صفحه</strong><br>
+                        بدهکاری: <span class="text-danger">${pageDebit.toLocaleString()}</span><br>
+                        بستانکاری: <span class="text-success">${pageCredit.toLocaleString()}</span><br>
+                        مانده: <strong>${pageBalance.toLocaleString()}</strong>
+                        
+                    </div>
+                `);
             }
+
         });
+
 
 
         function showDetails(counterparty) {

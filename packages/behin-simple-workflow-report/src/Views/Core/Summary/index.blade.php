@@ -316,21 +316,21 @@
                                             </td>
                                         </tr>
                                     @endif
-                                    @if (auth()->user()->access('گزارش لیست طلبکاران'))
+                                    {{-- @if (auth()->user()->access('گزارش لیست طلبکاران'))
                                         <tr>
                                             <td class="d-none"></td>
                                             <td>گزارش لیست طلبکاران</td>
                                             <td class="d-none">گزارش کامل لیست طلبکاران</td>
                                             <td>
-                                                <a href="{{ route('simpleWorkflowReport.creditor.index') }}"
+                                                <a href=""
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
                                     @if (auth()->user()->access('گزارش دفتر معین'))
                                         <tr>
                                             <td class="d-none"></td>
-                                            <td>گزارش لیست بدهکاران</td>
+                                            <td>گزارش دفتر معین</td>
                                             <td class="d-none">گزارش کامل دفتر معین</td>
                                             <td>
                                                 <a href="{{ route('simpleWorkflowReport.financial-transactions.index') }}"

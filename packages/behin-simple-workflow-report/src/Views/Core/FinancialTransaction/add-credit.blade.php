@@ -1,5 +1,5 @@
 <h4>فرم افزودن بستانکاری</h4>
-<form action="{{ route('simpleWorkflowReport.financial-transactions.addCredit') }}" method="POST">
+<form action="javascript:void(0)" method="POST" id="add-credit-form">
     @csrf
     <div class="row col-sm-12 p-0 m-0 dynamic-form" id="dfd41076-26ca-47e4-ab34-17bec3bd89db">
         <div class="col-sm-12">
@@ -90,6 +90,29 @@
         </div>
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
+            <label for="">در ریز خرج کرد ثبت شود؟</label>
+            <select name="store_in_pretty_cash" id="store_in_pretty_cash" class="form-control">
+                <option value="0">خیر</option>
+                <option value="1">بله</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label for="">طرف حساب مقصد دارد؟</label>
+            <select name="has_destination_account" id="has_destination_account" class="form-control">
+                <option value="1">بله</option>
+                <option value="0">خیر</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>طرف حساب مقصد</label>
+            <select name="destination_account_id" class="form-control select2" id="destination_account_id">
+                <option value="">انتخاب کنید</option>
+                @foreach ($counterParties as $counterParty)
+                    <option value="{{ $counterParty->id }}">{{ $counterParty->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        {{-- <div class="col-sm-4">
             <div class="form-group"><label>نام مقصد حساب</label><input type="text" name="destination_account_name"
                     list="destination_account_name_list" value="" class="form-control"
                     id="destination_account_name" placeholder="" style="">
@@ -103,10 +126,14 @@
                     name="destination_account_number" list="destination_account_number_list" value=""
                     class="form-control" id="destination_account_number" placeholder="" style=""></div>
 
-        </div>
+        </div> --}}
     </div>
-    <input type="submit" value="ذخیره" class="btn btn-primary m-2">
 </form>
+<div class="row">
+    <button class="btn btn-primary" onclick="submitForm()">
+        ذخیره
+    </button>
+</div>
 
 
 <script>
@@ -115,6 +142,24 @@
 
 <script>
     let counterPartyDataMap = {};
+
+    function submitForm(){
+        var fd = new FormData($('#add-credit-form')[0]);
+        var url = "{{ route('simpleWorkflowReport.financial-transactions.addCredit') }}";
+        send_ajax_formdata_request(
+            url,
+            fd,
+            function(res){
+                console.log(res);
+                show_message("ذخیره شد");
+                window.location.reload();
+            },
+            function(res){
+                console.log(res)
+                show_error(res);
+            }
+        )
+    }
 
     function getCounterParty(q, input_id) {
         var scriptId = "0fa291ce-6b0a-4e0b-b9aa-e6b65337f97c";

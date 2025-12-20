@@ -32,8 +32,10 @@ use Behin\SimpleWorkflow\Models\Entities\OnCreditPayment;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Missions;
-
-
+use Behin\SimpleWorkflowReport\Controllers\Core\FinancialTransactionController;
+use Illuminate\Support\Facades\Log;
+use Behin\SimpleWorkflow\Models\Entities\Creditor;
+use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 
 Route::get('', function () {
     return view('auth.login');
@@ -490,7 +492,7 @@ Route::get('test9', function () {
     $fins->where('counter_party_id', 'cya5xKXLoJ');
     $fins->where('fix_cost_type', '!=', 'حساب دفتری');
     $fins = $fins->paginate(25);
-    foreach($fins as $fin){
+    foreach ($fins as $fin) {
         $fin->case = Cases::find($fin->case_id);
     }
     $counterParties = Counter_parties::all();
@@ -498,15 +500,104 @@ Route::get('test9', function () {
 });
 
 Route::get('test10', function () {
-    $vars = Variable::where('key', 'customer_id')->whereNull('value')->get();
-    foreach($vars as $var){
-        $case = Cases::find($var->case_id);
-        if($case and $case->getVariable('customer_workshop_or_ceo_name')){
-            $customer = $case->getVariable('customer_workshop_or_ceo_name');
-            $customer = Customers::where('name', $customer)->first();
-            echo $case->number . ' | ' . $case->id . ' | ' . $customer?->name . ' | ' . $customer?->city . ' | ' . $customer?->id . '<br>';
-        }
+    $fins = Financials::query();
+    $fins->whereNotNull('counter_party_id');
+    $fins->where('fix_cost_type', '!=', 'حساب دفتری');
+    $fins->whereNull('converted');
+    $fins = $fins->orderBy('case_number', 'desc')->paginate(25);
+    $fins->getCollection()->transform(function ($item) {
+        $item->counterparty = Counter_parties::find($item->counter_party_id);
+        return $item;
+    });
+    foreach ($fins as $fin) {
+        $fin->case = Cases::find($fin->case_id);
     }
-    return $vars->count();
+    $counterParties = Counter_parties::all();
+    return view('test10', compact('fins', 'counterParties'));
 });
 
+Route::post('test11', function (Request $request) {
+
+    $fins = Financials::query();
+    $fins->whereNotNull('counter_party_id');
+    $fins->where('fix_cost_type', '!=', 'حساب دفتری');
+    $fins->where('id', $request->id);
+    $fins->whereNull('converted');
+    $fins = $fins->first();
+
+    if ($fins) {
+        if (str_contains($fins->payment_method, 'نقدی') or $fins->payment_method == null) {
+            $debit = array(
+                'case_id' => $fins->case_id,
+                'case_number' => $fins->case_number,
+                'financial_type' => 'بدهکار',
+                'counterparty_id' => $fins->counter_party_id,
+                'financial_method' => 'نقدی',
+                'amount' => $fins->cost,
+                'description' => $fins->description,
+                'transaction_or_cheque_due_date' => '',
+                'transaction_or_cheque_due_date_alt,' => $fins->fix_cost_date,
+                'invoice_or_cheque_number' => $fins->invoice_number,
+                'destination_account_name' => '',
+                'destination_account_number' => '',
+            );
+
+            $credit = array(
+                'case_id' => $fins->case_id,
+                'case_number' => $fins->case_number,
+                'financial_type' => 'بستانکار',
+                'amount' => $fins->payment,
+                'financial_method' => 'نقدی',
+                'counterparty_id' => $fins->counter_party_id,
+                'description' => $fins->description,
+                'invoice_or_cheque_number' => $fins->invoice_number,
+                'transaction_or_cheque_due_date' => '',
+                'transaction_or_cheque_due_date_alt,' => $fins->payment_date,
+                'destination_account_name' => $fins->destination_account_name,
+                'destination_account_number' => $fins->destination_account,
+            );
+
+            Financial_transactions::create($debit);
+            Financial_transactions::create($credit);
+
+            $fins->converted = 1;
+            $fins->save();
+            Log::info($fins->case_number);
+            return redirect()->back();
+            return [
+                'debit' => $debit,
+                'credit' => $credit
+            ];
+        }
+    }
+});
+
+Route::get('test13', function () {
+    $creditors = Creditor::get();
+    DB::transaction(function () use ($creditors) {
+        foreach ($creditors as $creditor) {
+            $counterparty = CounterPartyController::getByName($creditor->counterparty);
+            if (!$counterparty) {
+                return $creditor->id;
+            } else {
+                if ($creditor->type == 'طلب') {
+                    $financialType = 'بستانکار';
+                } else {
+                    $financialType = 'بدهکار';
+                }
+                $amount = str_replace(',', '', $creditor->amount);
+                $amount = str_replace('-', '', $creditor->amount);
+                // $amount = abs($amount);
+                // Financial_transactions::create([
+                //     'financial_type' => $financialType,
+                //     'amount' => $amount,
+                //     'financial_method' => $creditor->settlement_type,
+                //     'counterparty_id' => $counterparty->id,
+                //     'description' => 'از بخش طلبکاران - '. $creditor->description,
+                //     'invoice_or_cheque_number' => $creditor->invoice_number,
+                //     'transaction_or_cheque_due_date' => $creditor->invoice_date,
+                // ]);
+            }
+        }
+    });
+});

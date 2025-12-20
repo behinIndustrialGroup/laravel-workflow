@@ -41,31 +41,52 @@
                     <div class="card-header bg-success text-center font-vazir-bold">مشتری</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="customer">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <td>نام مشتری: {{ $customer['name'] }}</td>
-                                    <td>
-                                        @if (auth()->user()->access('امور جاری - شماره مشتری'))
-                                            موبایل مشتری: {{ $customer['mobile'] }}
-                                        @endif
-                                    </td>
-                                    <td>شهر مشتری: {{ $customer['city'] }}</td>
-                                    <td>آدرس مشتری: {{ $customer['address'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">توضیحات اولیه:
-                                        {{ $mainCase->getVariable('customer_init_description') }}<br>
-                                        {{ $mainCase->getVariable('initial_description') }}
-                                    </td>
-                                </tr>
-                            </table>
+                            <form method="POST" accept="{{ route('simpleWorkflowReport.external-internal.update', $mainCase->number) }}">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="form" value="customer_info">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            نام مشتری: 
+                                            <input type="text" name="customer_name" id="" value="{{ $customer['name'] }}" class="form-control">
+                                        </td>
+                                        <td>
+                                            @if (auth()->user()->access('امور جاری - شماره مشتری'))
+                                                موبایل مشتری: 
+                                                <input type="text" name="mobile" id="" value="{{ $customer['mobile'] }}" class="form-control">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            شهر مشتری: 
+                                            <input type="text" name="city" id="" value="{{ $customer['city'] }}" class="form-control">
+                                            </td>
+                                        <td>
+                                            آدرس مشتری: 
+                                            <input type="text" name="address" id="" value="{{ $customer['address'] }}" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            @if($mainCase->getVariable('customer_init_description'))
+                                                توضیحات اولیه خارجی: 
+                                                <textarea name="customer_init_description" id="" class="form-control" cols="30" rows="3">{{ $mainCase->getVariable('customer_init_description') }}</textarea>
+                                            @endif
+                                            @if($mainCase->getVariable('initial_description'))
+                                                توضیحات اولیه داخلی: 
+                                                <textarea name="initial_description" id="" class="form-control" cols="30" rows="3">{{ $mainCase->getVariable('initial_description') }}</textarea>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </table>
+                                <input type="submit" name="" value="ویرایش" id="">
+                            </form>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div
                         class="card-header text-center font-vazir-bold {{ count($devices) ? 'bg-success' : 'bg-primary' }}">
-                        دستگاه</div>
+                        دستگاه های پذیرش شده</div>
                     <div class="card-body">
                         <div class="row table-responsive" id="devices">
                             <table class="table table-bordered">
@@ -90,6 +111,50 @@
                                             <td>{{ $device->mapa_serial }}</td>
                                             <td>{{ $device->serial }}</td>
                                             <td>{{ $device->has_electrical_map }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-success" style="border: 1px solid">
+                    <div class="card-header text-center font-vazir-bold">
+                        قطعات پذیرش شده</div>
+                    <div class="card-body bg-light">
+                        <div class="row table-responsive" id="parts">
+                            <table class="table table-bordered">
+                                <thead style="background-color: #e2f7a2">
+                                    <tr>
+                                        <th>قطعه</th>
+                                        <th>سریال</th>
+                                        <th>واحد</th>
+                                        <th>سرپرست</th>
+                                        <th>کارشناسان مپا (زمان کل)</th>
+                                        <th>تایید تعمیرات</th>
+                                        <th>تصویر</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($parts as $part)
+                                        <tr class="part-header" onclick="toggleReports({{ $part->id }})">
+                                            <td>{{ $part->name }}</td>
+                                            <td>{{ $part->mapa_serial }}</td>
+                                            <td>{{ $part->refer_to_unit }}</td>
+                                            <td>{{ getUserInfo($part->mapa_expert_head)->name ?? '-' }}</td>
+                                            <td>
+                                                @foreach ($part->experts() as $expert)
+                                                    {{ getUserInfo($expert->registered_by)->name ?? $expert->registered_by }}
+                                                    ({{ $expert->total_duration }})
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ $part->repair_is_approved }}</td>
+                                            <td>
+                                                @if ($part->initial_part_pic)
+                                                    <a href="{{ url("$part->initial_part_pic") }}" download>دانلود</a>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

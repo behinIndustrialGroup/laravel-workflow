@@ -45,7 +45,7 @@ class FinancialTransactionController extends Controller
 
         $creditorsQuery = Financial_transactions::select(
             'counterparty_id',
-            DB::raw("{$totalAmountExpression} as total_amount")
+            DB::raw("{$totalAmountExpression} as total_amount"),
         )
             ->when($caseNumber !== null && $caseNumber !== '', function ($query) use ($caseNumber) {
                 $query->where('case_number', $caseNumber);
@@ -53,6 +53,10 @@ class FinancialTransactionController extends Controller
             ->when($onlyAssignedUsers, function ($query) {
                 $assignCounterParties = Counter_parties::whereNotNull('user_id')->pluck('id');
                 $query->whereIn('counterparty_id', $assignCounterParties);
+            }, function ($query) {
+                // وقتی onlyAssignedUsers = false
+                $unassignedCounterParties = Counter_parties::whereNull('user_id')->pluck('id');
+                $query->whereIn('counterparty_id', $unassignedCounterParties);
             })
             ->groupBy('counterparty_id');
 
@@ -76,8 +80,37 @@ class FinancialTransactionController extends Controller
         $caseNumber = $request->query('case_number');
         $onlyAssignedUsers = $request->boolean('only_assigned', false);
         $creditors = $this->prepareData($request);
+        $balance = Financial_transactions::select(
+            DB::raw("
+            SUM(
+                CASE
+                    WHEN financial_type = 'بدهکار' THEN -amount
+                    WHEN financial_type = 'بستانکار' THEN amount
+                    ELSE 0
+                END
+            ) AS total_amount
+        "),
+            // جمع بدهکاری
+            DB::raw("
+            SUM(
+                CASE
+                    WHEN financial_type = 'بدهکار' THEN amount
+                    ELSE 0
+                END
+            ) AS total_debit
+        "),
+            // جمع بستانکاری
+            DB::raw("
+            SUM(
+                CASE
+                    WHEN financial_type = 'بستانکار' THEN amount
+                    ELSE 0
+                END
+            ) AS total_credit
+        ")
+        )->first();
 
-        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber'));
+        return view('SimpleWorkflowReportView::Core.FinancialTransaction.index', compact('creditors', 'filter', 'caseNumber', 'balance'));
     }
 
     public function userIndex(Request $request)
@@ -116,7 +149,7 @@ class FinancialTransactionController extends Controller
         if ($totalAmount != 0) {
             return redirect()->back()->with('error', 'برای این کاربر به دلیل داشتن مانده حساب، امکان باز کردن مساعده وجود ندارد.');
         }
-        
+
         $userMaxAdvances = EmployeeSalaryReportController::userMaxAdvances($counterparty->user_id);
         $request = new Request([
             'financial_method' => 'نقدی',
@@ -239,7 +272,7 @@ class FinancialTransactionController extends Controller
 
     public function edit(Financial_transactions $financialTransaction)
     {
-        $counterParties = Counter_parties::all();
+        $counterParties = CounterPartyController::getAll();
 
         return view(
             'SimpleWorkflowReportView::Core.FinancialTransaction.edit',
@@ -256,8 +289,44 @@ class FinancialTransactionController extends Controller
 
     public function addCredit(Request $request)
     {
+        if ($request->has_destination_account) {
+            $validated = $request->validate([
+                'amount' => 'required',
+                'counterparty_id' => 'required|exists:wf_entity_counter_parties,id',
+                'destination_account_id' => 'required|exists:wf_entity_counter_parties,id',
+            ], [
+                'amount.required' => 'مبلغ الزامی است',
+                'counterparty_id.required' => 'طرف حساب الزامی است',
+                'destination_account_id.required' => 'طرف حساب مقصد الزامی است',
+            ]);
+            $destinationCounterparty = DB::table('wf_entity_counter_parties')->where('id', $request->destination_account_id)->first();
+        } else {
+            $validated = $request->validate([
+                'amount' => 'required',
+                'counterparty_id' => 'required|exists:wf_entity_counter_parties,id',
+            ], [
+                'amount.required' => 'مبلغ الزامی است',
+                'counterparty_id.required' => 'طرف حساب الزامی است',
+            ]);
+        }
+
+        if ($request->store_in_pretty_cash) {
+            $validated = $request->validate([
+                'description' => 'required',
+                'amount' => 'required',
+                'transaction_or_cheque_due_date' => 'required',
+                'counterparty_id' => 'required|exists:wf_entity_counter_parties,id',
+            ], [
+                'description.required' => 'توضیحات الزامی است',
+                'amount.required' => 'مبلغ الزامی است',
+                'transaction_or_cheque_due_date.required' => 'تاریخ تراکنش الزامی است',
+                'counterparty_id.required' => 'طرف حساب الزامی است',
+            ]);
+        }
+
+        $counterParty = DB::table('wf_entity_counter_parties')->where('id', $request->counterparty_id)->first();
         $amount = str_replace(',', '', $request->amount);
-        Financial_transactions::create([
+        $finTransaction = Financial_transactions::create([
             'case_number' => $request->case_number,
             'financial_type' => 'بستانکار',
             'financial_method' => $request->financial_method,
@@ -267,9 +336,34 @@ class FinancialTransactionController extends Controller
             'invoice_or_cheque_number' => $request->invoice_or_cheque_number,
             'transaction_or_cheque_due_date' => $request->transaction_or_cheque_due_date,
             'transaction_or_cheque_due_date_alt' => $request->transaction_or_cheque_due_date_alt,
-            'destination_account_name' => $request->destination_account_name,
-            'destination_account_number' => $request->destination_account_number,
+            'destination_account_id' => $request->destination_account_id ?? null,
+            'destination_account_name' => $destinationCounterparty->name ?? null,
+            'destination_account_number' => $destinationCounterparty->account_number ?? null,
         ]);
+        if (isset($destinationCounterparty)) {
+            $autoFinTransaction = Financial_transactions::create([
+                'case_number' => $request->case_number,
+                'financial_type' => 'بدهکار',
+                'financial_method' => $request->financial_method,
+                'description' => 'تراکنش خودکار. واریزی ' . $counterParty->name,
+                'counterparty_id' => $destinationCounterparty->id,
+                'amount' => (string)$amount,
+                'invoice_or_cheque_number' => $request->invoice_or_cheque_number,
+                'transaction_or_cheque_due_date' => $request->transaction_or_cheque_due_date,
+                'transaction_or_cheque_due_date_alt' => $request->transaction_or_cheque_due_date_alt,
+            ]);
+            $finTransaction->auto_financial_transaction_id = $autoFinTransaction->id;
+            $finTransaction->save();
+        }
+        if ($request->store_in_pretty_cash) {
+            $data = new Request([
+                'title' => $request->description,
+                'amount' => (string)$amount,
+                'paid_at' => $request->transaction_or_cheque_due_date,
+                'from_account' => $counterParty->name,
+            ]);
+            PettyCashController::store($data);
+        }
         return redirect()->back(); //->route('simpleWorkflowReport.financial-transactions.index');
     }
 
@@ -318,23 +412,34 @@ class FinancialTransactionController extends Controller
         ]);
 
         $amount = str_replace(',', '', $validated['amount']);
+        if ($financialTransaction->auto_financial_transaction_id) {
+            Financial_transactions::where('id', $financialTransaction->auto_financial_transaction_id)->delete();
+        }
+        $financialTransaction->delete();
 
-        $financialTransaction->update([
-            'financial_type' => $validated['financial_type'],
-            'counterparty_id' => $validated['counterparty_id'],
-            'case_number' => $validated['case_number'] ?? null,
-            'amount' => (string) $amount,
-            'financial_method' => $validated['financial_method'] ?? null,
-            'invoice_or_cheque_number' => $validated['invoice_or_cheque_number'] ?? null,
-            'transaction_or_cheque_due_date' => $validated['transaction_or_cheque_due_date'] ?? null,
-            'transaction_or_cheque_due_date_alt' => $validated['transaction_or_cheque_due_date_alt'] ?? null,
-            'destination_account_name' => $validated['destination_account_name'] ?? null,
-            'destination_account_number' => $validated['destination_account_number'] ?? null,
-            'description' => $validated['description'] ?? null,
-        ]);
+        if ($request->financial_type == 'بستانکار') {
+            $this->addCredit($request);
+        } else {
+            $this->addDebit($request);
+        }
+
+        // $financialTransaction->update([
+        //     'financial_type' => $validated['financial_type'],
+        //     'counterparty_id' => $validated['counterparty_id'],
+        //     'case_number' => $validated['case_number'] ?? null,
+        //     'amount' => (string) $amount,
+        //     'financial_method' => $validated['financial_method'] ?? null,
+        //     'invoice_or_cheque_number' => $validated['invoice_or_cheque_number'] ?? null,
+        //     'transaction_or_cheque_due_date' => $validated['transaction_or_cheque_due_date'] ?? null,
+        //     'transaction_or_cheque_due_date_alt' => $validated['transaction_or_cheque_due_date_alt'] ?? null,
+        //     'destination_account_name' => $validated['destination_account_name'] ?? null,
+        //     'destination_account_number' => $validated['destination_account_number'] ?? null,
+        //     'description' => $validated['description'] ?? null,
+        // ]);
 
         return redirect()
-            ->route('simpleWorkflowReport.financial-transactions.show', $financialTransaction->counterparty_id)
+            ->back()
+            // ->route('simpleWorkflowReport.financial-transactions.show', $financialTransaction->counterparty_id)
             ->with('success', 'تراکنش با موفقیت ویرایش شد.');
     }
 
