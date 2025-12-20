@@ -157,6 +157,8 @@
         <div class="card-body">
             بدهکاری (مدارپرداز طلب دارد): {{ number_format($balance->total_debit) }} <br>
             بستانکاری (مدارپرداز بدهکار است): {{ number_format($balance->total_credit) }} <br>
+            بدهکاری واقعی (براساس طرف حساب‌ها): {{ number_format($counterpartyDebit) }} <br>
+            بستانکاری واقعی (براساس طرف حساب‌ها): {{ number_format($counterpartyCredit) }} <br>
             مانده کل: {{ number_format($balance->total_amount) }}
             @if ($balance->total_amount < 0)
                 <span class="text-danger">طلب دارد</span>
