@@ -23,6 +23,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\ReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
+use Behin\SimpleWorkflowReport\Controllers\Core\BorrowRequestController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
@@ -45,6 +46,13 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::resource('role', RoleReportFormController::class);
     Route::resource('fin-report', FinReportController::class);
     Route::resource('external-internal', ExternalAndInternalReportController::class);
+    Route::prefix('borrow-requests')->name('borrow-requests.')->group(function () {
+        Route::get('', [BorrowRequestController::class, 'index'])->name('index');
+        Route::post('', [BorrowRequestController::class, 'store'])->name('store');
+        Route::post('{borrowRequest}/deliver', [BorrowRequestController::class, 'deliver'])->name('deliver');
+        Route::post('{borrowRequest}/mark-returned', [BorrowRequestController::class, 'markReturned'])->name('mark-returned');
+        Route::post('{borrowRequest}/confirm-return', [BorrowRequestController::class, 'confirmReturn'])->name('confirm-return');
+    });
     Route::post('external-internal/search', [ExternalAndInternalReportController::class, 'search'])->name('external-internal.search');
     Route::get('external-internal-archive', [ExternalAndInternalReportController::class, 'archive'])->name('external-internal-archive');
 
