@@ -22,6 +22,11 @@ class BorrowRequestController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        $deliveredRequests = Borrow_requests::whereNotNull('delivered_at')
+            ->whereNull('actual_return_date')
+            ->orderByDesc('delivered_at')
+            ->get();
+
         $waitingReturnConfirmation = Borrow_requests::whereNotNull('actual_return_date')
             ->orderByDesc('actual_return_date')
             ->get()
@@ -32,6 +37,7 @@ class BorrowRequestController extends Controller
         return view('SimpleWorkflowReportView::Core.BorrowRequest.index', compact(
             'myRequests',
             'pendingDeliveries',
+            'deliveredRequests',
             'waitingReturnConfirmation',
             'statuses'
         ));
@@ -62,8 +68,8 @@ class BorrowRequestController extends Controller
             'expected_return_date' => 'nullable|string',
         ]);
 
-        if (!is_null($borrowRequest->delivered_at)) {
-            return redirect()->back()->with('warning', 'این درخواست قبلاً تحویل شده است.');
+        if (!is_null($borrowRequest->actual_return_date)) {
+            return redirect()->back()->with('warning', 'برای درخواست تحویل‌گرفته‌شده امکان ویرایش اطلاعات تحویل وجود ندارد.');
         }
 
         $deliveredAt = convertPersianToEnglish($validated['delivered_at']);
@@ -84,7 +90,11 @@ class BorrowRequestController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->back()->with('success', 'درخواست تحویل شد و تاریخ‌ها ثبت گردید.');
+        $message = is_null($borrowRequest->getOriginal('delivered_at'))
+            ? 'درخواست تحویل شد و تاریخ‌ها ثبت گردید.'
+            : 'اطلاعات تحویل به‌روزرسانی شد.';
+
+        return redirect()->back()->with('success', $message);
     }
 
     public function markReturned(Borrow_requests $borrowRequest): RedirectResponse

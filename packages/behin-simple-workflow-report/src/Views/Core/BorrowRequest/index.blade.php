@@ -173,6 +173,53 @@
         </div>
         <div class="col-md-6">
             <div class="card mb-4">
+                <div class="card-header">درخواست‌های تحویل داده شده (در حال امانت)</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>کالا</th>
+                                <th>تحویل</th>
+                                <th>بازگشت احتمالی</th>
+                                <th>به‌روزرسانی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($deliveredRequests as $request)
+                                <tr>
+                                    <td>
+                                        <div>{{ $request->item_name }}</div>
+                                        <div class="text-muted small">درخواست‌کننده: {{ $request->requester_id }}</div>
+                                    </td>
+                                    <td>{{ $request->delivered_at_alt ?? ($request->delivered_at ? toJalali($request->delivered_at)->format('Y-m-d') : 'ـ') }}</td>
+                                    <td>{{ $request->expected_return_date_alt ?? ($request->expected_return_date ? toJalali($request->expected_return_date)->format('Y-m-d') : 'ـ') }}</td>
+                                    <td>
+                                        <form method="POST" action="{{ route('simpleWorkflowReport.borrow-requests.deliver', $request) }}" class="row g-1">
+                                            @csrf
+                                            <div class="col-12">
+                                                <input type="text" name="delivered_at" class="form-control persian-date" placeholder="تاریخ تحویل" value="{{ $request->delivered_at_alt ?? ($request->delivered_at ? toJalali($request->delivered_at)->format('Y-m-d') : '') }}" required>
+                                            </div>
+                                            <div class="col-12 mt-1">
+                                                <input type="text" name="expected_return_date" class="form-control persian-date" placeholder="تاریخ بازگشت احتمالی" value="{{ $request->expected_return_date_alt ?? ($request->expected_return_date ? toJalali($request->expected_return_date)->format('Y-m-d') : '') }}">
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <button class="btn btn-sm btn-outline-primary w-100" type="submit">ویرایش تاریخ‌ها</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">درخواست تحویل داده‌شده‌ای برای ویرایش وجود ندارد.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
                 <div class="card-header">در انتظار تایید بازگشت</div>
                 <div class="card-body table-responsive">
                     <table class="table table-bordered align-middle">
