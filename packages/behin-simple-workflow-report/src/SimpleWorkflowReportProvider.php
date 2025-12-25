@@ -13,7 +13,7 @@ class SimpleWorkflowReportProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__ . '/Config/borrow_requests.php', 'simpleWorkflowReport.borrow_requests');
     }
 
     /**
@@ -27,5 +27,9 @@ class SimpleWorkflowReportProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
         $this->loadViewsFrom(__DIR__. '/Views', 'SimpleWorkflowReportView');
         $this->loadTranslationsFrom(__DIR__ . '/Lang', 'SimpleWorkflowReportLang');
+
+        $this->publishes([
+            __DIR__ . '/Config/borrow_requests.php' => config_path('simpleWorkflowReport/borrow_requests.php'),
+        ], 'simple-workflow-report-config');
     }
 }
