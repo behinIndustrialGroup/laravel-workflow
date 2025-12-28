@@ -72,21 +72,25 @@ class BorrowRequestController extends Controller
             return redirect()->back()->with('warning', 'برای درخواست تحویل‌گرفته‌شده امکان ویرایش اطلاعات تحویل وجود ندارد.');
         }
 
-        $deliveredAt = convertPersianToEnglish($validated['delivered_at']);
-        $deliveredAtJalali = Jalalian::fromFormat('Y-m-d', $deliveredAt);
+        try {
+            $deliveredAtJalali = Jalalian::fromFormat('Y-m-d', $this->normalizeDate($validated['delivered_at']));
+            $expectedReturnJalali = null;
 
-        $expectedReturnJalali = null;
-        if (!empty($validated['expected_return_date'])) {
-            $expected = convertPersianToEnglish($validated['expected_return_date']);
-            $expectedReturnJalali = Jalalian::fromFormat('Y-m-d', $expected);
+            if (!empty($validated['expected_return_date'])) {
+                $expectedReturnJalali = Jalalian::fromFormat('Y-m-d', $this->normalizeDate($validated['expected_return_date']));
+            }
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('warning', 'فرمت تاریخ وارد شده معتبر نیست.')->withInput();
         }
 
         $borrowRequest->update([
             'delivery_id' => Auth::id(),
-            'delivered_at' => $deliveredAtJalali->toCarbon()->timestamp,
-            'delivered_at_alt' => $validated['delivered_at'],
-            'expected_return_date' => $expectedReturnJalali?->toCarbon()->timestamp,
-            'expected_return_date_alt' => $validated['expected_return_date'] ?? null,
+            'delivered_at' => $deliveredAtJalali->toCarbon(),
+            'delivered_at_alt' => $this->normalizeDate($validated['delivered_at']),
+            'expected_return_date' => $expectedReturnJalali?->toCarbon(),
+            'expected_return_date_alt' => isset($validated['expected_return_date'])
+                ? $this->normalizeDate($validated['expected_return_date'])
+                : null,
             'updated_by' => Auth::id(),
         ]);
 
@@ -110,7 +114,7 @@ class BorrowRequestController extends Controller
         $now = Jalalian::now();
 
         $borrowRequest->update([
-            'actual_return_date' => $now->toCarbon()->timestamp,
+            'actual_return_date' => $now->toCarbon(),
             'actual_return_date_alt' => $now->format('Y-m-d'),
             'updated_by' => Auth::id(),
         ]);
@@ -128,7 +132,7 @@ class BorrowRequestController extends Controller
 
         $borrowRequest->setReturnConfirmation([
             'by' => Auth::id(),
-            'at' => $now->toCarbon()->timestamp,
+            'at' => $now->toCarbon(),
             'at_alt' => $now->format('Y-m-d'),
         ]);
 
@@ -136,5 +140,10 @@ class BorrowRequestController extends Controller
         $borrowRequest->save();
 
         return redirect()->back()->with('success', 'بازگشت کالا تایید شد.');
+    }
+
+    private function normalizeDate(string $value): string
+    {
+        return str_replace('/', '-', convertPersianToEnglish(trim($value)));
     }
 }
