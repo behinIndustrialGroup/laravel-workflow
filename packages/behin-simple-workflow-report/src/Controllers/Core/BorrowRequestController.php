@@ -138,4 +138,9 @@ class BorrowRequestController extends Controller
 
         return redirect()->back()->with('success', 'بازگشت کالا تایید شد.');
     }
+
+    private function normalizeDate(string $value): string
+    {
+        return str_replace('/', '-', convertPersianToEnglish(trim($value)));
+    }
 }
