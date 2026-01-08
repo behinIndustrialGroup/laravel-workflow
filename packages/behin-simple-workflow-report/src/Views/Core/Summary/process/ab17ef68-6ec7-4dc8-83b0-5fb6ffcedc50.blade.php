@@ -19,6 +19,8 @@
                             <th>شماره پرونده</th>
                             <th>دستگاه</th>
                             <th>نام مشتری</th>
+                            <th>مدل دستگاه</th>
+                            <th>سریال مپا</th>
                             <th>تاریخ ایجاد</th>
                             <th>اقدام</th>
                         </tr>
@@ -37,6 +39,8 @@
                                     </td>
                                     <td>{{ $case->getVariable('device_name') }}</td>
                                     <td>{{ $case->getVariable('customer_workshop_or_ceo_name') }}</td>
+                                    <td>{{ $case->getVariable('device_model') }}</td>
+                                    <td>{{ $case->getVariable('mapa_serial') }}</td>
                                     <td dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</td>
                                     <td><a
                                             href="{{ route('simpleWorkflowReport.mapa-center.show', ['mapa_center' => $case->id]) }}"><button

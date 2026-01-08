@@ -19,7 +19,7 @@
     } else {
         $customerForm = getFormInformation('ac67f40d-4aa1-417a-9284-6a5c2f571ea1');
     }
-    $deviceForm = getFormInformation('670fb05c-a794-4677-be5d-80b6c9b13da9');
+    $deviceForm = getFormInformation('1edaccc5-ee2c-461e-b2b3-2f5024d90a9a');
     $fixForm = getFormInformation('14a68757-f609-44e1-82e9-4dc5ac35d60e');
     $variables = $case->variables();
 @endphp
