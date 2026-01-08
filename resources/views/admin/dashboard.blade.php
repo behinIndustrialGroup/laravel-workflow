@@ -76,13 +76,12 @@
 
         @if (auth()->user()->access('ثبت درخواست مرخصی'))
             <div class="col-sm-3 "
-            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
-                'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
-                'inDraft' => 0,
-                'force' => 1,
-                'redirect' => true,
-            ]) }}'; }"
-            >
+                onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                    'taskId' => '7f62e4ce-a96e-419a-8972-358fd642f39b',
+                    'inDraft' => 0,
+                    'force' => 1,
+                    'redirect' => true,
+                ]) }}'; }">
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
@@ -93,7 +92,8 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i
+                            class="fa fa-arrow-circle-left"></i></span>
                 </div>
             </div>
         @endauth
@@ -169,19 +169,19 @@
                         'force' => 0,
                         'redirect' => true,
                     ]) }}"
-                        class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></a>
+                        class="small-box-footer">{{ trans('ثبت') }} <i
+                            class="fa fa-arrow-circle-left"></i></a>
                 </div>
             </div>
         @endif
         @if (access('آیکون شروع فرایند ورود و خروج کالا از نگهبانی'))
             <div class="col-sm-3 "
-            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
-                'taskId' => '28d862dd-9268-47ad-bf6f-aa0520e6d3d2',
-                'inDraft' => 0,
-                'force' => 1,
-                'redirect' => true,
-            ]) }}'; }"
-            >
+                onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                    'taskId' => '28d862dd-9268-47ad-bf6f-aa0520e6d3d2',
+                    'inDraft' => 0,
+                    'force' => 1,
+                    'redirect' => true,
+                ]) }}'; }">
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
@@ -192,19 +192,19 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i
+                            class="fa fa-arrow-circle-left"></i></span>
                 </div>
             </div>
         @endauth
         @if (access('آیکون شروع فرایند ماموریت'))
             <div class="col-sm-3 "
-            onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
-                'taskId' => 'cf07ec23-686f-4a08-9cb5-5ea258c4b1a0',
-                'inDraft' => 0,
-                'force' => 1,
-                'redirect' => true,
-            ]) }}'; }"
-            >
+                onclick="if(confirm('شروع؟')) { window.location='{{ route('simpleWorkflow.process.start', [
+                    'taskId' => 'cf07ec23-686f-4a08-9cb5-5ea258c4b1a0',
+                    'inDraft' => 0,
+                    'force' => 1,
+                    'redirect' => true,
+                ]) }}'; }">
                 <!-- small box -->
                 <div class="small-box bg-secondary">
                     <div class="inner">
@@ -215,10 +215,27 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <span class="small-box-footer">{{ trans('ثبت') }} <i class="fa fa-arrow-circle-left"></i></span>
+                    <span class="small-box-footer">{{ trans('ثبت') }} <i
+                            class="fa fa-arrow-circle-left"></i></span>
                 </div>
             </div>
         @endauth
+        <div class="col-sm-3 ">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>{{ trans('کالای امانی') }}</h3>
+
+                    <p>{{ trans('ثبت و مدیریت کالاهای امانی') }}</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="{{ route('simpleWorkflowReport.borrow-requests.index') }}"
+                    class="small-box-footer">{{ trans('مشاهده') }} <i
+                        class="fa fa-arrow-circle-left"></i></a>
+            </div>
+        </div>
     @endsection
 
     @section('script')

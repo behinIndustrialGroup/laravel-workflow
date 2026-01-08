@@ -27,7 +27,10 @@ class ChequeReportController extends Controller
             return $item->cheque_number ?: 'unique_' . $item->id;
         });
 
+        $autoTransactionIds = Financial_transactions::whereNotNull('auto_financial_transaction_id')->pluck('auto_financial_transaction_id');
+        
         $chequeFromFinancialTransaction = Financial_transactions::where('financial_method', 'چک')
+        ->whereNotIn('id', $autoTransactionIds)
         ->get()
         ->map(function($item){
             $item->cheque_number = $item->invoice_or_cheque_number;

@@ -271,7 +271,7 @@
                                             </td>
                                         </tr>
                                     @endif --}}
-                                    @if (auth()->user()->access('گزارش بدهکاران'))
+                                    {{-- @if (auth()->user()->access('گزارش بدهکاران'))
                                         <tr>
                                             <td class="d-none"></td>
                                             <td>بدهکاران</td>
@@ -281,7 +281,7 @@
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
 
                                     @if (auth()->user()->access('گزارش اقدامات پرسنل'))
                                         <tr>

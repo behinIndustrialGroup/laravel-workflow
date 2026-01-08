@@ -157,3 +157,14 @@ if (!function_exists('convertPersianDateToTimestamp')) {
     }
 }
 
+if (!function_exists('convertPersianDateTimeToTimestamp')) {
+    function convertPersianDateTimeToTimestamp($string) {
+        $date = convertPersianToEnglish($string);
+        $date = explode(' ', $date);
+        if(count($date) == 1){
+            $date[1] = now()->format('H:i');
+        }
+        return Jalalian::fromFormat('Y-m-d H:i', $date[0] . ' ' . $date[1])->toCarbon()->timestamp;
+    }
+}
+

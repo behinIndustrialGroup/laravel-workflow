@@ -155,15 +155,19 @@
             </table>
         </div>
         <div class="card-body">
-            بدهکاری (مدارپرداز طلب دارد): {{ number_format($balance->total_debit) }} <br>
-            بستانکاری (مدارپرداز بدهکار است): {{ number_format($balance->total_credit) }} <br>
-            بدهکاری واقعی (براساس طرف حساب‌ها): {{ number_format($counterpartyDebit) }} <br>
-            بستانکاری واقعی (براساس طرف حساب‌ها): {{ number_format($counterpartyCredit) }} <br>
+            مجموع کل تراکنش های بدهکاری: {{ number_format($balance->total_debit) }} <br>
+            مجموع کل تراکنش های بستانکاری: {{ number_format($balance->total_credit) }} <br>
+            بدهکاری واقعی
+            (مبلغی که مدارپرداز از طرف حساب های خود طلب دارد):
+            : {{ number_format($totalDebit) }} <br>
+            بستانکاری واقعی
+            (مبلغی که مدارپرداز به طرف حساب های خود بدهکار است):
+            : {{ number_format($totalCredit) }} <br>
             مانده کل: {{ number_format($balance->total_amount) }}
             @if ($balance->total_amount < 0)
-                <span class="text-danger">طلب دارد</span>
+                <span class="text-danger"> ریال مدار پرداز طلب دارد</span>
             @elseif($balance->total_amount > 0)
-                <span class="text-success">بدهکار است</span>
+                <span class="text-success">ریال مدار پرداز بدهکار است</span>
             @endif
         </div>
     </div>

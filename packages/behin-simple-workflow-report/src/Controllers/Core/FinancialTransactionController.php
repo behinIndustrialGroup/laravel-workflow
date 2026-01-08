@@ -84,6 +84,44 @@ class FinancialTransactionController extends Controller
             return abs($item->total_amount);
         });
         $counterpartyCredit = $creditors->where('total_amount', '>', 0)->sum('total_amount');
+        $counterpartyBalance =  Financial_transactions::select(
+            DB::raw("
+            SUM(
+                CASE
+                    WHEN financial_type = 'بدهکار' THEN amount
+                    ELSE 0
+                END
+            ) AS total_debit
+        "),
+            // جمع بستانکاری
+            DB::raw("
+            SUM(
+                CASE
+                    WHEN financial_type = 'بستانکار' THEN amount
+                    ELSE 0
+                END
+            ) AS total_credit
+        "),
+
+            DB::raw("
+        SUM(
+            CASE
+                WHEN financial_type = 'بستانکار' THEN amount
+                ELSE -amount
+            END
+        ) AS balance
+    ")
+        )->groupBy('counterparty_id')->get();
+
+        $totalDebit = $counterpartyBalance
+            ->where('balance', '<', 0)
+            ->sum(fn($item) => abs($item->balance));
+
+        $totalCredit = $counterpartyBalance
+            ->where('balance', '>', 0)
+            ->sum('balance');
+
+
         $balance = Financial_transactions::select(
             DB::raw("
             SUM(
@@ -116,7 +154,7 @@ class FinancialTransactionController extends Controller
 
         return view(
             'SimpleWorkflowReportView::Core.FinancialTransaction.index',
-            compact('creditors', 'filter', 'caseNumber', 'balance', 'counterpartyDebit', 'counterpartyCredit')
+            compact('creditors', 'filter', 'caseNumber', 'balance', 'counterpartyDebit', 'counterpartyCredit', 'counterpartyBalance', 'totalDebit', 'totalCredit')
         );
     }
 

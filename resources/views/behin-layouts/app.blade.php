@@ -297,6 +297,19 @@
                 }
             }
         });
+        $(".persian-datetime").persianDatepicker({
+            viewMode: 'day',
+            initialValue: false,
+            format: 'YYYY-MM-DD HH:mm',
+            initialValueType: 'persian',
+            timePicker: { enabled: true, second: { enabled: false } },
+            calendar: {
+                persian: {
+                    leapYearMode: 'astronomical',
+                    locale: 'fa'
+                }
+            }
+        });
         $('.timepicker').timepicker({
             timeFormat: 'HH:mm', // فرمت 24 ساعته
             interval: 1, // نمایش با فاصله 5 دقیقه‌ای

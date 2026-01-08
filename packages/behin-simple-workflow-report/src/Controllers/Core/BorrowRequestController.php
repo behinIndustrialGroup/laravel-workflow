@@ -18,19 +18,19 @@ class BorrowRequestController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $pendingDeliveries = Borrow_requests::whereNull('delivered_at')
+        $pendingDeliveries = Borrow_requests::whereStatus('requested')
             ->orderByDesc('created_at')
             ->get();
 
-        $deliveredRequests = Borrow_requests::whereNotNull('delivered_at')
+        $deliveredRequests = Borrow_requests::whereStatus('delivered')->whereNotNull('delivered_at')
             ->whereNull('actual_return_date')
             ->orderByDesc('delivered_at')
             ->get();
 
-        $waitingReturnConfirmation = Borrow_requests::whereNotNull('actual_return_date')
+        $waitingReturnConfirmation = Borrow_requests::whereStatus('pending_return_confirmation')
             ->orderByDesc('actual_return_date')
             ->get()
-            ->filter(fn ($request) => $request->status === 'pending_confirmation');
+            ->filter(fn ($request) => $request->status === 'pending_return_confirmation');
 
         $statuses = config('simpleWorkflowReport.borrow_requests.statuses', []);
 
@@ -55,6 +55,7 @@ class BorrowRequestController extends Controller
 
         $data['requester_id'] = Auth::id();
         $data['created_by'] = Auth::id();
+        $data['status'] = config('simpleWorkflowReport.borrow_requests.statuses.requested.key');
 
         Borrow_requests::create($data);
 
@@ -72,21 +73,19 @@ class BorrowRequestController extends Controller
             return redirect()->back()->with('warning', 'برای درخواست تحویل‌گرفته‌شده امکان ویرایش اطلاعات تحویل وجود ندارد.');
         }
 
-        $deliveredAt = convertPersianToEnglish($validated['delivered_at']);
-        $deliveredAtJalali = Jalalian::fromFormat('Y-m-d', $deliveredAt);
-
+        $deliveredAtAlt = convertPersianDateTimeToTimestamp($request->delivered_at);
         $expectedReturnJalali = null;
         if (!empty($validated['expected_return_date'])) {
-            $expected = convertPersianToEnglish($validated['expected_return_date']);
-            $expectedReturnJalali = Jalalian::fromFormat('Y-m-d', $expected);
+            $expected = convertPersianDateTimeToTimestamp($validated['expected_return_date']);
         }
 
         $borrowRequest->update([
             'delivery_id' => Auth::id(),
-            'delivered_at' => $deliveredAtJalali->toCarbon()->timestamp,
-            'delivered_at_alt' => $validated['delivered_at'],
-            'expected_return_date' => $expectedReturnJalali?->toCarbon()->timestamp,
-            'expected_return_date_alt' => $validated['expected_return_date'] ?? null,
+            'delivered_at_alt' => $deliveredAtAlt,
+            'delivered_at' => $validated['delivered_at'],
+            'expected_return_date_alt' => $expected,
+            'expected_return_date' => $validated['expected_return_date'] ?? null,
+            'status' => config('simpleWorkflowReport.borrow_requests.statuses.delivered.key'),
             'updated_by' => Auth::id(),
         ]);
 
@@ -103,24 +102,25 @@ class BorrowRequestController extends Controller
             return redirect()->back()->with('warning', 'این درخواست در وضعیت تحویل به درخواست‌کننده نیست.');
         }
 
-        if ($borrowRequest->requester_id !== Auth::id()) {
+        if ($borrowRequest->requester_id != Auth::id()) {
             return redirect()->back()->with('warning', 'تنها درخواست‌کننده می‌تواند تحویل کالا را ثبت کند.');
         }
 
         $now = Jalalian::now();
 
         $borrowRequest->update([
-            'actual_return_date' => $now->toCarbon()->timestamp,
-            'actual_return_date_alt' => $now->format('Y-m-d'),
+            'actual_return_date' => $now->format('Y-m-d'),
+            'actual_return_date_alt' => $now->toCarbon()->timestamp,
             'updated_by' => Auth::id(),
+            'status' => config('simpleWorkflowReport.borrow_requests.statuses.pending_return_confirmation.key')
         ]);
 
-        return redirect()->back()->with('success', 'تحویل کالا ثبت شد و در انتظار تایید انبار است.');
+        return redirect()->back()->with('success', 'بازگشت کالا ثبت شد و در انتظار تایید انبار است.');
     }
 
     public function confirmReturn(Borrow_requests $borrowRequest): RedirectResponse
     {
-        if ($borrowRequest->status !== 'pending_confirmation') {
+        if ($borrowRequest->status !== 'pending_return_confirmation') {
             return redirect()->back()->with('warning', 'درخواست در انتظار تایید بازگشت نیست.');
         }
 
@@ -128,10 +128,11 @@ class BorrowRequestController extends Controller
 
         $borrowRequest->setReturnConfirmation([
             'by' => Auth::id(),
-            'at' => $now->toCarbon()->timestamp,
-            'at_alt' => $now->format('Y-m-d'),
+            'at' => $now->format('Y-m-d'),
+            'at_alt' => $now->toCarbon()->timestamp,
         ]);
 
+        $borrowRequest->status = config('simpleWorkflowReport.borrow_requests.statuses.returned.key');
         $borrowRequest->updated_by = Auth::id();
         $borrowRequest->save();
 

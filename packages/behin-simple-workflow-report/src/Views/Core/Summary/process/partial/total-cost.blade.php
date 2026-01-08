@@ -24,10 +24,15 @@
     $from = isset($_GET['from']) ? $_GET['from'] : "$thisYear-$thisMonth-01";
     $to = isset($_GET['to']) ? $_GET['to'] : (string) $to;
     $quser = isset($_GET['quser']) ? $_GET['quser'] : null;
+    if ($quser) {
+        $finTable = $finTable->filter(function ($item) use ($quser) {
+            return in_array($quser, $item->experts);
+        });
+    }
     $quserInfo = isset($_GET['quser']) ? getUserInfo($_GET['quser']) : null;
 
     // دریافت جدول اصلی
-    $finTable = ReportHelper::getFilteredFinTable($from, $to, $quser);
+    // $finTable = ReportHelper::getFilteredFinTable($from, $to, $quser);
     // dd($finTable);
     // پردازش آمار کاربران
     $users = DB::table('users')
@@ -51,12 +56,12 @@
             <div class="col-md-12">
 
                 {{-- کل دریافتی ها --}}
-                <div class="card">
+                {{-- <div class="card">
                     <p style="background-color: #fce172;">حساب دفتری</p>
                     <p style="background-color: #f7fabe;">علی الحساب</p>
                     <p style="background-color: #d4edda;">تسویه</p>
 
-                </div>
+                </div> --}}
                 {{-- @include('SimpleWorkflowReportView::Core.Summary.process.partial.all-payments') --}}
 
 
@@ -131,33 +136,39 @@
                                         $numberOfExternalProcess = 0;
                                     @endphp
                                     @foreach ($finTable as $row)
-                                        <tr 
-                                            @if($row->fix_cost_type == 'حساب دفتری')
+                                        <tr {{-- @if ($row->fix_cost_type == 'حساب دفتری')
                                                 style="background-color: #fce172;"
                                             @elseif(str_contains($row->fix_cost_type, 'علی الحساب'))
                                                 style="background-color: #f7fabe;"
                                             @elseif($row->payment_date) 
                                                 style="background-color: #d4edda;"
-                                            @endif>
+                                            @endif --}}>
 
-                                            <td>{{ $row->case_number }}
-                                                <a
-                                                    href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->case_number]) }}"><i
-                                                        class="fa fa-external-link"></i></a>
+                                            <td>{{ $row->number }}
+                                                @if ($row->number)
+                                                    <a
+                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
+                                                            class="fa fa-external-link"></i></a>
+                                                @endif
                                             </td>
                                             <td>{{ $row->customer ?? '' }}</td>
                                             <td>{{ $row->process_name ?? '' }}</td>
                                             <td>
+                                                @foreach ($row->experts as $expert)
+                                                    {{ getUserInfo($expert)?->name ? getUserInfo($expert)->name : $expert }}<br>
+                                                @endforeach
+                                            </td>
+                                            {{-- <td>
                                                 @foreach ($row->in_mapa_experts as $in_mapa_expert)
                                                     {{ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert }}<br>
                                                 @endforeach
                                                 @foreach ($row->out_mapa_experts as $out_mapa_expert)
                                                     {{ getUserInfo($out_mapa_expert)?->name ? getUserInfo($out_mapa_expert)->name : $out_mapa_expert }}<br>
                                                 @endforeach
+                                            </td> --}}
+                                            <td>{{ $row->debtDate ? toJalali((int) $row->debtDate)->format('Y-m-d') : trans('fields.not_available') }}
                                             </td>
-                                            <td>{{ $row->fix_cost_date ? toJalali((int) $row->fix_cost_date)->format('Y-m-d') : trans('fields.not_available') }}
-                                            </td>
-                                            <td {{ is_numeric($row->total_cost) ? 'bg-danger' : '' }}>
+                                            <td>
                                                 {{-- اگر کاربر فیلتر شده بود جزئیات تفکیک هزینه ها را در این ستون نمایش بده --}}
                                                 @if ($quser)
                                                     @if (count($row->all_case_costs))
@@ -186,23 +197,16 @@
                                                         @endif
                                                     @else
                                                         @php
-                                                            $totalRepairCost += (int) str_replace(
-                                                                ',',
-                                                                '',
-                                                                $row->total_cost,
-                                                            );
+                                                            $totalDebt = $row->case_debts->sum('amount');
                                                         @endphp
-                                                        {{ number_format($row->total_cost) }}
+                                                        {{ number_format($totalDebt) }}
                                                     @endif
                                                 @else
                                                     @php
-                                                        $totalRepairCost += (int) str_replace(
-                                                            ',',
-                                                            '',
-                                                            $row->total_cost,
-                                                        );
+                                                        $totalDebt = $row->case_debts->sum('amount');
+                                                        $totalRepairCost += (int) str_replace(',', '', $totalDebt);
                                                     @endphp
-                                                    {{ number_format($row->total_cost) }}
+                                                    {{ number_format($totalDebt) }}
                                                 @endif
                                             </td>
                                             <td style="background-color: #9ef0b2;">
@@ -240,17 +244,21 @@
                                                     {{ $quserInfo->name }} در تفکیک هزینه ها نیست
                                                 @else
                                                     @php
-                                                        $totalCaseCosts += (int) str_replace(',', '', $row->total_cost);
+                                                        $totalCaseCosts += (int) str_replace(',', '', $totalDebt);
                                                     @endphp
-                                                    {{ number_format($row->total_cost) }}
+                                                    {{ number_format($totalDebt) }}
                                                 @endif
                                             </td>
-                                            <td>{{ $row->total_payment ? number_format($row->total_payment) : '' }}</td>
-                                            <td>{{ $row->payment_date ? toJalali((int) $row->payment_date)->format('Y-m-d') : trans('fields.not_available') }}
+                                            <td>
+                                                @php
+                                                    $totalPayments = $row->payments->sum('amount');
+                                                @endphp
+                                                {{ $totalPayments ? number_format($totalPayments) : '' }}</td>
+                                            <td>{{ $row->paymentDate ? toJalali((int) $row->paymentDate)->format('Y-m-d') : trans('fields.not_available') }}
                                             </td>
                                             @php
                                                 // $totalRepairCost += $row->total_cost;
-                                                $totalPaymentAmount += $row->total_payment;
+                                                $totalPaymentAmount += $totalPayments;
                                                 if (
                                                     $row->process_id == '4bb6287b-9ddc-4737-9573-72071654b9de' or
                                                     $row->process_name == 'داخلی'
