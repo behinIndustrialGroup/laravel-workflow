@@ -7,6 +7,7 @@ use Behin\SimpleWorkflow\Models\Core\Form;
 use Behin\SimpleWorkflow\Models\Core\Process;
 use Behin\SimpleWorkflow\Models\Core\Script;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use OpenAI;
@@ -73,6 +74,51 @@ class ScriptController extends Controller
         $script->update($request->only('name', 'executive_file', 'content'));
 
         return redirect()->route('simpleWorkflow.scripts.index')->with('success', 'Script updated successfully.');
+    }
+
+    public function copy(Request $request, Script $script)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'executive_file' => 'required|string|max:255',
+        ]);
+
+        $content = $request->input('content');
+
+        if ($content === null) {
+            $content = $script->content;
+
+            if (!$content && $script->executive_file) {
+                $filePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $script->executive_file . '.php');
+                if (file_exists($filePath)) {
+                    $content = file_get_contents($filePath);
+                }
+            }
+        }
+
+        $newFilePath = base_path('packages/behin-simple-workflow/src/Controllers/Scripts/' . $request->executive_file . '.php');
+
+        if (file_exists($newFilePath)) {
+            return response()->json([
+                'message' => __('A script file with this name already exists.')
+            ], 422);
+        }
+
+        if (!File::exists(dirname($newFilePath))) {
+            File::makeDirectory(dirname($newFilePath), 0755, true);
+        }
+        file_put_contents($newFilePath, $content ?? '');
+
+        $newScript = Script::create([
+            'name' => $request->name,
+            'executive_file' => $request->executive_file,
+            'content' => $content,
+        ]);
+
+        return response()->json([
+            'message' => __('Script copied successfully.'),
+            'id' => $newScript->id,
+        ]);
     }
 
     public function export(Request $request)

@@ -69,7 +69,11 @@ class FieldController extends Controller
             'style' => $request->style,
             'script' => $request->script,
             'datalist_from_database' => $request->datalist_from_database,
-            'view_model_id' => $request->view_model_id
+            'view_model_id' => $request->view_model_id,
+            'endpoint' => $request->endpoint,
+            'minChars' => $request->minChars,
+            'limit' => $request->limit,
+            'initial_label' => $request->initial_label,
         ];
         if ($request->columns !== null) {
             $attributes['columns'] = $request->columns;

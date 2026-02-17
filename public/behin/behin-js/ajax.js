@@ -178,38 +178,58 @@ function runScript(scriptId, data,callback){
     );
 }
 
-function open_admin_modal(url, title = '', id=null){
-    if(id == null){
-        id = Math.floor(Math.random() * 100000000);
-    }
-    var modal = $('<div class="modal fade" id="admin-modal-' + id + '"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                    '<div class="modal-dialog modal-lg">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-body" id="modal-body-' + id + '">' +
-                    '<h4 class="modal-title" id="myModalLabel">'+ title +'</h4>' +
-                    '<p>Modal content goes here.</p>' +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>');
+
+function open_admin_modal(url, title = '', fullscreen = false) {
+
+    var modal = $(`
+        <div class="modal fade" id="admin-modal" tabindex="-1">
+            <div class="modal-dialog modal-lg ${fullscreen ? 'modal-fullscreen' : ''}" id="admin-modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="admin-modal-header">
+                        <h5 class="modal-title mb-0">${title}</h5>
+                        <div class="admin-modal-actions">
+                            <i class="fa ${fullscreen ? 'fa-compress' : 'fa-expand'}" 
+                               id="modal-maximize" 
+                               title="${fullscreen ? 'کوچک‌نمایی' : 'بزرگ‌نمایی'}"></i>
+                            <i class="fa fa-times" id="modal-close" title="بستن"></i>
+                        </div>
+                    </div>
+
+                    <div class="modal-body" id="modal-body">
+                        در حال بارگذاری...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    `);
 
     $('body').append(modal);
 
-    $('#admin-modal-' + id).on('hidden.bs.modal', function () {
+    $('#admin-modal').on('hidden.bs.modal', function () {
         $(this).remove();
-      });
+    });
 
+    // بستن
+    $(document).on('click', '#modal-close', function () {
+        $('#admin-modal').modal('hide');
+    });
 
-    send_ajax_get_request(
-        url,
-        function(data){
-            $('#admin-modal-' + id + ' #modal-body-' + id).html(data);
-            $('#admin-modal-' + id).modal('show')
-        }
-    )
+    // بزرگ / کوچک
+    $(document).on('click', '#modal-maximize', function () {
+        $('#admin-modal-dialog').toggleClass('modal-fullscreen');
+
+        $(this).toggleClass('fa-expand fa-compress')
+               .attr('title', $(this).hasClass('fa-compress') ? 'کوچک‌نمایی' : 'بزرگ‌نمایی');
+    });
+
+    send_ajax_get_request(url, function (data) {
+        $('#modal-body').html(data);
+        $('#admin-modal').modal('show');
+    });
 }
+
 
 function open_admin_modal_with_data(data, title = '', id = null){
     if(id == null){

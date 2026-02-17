@@ -19,7 +19,7 @@ class ViewModelController extends Controller
 {
     public function index()
     {
-        $viewModels = ViewModel::get();
+        $viewModels = ViewModel::orderBy('created_at')->get();
         return view('SimpleWorkflowView::Core.ViewModel.index', compact('viewModels'));
     }
 
@@ -194,141 +194,146 @@ class ViewModelController extends Controller
 
     public function getRows(Request $request)
     {
-        // $inbox = InboxController::getById($request->inbox_id);
-        $case = CaseController::getById($request->case_id);
-        $viewModel = self::getById($request->viewModel_id);
+        try {
 
-        if ($viewModel->api_key != $request->api_key) {
-            return response(trans("fields.Api key is not valid"), 403);
-        }
+            // $inbox = InboxController::getById($request->inbox_id);
+            $case = CaseController::getById($request->case_id);
+            $viewModel = self::getById($request->viewModel_id);
 
-        $columns = explode(',', $viewModel->default_fields);
-        $max_number_of_rows = $viewModel->max_number_of_rows;
-
-        // ✅ تبدیل ایمن به آرایه
-        $readCondition = is_array($viewModel->which_rows_user_can_read)
-            ? $viewModel->which_rows_user_can_read
-            : json_decode($viewModel->which_rows_user_can_read, true) ?? [];
-
-        $updateCondition = is_array($viewModel->which_rows_user_can_update)
-            ? $viewModel->which_rows_user_can_update
-            : json_decode($viewModel->which_rows_user_can_update, true) ?? [];
-
-        $deleteCondition = is_array($viewModel->which_rows_user_can_delete)
-            ? $viewModel->which_rows_user_can_delete
-            : json_decode($viewModel->which_rows_user_can_delete, true) ?? [];
-
-        $model = self::getModelById($viewModel->id);
-        $s = '';
-
-        if ($viewModel->allow_read_row) {
-            if ($viewModel->show_rows_based_on == 'case_id') {
-                $rows = $model::where('case_id', $case->id)->whereNull('deleted_at');
-            }
-            elseif ($viewModel->show_rows_based_on == 'case_number') {
-                $rows = $model::where('case_number', $case->number)->whereNull('deleted_at');
-            }else{
-                $rows = $model::query()->whereNull('deleted_at');
+            if ($viewModel->api_key != $request->api_key) {
+                return response(trans("fields.Api key is not valid"), 403);
             }
 
-            $rows = $rows->where(function ($query) use ($readCondition) {
-                if (in_array('all', $readCondition)) {
-                    // $query->orWhereNotNull('deleted_at');
+            $columns = explode(',', $viewModel->default_fields);
+            $max_number_of_rows = $viewModel->max_number_of_rows;
+
+            // ✅ تبدیل ایمن به آرایه
+            $readCondition = is_array($viewModel->which_rows_user_can_read)
+                ? $viewModel->which_rows_user_can_read
+                : json_decode($viewModel->which_rows_user_can_read, true) ?? [];
+
+            $updateCondition = is_array($viewModel->which_rows_user_can_update)
+                ? $viewModel->which_rows_user_can_update
+                : json_decode($viewModel->which_rows_user_can_update, true) ?? [];
+
+            $deleteCondition = is_array($viewModel->which_rows_user_can_delete)
+                ? $viewModel->which_rows_user_can_delete
+                : json_decode($viewModel->which_rows_user_can_delete, true) ?? [];
+
+            $model = self::getModelById($viewModel->id);
+            $s = '';
+
+            if ($viewModel->allow_read_row) {
+                if ($viewModel->show_rows_based_on == 'case_id') {
+                    $rows = $model::where('case_id', $case->id)->whereNull('deleted_at');
+                } elseif ($viewModel->show_rows_based_on == 'case_number') {
+                    $rows = $model::where('case_number', $case->number)->whereNull('deleted_at');
+                } else {
+                    $rows = $model::query()->whereNull('deleted_at');
                 }
 
-                if (in_array('user-created-it', $readCondition)) {
-                    $query->orWhere('created_by', Auth::id());
-                }
+                $rows = $rows->where(function ($query) use ($readCondition) {
+                    if (in_array('all', $readCondition)) {
+                        // $query->orWhereNotNull('deleted_at');
+                    }
 
-                if (in_array('user-contributed-it', $readCondition)) {
-                    $query->orWhereRaw('FIND_IN_SET(?, contributers)', [Auth::id()]);
-                }
+                    if (in_array('user-created-it', $readCondition)) {
+                        $query->orWhere('created_by', Auth::id());
+                    }
 
-                if (in_array('user-updated-it', $readCondition)) {
-                    $query->orWhere('updated_by', Auth::id());
-                }
-            });
+                    if (in_array('user-contributed-it', $readCondition)) {
+                        $query->orWhereRaw('FIND_IN_SET(?, contributers)', [Auth::id()]);
+                    }
 
-            $rows = $rows->orderBy('updated_at', 'desc')
-                ->take($max_number_of_rows)
-                ->get()->each(function ($row) use ($viewModel, $updateCondition, $deleteCondition) {
-                    $row->show_as = $viewModel->show_as;
-                    $row->alllow_update = self::userCanUpdateRow($row, $updateCondition);
-                    $row->alllow_delete = self::userCanDeleteRow($row, $deleteCondition);
+                    if (in_array('user-updated-it', $readCondition)) {
+                        $query->orWhere('updated_by', Auth::id());
+                    }
                 });
-            if($viewModel->script_before_show_rows){
-                $request->merge(['rows' => $rows]);
-                $rows = ScriptController::runFromView($request, $viewModel->script_before_show_rows);
-            }
 
-            foreach ($rows as $row) {
-                if ($row->show_as == 'table') {
-                    $s .= "<tr>";
-                    foreach ($columns as $column) {
-                        $column = trim($column);
-                        try {
-                            if (str_contains($column, '()->')) {
-                                $value = $this->resolveColumnPath($row, $column);
-                            } elseif (Str::endsWith($column, '()')) {
-                                $method = Str::beforeLast($column, '()');
+                $rows = $rows->orderBy('updated_at', 'desc')
+                    // ->take($max_number_of_rows)
+                    ->get()->each(function ($row) use ($viewModel, $updateCondition, $deleteCondition) {
+                        $row->show_as = $viewModel->show_as;
+                        $row->allow_update = self::userCanUpdateRow($row, $updateCondition);
+                        $row->allow_delete = self::userCanDeleteRow($row, $deleteCondition);
+                    });
+                if ($viewModel->script_before_show_rows) {
+                    $request->merge(['rows' => $rows]);
+                    $rows = ScriptController::runFromView($request, $viewModel->script_before_show_rows);
+                    Log::info($rows);
+                }
 
-                                if ($method && method_exists($row, $method)) {
-                                    $value = $row->$method();
+                foreach ($rows as $row) {
+                    if ($row->show_as == 'table') {
+                        $s .= "<tr>";
+                        foreach ($columns as $column) {
+                            $column = trim($column);
+                            try {
+                                if (str_contains($column, '()->')) {
+                                    $value = $this->resolveColumnPath($row, $column);
+                                } elseif (Str::endsWith($column, '()')) {
+                                    $method = Str::beforeLast($column, '()');
+
+                                    if ($method && method_exists($row, $method)) {
+                                        $value = $row->$method();
+                                    } else {
+                                        $value = 'تابع تعریف نشده است';
+                                    }
                                 } else {
-                                    $value = 'تابع تعریف نشده است';
+                                    $value = $row->$column ?? null;
                                 }
-                            } else {
-                                $value = $row->$column ?? null;
+
+                                $s .= "<td>{$value}</td>";
+                            } catch (\Throwable $e) {
+                                $s .= "<td>" . $e->getMessage() . "</td>";
                             }
-
-                            $s .= "<td>{$value}</td>";
-                        } catch (\Throwable $e) {
-                            $s .= "<td>" . $e->getMessage() . "</td>";
                         }
-                    }
-                    $s .= "<td>";
-                    if ($row->alllow_update) {
-                        $s .= "<i class='material-icons btn btn-success ml-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'>edit</i>";
-                    }
+                        $s .= "<td>";
+                        if ($row->allow_update) {
+                            $s .= "<i class='fa fa-edit btn btn-sm btn-success ml-1' onclick='open_view_model_form(`$viewModel->update_form`, `$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                        }
 
-                    if ($row->alllow_delete) {
-                        $s .= "<i class='material-icons btn btn-danger ml-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'>delete</i>";
+                        if ($row->allow_delete) {
+                            $s .= "<i class='fa fa-trash btn btn-sm btn-danger ml-1' onclick='delete_view_model_row(`$viewModel->id`,`$row->id`, `$viewModel->api_key`)'></i>";
+                        }
+                        $s .= "</td>";
+                        $s .= "</tr>";
                     }
-                    $s .= "</td>";
-                    $s .= "</tr>";
-                }
-                if ($row->show_as == 'box') {
-                    $request = new Request([
-                        'api_key' => $viewModel->api_key,
-                        'row_id' => $row->id,
-                        'case_id' => $request->case_id,
-                        'viewModel_id' => $viewModel->id,
-                    ]);
-                    $s .= "<div class='card'>";
-                    if ($row->alllow_update) {
-                        $s .= FormController::open($request, $viewModel->update_form, false);
-                    } else {
-                        $s .= FormController::openReadForm($request, $viewModel->read_form, false);
+                    if ($row->show_as == 'box') {
+                        $request = new Request([
+                            'api_key' => $viewModel->api_key,
+                            'row_id' => $row->id,
+                            'case_id' => $request->case_id,
+                            'viewModel_id' => $viewModel->id,
+                        ]);
+                        $s .= "<div class='card'>";
+                        if ($row->allow_update) {
+                            $s .= FormController::open($request, $viewModel->update_form, false);
+                        } else {
+                            $s .= FormController::openReadForm($request, $viewModel->read_form, false);
+                        }
+                        $s .= "</div>";
                     }
-                    $s .= "</div>";
                 }
             }
-        }
 
-        //
-        if ($viewModel->allow_create_row and count($rows) < $max_number_of_rows) {
-            $s .= "<tr>";
-            $colspan = count($columns) + 1;
-            $btnLabel = trans('fields.Create new');
-            $s .= "<td colspan='{$colspan}'>";
-            $s .= "<button class='btn btn-sm btn-primary' onclick='open_view_model_create_new_form(`$viewModel->create_form`, `$viewModel->id`, `$viewModel->api_key`)'>";
-            $s .= "{$btnLabel}</button></td>";
-            $s .= "</tr>";
+            //
+            if ($viewModel->allow_create_row and count($rows) < $max_number_of_rows) {
+                $s .= "<tr>";
+                $colspan = count($columns) + 1;
+                $btnLabel = trans('fields.Create new');
+                $s .= "<td colspan='{$colspan}'>";
+                $s .= "<button class='btn btn-sm btn-primary' onclick='open_view_model_create_new_form(`$viewModel->create_form`, `$viewModel->id`, `$viewModel->api_key`)'>";
+                $s .= "<i class='fa fa-plus' aria-hidden='true'></i>{$btnLabel}</button></td>";
+                $s .= "</tr>";
+            }
+            return $s;
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
-        return $s;
     }
 
-    public function updateRecord(Request $request)
+    public static function updateRecord(Request $request)
     {
         try {
             $case = CaseController::getById($request->caseId);
@@ -343,6 +348,10 @@ class ViewModelController extends Controller
             $row = $model::findOrNew($request->rowId);
 
             $isNew = !$row->exists;
+            $rows = $model::where('case_number', $case->number)->count();
+            if ($rows >= $viewModel->max_number_of_rows) {
+                return response(trans("حداکثر تعداد رکورد مجاز " . $viewModel->max_number_of_rows . " رکورد است"), 403);
+            }
             $data = $request->all();
             // بررسی داینامیک فایل‌ها
             foreach ($request->allFiles() as $fieldName => $file) {

@@ -24,6 +24,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\RoleReportFormController;
 use Behin\SimpleWorkflowReport\Controllers\Core\SummaryReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\TimeoffController;
 use Behin\SimpleWorkflowReport\Controllers\Core\BorrowRequestController;
+use Behin\SimpleWorkflowReport\Controllers\Core\ConsumablePartController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
 use Behin\SimpleWorkflowReport\Controllers\Core\CreditorReportController;
 use Behin\SimpleWorkflowReport\Controllers\Core\DailyReportController;
@@ -49,6 +50,7 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::prefix('borrow-requests')->name('borrow-requests.')->group(function () {
         Route::get('', [BorrowRequestController::class, 'index'])->name('index');
         Route::post('', [BorrowRequestController::class, 'store'])->name('store');
+        Route::get('report', [BorrowRequestController::class, 'report'])->name('report');
         Route::post('{borrowRequest}/deliver', [BorrowRequestController::class, 'deliver'])->name('deliver');
         Route::post('{borrowRequest}/mark-returned', [BorrowRequestController::class, 'markReturned'])->name('mark-returned');
         Route::post('{borrowRequest}/confirm-return', [BorrowRequestController::class, 'confirmReturn'])->name('confirm-return');
@@ -144,6 +146,16 @@ Route::name('simpleWorkflowReport.')->prefix('workflow-report')->middleware(['we
     Route::post('financial-transactions/add-credit', [FinancialTransactionController::class, 'addCredit'])->name('financial-transactions.addCredit')->middleware('access:گزارش لیست طلبکاران');
     Route::get('financial-transactions/{counterparty}/show-add-debit/{onlyAssignedUsers?}', [FinancialTransactionController::class, 'showAddDebit'])->name('financial-transactions.showAddDebit')->middleware('access:گزارش لیست طلبکاران');
     Route::post('financial-transactions/add-debit', [FinancialTransactionController::class, 'addDebit'])->name('financial-transactions.addDebit')->middleware('access:گزارش لیست طلبکاران');
+
+    Route::name('consumable-parts.')
+        ->prefix('consumable-parts')
+        ->group(function () {
+            Route::get('index', [ConsumablePartController::class, 'index'])->name('index')->middleware('access:درخواست قطعات مصرفی');
+            Route::get('create', [ConsumablePartController::class, 'create'])->name('create')->middleware('access:دریافت کالا از انبار');
+            Route::post('store', [ConsumablePartController::class, 'store'])->name('store')->middleware('access:دریافت کالا از انبار');
+            Route::get('buying-list', [ConsumablePartController::class, 'buyingList'])->name('buyingList')->middleware('access:لیست خرید داخلی و خارجی');
+            Route::put('{consumablePart}/deliver', [ConsumablePartController::class, 'deliver'])->name('deliver')->middleware('access:درخواست قطعات مصرفی');
+        });
 
 });
 

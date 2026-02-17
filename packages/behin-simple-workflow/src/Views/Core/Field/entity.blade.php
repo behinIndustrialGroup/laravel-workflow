@@ -27,7 +27,7 @@
 ]) !!}
 <div id="style-editor" style="height: 200px; width: 100%;font-size: 16px;">{{ $attributes?->style ?? null }}</div>
 <div id="script-editor" style="height: 500px; width: 100%;font-size: 16px;">{{ $attributes?->script ?? null }}</div>
-<textarea name="script" id="script" dir="ltr" class="d-none">{{ $attributes?->script ?? null }}</textarea>
+<textarea name="script" id="script" dir="ltr" class="col-sm-12">{{ $attributes?->script ?? null }}</textarea>
 <script>
     ace.require('ace/ext/language_tools');
 

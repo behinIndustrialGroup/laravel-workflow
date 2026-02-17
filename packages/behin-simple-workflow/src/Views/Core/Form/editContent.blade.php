@@ -27,19 +27,19 @@
             </div>
         </div>
         <div class="card">
-            <div class="row">
-                <div class="col-sm-12">
-                    <form action="{{ route('simpleWorkflow.form.updateContent') }}" method="POST" class="mb-3">
+                <div class="col-sm-12 p-2">
+                    <form action="{{ route('simpleWorkflow.form.updateContent') }}" method="POST" class="m-1">
                         @csrf
                         <input type="hidden" name="formId" value="{{ $form->id }}">
                         <label for="">{{ trans('Form Name') }}:</label>
-                        <input type="text" name="name" value="{{ $form->name }}" class="form-control" id="">
+                        <input type="text" name="name" value="{{ $form->name }}" class="form-control"
+                            id="">
                         <label for="">{{ trans('Form Content') }}:</label>
-                        <textarea name="content" class="form-control" dir="ltr" id="" cols="30" rows="30">{{ $form->content }}</textarea>
+                        <div dir="ltr" id="form-content" style="height: 600px; width: 100%;">{{ $form->content }}</div>
+                        <textarea name="content" class="form-control d-none" dir="ltr" id="content" cols="30" rows="30">{{ $form->content }}</textarea>
                         <button type="submit" class="btn btn-primary">{{ trans('Update') }}</button>
                     </form>
                 </div>
-            </div>
         </div>
         <div class="col-sm-12">
             @include('SimpleWorkflowView::Core.Form.preview', ['form' => $form])
@@ -55,11 +55,20 @@
         function deleteField(index) {
             $('#tr_' + index).remove();
         }
+
+        const formContentEditor = ace.edit("form-content");
+        formContentEditor.setTheme("ace/theme/monokai"); // انتخاب تم
+        formContentEditor.session.setMode("ace/mode/javascript");
+        formContentEditor.setOption("wrap", true);
+        formContentEditor.setOption("font-size", '16px');
+        formContentEditor.session.on('change', function() {
+            $('#content').val(formContentEditor.getValue());
+        });
     </script>
     <script>
         const editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai"); // انتخاب تم
-        editor.session.setMode("ace/mode/javascript"); 
+        editor.session.setMode("ace/mode/javascript");
         // غیرفعال کردن تحلیلگر پیش‌فرض Ace
         editor.getSession().setUseWorker(false);
 

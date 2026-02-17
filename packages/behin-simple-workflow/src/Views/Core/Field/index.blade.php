@@ -22,6 +22,7 @@
                     <option value="select">select</option>
                     <option value="select-multiple">select-multiple</option>
                     <option value="select-simple">select-simple</option>
+                    <option value="searchable-input">searchable-input</option>
                     <option value="file">file</option>
                     <option value="checkbox">checkbox</option>
                     <option value="radio">radio</option>

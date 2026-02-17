@@ -77,7 +77,7 @@
 
         <div class="row table-responsive">
             <table class="table table-bordered">
-                @foreach ($case->getHistoryList() as $row)
+                @foreach ($case->getHistoryList()->unique(fn($row) => $row->task->id . '|' . $row->created_at->format('Y-m-d H:i')) as $row)
                     @if (in_array($row->task->id, [
                         '9f6b7b5c-155e-4698-8b05-26ebb061bb7d',
                         '19a1be98-7b4a-4100-903d-e6612c4c4a6c',

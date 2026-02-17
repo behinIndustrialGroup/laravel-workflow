@@ -224,14 +224,14 @@
             <!-- small box -->
             <div class="small-box bg-primary">
                 <div class="inner">
-                    <h3>{{ trans('کالای امانی') }}</h3>
+                    <h3>{{ trans('انبار') }}</h3>
 
-                    <p>{{ trans('ثبت و مدیریت کالاهای امانی') }}</p>
+                    <p>{{ trans('کالای امانی، قطعات مصرفی و لیست خریدها') }}</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="{{ route('simpleWorkflowReport.borrow-requests.index') }}"
+                <a href="{{ route('admin.warehouseDashboard') }}"
                     class="small-box-footer">{{ trans('مشاهده') }} <i
                         class="fa fa-arrow-circle-left"></i></a>
             </div>

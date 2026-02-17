@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {{-- ACE Editor --}}
+    {{--ACE Editor --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-javascript.js"></script>
@@ -57,7 +57,7 @@
                         <select name="type" id="type" class="form-select">
                             @foreach ([
                                 'string', 'number', 'formatted-digit', 'text', 'date', 'time', 'datetime',
-                                'select', 'select-multiple', 'select-simple', 'file', 'checkbox', 'radio',
+                                'select', 'select-multiple', 'select-simple', 'searchable-input', 'file', 'checkbox', 'radio',
                                 'location', 'signature', 'entity', 'title', 'div', 'button',
                                 'help', 'hidden', 'view-model'
                             ] as $typeOption)
@@ -81,6 +81,9 @@
 
                     @case('view-model')
                         @include('SimpleWorkflowView::Core.Field.view-model', ['field' => $field])
+                        @break
+                    @case('searchable-input')
+                        @include('SimpleWorkflowView::Core.Field.searchable-input', ['field' => $field])
                         @break
 
                     @default

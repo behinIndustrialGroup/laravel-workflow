@@ -32,7 +32,9 @@
                         {{ $fin->counterparty->name }}
                     </td>
                     <td>{{ $fin->cost }}</td>
-                    <td>{{ $fin->payment }}</td>
+                    <td>
+                        <input type="text" name="amount" id="" value="{{ $fin->payment == 0 ? $fin->cost : $fin->payment }}">
+                        {{ $fin->payment }}</td>
                     <td>{{ $fin->fix_cost_type }}</td>
                     <td class="col-md-3 text-end">
                         <button type="submit" class="btn btn-primary mt-3 mt-md-0 w-100">

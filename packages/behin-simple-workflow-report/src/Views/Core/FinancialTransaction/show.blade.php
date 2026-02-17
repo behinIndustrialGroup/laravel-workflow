@@ -35,6 +35,7 @@
                     <th>نوع پرداختی</th>
                     <th>{{ trans('fields.invoice_or_cheque_number') }}</th>
                     <th>{{ trans('fields.transaction_or_cheque_due_date') }}</th>
+                    <th class="d-none">{{ trans('fields.transaction_or_cheque_due_date_alt') }}</th>
                     <th>{{ trans('fields.destination_account_name') }}</th>
                     <th>{{ trans('fields.destination_account_number') }}</th>
                     <th>توضیحات</th>
@@ -44,8 +45,10 @@
             <tbody>
                 @foreach ($creditors as $creditor)
                     <tr id="financial-transaction-row-{{ $creditor->id }}"
-                        @if ($creditor->financial_type == 'بدهکار') style="background: #f56c6c" @endif
-                        @if ($creditor->financial_type == 'بستانکار') class="bg-success" @endif>
+                        @if (str_contains($creditor->description, 'بستن مساعده')) class="bg-light" 
+                        @elseif ($creditor->financial_type == 'بدهکار') style="background: #f56c6c"
+                        @elseif ($creditor->financial_type == 'بستانکار') class="bg-success" @endif
+                        >
                         <td>{{ $creditor->financial_type }}</td>
                         <td>{{ $creditor->counterparty()->name ?? '' }}</td>
                         <td dir="ltr">
@@ -63,6 +66,7 @@
                         <td>{{ $creditor->financial_method }}</td>
                         <td>{{ $creditor->invoice_or_cheque_number }}</td>
                         <td>{{ $creditor->transaction_or_cheque_due_date }}</td>
+                        <td class="d-none">{{ $creditor->transaction_or_cheque_due_date_alt }}</td>
                         <td>{{ $creditor->destination_account_name }}</td>
                         <td>{{ $creditor->destination_account_number }}</td>
                         <td>{{ $creditor->description }}</td>
@@ -108,7 +112,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
             },
             "order": [
-                [6, "desc"]
+                [7, "asc"]
             ],
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api();

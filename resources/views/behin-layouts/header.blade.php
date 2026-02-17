@@ -30,6 +30,11 @@ use App\CustomClasses\Access;
                 تست نوتیفیکیشن
             </a>
         </li>
+        <li class="nav-item d-md-block">
+            <button type="button" class="btn btn-sm btn-warning" onclick="checkNotificationPermission()">
+                <i class="fa fa-bell"></i>
+            </button>
+        </li>
     </ul>
 
     <!-- Right navbar links -->

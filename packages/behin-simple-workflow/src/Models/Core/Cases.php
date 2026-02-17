@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Behin\SimpleWorkflow\Models\Entities\Customers;
 use Illuminate\Support\Str;
 
 
@@ -103,6 +104,13 @@ class Cases extends Model
 
     public function parent(){
         return Cases::find($this->parent_id);
+    }
+
+    public function customerName(){
+        if($this->getVariable('customer_id')){
+            return Customers::find($this->getVariable('customer_id'))?->name;
+        }
+        return $this->getVariable('customer_workshop_or_ceo_name');
     }
 
 }

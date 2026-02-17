@@ -5,6 +5,9 @@
 <div class="row">
     <div class="col-sm-6">
         <label for="style" class="form-label">{{ trans('View Model') }}</label>
+        @if($attributes?->view_model_id)
+            <a href="{{ route('simpleWorkflow.view-model.edit', $attributes?->view_model_id) }}">{{ trans('Edit') }}</a>
+        @endif
         <select name="view_model_id" id="view_model_id" class="form-select form-control">
             <option value="">{{ trans('Select View Model') }}</option>
             @foreach ($viewModels as $viewModel)

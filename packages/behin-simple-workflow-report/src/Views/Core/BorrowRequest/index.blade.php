@@ -152,7 +152,7 @@
                                 @forelse ($pendingDeliveries as $request)
                                     <tr>
                                         <td>{{ $request->item_name }}</td>
-                                        <td>{{ $request->requester_id }}</td>
+                                        <td>{{ getUserInfo($request->requester_id)->name }}</td>
                                         <td>{{ $request->quantity }}</td>
                                         <td>
                                             <form method="POST"

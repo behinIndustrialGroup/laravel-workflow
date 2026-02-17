@@ -8,19 +8,37 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group"><label>طرف حساب</label>
+            <div class="form-group">
                 @if (isset($counterparty))
+                    <label>طرف حساب</label>
                     <input type="text" name="counterparty_name" value="{{ $counterparty->name }}"
                         class="form-control" id="counterparty_name" readonly>
                     <input type="hidden" name="counterparty_id" value="{{ $counterparty->id }}" class="form-control"
                         id="counterparty" readonly>
                 @else
-                    <select name="counterparty_id" class="form-control select2" id="counterparty">
+                    @php
+                        $fieldName = 'counterparty_id';
+                        $fieldDetails = getFieldDetailsByName($fieldName);
+                        $fieldValue = null;
+                        $fieldValueAlt = null;
+                    @endphp
+                    <div class="">
+                        @include('SimpleWorkflowView::Core.Form.field-generator', [
+                            'fieldName' => $fieldName,
+                            'fieldId' => $fieldName,
+                            'fieldClass' => 'col-sm-12',
+                            'readOnly' => true,
+                            'required' => false,
+                            'fieldValue' => $fieldValue,
+                            'fieldValueAlt' => $fieldValueAlt ?? '',
+                        ])
+                    </div>
+                    {{-- <select name="counterparty_id" class="form-control select2" id="counterparty">
                         <option value="">انتخاب کنید</option>
                         @foreach ($counterParties as $counterParty)
                             <option value="{{ $counterParty->id }}">{{ $counterParty->name }}</option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 @endif
             </div>
         </div>
@@ -103,7 +121,24 @@
                 <option value="0">خیر</option>
             </select>
         </div>
+        @php
+            $fieldName = 'destination_account_id';
+            $fieldDetails = getFieldDetailsByName($fieldName);
+            $fieldValue = null;
+            $fieldValueAlt = null;
+        @endphp
         <div class="col-sm-4">
+            @include('SimpleWorkflowView::Core.Form.field-generator', [
+                'fieldName' => $fieldName,
+                'fieldId' => $fieldName,
+                'fieldClass' => 'col-sm-12',
+                'readOnly' => true,
+                'required' => false,
+                'fieldValue' => $fieldValue,
+                'fieldValueAlt' => $fieldValueAlt ?? '',
+            ])
+        </div>
+        {{-- <div class="col-sm-4">
             <label>طرف حساب مقصد</label>
             <select name="destination_account_id" class="form-control select2" id="destination_account_id">
                 <option value="">انتخاب کنید</option>
@@ -111,7 +146,7 @@
                     <option value="{{ $counterParty->id }}">{{ $counterParty->name }}</option>
                 @endforeach
             </select>
-        </div>
+        </div> --}}
         {{-- <div class="col-sm-4">
             <div class="form-group"><label>نام مقصد حساب</label><input type="text" name="destination_account_name"
                     list="destination_account_name_list" value="" class="form-control"
@@ -143,18 +178,18 @@
 <script>
     let counterPartyDataMap = {};
 
-    function submitForm(){
+    function submitForm() {
         var fd = new FormData($('#add-credit-form')[0]);
         var url = "{{ route('simpleWorkflowReport.financial-transactions.addCredit') }}";
         send_ajax_formdata_request(
             url,
             fd,
-            function(res){
+            function(res) {
                 console.log(res);
                 show_message("ذخیره شد");
                 window.location.reload();
             },
-            function(res){
+            function(res) {
                 console.log(res)
                 show_error(res);
             }

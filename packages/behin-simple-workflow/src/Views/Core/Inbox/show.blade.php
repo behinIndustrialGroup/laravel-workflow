@@ -87,7 +87,7 @@
                     <br>
                     {{ trans('fields.Done By') }}:
                     <span class="badge badge-light">
-                        {{ getUserInfo($inbox->actor)->name }}
+                        {{ getUserInfo($inbox->actor)->name ?? '' }}
                     </span>
                 </p>
             </div>
@@ -101,7 +101,7 @@
                 </button>
             @else
                 <button class="md-btn md-btn-warning" onclick="showJumpModal()">
-                    <i class="material-icons">arrow_right</i>
+                    <i class="fa fa-arrow-right"></i>
                     {{ trans('fields.Send Manully') }}
                 </button>
 
@@ -114,13 +114,13 @@
 
                 @if ($task->show_save_button)
                     <button class="md-btn md-btn-primary" onclick="saveForm()">
-                        <i class="material-icons">save</i>
+                        <i class="fa fa-save"></i>
                         {{ trans('fields.Save') }}
                     </button>
                 @endif
 
                 <button class="md-btn md-btn-info" onclick="saveAndNextForm()">
-                    <i class="material-icons">save</i>
+                    <i class="fa fa-save"></i>
                     {{ trans('fields.Save and next') }}
                 </button>
 

@@ -9,28 +9,45 @@
         </div>
 
         <div class="col-sm-4">
-            <div class="form-group"><label>طرف حساب</label>
+            <div class="form-group">
                 @if (isset($counterparty))
-                    <input type="text" name="counterparty_name" value="{{ $counterparty->name }}" class="form-control"
-                        id="counterparty_name" readonly>
+                    <label>طرف حساب</label>
+                    <input type="text" name="counterparty_name" value="{{ $counterparty->name }}"
+                        class="form-control" id="counterparty_name" readonly>
                     <input type="hidden" name="counterparty_id" value="{{ $counterparty->id }}" class="form-control"
                         id="counterparty" readonly>
                 @else
-                    <select name="counterparty_id" class="form-control select2" id="counterparty">
+                    @php
+                        $fieldName = 'counterparty_id';
+                        $fieldDetails = getFieldDetailsByName($fieldName);
+                        $fieldValue = null;
+                        $fieldValueAlt = null;
+                    @endphp
+                    <div class="">
+                        @include('SimpleWorkflowView::Core.Form.field-generator', [
+                            'fieldName' => $fieldName,
+                            'fieldId' => $fieldName,
+                            'fieldClass' => 'col-sm-12',
+                            'readOnly' => true,
+                            'required' => false,
+                            'fieldValue' => $fieldValue,
+                            'fieldValueAlt' => $fieldValueAlt ?? '',
+                        ])
+                    </div>
+                    {{-- <select name="counterparty_id" class="form-control select2" id="counterparty">
                         <option value="">انتخاب کنید</option>
                         @foreach ($counterParties as $counterParty)
                             <option value="{{ $counterParty->id }}">{{ $counterParty->name }}</option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 @endif
             </div>
         </div>
         <div class="col-sm-8"></div>
         <div class="col-sm-4">
             <div class="form-group"><label>بابت پرونده</label>
-                <input type="text" name="case_number" list="case_number_list"
-                    class="form-control" inputmode="numeric" id="case_number" placeholder=""
-                    style="">
+                <input type="text" name="case_number" list="case_number_list" class="form-control"
+                    inputmode="numeric" id="case_number" placeholder="" style="">
             </div>
         </div>
 

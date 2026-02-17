@@ -43,10 +43,13 @@ Route::get('', function () {
 
 require __DIR__ . '/auth.php';
 
-Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(function () {
     Route::get('', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+    Route::get('warehouse-dashboard', function () {
+        return view('admin.warehouse');
+    })->name('warehouseDashboard');
 });
 
 Route::get('/pusher/beams-auth', function (Request $request) {
@@ -504,6 +507,7 @@ Route::get('test10', function () {
     $fins->whereNotNull('counter_party_id');
     $fins->where('fix_cost_type', '!=', 'حساب دفتری');
     $fins->whereNull('converted');
+    // $fins->where('case_number', 4322);
     $fins = $fins->orderBy('case_number', 'desc')->paginate(25);
     $fins->getCollection()->transform(function ($item) {
         $item->counterparty = Counter_parties::find($item->counter_party_id);
@@ -533,8 +537,8 @@ Route::post('test11', function (Request $request) {
                 'financial_type' => 'بدهکار',
                 'counterparty_id' => $fins->counter_party_id,
                 'financial_method' => 'نقدی',
-                'amount' => $fins->cost,
-                'description' => $fins->description,
+                'amount' => $request->amount,
+                'description' => $fins->fix_cost_type . ' ' . $fins->description,
                 'transaction_or_cheque_due_date' => '',
                 'transaction_or_cheque_due_date_alt,' => $fins->fix_cost_date,
                 'invoice_or_cheque_number' => $fins->invoice_number,
@@ -546,10 +550,10 @@ Route::post('test11', function (Request $request) {
                 'case_id' => $fins->case_id,
                 'case_number' => $fins->case_number,
                 'financial_type' => 'بستانکار',
-                'amount' => $fins->payment,
+                'amount' => $request->amount,
                 'financial_method' => 'نقدی',
                 'counterparty_id' => $fins->counter_party_id,
-                'description' => $fins->description,
+                'description' => $fins->fix_cost_type . ' ' . $fins->description,
                 'invoice_or_cheque_number' => $fins->invoice_number,
                 'transaction_or_cheque_due_date' => '',
                 'transaction_or_cheque_due_date_alt,' => $fins->payment_date,

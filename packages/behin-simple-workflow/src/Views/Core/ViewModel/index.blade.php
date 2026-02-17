@@ -50,6 +50,7 @@
                                         <th>{{ trans('fields.ID') }}</th>
                                         <th>{{ trans('fields.Name') }}</th>
                                         <th>{{ trans('fields.Entity Name') }}</th>
+                                        <th>{{ trans('fields.Created At') }}</th>
                                         <th>{{ trans('fields.Action') }}</th>
                                     </tr>
                                 </thead>
@@ -60,9 +61,14 @@
                                             <td>{{ $viewModel->id }}</td>
                                             <td>{{ $viewModel->name }}</td>
                                             <td>{{ $viewModel->entity->name }}</td>
+                                            <td dir="ltr">{{ toJalali($viewModel->created_at) }}</td>
                                             <td>
-                                                <a class="btn btn-primary" href="{{ route('simpleWorkflow.view-model.edit', $viewModel->id) }}">{{ trans('fields.Edit') }}</a>
-                                                <a href="{{ route('simpleWorkflow.view-model.copy', $viewModel->id) }}" class="btn btn-info">Copy</a>
+                                                <a class="btn btn-sm btn-primary" href="{{ route('simpleWorkflow.view-model.edit', $viewModel->id) }}">
+                                                    <i class="fa fa-edit"></i>{{ trans('fields.Edit') }}
+                                                </a>
+                                                <a href="{{ route('simpleWorkflow.view-model.copy', $viewModel->id) }}" class="btn btn-sm btn-info">
+                                                    <i class="fa fa-copy"></i>Copy
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -84,7 +90,8 @@
         $('#table').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Persian.json"
-            }
+            },
+            "order": [4,'desc']
         });
         $('#select-all').on('click', function() {
             $('input[name="view_model_ids[]"]').prop('checked', this.checked);

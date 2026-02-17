@@ -200,7 +200,9 @@ class FinancialTransactionController extends Controller
             'financial_method' => 'نقدی',
             'description' => 'بازکردن مساعده',
             'counterparty_id' => $counterparty->id,
-            'amount' => $userMaxAdvances
+            'amount' => $userMaxAdvances,
+            'transaction_or_cheque_due_date' => Jalalian::now()->format('Y-m-d'),
+            'transaction_or_cheque_due_date_alt' => (string)now()->timestamp . '000',
         ]);
         $this->addCredit($request);
         return redirect()->back();
@@ -233,7 +235,8 @@ class FinancialTransactionController extends Controller
             return "برای این طرف حساب نمیتوانید حساب مساعده باز کنید";
         }
         $request = new Request([
-            'filter' => 'all'
+            'filter' => 'all',
+            'only_assigned' => true
         ]);
         $creditors = $this->prepareData($request);
         $creditor = $creditors->where('counterparty_id', $counterparty->id);
@@ -243,7 +246,9 @@ class FinancialTransactionController extends Controller
                 'financial_method' => 'نقدی',
                 'description' => 'بستن مساعده',
                 'counterparty_id' => $counterparty->id,
-                'amount' => $totalAmount
+                'amount' => $totalAmount,
+                'transaction_or_cheque_due_date' => Jalalian::now()->format('Y-m-d'),
+                'transaction_or_cheque_due_date_alt' => (string)now()->timestamp . '000',
             ]);
             $this->addDebit($request);
         }
@@ -253,11 +258,13 @@ class FinancialTransactionController extends Controller
                 'financial_method' => 'نقدی',
                 'description' => 'بستن مساعده',
                 'counterparty_id' => $counterparty->id,
-                'amount' => $totalAmount
+                'amount' => abs($totalAmount),
+                'transaction_or_cheque_due_date' => Jalalian::now()->format('Y-m-d'),
+                'transaction_or_cheque_due_date_alt' => (string)now()->timestamp . '000',
             ]);
             $this->addCredit($request);
         }
-        return redirect()->back();
+        return redirect()->route('simpleWorkflowReport.financial-transactions.openUserSalaryAdvances', $counterparty->id);
     }
 
     public function userExport(Request $request)

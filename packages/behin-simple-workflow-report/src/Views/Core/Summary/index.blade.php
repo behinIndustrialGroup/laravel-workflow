@@ -393,6 +393,15 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (access('گزارش کالاهای امانی'))
+                                        <tr>
+                                            <td>لیست کالاهای امانی</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.borrow-requests.report') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
 
                                 </tbody>
                             </table>

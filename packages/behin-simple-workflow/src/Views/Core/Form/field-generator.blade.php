@@ -4,6 +4,14 @@
     if ($fieldDetails) {
         $fieldAttributes = json_decode($fieldDetails->attributes);
     }
+    $fieldType = isset($fieldDetails->type) ? $fieldDetails->type : null;
+    $fieldStyle = isset($fieldAttributes->style) ? $fieldAttributes->style : null;
+    $fieldScript = isset($fieldAttributes->script) ? $fieldAttributes->script : null;
+    $fieldPlaceholder = isset($fieldAttributes->placeholder) ? $fieldAttributes->placeholder : null;
+    $fieldOptions = isset($fieldAttributes->options) ? $fieldAttributes->options : null;
+    $fieldQuery = isset($fieldAttributes->query) ? $fieldAttributes->query : null;
+    $fieldDatalist = isset($fieldAttributes->datalist_from_database) ? $fieldAttributes->datalist_from_database : null;
+    $fieldClass = isset($fieldAttributes->class) ? $fieldAttributes->class : 'form-control';
 @endphp
 @if ($fieldDetails->type == 'title')
     {!! Form::title($fieldId, [
@@ -163,6 +171,24 @@
         'readonly' => $readOnly,
         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+    ]) !!}
+@endif
+@if ($fieldDetails->type === 'searchable-input')
+    {!! Form::searchableInput($fieldId, [
+        'value' => $fieldValue,
+        'endpoint' => isset($fieldAttributes->endpoint) && is_string($fieldAttributes->endpoint)
+            ? $fieldAttributes->endpoint
+            : null,
+        'minChars' => isset($fieldAttributes->minChars) ? $fieldAttributes->minChars : null,
+        'limit' => isset($fieldAttributes->limit) ? $fieldAttributes->limit : null,
+        'initial_label' => $fieldAttributes->initial_label ?? ($fieldAttributes->initialLabel ?? null),
+        'class' => 'form-control',
+        'id' => $fieldId,
+        'placeholder' => $fieldPlaceholder,
+        'required' => $required,
+        'readonly' => $readOnly,
+        'style' => $fieldStyle,
+        'script' => $fieldScript,
     ]) !!}
 @endif
 @if ($fieldDetails->type == 'file')

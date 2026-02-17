@@ -3,6 +3,8 @@
 namespace Behin\SimpleWorkflowReport\Controllers\Core;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Entities\Borrow_requests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class BorrowRequestController extends Controller
         $waitingReturnConfirmation = Borrow_requests::whereStatus('pending_return_confirmation')
             ->orderByDesc('actual_return_date')
             ->get()
-            ->filter(fn ($request) => $request->status === 'pending_return_confirmation');
+            ->filter(fn($request) => $request->status === 'pending_return_confirmation');
 
         $statuses = config('simpleWorkflowReport.borrow_requests.statuses', []);
 
@@ -52,6 +54,12 @@ class BorrowRequestController extends Controller
             'case_id' => 'nullable|integer',
             'case_number' => 'nullable|string',
         ]);
+        SendPushNotification::dispatch(
+            82,
+            'درخواست جدید تحویل کالای امانی',
+            'درخواست جدید تحویل کالای امانی بهتون ارجاع داده شد',
+            route('simpleWorkflowReport.borrow-requests.index')
+        );
 
         $data['requester_id'] = Auth::id();
         $data['created_by'] = Auth::id();
@@ -142,5 +150,39 @@ class BorrowRequestController extends Controller
     private function normalizeDate(string $value): string
     {
         return str_replace('/', '-', convertPersianToEnglish(trim($value)));
+    }
+
+    public function report()
+    {
+        $fromDate = request('from_date') ?? null;
+        $toDate = request('to_date') ?? null;
+        $dateColumn = request('date_column') ?? 'delivered_at_alt';
+        $perPage = request('per_page') ?? 25;
+        $item_name = request('item_name') ?? null;
+        $requesterId = request('requester_id') ?? null;
+        $users = User::all();
+        $statuses = config('simpleWorkflowReport.borrow_requests.statuses', []);
+
+
+        $allRequests = Borrow_requests::query();
+        if ($fromDate) {
+            $fromDate .= ' 00:00';
+            $fromDateAlt = convertPersianDateTimeToTimestamp($fromDate);
+            $allRequests->where($dateColumn, '>=', $fromDateAlt);
+        }
+        if ($toDate) {
+            $toDate .= ' 23:59';
+            $toDateAlt = convertPersianDateTimeToTimestamp($toDate);
+            $allRequests->where($dateColumn, '<=', $toDateAlt);
+        }
+        if ($requesterId) {
+            $allRequests->where('requester_id', $requesterId);
+        }
+        if ($item_name) {
+            $allRequests->where('item_name', 'like', '%' . $item_name . '%');
+        }
+        $allRequests = $allRequests->orderByDesc($dateColumn)->paginate($perPage);
+
+        return view('SimpleWorkflowReportView::Core.BorrowRequest.report', compact('allRequests', 'users', 'statuses'));
     }
 }

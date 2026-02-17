@@ -251,7 +251,7 @@
             fd.append('counterparty', counterparty);
             var url = "{{ route('simpleWorkflowReport.financial-transactions.show', 'counterparty') }}";
             url = url.replace('counterparty', counterparty);
-            open_admin_modal(url, 'جزئیات بیشتر');
+            open_admin_modal(url, 'جزئیات بیشتر',true);
         }
 
         function showAddCredit(counterparty) {

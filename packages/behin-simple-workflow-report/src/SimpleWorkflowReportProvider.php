@@ -14,6 +14,7 @@ class SimpleWorkflowReportProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/Config/borrow_requests.php', 'simpleWorkflowReport.borrow_requests');
+        $this->mergeConfigFrom(__DIR__ . '/Config/consumable_parts.php', 'simpleWorkflowReport.consumable_parts');
     }
 
     /**

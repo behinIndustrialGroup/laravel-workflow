@@ -26,6 +26,7 @@ use MyFormBuilder\Fields\SimpleSelectField;
 use MyFormBuilder\Fields\SignatureField;
 use MyFormBuilder\Fields\TimeField;
 use MyFormBuilder\Fields\DateTimeField;
+use MyFormBuilder\Fields\SearchableInputField;
 use MyFormBuilder\Fields\ViewModelField;
 
 class FormBuilder
@@ -243,6 +244,13 @@ class FormBuilder
         $field = $this->fieldFactory->create('select', $name, $attributes);
         $this->fields[] = new SelectField($name, $field);
         return $this;
+    }
+
+    public function searchableInput(string $name, array $attributes = null)
+    {
+        $attributes = $attributes ?? [];
+
+        return (new SearchableInputField($name, $attributes))->render();
     }
 
     public function viewModel($name, $attributes = [])
