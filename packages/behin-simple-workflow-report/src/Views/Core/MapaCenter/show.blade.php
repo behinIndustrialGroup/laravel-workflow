@@ -53,6 +53,8 @@
         <div class="card-header">
             <h3 class="card-title">مپا سنتر</h3>
             شماره پرونده: {{ $case->number }}<br>
+            <input type="hidden" id="caseId" value="{{ $case->id }}">
+
             نام دستگاه: {{ $case->getVariable('device_name') }}
         </div>
         <div class="card-body">
@@ -261,8 +263,37 @@
                 </div> --}}
             </div>
 
+            @if (auth()->user()->access('مپاسنتر: نمایش جزئیات فاکتور قطعات نصب شده'))
+                @include('SimpleWorkflowView::Core.Form.field-generator', [
+                    'fieldName' => 'لیست قطعات مورد نیاز از انبار به همراه قیمت',
+                    'fieldId' => 'consumable-parts',
+                    'fieldClass' => 'col-sm-12 text-center',
+                    'readOnly' => false,
+                    'required' => false,
+                    'fieldValue' => null,
+                    'fieldValueAlt' => null,
+                ])
+                <script>
+                    $('#consumable-parts .card-header').css('text-align', 'center')
+                    $('#consumable-parts .card-header').css('background', '#eebef9')
+                </script>
+            @else
+                @include('SimpleWorkflowView::Core.Form.field-generator', [
+                    'fieldName' => 'قطعات مورد نیاز از انبار',
+                    'fieldId' => 'consumable-parts',
+                    'fieldClass' => 'col-sm-12 text-center',
+                    'readOnly' => false,
+                    'required' => false,
+                    'fieldValue' => null,
+                    'fieldValueAlt' => null,
+                ])
+                <script>
+                    $('#consumable-parts .card-header').css('text-align', 'center')
+                    $('#consumable-parts .card-header').css('background', '#eebef9')
+                </script>
+            @endif
             <!-- باکس افزودن قطعه -->
-            <div class="card mb-4">
+            {{-- <div class="card mb-4">
                 <div class="card-header bg-warning text-center">نصب قطعه روی دستگاه</div>
                 <div class="card-body">
                     <form action="{{ route('simpleWorkflowReport.mapa-center.install-part', $case->id) }}" method="POST">
@@ -280,7 +311,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- جدول قطعات نصب‌شده -->
             <div class="card">
@@ -355,6 +386,18 @@
                     </table>
                 </div>
             </div>
+
+            @if (auth()->user()->access('گزارش مالی مپا سنتر'))
+                @include('SimpleWorkflowView::Core.Form.field-generator', [
+                    'fieldName' => 'هزینه‌های انجام شده از تنخواه',
+                    'fieldId' => 'hazinehaye_tankhah',
+                    'fieldClass' => 'col-sm-12',
+                    'readOnly' => true,
+                    'required' => false,
+                    'fieldValue' => null,
+                    'fieldValueAlt' => null,
+                ])
+            @endif
 
 
 
@@ -515,7 +558,7 @@
                     [2, 'desc']
                 ]
             });
-            
+
             $('#parts-table').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json'

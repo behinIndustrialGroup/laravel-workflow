@@ -36,15 +36,15 @@
                                         <td>{{ $value->created_at }}</td>
                                         <td class="project-actions text-right">
                                             <a class="btn btn-primary btn-sm" href="{{ route('simpleWorkflow.task.index', $value->id) }}">
-                                                <i class="material-icons"  style="font-size: 16px;">account_tree</i>
+                                                <img src="{{ asset('behin/behin-dist/icon-svg/flowchart-24.svg') }}" alt="">
                                                 {{ trans('Edit Flow') }}
                                             </a>
                                             <a class="btn btn-secondary btn-sm" href="{{ route('simpleWorkflow.process.edit', $value->id) }}">
-                                                <i class="material-icons"  style="font-size: 16px;">edit</i>
+                                                <img src="{{ asset('behin/behin-dist/icon-svg/edit-24.svg') }}" alt="">
                                                 {{ trans('Edit') }}
                                             </a>
                                             <a class="btn btn-info btn-sm" href="{{ route('simpleWorkflow.process.exportView', $value->id) }}">
-                                                <i class="material-icons"  style="font-size: 16px;">ios_share</i>
+                                                <img src="{{ asset('behin/behin-dist/icon-svg/share-24.svg') }}" alt="">
                                                 {{ trans('Export') }}
                                             </a>
                                         </td>

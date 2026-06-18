@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-php.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/theme-monokai.js"></script> --}}
     <div class="container table-responsive card p-2">
         <div class="row mb-3 text-left" dir="ltr">
             <div class="col-md-12">
@@ -69,12 +69,12 @@
             <label for="class_uses">{{ trans('fields.Class Uses') }}</label>
             <div id="use_editor" style="height: 200px; width: 100%;">{{ $entity->uses }}</div>
             <textarea name="uses" id="class_uses" class="form-control"
-                style="display: none;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->uses }}</textarea>
+                style="display: block;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->uses }}</textarea>
 
             <label for="class_contents">{{ trans('fields.Class Content') }}</label>
             <div id="editor" style="height: 500px; width: 100%;">{{ $entity->class_contents }}</div>
             <textarea name="class_contents" id="class_contents" class="form-control"
-                style="display: none;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->class_contents }}</textarea>
+                style="display: block;text-align: left; white-space: pre; font-family: Monospace " dir="ltr">{{ $entity->class_contents }}</textarea>
             <button class="btn btn-primary">{{ trans('fields.Submit') }}</button>
             <a class="btn btn-danger" style="float: left" href="{{ route('simpleWorkflow.entities.createTable', $entity->id) }}"
                 >{{ trans('fields.Create Table') }}</a>
@@ -95,6 +95,7 @@
                         <option value="string" ${type === 'string' ? 'selected' : ''}>string</option>
                         <option value="text" ${type === 'text' ? 'selected' : ''}>text</option>
                         <option value="integer" ${type === 'integer' ? 'selected' : ''}>integer</option>
+                        <option value="bigInteger" ${type === 'bigInteger' ? 'selected' : ''}>bigInteger</option>
                         <option value="json" ${type === 'json' ? 'selected' : ''}>json</option>
                         <option value="entity" ${type === 'entity' ? 'selected' : ''}>entity</option>
                     </select>

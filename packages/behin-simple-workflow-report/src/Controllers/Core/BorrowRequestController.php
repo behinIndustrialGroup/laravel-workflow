@@ -9,6 +9,7 @@ use Behin\SimpleWorkflow\Models\Entities\Borrow_requests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Morilog\Jalali\Jalalian;
 
 class BorrowRequestController extends Controller
@@ -160,6 +161,7 @@ class BorrowRequestController extends Controller
         $perPage = request('per_page') ?? 25;
         $item_name = request('item_name') ?? null;
         $requesterId = request('requester_id') ?? null;
+        $status = request('status') ?? null;
         $users = User::all();
         $statuses = config('simpleWorkflowReport.borrow_requests.statuses', []);
 
@@ -181,7 +183,16 @@ class BorrowRequestController extends Controller
         if ($item_name) {
             $allRequests->where('item_name', 'like', '%' . $item_name . '%');
         }
-        $allRequests = $allRequests->orderByDesc($dateColumn)->paginate($perPage);
+        if ($status) {
+            if ($status == 'returned') {
+                $allRequests->where('status',  $status);
+            } else {
+                $allRequests->whereNot('status', 'returned')->where('status',  $status);
+            }
+        } else {
+            $allRequests->whereNot('status', 'returned');
+        }
+        $allRequests = $allRequests->orderByDesc($dateColumn)->paginate($perPage)->withQueryString();
 
         return view('SimpleWorkflowReportView::Core.BorrowRequest.report', compact('allRequests', 'users', 'statuses'));
     }

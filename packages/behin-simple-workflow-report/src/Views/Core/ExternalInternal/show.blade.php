@@ -21,6 +21,7 @@
                 <div class="card-header bg-success text-center font-vazir-bold" style="font-size: 25px">پذیرش</div>
                 <div class="card-body">
                     <div class="row table-responsive" id="admision">
+                        <input type="hidden" id="caseId" value="{{ $mainCase->id }}">
                         <table class="table table-bordered">
                             <tr>
                                 <td>شماره پرونده: {{ $mainCase->number }}</td>
@@ -136,6 +137,7 @@
                                     <th>کارشناسان مپا (زمان کل)</th>
                                     <th>تایید تعمیرات</th>
                                     <th>تصویر</th>
+                                    <th>اقدامات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -157,6 +159,12 @@
                                             @if ($part->initial_part_pic)
                                                 <a href="{{ url("$part->initial_part_pic") }}" download>دانلود</a>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('simpleWorkflowReport.parts.edit', $part->id) }}"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -368,6 +376,26 @@
                             </table>
                         </div>
                     </div>
+
+                    <div class="card">
+                        <div class="card-header text-center" style="background-color: #e2f7a2">
+                            قطعات مصرفی از انبار
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <tr>
+                                    <th>نام محصول</th>
+                                    <th>تعداد استفاده شده</th>
+                                </tr>
+                                @foreach ($consumableParts as $consumablePart)
+                                    <tr>
+                                        <td>{{ $consumablePart->product_name }}</td>
+                                        <td>{{ $consumablePart->usedQuantity() ?? '' }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             @if (count($mapaCenterReports))
@@ -433,84 +461,22 @@
                             href="{{ route('simpleWorkflowReport.financial-transactions.index') . '?filter=all&case_number=' . $mainCase->number }}">گزارش
                             وضعیت حساب</a>
                     </div>
-                    {{-- <div class="card-body"> --}}
-                    {{-- مالی --}}
-                    {{-- <div class="row table-responsive" id="financials">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th>{{ trans('fields.process_name') }}</th>
-                                            <th>{{ trans('fields.fix_cost_type') }}</th>
-                                            <th>{{ trans('fields.fix_cost_date') }}</th>
-                                            <th>هزینه اعلام شده</th>
-                                            <th>{{ trans('fields.destination_account') }}</th>
-                                            <th>نام مقصد حساب/گیرنده چک</th>
-                                            <th>هزینه دریافت شده/مبلغ چک</th>
-                                            <th>تاریخ دریافت هزینه/سررسید چک</th>
-                                            <th>{{ trans('fields.description') }}</th>
-                                        </tr>
-                                        @foreach ($financials as $fin)
-                                            <tr>
-                                                <td>{{ $fin->process_name }}</td>
-                                                <td>{{ $fin->fix_cost_type }}</td>
-                                                <td>{{ $fin->fix_cost_date ? toJalali((int) $fin->fix_cost_date)->format('Y-m-d') : '' }}
-                                                </td>
-                                                <td>{{ number_format((int) $fin->cost) }}
-                                                    @if ($fin->cost2)
-                                                        <br>
-                                                        {{ number_format((int) $fin->cost2) }}
-                                                    @endif
-                                                    @if ($fin->cost3)
-                                                        <br>
-                                                        {{ number_format((int) $fin->cost3) }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{ $fin->destination_account }}
-                                                    @if ($fin->destination_account_2)
-                                                        <br>
-                                                        {{ $fin->destination_account_2 }}
-                                                    @endif
-                                                    @if ($fin->destination_account_3)
-                                                        <br>
-                                                        {{ $fin->destination_account_3 }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($fin->fix_cost_type == 'علی الحساب - چک' || $fin->fix_cost_type == 'تسویه کامل - چک')
-                                                        {{ $fin->cheque_receiver }}
-                                                    @else
-                                                        {{ $fin->destination_account_name }}
-                                                        @if ($fin->destination_account_name_2)
-                                                            <br>
-                                                            {{ $fin->destination_account_name_2 }}
-                                                        @endif
-                                                        @if ($fin->destination_account_name_3)
-                                                            <br>
-                                                            {{ $fin->destination_account_name_3 }}
-                                                        @endif
-                                                    @endif
-                                                </td>
-                                                <td>{{ number_format((int)$fin->payment) }}
-                                                </td>
-                                                <td>
-                                                    @if ($fin->fix_cost_type == 'علی الحساب - چک' || $fin->fix_cost_type == 'تسویه کامل - چک')
-                                                        {{ $fin->cheque_due_date ? toJalali((int) $fin->cheque_due_date)->format('Y-m-d') : '' }}
-                                                    @else
-                                                        {{ $fin->payment_date ? toJalali((int) $fin->payment_date)->format('Y-m-d') : '' }}
-                                                    @endif
-                                                </td>
-                                                <td>{{ $fin->description }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-                                </div> --}}
-                    {{-- </div> --}}
+
                 </div>
                 @if (count($financialTransactions))
                     {{-- @include('SimpleWorkflowReportView::Core.FinancialTransaction.show', [
                                 'creditors' => $financialTransactions,
                             ]); --}}
                 @endif
+                @include('SimpleWorkflowView::Core.Form.field-generator', [
+                    'fieldName' => 'هزینه‌های انجام شده از تنخواه',
+                    'fieldId' => 'hazinehaye_tankhah',
+                    'fieldClass' => 'col-sm-12',
+                    'readOnly' => true,
+                    'required' => false,
+                    'fieldValue' => null,
+                    'fieldValueAlt' => null,
+                ])
                 <div class="card">
                     <div
                         class="card-header text-center font-vazir-bold {{ count($caseCosts) ? 'bg-success' : 'bg-primary' }}">
@@ -540,6 +506,15 @@
                     </div>
                 </div>
             @endif
+            @include('SimpleWorkflowView::Core.Form.field-generator', [
+                'fieldName' => 'فایل‌های مرتبط با پرونده',
+                'fieldId' => 'case_extra_docs',
+                'fieldClass' => 'col-sm-12',
+                'readOnly' => true,
+                'required' => false,
+                'fieldValue' => null,
+                'fieldValueAlt' => null,
+            ])
             <div class="card" style="border: 1px solid #ee00ff">
                 <div class="card-header text-center font-vazir-bold" style="font-size: 25px; background-color: #ee00ff">
                     تحویل

@@ -11,7 +11,6 @@
 @endsection
 
 @section('content')
-    <h1>Edit ViewModel</h1>
     @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -23,8 +22,14 @@
         </div>
     @endif
 
-    <div class="container">
-        <div class="card">
+    <div class="card">
+        <div class="card-header">
+            Edit ViewModel
+            <a href="{{ route('simpleWorkflow.view-model.copy', $view_model->id) }}" class="btn btn-sm btn-info">
+                <img src="{{ asset('behin/behin-dist/icon-svg/copy-24.svg') }}" alt="">
+            </a>
+        </div>
+        <div class="card-body">
             <form action="{{ route('simpleWorkflow.view-model.update', $view_model->id) }}" method="POST"
                 class="table-responsive">
                 @csrf
@@ -173,7 +178,8 @@
                                     @endforeach
                                 </select>
                                 <a id="update_form_edit_btn" class="btn btn-sm btn-outline-primary ml-2" target="_blank"
-                                    data-url-template="{{ route('simpleWorkflow.form.edit', ['id' => $view_model->update_form]) }}">
+                                    data-url-template="{{ route('simpleWorkflow.form.edit', ['id' => 'FORM_ID']) }}"
+                                    style="display: none;">
                                     {{ trans('fields.Edit') }}
                                 </a>
                             </div>
@@ -376,20 +382,6 @@
                 <code>
                     delete_view_model_row('{{ $view_model->id }}', row_id, '{{ $view_model->api_key }}')
                 </code>
-                <h6>نمونه اسکریپت قبل از دریافت ردیف ها </h6>
-                <div class="ace-editor" id="script_before_get_rows_sample" style="height: 200px; width: 100%;font-size: 16px;">
-                    if ($request->rows) {
-                        $rows = [];
-                        foreach ($request->rows as $row){
-                            if($row->status == '1'){
-                                $row->allow_update = false;
-                                $row->allow_delete = false;
-                            }
-                            $rows[] = $row;
-                        }
-                    }
-                    return collect($rows);
-                </div>
             </div>
         </div>
     </div>

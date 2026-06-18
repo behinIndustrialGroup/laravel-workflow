@@ -209,3 +209,11 @@ legend {
 i{
     vertical-align: middle !important;
 }
+
+.up-btn, .down-btn{
+    font-size: 25px !important;
+}
+
+.hour-input, .minute-input{
+    font-size: 20px !important;
+}

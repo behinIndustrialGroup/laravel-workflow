@@ -171,7 +171,7 @@
 
                 // جمع کل جدول (ستون سوم = index 1)
                 var total = api
-                    .column(2, {
+                    .column(3, {
                         search: 'applied'
                     })
                     .data()
@@ -181,7 +181,7 @@
 
                 // جمع صفحه جاری
                 var pageTotal = api
-                    .column(2, {
+                    .column(3, {
                         page: 'current'
                     })
                     .data()

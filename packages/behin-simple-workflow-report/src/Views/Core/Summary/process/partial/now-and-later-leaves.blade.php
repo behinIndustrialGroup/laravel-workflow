@@ -31,7 +31,9 @@
                         <tr>
                             <td class="d-none">{{ $row->id }}</td>
                             <td class="d-none">{{ $row->case_number }}</td>
-                            <td>{{ $row->user()?->name }}</td>
+                            <td>{{ $row->user()?->name }} <br>
+                                <p class="badge bg-secondary" dir="ltr">درخواست: {{ toJalali($row->created_at)->format('Y-m-d H:i') }}</p>
+                            </td>
                             <td>{{ $row->type }}</td>
                             <td dir="ltr">{{ toJalali((int)$row->start_timestamp)->format('Y-m-d H:i') }}</td>
                             <td dir="ltr">{{ toJalali((int)$row->end_timestamp)->format('Y-m-d H:i') }}</td>
@@ -75,7 +77,9 @@
                         <tr>
                             <td class="d-none">{{ $row->id }}</td>
                             <td class="d-none">{{ $row->case_number }}</td>
-                            <td>{{ $row->user()?->name }}</td>
+                            <td>{{ $row->user()?->name }} <br>
+                                <p class="badge bg-secondary" dir="ltr">درخواست: {{ toJalali($row->created_at)->format('Y-m-d H:i') }}</p>
+                            </td>
                             <td>{{ $row->type }}</td>
                             <td>{{ toJalali((int)$row->start_timestamp)->format('Y-m-d') }}</td>
                             <td>{{ toJalali((int)$row->end_timestamp)->format('Y-m-d') }}</td>

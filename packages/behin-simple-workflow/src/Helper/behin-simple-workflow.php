@@ -151,9 +151,26 @@ if (!function_exists('convertPersianToEnglish')) {
 
 
 if (!function_exists('convertPersianDateToTimestamp')) {
-    function convertPersianDateToTimestamp($string) {
+    function convertPersianDateToTimestamp($string, $to = 'seconds')
+    {
         $date = convertPersianToEnglish($string);
-        return Jalalian::fromFormat('Y-m-d', $date)->toCarbon()->timestamp;
+        if (strlen($date) == 10) {
+            $response = Jalalian::fromFormat('Y-m-d', $date)->toCarbon()->timestamp;
+        } elseif (strlen($date) == 16) {
+            $dateTime = explode(' ', $date);
+            if (count($dateTime) == 2) {
+                $date = $dateTime[0];
+                $time = $dateTime[1];
+                $dateString = "$date $time";
+                $response = Jalalian::fromFormat('Y-m-d H:i', $dateString)->toCarbon()->timestamp;
+            }
+        }else{
+            return $date;
+        }
+        if ($to == 'seconds') {
+            return $response;
+        }
+        return $response * 1000;
     }
 }
 

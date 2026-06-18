@@ -237,7 +237,7 @@
                                             </td>
                                         </tr>
                                     @endif
-                                    @if (auth()->user()->access('گزارش کل تعیین هزینه ها و دریافت هزینه ها'))
+                                    {{-- @if (auth()->user()->access('گزارش کل تعیین هزینه ها و دریافت هزینه ها'))
                                         <tr>
                                             <td class="d-none"></td>
                                             <td>هزینه ها</td>
@@ -247,7 +247,7 @@
                                                     class="btn btn-primary btn-sm">مشاهده گزارش</a>
                                             </td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
 
                                     @if (auth()->user()->access('گزارش چک ها'))
                                         <tr>
@@ -402,6 +402,42 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if (access('گزارش قطعات درخواستی از انبار'))
+                                        <tr>
+                                            <td>گزارش قطعات درخواستی از انبار</td>
+                                            <td>
+                                                <a href="{{ route('simpleWorkflowReport.consumable-parts.report') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (access('تنخواه گردانی'))
+                                        <tr>
+                                            <td>تنخواه گردانی</td>
+                                            <td>
+                                                <a href="{{ route('petty-cash.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    {{-- @if (access('گزارش درآمدها'))
+                                        <tr>
+                                            <td>درآمدها</td>
+                                            <td>
+                                                <a href="{{ route('incomes-report.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (access('گزارش هزینه‌ها'))
+                                        <tr>
+                                            <td>گزارش هزینه‌ها</td>
+                                            <td>
+                                                <a href="{{ route('outcomes-report.index') }}"
+                                                    class="btn btn-primary btn-sm">مشاهده گزارش</a>
+                                            </td>
+                                        </tr>
+                                    @endif --}}
 
                                 </tbody>
                             </table>

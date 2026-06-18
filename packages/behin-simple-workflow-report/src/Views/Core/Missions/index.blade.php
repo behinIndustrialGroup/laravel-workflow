@@ -64,6 +64,7 @@
                             <th>مدت (ساعت)</th>
                             <th>وضعیت</th>
                             <th>پرونده ها</th>
+                            <th>توضیحات تایید/عدم تایید</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
@@ -89,9 +90,13 @@
                                         @if ($case->related_case_number)
                                             <i class="fa fa-external-link text-primary"
                                                 onclick="window.open('{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $case->related_case_number]) }}', '_blank')"></i>
-                                            {{ $case->related_case_number ?? '-' }}<br>
+                                            {{ $case->related_case_number ?? '-' }}({{ $case->relatedCase()?->getVariable('customer_workshop_or_ceo_name') ?? ''}})
+                                            <br>
                                         @endif
                                     @endforeach
+                                </td>
+                                <td>
+                                    {{ $mission->status_description }}
                                 </td>
                                 <td>
                                     @if (auth()->user()->access('حذف ماموریت'))

@@ -30,6 +30,13 @@
             </div>
         @endif
         <div class="row justify-content-center">
+            <div class="col-sm-12">
+                @include('SimpleWorkflowReportView::Core.Summary.process.partial.now-and-later-leaves', [
+                    'items' => $items,
+                    'process' => $process,
+                    'userId' => $userId,
+                ])
+            </div>
 
             <div class="col-md-12">
 
@@ -62,19 +69,18 @@
                                                 <td class="d-none">{{ $thisMonth }}</td>
                                                 <td>
                                                     @if (auth()->user()->access('تغییر مانده مرخصی ها'))
-                                                        <form
-                                                            method="POST"
+                                                        <form method="POST"
                                                             action="{{ route('simpleWorkflowReport.timeoff.update', ['processId' => $process->id]) }}">
                                                             @csrf
                                                             <input type="hidden" name="userId" id=""
-                                                            value="{{ $user->id }}">
+                                                                value="{{ $user->id }}">
                                                             <input type="hidden" name="restBySystem" id=""
-                                                            class="form-control"
-                                                            value="{{ round($user->restLeaves, 2) }}">
+                                                                class="form-control"
+                                                                value="{{ round($user->restLeaves, 2) }}">
                                                             <input type="text" name="restByUser" id=""
-                                                            value="{{ round($user->restLeaves, 2) }}">
+                                                                value="{{ round($user->restLeaves, 2) }}">
                                                             <input type="submit" value="ثبت" name=""
-                                                            class="btn btn-primary btn-sm">
+                                                                class="btn btn-primary btn-sm">
                                                         </form>
                                                     @else
                                                         {{ round($user->restLeaves, 2) }}
@@ -83,8 +89,7 @@
                                                 <td>
                                                     <a
                                                         href="?userId={{ $user->id }}&year={{ $thisYear }}&month={{ $thisMonth }}">
-                                                        <button
-                                                            class="btn btn-primary btn-sm">{{ trans('fields.Show More') }}</button>
+                                                        <button class="btn btn-primary btn-sm">نمایش کل سال</button>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -96,11 +101,7 @@
                     </div>
                 @endif
 
-                @include('SimpleWorkflowReportView::Core.Summary.process.partial.now-and-later-leaves', [
-                    'items' => $items,
-                    'process' => $process,
-                    'userId' => $userId
-                ])
+
             </div>
         </div>
     </div>

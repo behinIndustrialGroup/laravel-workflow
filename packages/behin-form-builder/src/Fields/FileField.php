@@ -13,7 +13,8 @@ class FileField extends AbstractField
             $s .= ' <span class="text-danger">*</span>';
         }
         $s .= '</label><br>';
-        if(isset($this->attributes['value']) && is_string($this->attributes['value'])){
+        if(isset($this->attributes['value']) && is_string($this->attributes['value']) && $this->attributes['value'] != '' ){
+            // $s .= print_r($this->attributes['value']);
             $s .= '<a href="' . url($this->attributes['value']) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
         }
         if(isset($this->attributes['value']) && is_array($this->attributes['value']) && count($this->attributes['value']) > 0){

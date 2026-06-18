@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
+use Behin\SimpleWorkflow\Models\Entities\Consumable_parts;
+
 
 
 class ExternalAndInternalReportController extends Controller
@@ -41,6 +43,7 @@ class ExternalAndInternalReportController extends Controller
             '1763ab09-1b90-4609-af45-ef5b68cf10d0',
         ])
             ->whereNull('parent_id')
+            ->whereNot('status', 'canceled')
             ->whereNotNull('number')
             ->groupBy('number')
             ->get()
@@ -136,6 +139,7 @@ class ExternalAndInternalReportController extends Controller
             }
         }
         $parts = Parts::where('case_number', $caseNumber)->get();
+        $consumableParts = Consumable_parts::where('case_number', $caseNumber)->get();
         $mapaCenterReports = Mapa_center_fix_report::where('case_number', $caseNumber)->get();
 
         $financials = Financials::where('case_number', $caseNumber)->get();
@@ -148,7 +152,7 @@ class ExternalAndInternalReportController extends Controller
         ];
         return view(
             'SimpleWorkflowReportView::Core.ExternalInternal.show',
-            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'totalDuration', 'parts', 'financials', 'financialTransactions', 'caseCosts', 'delivery', 'mapaCenterReports')
+            compact('mainCase', 'customer', 'devices', 'deviceRepairReports', 'totalDuration', 'parts', 'financials', 'financialTransactions', 'caseCosts', 'delivery', 'mapaCenterReports', 'consumableParts')
         );
     }
 

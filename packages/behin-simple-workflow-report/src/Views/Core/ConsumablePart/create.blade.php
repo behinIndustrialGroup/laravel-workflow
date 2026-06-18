@@ -50,6 +50,7 @@
                         <th>قطعه</th>
                         <th>تعداد مورد نیاز</th>
                         <th>وضعیت</th>
+                        <th>شماره پرونده</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +60,7 @@
                             <td>{{ $consumablePart->product_name }}</td>
                             <td>{{ $consumablePart->requested_quantity }}</td>
                             <td>{{ $consumablePart->consumable_part_status }}</td>
+                            <td>{{ $consumablePart->case_number ?? '' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

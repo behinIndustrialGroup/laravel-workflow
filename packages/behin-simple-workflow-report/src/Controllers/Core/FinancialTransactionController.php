@@ -27,6 +27,7 @@ use Morilog\Jalali\Jalalian;
 use Behin\SimpleWorkflow\Models\Entities\Financial_transactions;
 use Behin\SimpleWorkflow\Models\Entities\Counter_parties;
 use Behin\SimpleWorkflowReport\Exports\CounterpartyFinancialTransactionExport;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class FinancialTransactionController extends Controller
@@ -36,6 +37,11 @@ class FinancialTransactionController extends Controller
         $filter = $request->query('filter', 'negative');
         $caseNumber = $request->query('case_number');
         $onlyAssignedUsers = $request->boolean('only_assigned', false);
+
+        $amountValue = $request->query('amount_value');
+        $amountOperator = $request->query('amount_operator');
+
+        $allowedOperators = ['>', '<', '>=', '<=', '=', '!='];
 
         $totalAmountExpression = "SUM(CASE
                 WHEN financial_type = 'بدهکار' THEN -amount
@@ -70,6 +76,19 @@ class FinancialTransactionController extends Controller
                 $filter = 'negative';
                 $creditorsQuery->havingRaw("{$totalAmountExpression} < 0");
                 break;
+        }
+
+        // ✅ فیلتر جدید بر اساس مبلغ و اپراتور
+        if (
+            $amountValue !== null &&
+            is_numeric($amountValue) &&
+            in_array($amountOperator, $allowedOperators)
+        ) {
+            Log::info('total amount: ' . $amountValue);
+            $creditorsQuery->havingRaw(
+                "{$totalAmountExpression} {$amountOperator} ?",
+                [$amountValue]
+            );
         }
 
         return $creditorsQuery->get();
@@ -165,7 +184,9 @@ class FinancialTransactionController extends Controller
         $onlyAssignedUsers = $request->boolean('only_assigned', true);
         $request->merge(['only_assigned' => true]);
         $request->merge(['filter' => 'all']);
-        $counterParties = Counter_parties::whereNotNull('user_id')->get()->each(function ($row) {
+        $counterParties = Counter_parties::whereNotNull('user_id')->whereHas('user',function($query){
+            $query->where('is_disabled', '0');
+        })->get()->each(function ($row) {
             $row->user_max_advance = EmployeeSalaryReportController::userMaxAdvances($row->user_id);
         });
 

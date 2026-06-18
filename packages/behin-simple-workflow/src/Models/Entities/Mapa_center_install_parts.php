@@ -14,7 +14,7 @@ use Behin\SimpleWorkflowReport\Models\Core\RepairCases;
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_mapa_center_install_parts'; 
-    protected $fillable = ['case_id', 'case_number', 'name', 'value', ]; 
+    protected $fillable = ['case_id', 'case_number', 'name', 'value', 'supply_source', 'supply_date', 'invoice_number', 'amount', 'invoice_date',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();

@@ -58,9 +58,12 @@
         href="{{ url('behin/behin-dist/plugins/mapp/css/mapp.min.css') . '?' . config('app.version') }}">
     <link rel="stylesheet"
         href="{{ url('behin/behin-dist/plugins/mapp/css/fa/style.css') . '?' . config('app.version') }}">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    {{-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"> --}}
     <!-- Material Icons اضافه -->
     <link href="{{ url('behin/behin-dist/dist/css/icon.css') . '?' . config('app.version') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url('behin/behin-dist/plugins/sweetalert/sweetalert2.min.css') }}">
+
+
 
     <!-- استایل سفارشی متریال -->
     <style>
@@ -180,6 +183,7 @@
     </script>
 
 
+
     <script src="{{ url('behin/behin-dist/plugins/mapp/js/mapp.env.js') . '?' . config('app.version') }}"></script>
 
     <script>
@@ -188,14 +192,14 @@
     <script src="{{ url('behin/behin-js/ajax.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('behin/behin-js/dataTable.js') . '?' . config('app.version') }}"></script>
     <script src="{{ url('behin/behin-js/dropzone.js') . '?' . config('app.version') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script> --}}
     <script src="{{ url('behin/behin-dist/plugins/autonumeric/autoNumeric.min.js') . '?' . config('app.version') }}">
     </script>
 
     {{-- ACE Editor --}}
     <script src={{ url('behin/behin-dist/plugins/ace/1.13.1/ace.js') }}></script>
-    <script src={{ url('behin/behin-dist/plugins/ace/1.23.0/mode-php.js') }}></script>
-    <script src={{ url('behin/behin-dist/plugins/ace/1.23.0/theme-monokai.js') }}></script>
+    <script src={{ url('behin/behin-dist/plugins/ace/1.13.1/mode-php.js') }}></script>
+    <script src={{ url('behin/behin-dist/plugins/ace/1.13.1/theme-monokai.js') }}></script>
     <script src={{ url('behin/behin-dist/plugins/ace/1.13.1/ext-language_tools.min.js') }}></script>
 
 
@@ -214,29 +218,42 @@
                 <div class="container-fluid">
                     @if (!isset($disableBackBtn))
                         <div class="card">
-                            <div class="card-header">
-                                <a href="javascript:history.back()" class="btn btn-outline-primary float-left">
+                            <div class="card-body">
+                                <a href="{{ $backUrl ?? 'javascript:history.back()' }}"
+                                    class="btn btn-sm btn-outline-primary float-left">
                                     <i class="fa fa-arrow-left"></i> {{ trans('fields.Back') }}
                                 </a>
                             </div>
                         </div>
                     @endisset
-            </div>
-            <div class="container-fluid p-2">
-                @yield('content')
-            </div>
-        </section>
-    </div>
+                    @if (!isset($disableSessionMsg))
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                    @endisset
+        </div>
+        <div class="container-fluid p-2">
+            @yield('content')
+        </div>
+    </section>
+</div>
 
 
 
-    <footer class="main-footer">
-        @include('behin-layouts.mobile-navigation')
-        {{-- <strong> &copy; 2018 <a href="http://github.com/hesammousavi/">حسام موسوی</a>.</strong> --}}
-    </footer>
+<footer class="main-footer">
+    @include('behin-layouts.mobile-navigation')
+    {{-- <strong> &copy; 2018 <a href="http://github.com/hesammousavi/">حسام موسوی</a>.</strong> --}}
+</footer>
 
-    <aside class="control-sidebar control-sidebar-dark">
-    </aside>
+<aside class="control-sidebar control-sidebar-dark">
+</aside>
 </div>
 
 <script src="{{ url('behin/behin-dist/plugins/bootstrap/js/bootstrap.bundle.min.js') . '?' . config('app.version') }}">
@@ -260,6 +277,8 @@
         <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> --}}
 <script src="{{ url('behin/behin-dist/plugins/mapp/js/mapp.min.js') . '?' . config('app.version') }}"></script>
 <script src="{{ url('behin/behin-dist/plugins/toastr/toastr.min.js') . '?' . config('app.version') }}"></script>
+<script src="{{ url('behin/behin-dist/plugins/sweetalert/sweetalert2.all.min.js') }}"></script>
+
 {{-- <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 <script>
@@ -337,7 +356,6 @@
             calendar: {
                 persian: {
                     leapYearMode: 'astronomical',
-                    locale: 'fa'
                 }
             }
         });
@@ -355,17 +373,17 @@
             calendar: {
                 persian: {
                     leapYearMode: 'astronomical',
-                    locale: 'fa'
+                    locale: 'en'
                 }
             }
         });
-        $('.timepicker').timepicker({
-            timeFormat: 'HH:mm', // فرمت 24 ساعته
-            interval: 1, // نمایش با فاصله 5 دقیقه‌ای
-            dynamic: false,
-            dropdown: true,
-            scrollbar: true
-        });
+        // $('.timepicker').timepicker({
+        //     timeFormat: 'HH:mm', // فرمت 24 ساعته
+        //     interval: 1, // نمایش با فاصله 5 دقیقه‌ای
+        //     dynamic: false,
+        //     dropdown: true,
+        //     scrollbar: true
+        // });
         AutoNumeric.multiple('.formatted-digit', {
             digitGroupSeparator: ',',
             decimalCharacter: '.',
@@ -433,7 +451,7 @@
 <script src="{{ url('behin/behin-js/loader.js') . '?' . config('app.version') }}"></script>
 <script src="{{ url('behin/behin-js/scripts.js') . '?' . config('app.version') }}"></script>
 @yield('script')
-</div>
+
 
 
 </body>

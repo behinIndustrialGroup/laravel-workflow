@@ -3,101 +3,127 @@
 @section('title', trans('Edit Process'))
 
 @section('content')
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    <script src="https://lib.arvancloud.ir/mermaid/9.4.2-rc.1/mermaid.min.js"></script>
+    <script>
         mermaid.initialize({
             startOnLoad: true
         });
     </script>
     <style>
         .task-form rect {
-            fill: #007bff !important; /* آبی برای تسک‌های نوع فرم */
-            stroke: #0056b3 !important; /* حاشیه تیره‌تر */
+            fill: #007bff !important;
+            /* آبی برای تسک‌های نوع فرم */
+            stroke: #0056b3 !important;
+            /* حاشیه تیره‌تر */
             font-family: Vazir !important;
             color: white !important;
         }
 
         .task-script rect {
-            fill: #28a745 !important; /* سبز برای تسک‌های نوع اسکریپت */
+            fill: #28a745 !important;
+            /* سبز برای تسک‌های نوع اسکریپت */
             stroke: #1e7e34 !important;
             font-family: Vazir !important;
             color: white !important;
         }
 
-        .task-condition rect {
-            fill: #ffc107 !important; /* زرد برای سایر تسک‌ها */
+        .task-condition rect,
+        polygon {
+            fill: #ffc107 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #d39e00 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-        .task-end  rect{
-            fill: #f10808 !important; /* زرد برای سایر تسک‌ها */
+
+        .task-end rect {
+            fill: #f10808 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #d30000 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-        .task-timed_condition  rect{
-            fill: #8408f1 !important; /* زرد برای سایر تسک‌ها */
+
+        .task-timed_condition rect {
+            fill: #8408f1 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #6d00d3 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-        .task-form  {
-            fill: #007bff !important; /* آبی برای تسک‌های نوع فرم */
-            stroke: #0056b3 !important; /* حاشیه تیره‌تر */
+
+        .task-form {
+            fill: #007bff !important;
+            /* آبی برای تسک‌های نوع فرم */
+            stroke: #0056b3 !important;
+            /* حاشیه تیره‌تر */
             font-family: Vazir !important;
             color: white !important;
         }
 
-        .task-script  {
-            fill: #28a745 !important; /* سبز برای تسک‌های نوع اسکریپت */
+        .task-script {
+            fill: #28a745 !important;
+            /* سبز برای تسک‌های نوع اسکریپت */
             stroke: #1e7e34 !important;
             font-family: Vazir !important;
             color: white !important;
         }
 
-        .task-condition  {
-            fill: #ffc107 !important; /* زرد برای سایر تسک‌ها */
+        .task-condition {
+            fill: #ffc107 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #d39e00 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-        .task-end  {
-            fill: #f10808 !important; /* زرد برای سایر تسک‌ها */
+
+        .task-end {
+            fill: #f10808 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #d30000 !important;
             font-family: Vazir !important;
             color: white !important;
         }
-        .task-timed_condition  {
-            fill: #8408f1 !important; /* زرد برای سایر تسک‌ها */
+
+        .task-timed_condition {
+            fill: #8408f1 !important;
+            /* زرد برای سایر تسک‌ها */
             stroke: #6d00d3 !important;
             font-family: Vazir !important;
             color: white !important;
         }
     </style>
-    <div class="container">
-        <h2>{{ $process->name }}</h2>
-        <button onclick="check_error()" class="btn btn-danger">
-            {{ trans('fields.Check Error') }}
-        </button>
-        <div class="table-responsive">
+    <div class="card">
+        <div class="card-header">
+            {{ $process->name }}
+            <button onclick="check_error()" class="btn btn-danger col-sm-auto">
+                {{ trans('fields.Check Error') }}
+            </button>
+        </div>
+
+        <div class="card-body table-responsive">
             <div class="mermaid" style="width: 1000px">
                 graph TD
                 @foreach ($process->startTasks() as $task)
                     @php
-                        if($task->type == 'form')
+                        if ($task->type == 'form') {
                             $taskClass = 'task-form';
-                        if($task->type == 'script')
+                        }
+                        if ($task->type == 'script') {
                             $taskClass = 'task-script';
-                        if($task->type == 'condition')
+                        }
+                        if ($task->type == 'condition') {
                             $taskClass = 'task-condition';
-                        if($task->type == 'end')
+                        }
+                        if ($task->type == 'end') {
                             $taskClass = 'task-end';
-                        if($task->type == 'timed_condition')
+                        }
+                        if ($task->type == 'timed_condition') {
                             $taskClass = 'task-timed_condition';
+                        }
                     @endphp
-                    {{ $task->id }}["<a type='submit' class="{{ $taskClass }} task-edit-link"
-                        href='{{ route('simpleWorkflow.task.edit', $task->id) }}'>{{ $task->name }}</a>"]:::{{ $taskClass }}
+                    {{ $task->id }}("{{ $task->name }}"):::{{ $taskClass }}
+                    click {{ $task->id }} "{{ route('simpleWorkflow.task.edit', $task->id) }}"
                     @php
                         $children = $task->children();
                     @endphp
@@ -116,7 +142,22 @@
 
 
 
-        <form action="{{ route('simpleWorkflow.task.create') }}" method="POST" class="p-4 border rounded bg-light">
+
+
+        <!-- Modal for editing tasks -->
+        <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <iframe id="taskModalIframe" style="width:100%;height:80vh;border:0;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card">
+        <form action="{{ route('simpleWorkflow.task.create') }}" method="POST" class="">
             @csrf
             <input type="hidden" name="process_id" value="{{ $process->id }}">
             <div class="row mb-3">
@@ -159,18 +200,6 @@
                 </div>
             </div>
         </form>
-
-        <!-- Modal for editing tasks -->
-        <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <iframe id="taskModalIframe" style="width:100%;height:80vh;border:0;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 @endsection
 
@@ -178,17 +207,17 @@
     <script>
         initial_view();
 
-        document.addEventListener('click', function(e){
+        document.addEventListener('click', function(e) {
             const link = e.target.closest('.task-edit-link');
-            if(link){
+            if (link) {
                 e.preventDefault();
                 var url = link.getAttribute('href');
                 window.location = url;
             }
         });
 
-        window.addEventListener('message', function(e){
-            if(e.data === 'task-updated'){
+        window.addEventListener('message', function(e) {
+            if (e.data === 'task-updated') {
                 $('#taskModal').modal('hide');
                 location.reload();
             }

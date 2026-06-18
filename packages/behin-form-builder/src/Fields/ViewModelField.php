@@ -20,18 +20,16 @@ class ViewModelField extends AbstractField
         $columns = explode(',', $viewModel->default_fields);
         $max_number_of_rows = $viewModel->max_number_of_rows;
 
-        $s .= "<div class='table-responsive card p-1' style='" . $style . "'>";
+        $s .= "<div class='card p-1' id='$id' style='" . $style . "'>";
 
         // ✅ اضافه کردن دکمه رفرش بالا
-        $s .= "<div class='d-flex align-items-center mb-2'>";
-        $s .= "<button type='button' class='btn btn-sm material-icons' onclick='get_view_model_rows(\"$viewModel->id\", \"$viewModel->api_key\")'>";
-        $s .= "<i class='fa fa-refresh'></i>";
-        $s .= "</button>";
-        $s .= "<h5 class='mb-0'>" . trans('fields.' . $viewModel->name) . "</h5>";
+        $s .= "<div class='card-header row'>";
+        $s .= "<i class='fa fa-refresh' onclick='get_view_model_rows(\"$viewModel->id\", \"$viewModel->api_key\")'></i>";
+        $s .= "<h5 class='mb-0 col-sm-10'>" . trans('fields.' . $viewModel->name) . "</h5>";
 
         $s .= "</div>";
 
-        $s .= "<table class='table table-striped' id='{$viewModel->id}' style='width: 100%'>";
+        $s .= "<div class='card-body table-responsive '><table class='table table-striped' id='{$viewModel->id}' style='width: 100%'>";
         if ($viewModel->show_as == 'table') {
 
             $s .= "<thead><tr>";
@@ -48,10 +46,15 @@ class ViewModelField extends AbstractField
 
 
 
-        $s .= "</table>";
+        $s .= "</table></div>";
         $s .= "</div>";
 
         $s .= "<script>get_view_model_rows(`$viewModel->id`, `$viewModel->api_key`)</script>";
+        if(isset($this->attributes['script'])){
+            $s .= '<script>';
+            $s .= $this->attributes['script'];
+            $s .= '</script>';
+        }
 
         return $s;
     }

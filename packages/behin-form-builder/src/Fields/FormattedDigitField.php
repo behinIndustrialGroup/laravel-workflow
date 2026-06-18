@@ -3,23 +3,26 @@
 namespace MyFormBuilder\Fields;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FormattedDigitField extends AbstractField
 {
     public function render(): string
     {
+        $attributes = $this->attributes;
         $readonly = $this->attributes['readonly'] ?? '';
         $isPrice = $this->attributes['isPrice'] ?? false;
-
+        $showLabel = isset($attributes['showLabel']) ? $attributes['showLabel'] : true;
         $s = '<div class="form-group">';
-        $s .= '<label>';
-        $s .= trans('fields.' . $this->name);
-
-        if (($this->attributes['required'] ?? '') === 'on' && $readonly !== 'on') {
-            $s .= ' <span class="text-danger">*</span>';
+        if ($showLabel) {
+            $s .= '<label>';
+            $s .= trans('fields.' . $this->name);
+            $s .= $showLabel;
+            if ($this->attributes['required'] == 'on' && $this->attributes['readonly'] != 'on') {
+                $s .= ' <span class="text-danger">*</span>';
+            }
+            $s .= '</label>';
         }
-
-        $s .= '</label>';
 
         // شروع ساخت input
         $s .= '<input type="text" name="' . $this->name . '" ';

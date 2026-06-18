@@ -13,7 +13,7 @@ use Behin\SimpleWorkflow\Models\Core\Cases;
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_part_reports'; 
-    protected $fillable = ['case_id', 'case_number', 'fix_report', 'done_at', 'repair_duration', 'see_the_problem', 'registered_by', 'part_id', 'other_parts', 'special_parts', 'power', 'inbox_id', ]; 
+    protected $fillable = ['case_id', 'case_number', 'fix_report', 'done_at', 'repair_duration', 'see_the_problem', 'registered_by', 'part_id', 'other_parts', 'special_parts', 'power', 'inbox_id',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();
@@ -28,4 +28,8 @@ function case(){
 
 function part(){
     return Parts::find($this->part_id);
+}
+
+function mapaExpert(){
+    return getUserInfo($this->registered_by);
 }}

@@ -95,6 +95,7 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::name('routing.')->prefix('routing')->group(function(){
         Route::post('create-case-number-and-save', [ RoutingController::class, 'createCaseNumberAndSave' ])->name('createCaseNumberAndSave');
         Route::post('save', [ RoutingController::class, 'save' ])->name('save');
+        Route::post('simulate-save-and-next', [ RoutingController::class, 'simulateSaveAndNext' ])->name('simulateSaveAndNext');
         Route::post('save-and-next', [ RoutingController::class, 'saveAndNext' ])->name('saveAndNext');
         Route::post('jump-back', [ RoutingController::class, 'jumpBack' ])->name('jumpBack');
         Route::post('jump-to', [ RoutingController::class, 'jumpTo' ])->name('jumpTo');

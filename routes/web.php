@@ -6,6 +6,7 @@ use Behin\SimpleWorkflow\Controllers\Core\PushNotifications;
 use Behin\SimpleWorkflow\Controllers\Core\VariableController;
 use Behin\SimpleWorkflow\Jobs\SendPushNotification;
 use Behin\SimpleWorkflow\Models\Core\Cases;
+use Behin\SimpleWorkflow\Models\Core\Inbox;
 use Behin\SimpleWorkflow\Models\Core\Variable;
 use Behin\SimpleWorkflow\Models\Entities\Customers;
 use Behin\SimpleWorkflow\Models\Entities\Financials;
@@ -36,6 +37,7 @@ use Behin\SimpleWorkflowReport\Controllers\Core\FinancialTransactionController;
 use Illuminate\Support\Facades\Log;
 use Behin\SimpleWorkflow\Models\Entities\Creditor;
 use Behin\SimpleWorkflowReport\Controllers\Core\CounterPartyController;
+use Behin\Sms\Controllers\ArsanSmsController;
 
 Route::get('', function () {
     return view('auth.login');
@@ -88,6 +90,7 @@ Route::get('queue-work', function () {
         } catch (Exception $e) {
             // در صورت خطا، job را به جدول failed_jobs منتقل کنید
             DB::table('failed_jobs')->insert([
+                'uuid' => $job->id,
                 'connection' => $job->connection ?? 'database',
                 'queue' => $job->queue,
                 'payload' => $job->payload,
@@ -103,12 +106,16 @@ Route::get('queue-work', function () {
 });
 
 Route::get('build-app', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('view:clear');
+    Artisan::call('optimize:clear');
     Artisan::call('migrate');
     return redirect()->back();
-});
+})->middleware(['web', 'auth']);
+
+Route::get('test', function () {
+    $msg = "صنعتگر گرامی
+کد تایید تعمیرات:";
+    return ArsanSmsController::send("09376922176", $msg);
+})->middleware(['web', 'auth']);
 
 // Route::get('test', function () {
 //     $financials = Financials::all()->map(function ($financial) {
@@ -233,28 +240,16 @@ Route::get('build-app', function () {
 //     return response()->json($onCredits);
 // });
 
-Route::post('test3', function (Request $request) {
-    $customerName = $request->customer_name;
-    $counterPartyId = $request->counter_party_id;
-
-    // مرحله ۱: پیدا کردن case_id های مربوط به این مشتری
-    $caseIds = DB::table('wf_variables')
-        ->where('key', 'customer_workshop_or_ceo_name')
-        ->where('value', $customerName)
-        ->pluck('case_id');
-
-    // dd($caseIds);
-
-    if ($caseIds->isEmpty()) {
-        return "موردی برای '{$customerName}' پیدا نشد.";
-    }
-
-    // مرحله ۲: آپدیت همه رکوردهای مالی مرتبط
-    $fins = DB::table('wf_entity_financials')
-        ->whereIn('case_id', $caseIds)
-        ->update(['counter_party_id' => $counterPartyId]);
-    return redirect()->back()->with('success', "طرف حساب مشتری '{$customerName}' با موفقیت به‌روزرسانی شد.");
-});
+// Route::get('test3', function (Request $request) {
+//     $inboxes = Inbox::whereHas('task', function($query){
+//         $query->where('type', 'end');
+//     })->where('status', 'done')->get();
+//     foreach($inboxes as $inbox){
+//         $inbox->status = 'new';
+//         $inbox->save();
+//     }
+//     return $inboxes;
+// });
 
 
 // Route::get('test4', function () {
@@ -605,5 +600,3 @@ Route::get('test13', function () {
         }
     });
 });
-
-

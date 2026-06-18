@@ -17,6 +17,6 @@ protected static function boot()
                 $model->id = $model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
             });
         }
-public function couterparty(){
+public function counterparty(){
     return Counter_parties::find($this->couterparty);
 }}

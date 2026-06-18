@@ -36,6 +36,16 @@ class Inbox extends Model
         'case_name'
     ];
 
+    public function scopeOpen($query)
+    {
+        $statuses = collect(config('workflow.inboxStatus'))
+            ->where('type', 'open')
+            ->keys()
+            ->toArray();
+
+        return $query->whereIn('status', $statuses);
+    }
+
     public function getTimeStatusAttribute()
     {
         if ($this->task && $this->task->duration) {

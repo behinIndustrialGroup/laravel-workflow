@@ -87,14 +87,14 @@
                                                 data-type="پاداش‌های متفرقه برای {{ $user->name }}"
                                                 data-items='@json($rewardItems)' title="نمایش جزئیات پاداش‌ها"
                                                 {{ $rewardCount === 0 ? 'disabled' : '' }}>
-                                                <i class="material-icons" style="font-size: 16px;">visibility</i>
+                                                <i class="fa fa-eye" style="font-size: 16px;"></i>
                                             </button>
                                             @if (access('افزودن پاداش متفرقه'))
                                                 <button type="button"
                                                     class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
                                                     data-type="reward" data-user-id="{{ $user->id }}"
                                                     data-user-name="{{ $user->name }}" title="افزودن پاداش">
-                                                    <i class="material-icons" style="font-size: 16px;">add_circle</i>
+                                                    <i class="fa fa-plus" style="font-size: 16px;"></i>
                                                 </button>
                                             @endif
                                         </div>
@@ -109,14 +109,14 @@
                                                 data-type="جرایم متفرقه برای {{ $user->name }}"
                                                 data-items='@json($penaltyItems)' title="نمایش جزئیات جرایم"
                                                 {{ $penaltyCount === 0 ? 'disabled' : '' }}>
-                                                <i class="material-icons" style="font-size: 16px;">visibility</i>
+                                                <i class="fa fa-eye" style="font-size: 16px;"></i>
                                             </button>
                                             @if (access('افزودن جرایم متفرقه'))
                                                 <button type="button"
                                                     class="btn btn-outline-primary btn-sm js-open-reward-penalty-form"
                                                     data-type="penalty" data-user-id="{{ $user->id }}"
                                                     data-user-name="{{ $user->name }}" title="افزودن جریمه">
-                                                    <i class="material-icons" style="font-size: 16px;">add_circle</i>
+                                                    <i class="fa fa-plus" style="font-size: 16px;"></i>
                                                 </button>
                                             @endif
                                         </div>

@@ -263,19 +263,23 @@ function close_admin_modal(id){
     $('#admin-modal-' + id).modal('hide');
 }
 
-function get_view_model_rows(viewModel_id, api_key){
+function get_view_model_rows(viewModel_id, api_key) {
     url = appUrl + 'workflow/get-view-model-rows';
     var fd = new FormData();
     fd.append('viewModel_id', viewModel_id);
     fd.append('api_key', api_key);
     fd.append('inbox_id', $('#inboxId').val() ?? '');
     fd.append('case_id', $('#caseId').val() ?? '');
-    send_ajax_formdata_request(url, fd, function(response){
-        // console.log(response)
-        $(`#${viewModel_id} tbody`).html('');
-        $(`#${viewModel_id} tbody`).html(response);
-    })
+
+    return new Promise((resolve, reject) => {
+        send_ajax_formdata_request(url, fd, function(response){
+            $(`#${viewModel_id} tbody`).html('');
+            $(`#${viewModel_id} tbody`).html(response);
+            resolve(response);
+        });
+    });
 }
+
 
 function open_view_model_form(form_id, viewModel_id, row_id, api_key){
     url = appUrl + 'workflow/form/open/' + form_id

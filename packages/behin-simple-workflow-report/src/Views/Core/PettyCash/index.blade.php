@@ -6,9 +6,6 @@
 @endphp
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
     <div class="card mb-3">
         <div class="card-header">
             <form class="row" method="GET">
@@ -42,11 +39,14 @@
                 <div class="col-md-2">
                     <input name="amount" class="form-control formatted-digit" placeholder="مبلغ" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="text" name="paid_at" class="form-control persian-date" placeholder="تاریخ پرداخت" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input name="from_account" class="form-control" placeholder="از حساب">
+                </div>
+                <div class="col-md-2">
+                    <input name="case_number" class="form-control" placeholder="پرونده">
                 </div>
                 <div class="col-md-1">
                     <button class="btn btn-primary" type="submit">افزودن</button>
@@ -59,6 +59,7 @@
                         <th>مبلغ</th>
                         <th>تاریخ پرداخت</th>
                         <th>از حساب</th>
+                        <th>پرونده</th>
                         <th>اقدامات</th>
                     </tr>
                 </thead>
@@ -69,6 +70,7 @@
                             <td>{{ number_format($item->amount) }}</td>
                             <td>{{ toJalali($item->paid_at)->format('Y-m-d') }}</td>
                             <td>{{ $item->from_account }}</td>
+                            <td>{{ $item->case_number }}</td>
                             <td>
                                 <a href="{{ route('simpleWorkflowReport.petty-cash.edit', $item) }}" class="btn btn-sm btn-primary">ویرایش</a>
                                 <form action="{{ route('simpleWorkflowReport.petty-cash.destroy', $item) }}" method="POST" style="display:inline-block">

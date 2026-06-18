@@ -22,6 +22,7 @@ use Behin\SimpleWorkflow\Models\Entities\Other_daily_reports;
 use Behin\SimpleWorkflowReport\Helper\ReportHelper;
 use Behin\SimpleWorkflowReport\Models\DailyReportReminderLog;
 use Behin\SimpleWorkflowReport\Services\DailyReportReminderService;
+use Behin\Sms\Controllers\ArsanSmsController;
 use Behin\Sms\Controllers\SmsController;
 use BehinUserRoles\Models\User;
 use Carbon\Carbon;
@@ -337,11 +338,15 @@ class DailyReportController extends Controller
 
         foreach ($usersToNotify as $user) {
             try {
+                $userName = $user->name;
                 $parameters = [[
                     'name' => $parameterKey,
                     'value' => $user->name,
                 ]];
-                $response = SmsController::sendByTemp($user->email, $templateId, $parameters);
+                // $response = SmsController::sendByTemp($user->email, $templateId, $parameters);
+                $msg = "$userName
+امروز تاکنون هیچ گزارشی ثبت نکرده‌اید. لطفاً توجه داشته باشید که تا ساعت ۱۲ امشب فرصت ثبت گزارش‌های روزانه وجود دارد.";
+                $response = ArsanSmsController::send($user->email,$msg);
 
                 $log = DailyReportReminderLog::updateOrCreate(
                     [

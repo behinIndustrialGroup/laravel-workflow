@@ -39,8 +39,10 @@
     <div class="card">
         <div class="card-header">
             راهنما<br>
-            افزودن طلبکاری: یعنی مشتری از مدار پرداز طلب دارد. مانند مشتری به مدار پرداز کالایی فروخته، خدماتی ارائه داده یا مبلغی به مدار پرداز پرداخت کرده<br>
-            افزودن بدهکاری: یعنی مشتری به مدار پرداز بدهکار است. مانند مشتری از مدارپرداز خدماتی دریافت کرده یا کالایی از مدار پرداز خریده یا مدارپرداز مبلغی به مشتری پرداخت کرده است.
+            افزودن طلبکاری: یعنی مشتری از مدار پرداز طلب دارد. مانند مشتری به مدار پرداز کالایی فروخته، خدماتی ارائه داده یا
+            مبلغی به مدار پرداز پرداخت کرده<br>
+            افزودن بدهکاری: یعنی مشتری به مدار پرداز بدهکار است. مانند مشتری از مدارپرداز خدماتی دریافت کرده یا کالایی از
+            مدار پرداز خریده یا مدارپرداز مبلغی به مشتری پرداخت کرده است.
         </div>
     </div>
     <div class="card mb-3">
@@ -62,25 +64,50 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-body">
-            <form action="{{ route('simpleWorkflowReport.financial-transactions.index') }}" method="GET"
-                class="row align-items-end">
-                <div class="col-sm-6 col-md-4 mb-2">
-                    <label class="form-label">جستجو بر اساس شماره پرونده</label>
-                    <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
-                        placeholder="شماره پرونده را وارد کنید">
-                </div>
-                <input type="hidden" name="filter" value="{{ $filter }}">
-                <div class="col-auto mb-2">
-                    <button type="submit" class="btn btn-primary">جستجو</button>
-                </div>
-                @if (filled($caseNumber ?? null))
-                    <div class="col-auto mb-2">
-                        <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => $filter]) }}"
-                            class="btn btn-outline-secondary">حذف جستجو</a>
+        <div class="card-body row col-sm-12">
+            <div class="col-sm-6">
+                <form action="{{ route('simpleWorkflowReport.financial-transactions.index') }}" method="GET"
+                    class="align-items-end">
+                    <div class="col-sm-12 mb-2">
+                        <label class="form-label">جستجو بر اساس شماره پرونده</label>
+                        <input type="text" class="form-control" name="case_number" value="{{ $caseNumber ?? '' }}"
+                            placeholder="شماره پرونده را وارد کنید">
                     </div>
-                @endif
-            </form>
+                    <input type="hidden" name="filter" value="{{ $filter }}">
+                    <div class="col-auto mb-2">
+                        <button type="submit" class="btn btn-primary">جستجو</button>
+                    </div>
+                    @if (filled($caseNumber ?? null))
+                        <div class="col-auto mb-2">
+                            <a href="{{ route('simpleWorkflowReport.financial-transactions.index', ['filter' => $filter]) }}"
+                                class="btn btn-outline-secondary">حذف جستجو</a>
+                        </div>
+                    @endif
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <form action="{{ route('simpleWorkflowReport.financial-transactions.index') }}" method="GET"
+                    class="align-items-end">
+                    <input type="hidden" name="filter" value="all" id="">
+                    <div class="col-sm-6 mb-2">
+                        <label for="">نمایش مانده حساب</label>
+                        <select name="amount_operator" id="">
+                            <option value="<" {{ request()->get('amount_operator') == '<' ? 'selected' : '' }}>کوچکتر
+                                از
+                            </option>
+                            <option value=">" {{ request()->get('amount_operator') == '>' ? 'selected' : '' }}>بزرگتر
+                                از
+                            </option>
+                        </select>
+                        <input type="text" name="amount_value" value="{{ request()->get('amount_value') }}"
+                            class="form-control formatted-digit" id="">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">جستجو</button>
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
     <div class="card mb-3">
@@ -251,7 +278,7 @@
             fd.append('counterparty', counterparty);
             var url = "{{ route('simpleWorkflowReport.financial-transactions.show', 'counterparty') }}";
             url = url.replace('counterparty', counterparty);
-            open_admin_modal(url, 'جزئیات بیشتر',true);
+            open_admin_modal(url, 'جزئیات بیشتر', true);
         }
 
         function showAddCredit(counterparty) {

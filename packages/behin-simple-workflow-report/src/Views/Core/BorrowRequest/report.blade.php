@@ -21,6 +21,7 @@
                 </div>
                 <div class="col-sm-3 mb-1">
                     <select name="requester_id" id="" class="form-control select2">
+                        <option value="">انتخاب کنید</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}"
                                 {{ request('requester_id') == $user->id ? 'selected' : '' }}>
@@ -48,6 +49,14 @@
                 <div class="col-sm-3 mb-1">
                     <input type="text" class="form-control persian-date" name="to_date" value="{{ request('to_date') }}"
                         placeholder="تا تاریخ">
+                </div>
+                <div class="col-sm-4 mb-1">
+                    <select name="status" id="status" class="form-control">
+                        <option value="">انتخاب کنید</option>
+                        @foreach ($statuses as $statusKey => $statusValue)
+                            <option value="{{ $statusKey }}" {{ request()->get('status') == $statusKey ? 'selected' : '' }}>{{ $statusValue['label'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-sm-2 mb-1">
                     <button class="btn btn-info">جستجو</button>

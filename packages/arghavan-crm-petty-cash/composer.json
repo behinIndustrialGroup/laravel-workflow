@@ -1,0 +1,16 @@
+{
+    "name": "arghavan/petty-cash",
+    "description": "",
+    "authors": [
+        {
+            "name": "mkhodroo",
+            "email": "mkhodroo@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PettyCash\\": "src/"
+        }
+    },
+    "require": {}
+}

@@ -1,5 +1,9 @@
 <?php
 
+use App\Providers\BladeServiceProvider;
+use Arghavan\IncomesReport\IncomesReportServiceProvider;
+use Arghavan\PettyCash\PettyCashServiceProvider;
+
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\BroadcastServiceProvider::class,
@@ -21,4 +25,7 @@ return [
     TodoList\TodoListProvider::class,
     UserProfile\UserProfileProvider::class,
     ShortenerUrl\Shortener\ShortenerServiceProvider::class,
+    BladeServiceProvider::class,
+    PettyCashServiceProvider::class,
+    IncomesReportServiceProvider::class,
 ];

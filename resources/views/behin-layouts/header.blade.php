@@ -9,7 +9,7 @@ use App\CustomClasses\Access;
         <!-- Menu Toggle -->
         <li class="nav-item">
             <a class="nav-link text-white" data-widget="pushmenu" href="#">
-                <i class="material-icons">menu</i>
+                <i class="fa fa-bars"></i>
             </a>
         </li>
 
@@ -42,7 +42,8 @@ use App\CustomClasses\Access;
 
         <!-- Refresh -->
         <li class="mr-2">
-            <button type="button" class="btn btn-sm btn-outline-light" onclick="window.location.reload()">
+            <button type="button" class="btn btn-sm btn-outline-light" onclick="window.location.reload()"
+                ondblclick="window.location.href = '{{ url('/build-app') }}'">
                 <i class="fa fa-refresh"></i>
                 {{ __('Refresh') }}
             </button>
@@ -70,8 +71,6 @@ use App\CustomClasses\Access;
     </ul>
 </nav>
 
-<!-- Material Icons -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
     .navbar .btn {

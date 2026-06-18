@@ -1,12 +1,10 @@
-@php
-    $content = json_decode($form->content);
-    $formMode = in_array($inbox->status, ['done', 'doneByOther']) ? 'readonly' : null;
-@endphp
-
-
 @extends('behin-layouts.app')
 
 @section('title', $form->name)
+
+@php
+    $content = json_decode($form->content);
+@endphp
 
 @section('content')
     <div class="card shadow-sm mb-4">
@@ -15,21 +13,16 @@
         </div>
         <div class="card-body">
             <p class="mb-0">
-                {{ trans('fields.Case Number') }}:
-                <span class="badge badge-secondary">{{ $case->number }}</span> <br>
-
-                {{ trans('fields.Creator') }}:
-                <span class="badge badge-light">{{ getUserInfo($case->creator)->name }}</span> <br>
-
-                {{ trans('fields.Created At') }}:
-                <span class="badge badge-light" dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</span>
+                {{ trans('fields.Case Number') }}: <span class="badge badge-secondary">{{ $case->number }}</span> <br>
+                {{ trans('fields.Creator') }}: <span class="badge badge-light">{{ getUserInfo($case->creator)->name }}</span>
                 <br>
-
+                {{ trans('fields.Created At') }}: <span class="badge badge-light"
+                    dir="ltr">{{ toJalali($case->created_at)->format('Y-m-d H:i') }}</span>
+                <br>
                 <span class="badge badge-light" style="color: dark">{{ $case->id }}</span>
             </p>
         </div>
     </div>
-
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -50,36 +43,23 @@
                 <input type="hidden" name="caseId" id="caseId" value="{{ $case->id }}">
                 <input type="hidden" name="taskId" id="taskId" value="{{ $task->id }}">
                 <input type="hidden" name="processId" id="processId" value="{{ $process->id }}">
-                @if (View::exists('SimpleWorkflowView::Custom.Form.' . $form->id))
-                    @include('SimpleWorkflowView::Custom.Form.' . $form->id, [
-                        'form' => $form,
-                        'task' => $task,
-                        'case' => $case,
-                        'inbox' => $inbox,
-                        'variables' => $variables,
-                        'process' => $process,
-                        'mode' => $formMode,
-                    ])
-                @else
-                    @include('SimpleWorkflowView::Core.Form.preview', [
-                        'form' => $form,
-                        'task' => $task,
-                        'case' => $case,
-                        'inbox' => $inbox,
-                        'variables' => $variables,
-                        'process' => $process,
-                        'mode' => $formMode,
-                    ])
-                @endif
+                @include('SimpleWorkflowView::Core.Form.preview', [
+                    'form' => $form,
+                    'task' => $task,
+                    'case' => $case,
+                    'inbox' => $inbox,
+                    'variables' => $variables,
+                    'process' => $process,
+                ])
             </form>
         </div>
     </div>
-    <div class='card shadow-sm mb-4' style='height: 30px'></div>
+
     @if (in_array($inbox->status, ['done', 'doneByOther']))
         <div class="card shadow-sm mb-2">
             <div class="card-body">
                 <p class="m-0">
-                    <i class="material-icons text-success mr-2">check_circle</i>
+                    <i class="fa fa-check-circle text-success mr-2"></i>
                     {{ trans('fields.Done At') }}:
                     <span class="badge badge-light" dir="ltr">
                         {{ toJalali($inbox->updated_at)->format('Y-m-d H:i') }}
@@ -87,244 +67,46 @@
                     <br>
                     {{ trans('fields.Done By') }}:
                     <span class="badge badge-light">
-                        {{ getUserInfo($inbox->actor)->name ?? '' }}
+                        {{ getUserInfo($inbox->actor)->name }}
                     </span>
                 </p>
             </div>
         </div>
     @else
-        <div class="action-buttons bg-white p-2 shadow-md flex justify-between items-center gap-2">
-            @if ($inbox->status == 'draft')
-                <button class="md-btn md-btn-info" onclick="createCaseNumberAndSave()">
-                    <i class="material-icons">file_alt</i>
-                    {{ trans('fields.Create Case Number and Save') }}
-                </button>
-            @else
-                <button class="md-btn md-btn-warning" onclick="showJumpModal()">
-                    <i class="fa fa-arrow-right"></i>
-                    {{ trans('fields.Send Manully') }}
-                </button>
-
-                @if ($task->show_reminder_button)
-                    <button class="md-btn md-btn-secondary" type="button" onclick="openReminderModal()">
-                        <i class="material-icons">alarm</i>
-                        {{ trans('fields.Add Reminder') }}
-                    </button>
-                @endif
-
-                @if ($task->show_save_button)
-                    <button class="md-btn md-btn-primary" onclick="saveForm()">
-                        <i class="fa fa-save"></i>
-                        {{ trans('fields.Save') }}
-                    </button>
-                @endif
-
-                <button class="md-btn md-btn-info" onclick="saveAndNextForm()">
-                    <i class="fa fa-save"></i>
-                    {{ trans('fields.Save and next') }}
-                </button>
-
+        <div class="card">
+            <div class="card-body d-flex flex-wrap gap-2 p-1">
                 @if ($task->show_cancel_button)
-                    <a class="md-btn md-btn-danger"
+                    <a class="btn btn-sm btn-outline-danger m-1 "
                         href="{{ route('simpleWorkflow.inbox.cancel', $inbox->id) }}"
                         onclick="return confirm('{{ trans('fields.Are you sure?') }}');">
-                        <i class="material-icons">cancel</i>
+                        <i class="fa fa-danger"></i>
                         {{ trans('fields.Cancel Request') }}
                     </a>
                 @endif
-            @endif
-        </div>
-
-        @if ($task->show_reminder_button)
-            <div class="modal fade" id="reminderModal" tabindex="-1" role="dialog" aria-labelledby="reminderModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="reminderModalLabel">{{ trans('fields.Add Reminder') }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('fields.Close') }}">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form id="reminderForm" action="{{ route('simpleWorkflow.inbox.reminders.store', $inbox->id) }}" method="POST">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="reminder-title" class="col-form-label">{{ trans('fields.Reminder Title') }}</label>
-                                    <input type="text" class="form-control" id="reminder-title" name="title" maxlength="255" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="reminder-message" class="col-form-label">{{ trans('fields.Reminder Message') }}</label>
-                                    <textarea class="form-control" id="reminder-message" name="message" rows="3"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="reminder-at" class="col-form-label">{{ trans('fields.Reminder At') }}</label>
-                                    <input type="datetime-local" class="form-control" id="reminder-at" name="remind_at" required min="{{ now()->format('Y-m-d\TH:i') }}" value="{{ now()->addMinutes(5)->format('Y-m-d\TH:i') }}">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ trans('fields.Cancel') }}</button>
-                                <button type="submit" class="btn btn-primary">{{ trans('fields.Send Reminder') }}</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                @if ($inbox->status == 'draft')
+                    <button class="btn btn-sm btn-outline-info m-1 "
+                        onclick="createCaseNumberAndSave()">{{ trans('fields.Create Case Number and Save') }}</button>
+                @else
+                    {{-- @if ($task->jumps->count() > 0) --}}
+                        <button class="btn btn-sm btn-outline-warning m-1 " onclick="showJumpModal()">
+                            <i class="fa fa-send"></i> {{ trans('fields.Send Manully') }}
+                        </button>
+                    {{-- @endif --}}
+                    <button class="btn btn-sm btn-outline-primary m-1 " onclick="saveForm()">
+                        <i class="fa fa-save"></i> {{ trans('fields.Save') }}
+                    </button>
+                    <button class="btn btn-sm btn-outline-success m-1 " onclick="simulateSaveAndNext()">
+                        <i class="fa fa-save"></i> <i class="fa fa-arrow-left"></i>{{ trans('fields.Save and next') }}
+                    </button>
+                @endif
             </div>
-        @endif
-
-        <style>
-            .md-btn {
-                position: relative;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
-                font-size: 14px;
-                font-weight: 500;
-                border: none;
-                border-radius: 9999px;
-                /* pill shape */
-                padding: 10px 20px;
-                color: #fff;
-                cursor: pointer;
-                transition: box-shadow 0.2s ease, transform 0.1s ease;
-                overflow: hidden;
-            }
-
-            .md-btn:active {
-                transform: scale(0.97);
-            }
-
-            .md-btn::after {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                background: rgba(255, 255, 255, 0.4);
-                border-radius: 50%;
-                transform: translate(-50%, -50%);
-                transition: width 0.4s ease, height 0.4s ease;
-            }
-
-            .md-btn:active::after {
-                width: 220%;
-                height: 220%;
-            }
-
-            .md-btn-info {
-                background-color: #2196F3;
-            }
-
-            .md-btn-warning {
-                background-color: #FFC107;
-                color: #212121;
-            }
-
-            .md-btn-secondary {
-                background-color: #607d8b;
-            }
-
-            .md-btn-primary {
-                background-color: #3F51B5;
-            }
-
-            .md-btn-danger {
-                background-color: #F44336;
-            }
-
-            .action-buttons {
-                    position: relative;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    padding: 10px;
-                    display: flex;
-                    justify-content: space-around;
-                    background: #fff;
-                    border-top: 1px solid #ddd;
-                    z-index: 1000;
-                    border-radius: 10px;
-                }
-
-            /* موبایل: ثابت پایین صفحه */
-            @media (max-width: 768px) {
-                .action-buttons {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    padding: 10px;
-                    display: flex;
-                    justify-content: space-around;
-                    background: #fff;
-                    border-top: 1px solid #ddd;
-                    z-index: 1000;
-                }
-            }
-        </style>
-
+        </div>
     @endif
 @endsection
 
 @section('script')
     <script>
-        // initial_view()
-        $('#mobile-navigation').fadeOut(1000)
-
-        function formatDateTimeLocal(date) {
-            const pad = (value) => String(value).padStart(2, '0');
-            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-        }
-
-        function openReminderModal() {
-            const modal = $('#reminderModal');
-            if (!modal.length) {
-                return;
-            }
-
-            const input = modal.find('#reminder-at');
-            const now = new Date();
-            input.attr('min', formatDateTimeLocal(now));
-            const defaultDate = new Date(now.getTime() + 5 * 60 * 1000);
-            input.val(formatDateTimeLocal(defaultDate));
-            modal.modal('show');
-        }
-
-        const reminderForm = $('#reminderForm');
-        if (reminderForm.length) {
-            reminderForm.on('submit', function(event) {
-                event.preventDefault();
-                const form = this;
-                const fd = new FormData(form);
-                send_ajax_formdata_request(form.action, fd, function(response) {
-                    if (response.status === 200) {
-                        show_message(response.msg);
-                        form.reset();
-                        const modal = $('#reminderModal');
-                        if (modal.length) {
-                            modal.modal('hide');
-                        }
-                    } else {
-                        show_error(response.msg || '{{ trans('fields.Unknown error') }}');
-                    }
-                }, function(xhr) {
-                    hide_loading();
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        const messages = Object.values(xhr.responseJSON.errors).flat();
-                        show_error(messages.join('<br>'));
-                        return;
-                    }
-
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        show_error(xhr.responseJSON.message);
-                        return;
-                    }
-
-                    show_error('{{ trans('fields.Unknown error') }}');
-                });
-            });
-        }
+        initial_view()
 
         function createCaseNumberAndSave() {
             var form = $('#form')[0];
@@ -345,9 +127,6 @@
         }
 
         function saveForm() {
-            if ($('.view-model-update-btn').length > 0) {
-                $('.view-model-update-btn').click()
-            }
             var form = $('#form')[0];
             var fd = new FormData(form);
             send_ajax_formdata_request(
@@ -365,10 +144,50 @@
             )
         }
 
+        function simulateSaveAndNext() {
+            var form = $('#form')[0];
+            var fd = new FormData(form);
+            send_ajax_formdata_request(
+                '{{ route('simpleWorkflow.routing.simulateSaveAndNext') }}',
+                fd,
+                function(response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        $msg = 'مرحله بعدی ';
+                        if (response.nextInboxInfos) {
+                            response.nextInboxInfos.forEach(function($i) {
+                                $msg += '«' + $i['task']['name'] + ' که توسط ' + $i['actor_details']['name'] +
+                                    '», '
+                            })
+                            $msg += "انجام خواهد شد. تایید می کنید؟";
+                        }else{
+                            $msg += "پایان فرایند است. تایید میکنید؟";
+                        }
+
+                        Swal.fire({
+                            text: $msg,
+                            icon: 'question',
+                            showCancelButton: true, // نمایش دکمه لغو
+                            confirmButtonColor: '#3085d6', // رنگ دکمه تأیید
+                            cancelButtonColor: '#d33', // رنگ دکمه لغو
+                            confirmButtonText: 'بله، برو مرحله بعد',
+                            cancelButtonText: 'فعلا نه'
+                        }).then((result) => {
+                            // اگر کاربر روی دکمه تأیید کلیک کرد
+                            if (result.isConfirmed) {
+                                saveAndNextForm()
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                // اگر کاربر روی دکمه لغو کلیک کرد
+                            }
+                        });
+                    } else {
+                        show_error(response.msg);
+                    }
+                }
+            )
+        }
+
         function saveAndNextForm() {
-            if ($('.view-model-update-btn').length > 0) {
-                $('.view-model-update-btn').click()
-            }
             var form = $('#form')[0];
             var fd = new FormData(form);
             send_ajax_formdata_request(
@@ -377,14 +196,11 @@
                 function(response) {
                     console.log(response);
                     if (response.status == 200) {
+                        show_message('{{ trans('fields.Saved') }}')
+                        // window.close();
                         if (response.url) {
-                            if(response.msg){
-                                window.location.href = response.url + '?msg=' + response.msg;
-                            }else{
-                                window.location.href = response.url;
-                            }
+                            window.location.href = response.url;
                         } else {
-                            show_message(response.msg)
                             window.location.href = '{{ route('simpleWorkflow.inbox.index') }}';
                         }
                     } else {
@@ -398,17 +214,11 @@
             send_ajax_get_request(
                 '{{ route('simpleWorkflow.task-jump.show', [$task->id, $inbox->id, $case->id, $process->id]) }}',
                 function(response) {
-                    open_admin_modal_with_data(response, '')
+                    open_admin_modal_with_data(response, '', null, function() {
+                        initial_view()
+                    })
                 }
             )
         }
-
-        @if (in_array($inbox->status, ['done', 'doneByOther']))
-            $(document).ready(function() {
-                var form = $('#form');
-                form.find('input, select, textarea, button').prop('disabled', true);
-                form.find('a').removeAttr('href').css('pointer-events', 'none');
-            });
-        @endif
     </script>
 @endsection

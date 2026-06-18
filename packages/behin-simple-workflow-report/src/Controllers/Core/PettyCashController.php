@@ -82,6 +82,7 @@ class PettyCashController extends Controller
             'amount' => 'required|numeric',
             'paid_at' => 'required|string',
             'from_account' => 'nullable|string',
+            'case_number' => 'nullable|string',
         ]);
         $data['paid_at'] = convertPersianToEnglish($data['paid_at']);
         $data['paid_at'] = Jalalian::fromFormat('Y-m-d', $data['paid_at'])
@@ -106,6 +107,7 @@ class PettyCashController extends Controller
             'amount' => 'required|numeric',
             'paid_at' => 'required|string',
             'from_account' => 'nullable|string',
+            'case_number' => 'nullable|string',
         ]);
         $data['paid_at'] = convertPersianToEnglish($data['paid_at']);
         $data['paid_at'] = Jalalian::fromFormat('Y-m-d', $data['paid_at'])

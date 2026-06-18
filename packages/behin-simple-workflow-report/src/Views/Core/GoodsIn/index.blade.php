@@ -247,12 +247,14 @@
                                         جستجو: {{ $filters['search'] }}</span>
                                 @endif
                                 @if (!empty($filters['from_date']))
-                                    <span class="filter-chip"><i class="material-icons"
-                                            style="font-size: 18px;">calendar_month</i> از
+                                    <span class="filter-chip">
+                                        <i class="fa fa-calendar"
+                                            style="font-size: 18px;"></i> از
                                         {{ $filters['from_date'] }}</span>
                                 @endif
                                 @if (!empty($filters['to_date']))
-                                    <span class="filter-chip"><i class="material-icons" style="font-size: 18px;">event</i>
+                                    <span class="filter-chip">
+                                        <i class="fa fa-calendar" style="font-size: 18px;"></i>
                                         تا {{ $filters['to_date'] }}</span>
                                 @endif
                             </div>
@@ -405,7 +407,7 @@
                                     <tr>
                                         <td colspan="{{ $columnMetadata->count() + 1 }}">
                                             <div class="empty-state">
-                                                <i class="material-icons">inventory_2</i>
+                                                <i class=""></i>
                                                 <p class="mb-1">هیچ داده‌ای مطابق فیلترهای انتخابی یافت نشد.</p>
                                                 <small>فیلترها را تغییر دهید یا پاک‌سازی کنید.</small>
                                             </div>

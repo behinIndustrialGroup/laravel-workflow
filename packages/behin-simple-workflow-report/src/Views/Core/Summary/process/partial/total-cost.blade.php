@@ -69,18 +69,20 @@
                 <div class="">
                     <div class="card">
                         <div class="card-header bg-success text-center">
-                            عملکرد مالی پرسنل
+                            <h3>
+                                عملکرد مالی پرسنل
+                            </h3>
                         </div>
                         <div class="card-header bg-light">
-                            <form action="{{ url()->current() }}" class="form-row align-items-end">
+                            <form action="[[ url()->current() ]]" class="form-row align-items-end">
                                 <div class="form-group col-md-2">
                                     <label for="year">از</label>
-                                    <input type="text" name="from" value="{{ $from }}"
+                                    <input type="text" name="from" value="[[ $from ]]"
                                         class="form-control persian-date">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="year">تا</label>
-                                    <input type="text" name="to" value="{{ $to }}"
+                                    <input type="text" name="to" value="[[ $to ]]"
                                         class="form-control persian-date">
                                 </div>
 
@@ -88,11 +90,11 @@
                                 <div class="form-group col-md-2">
                                     <label for="quser">کاربر</label>
                                     <select name="quser" id="quser" class="select2 form-control">
-                                        <option value="">{{ trans('fields.All') }}
+                                        <option value="">[[ trans('fields.All') ]]
                                         </option>
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}" {{ $user->id == $quser ? 'selected' : '' }}>
-                                                {{ $user->name }}
+                                            <option value="[[ $user->id ]]" [[ $user->id == $quser ? 'selected' : '' ]]>
+                                                [[ $user->name ]]
                                             </option>
                                         @endforeach
                                     </select>
@@ -116,15 +118,15 @@
                             <table class="table" id="total-cost">
                                 <thead>
                                     <tr>
-                                        <th>{{ trans('fields.case_number') }}</th>
-                                        <th>{{ trans('fields.customer') }}</th>
-                                        <th>{{ trans('fields.process') }}</th>
-                                        <th>{{ trans('fields.mapa_expert') }}</th>
-                                        <th>{{ trans('fields.fix_cost_date') }}</th>
-                                        <th>{{ trans('fields.Declared Cost') }}</th>
+                                        <th>[[ trans('fields.case_number') ]]</th>
+                                        <th>[[ trans('fields.customer') ]]</th>
+                                        <th>[[ trans('fields.process') ]]</th>
+                                        <th>[[ trans('fields.mapa_expert') ]]</th>
+                                        <th>[[ trans('fields.fix_cost_date') ]]</th>
+                                        <th>[[ trans('fields.Declared Cost') ]]</th>
                                         <th style="background-color: #d4edda;">تفکیک هزینه ها</th>
-                                        <th>{{ trans('fields.payment_amount') }}</th>
-                                        <th>{{ trans('fields.payment_date') }}</th>
+                                        <th>[[ trans('fields.payment_amount') ]]</th>
+                                        <th>[[ trans('fields.payment_date') ]]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,29 +146,31 @@
                                                 style="background-color: #d4edda;"
                                             @endif --}}>
 
-                                            <td>{{ $row->number }}
+                                            <td>[[ $row->number ]]
                                                 @if ($row->number)
                                                     <a
-                                                        href="{{ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) }}"><i
+                                                        href="[[ route('simpleWorkflowReport.external-internal.show', ['external_internal' => $row->number]) ]]"><i
                                                             class="fa fa-external-link"></i></a>
                                                 @endif
                                             </td>
-                                            <td>{{ $row->customer ?? '' }}</td>
-                                            <td>{{ $row->process_name ?? '' }}</td>
+                                            <td>[[ $row->customer ?? '' ]]</td>
+                                            <td>[[ $row->process_name ?? '' ]]</td>
                                             <td>
                                                 @foreach ($row->experts as $expert)
-                                                    {{ getUserInfo($expert)?->name ? getUserInfo($expert)->name : $expert }}<br>
+                                                    [[ getUserInfo($expert)?->name ? getUserInfo($expert)->name : $expert
+                                                    ]]<br>
                                                 @endforeach
                                             </td>
                                             {{-- <td>
                                                 @foreach ($row->in_mapa_experts as $in_mapa_expert)
-                                                    {{ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert }}<br>
+                                                    [[ getUserInfo($in_mapa_expert)?->name ? getUserInfo($in_mapa_expert)->name : $in_mapa_expert ]]<br>
                                                 @endforeach
                                                 @foreach ($row->out_mapa_experts as $out_mapa_expert)
-                                                    {{ getUserInfo($out_mapa_expert)?->name ? getUserInfo($out_mapa_expert)->name : $out_mapa_expert }}<br>
+                                                    [[ getUserInfo($out_mapa_expert)?->name ? getUserInfo($out_mapa_expert)->name : $out_mapa_expert ]]<br>
                                                 @endforeach
                                             </td> --}}
-                                            <td>{{ $row->debtDate ? toJalali((int) $row->debtDate)->format('Y-m-d') : trans('fields.not_available') }}
+                                            <td>[[ $row->debtDate ? toJalali((int) $row->debtDate)->format('Y-m-d') :
+                                                trans('fields.not_available') ]]
                                             </td>
                                             <td>
                                                 {{-- اگر کاربر فیلتر شده بود جزئیات تفکیک هزینه ها را در این ستون نمایش بده --}}
@@ -188,25 +192,43 @@
                                                                     $case_cost->amount,
                                                                 );
                                                             @endphp
-                                                            {{ $case_cost->counterparty()?->name }}
-                                                            ({{ $case_cost->amount }})
+                                                            [[ $case_cost->counterparty()?->name ]]
+                                                            ([[ $case_cost->amount ]])
                                                             <br>
                                                         @endforeach
                                                         @if ($totalCaseCost)
-                                                            مجموع ({{ number_format($totalCaseCost) }})
+                                                            مجموع ([[ number_format($totalCaseCost) ]])
                                                         @endif
                                                     @else
                                                         @php
-                                                            $totalDebt = $row->case_debts->sum('amount');
+                                                            // $totalDebt = $row->case_debts->sum('amount');
+                                                            $totalDebt = 0;
+                                                            foreach ($row->case_debts as $value) {
+                                                                // echo gettype($value->amount);
+                                                                $totalDebt += (int) $value->amount;
+                                                            }
+                                                            if (gettype($totalRepairCost) == 'string') {
+                                                            } else {
+                                                                // $totalRepairCost += (int) str_replace(',', '', $totalDebt);
+                                                            }
+                                                            // $totalDebt = $row->case_debts->sum('amount');
                                                         @endphp
-                                                        {{ number_format($totalDebt) }}
+                                                        [[ number_format($totalDebt) ]]
                                                     @endif
                                                 @else
                                                     @php
-                                                        $totalDebt = $row->case_debts->sum('amount');
-                                                        $totalRepairCost += (int) str_replace(',', '', $totalDebt);
+                                                        // $totalDebt = $row->case_debts->sum('amount');
+                                                        $totalDebt = 0;
+                                                        foreach ($row->case_debts as $value) {
+                                                            // echo gettype($value->amount);
+                                                            $totalDebt += (int) $value->amount;
+                                                        }
+                                                        if (gettype($totalRepairCost) == 'string') {
+                                                        } else {
+                                                            // $totalRepairCost += (int) str_replace(',', '', $totalDebt);
+                                                        }
                                                     @endphp
-                                                    {{ number_format($totalDebt) }}
+                                                    [[ number_format($totalDebt) ]]
                                                 @endif
                                             </td>
                                             <td style="background-color: #9ef0b2;">
@@ -230,31 +252,33 @@
                                                         @endphp
                                                         {{-- اگر کاربر فیلتر شده بود دیگر اسم کاربر را در تفکیک هزینه ها نمایش نده --}}
                                                         @if ($quser)
-                                                            {{ $case_cost->amount }}
+                                                            [[ $case_cost->amount ]]
                                                         @else
-                                                            {{ $case_cost->counterparty()->name ?? '<span class="text-danger">not found</span>' }}
-                                                            ({{ $case_cost->amount }})
+                                                            [[ $case_cost->counterparty()->name ?? '<span
+                                                                class="text-danger">not found</span>' ]]
+                                                            ([[ $case_cost->amount ]])
                                                             <br>
                                                         @endif
                                                     @endforeach
                                                     {{-- @if ($totalCaseCost)
-                                                        مجموع ({{ number_format($totalCaseCost) }})
+                                                        مجموع ([[ number_format($totalCaseCost) ]])
                                                     @endif --}}
                                                 @elseif(isset($row->all_case_costs) && count($row->all_case_costs))
-                                                    {{ $quserInfo->name }} در تفکیک هزینه ها نیست
+                                                    [[ $quserInfo->name ]] در تفکیک هزینه ها نیست
                                                 @else
                                                     @php
                                                         $totalCaseCosts += (int) str_replace(',', '', $totalDebt);
                                                     @endphp
-                                                    {{ number_format($totalDebt) }}
+                                                    [[ number_format($totalDebt) ]]
                                                 @endif
                                             </td>
                                             <td>
                                                 @php
                                                     $totalPayments = $row->payments->sum('amount');
                                                 @endphp
-                                                {{ $totalPayments ? number_format($totalPayments) : '' }}</td>
-                                            <td>{{ $row->paymentDate ? toJalali((int) $row->paymentDate)->format('Y-m-d') : trans('fields.not_available') }}
+                                                [[ $totalPayments ? number_format($totalPayments) : '' ]]</td>
+                                            <td>[[ $row->paymentDate ? toJalali((int) $row->paymentDate)->format('Y-m-d') :
+                                                trans('fields.not_available') ]]
                                             </td>
                                             @php
                                                 // $totalRepairCost += $row->total_cost;
@@ -278,15 +302,15 @@
                                     <tr class="bg-success">
                                         <td></td>
                                         <td>
-                                            داخلی: {{ $numberOfInternalProcess }}<br>
-                                            خارجی: {{ $numberOfExternalProcess }}
+                                            داخلی: [[ $numberOfInternalProcess ]]<br>
+                                            خارجی: [[ $numberOfExternalProcess ]]
                                         </td>
                                         <td></td>
                                         <td></td>
                                         <td>مجموع</td>
-                                        <td>{{ number_format($totalRepairCost) }}</td>
-                                        <td>{{ number_format($totalCaseCosts) }}</td>
-                                        <td>{{ number_format($totalPaymentAmount) }}</td>
+                                        <td>[[ number_format($totalRepairCost) ]]</td>
+                                        <td>[[ number_format($totalCaseCosts) ]]</td>
+                                        <td>[[ number_format($totalPaymentAmount) ]]</td>
                                         <td></td>
                                     </tr>
                                 </tfoot>

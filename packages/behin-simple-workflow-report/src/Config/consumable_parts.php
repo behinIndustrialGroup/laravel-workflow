@@ -5,7 +5,7 @@ return [
         [
             'key' => 'requested',
             'label' => 'در انتظار تحویل انبار',
-            'color' => '#f63245ff',
+            'color' => '#f632468f',
             'description' => 'درخواست ثبت شده و منتظر تایید و تحویل انبار است.',
         ],
         [
@@ -17,19 +17,19 @@ return [
         [
             'key' => 'confirmed',
             'label' => 'تایید',
-            'color' => '#efa613ff',
+            'color' => '#2bd144ff',
             'description' => '',
         ],
         [
             'key' => 'pending_buy_in',
             'label' => 'در انتظار خرید داخلی',
-            'color' => '#e6fb93ff',
+            'color' => '#f7e466ff',
             'description' => 'کالا در لیست خرید داخلی است',
         ],
         [
             'key' => 'pending_buy_out',
             'label' => 'در انتظار خرید خارجی',
-            'color' => '#00b506ff',
+            'color' => '#ffca1aff',
             'description' => 'کالا در لیست خرید خارجی است',
         ],
     ],

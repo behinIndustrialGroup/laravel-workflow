@@ -98,10 +98,13 @@
     ]) !!}
 @endif
 @if ($fieldDetails->type == 'date')
-    {!! Form::date($fieldId, [
+    {!! Form::date($fieldName, [
+        'id' => $fieldId,
         'value' => $fieldValue,
+        'altValue' => $fieldValueAlt ?? '',
         'class' => 'form-control',
         'id' => $fieldId,
+        'showLabel' => isset($showLabel) ? $showLabel : true,
         'placeholder' => $fieldAttributes?->placeholder,
         'required' => $required,
         'readonly' => $readOnly,
@@ -124,7 +127,7 @@
 @if ($fieldDetails->type == 'datetime')
     {!! Form::datetime($fieldId, [
         'value' => $fieldValue,
-        'altValue' => $fieldValueAlt ?? '',
+        'valueAlt' => $fieldValueAlt ?? '',
         'class' => 'form-control',
         'id' => $fieldId,
         'placeholder' => $fieldAttributes?->placeholder,
@@ -247,6 +250,7 @@
         'id' => $fieldId,
         'view_model_id' => $fieldAttributes?->view_model_id,
         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
     ]) !!}
 @endif
 
@@ -258,6 +262,7 @@
         'placeholder' => $fieldAttributes?->placeholder,
         'required' => $required,
         'readonly' => $readOnly,
+        'showLabel' => isset($showLabel) ? $showLabel : false,
         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
         'datalist_from_database' => isset($fieldAttributes?->datalist_from_database)
